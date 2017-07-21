@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { QueryRenderer, graphql } from 'react-relay/compat';
-import { Store } from 'react-relay/classic';
 import cx from 'classnames';
 
 import OriginDestinationBar from './OriginDestinationBar';
@@ -10,6 +9,7 @@ import RightOffcanvasToggle from './RightOffcanvasToggle';
 import ViaPointBarContainer from './ViaPointBarContainer';
 import LazilyLoad, { importLazy } from './LazilyLoad';
 import { otpToLocation } from '../util/otpStrings';
+import getEnvironment from '../relayEnvironment';
 
 class SummaryNavigation extends React.Component {
   static propTypes = {
@@ -151,7 +151,7 @@ class SummaryNavigation extends React.Component {
                 }
               }
             `}
-            environment={Store}
+            environment={getEnvironment()}
             render={({ props }) =>
               props &&
               <TimeSelectorContainer

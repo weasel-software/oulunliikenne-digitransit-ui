@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { QueryRenderer, graphql } from 'react-relay/compat';
-import { Store } from 'react-relay/classic';
 
 import CityBikeMarker from './CityBikeMarker';
 import ComponentUsageExample from '../../ComponentUsageExample';
+import getEnvironment from '../../../relayEnvironment';
 
 class CityBikeMarkerContainer extends React.Component {
   static description = (
@@ -42,7 +42,7 @@ class CityBikeMarkerContainer extends React.Component {
     }
     return (
       <QueryRenderer
-        environment={Store}
+        environment={getEnvironment()}
         query={graphql`
           query CityBikeMarkerContainerQuery {
             viewer {

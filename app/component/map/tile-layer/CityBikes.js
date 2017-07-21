@@ -1,7 +1,6 @@
 import { VectorTile } from '@mapbox/vector-tile';
 import Protobuf from 'pbf';
 import { fetchQuery, graphql } from 'react-relay/compat';
-import { Store } from 'react-relay/classic';
 import glfun from '@mapbox/mapbox-gl-style-spec/function';
 import pick from 'lodash/pick';
 
@@ -12,6 +11,7 @@ import {
   drawCitybikeNotInUseIcon,
   drawAvailabilityBadge,
 } from '../../../util/mapIconUtils';
+import getEnvironment from '../../../relayEnvironment';
 
 const getScale = glfun(
   {
@@ -128,9 +128,11 @@ class CityBikes {
     };
 
     if (lastFetch && currentTime - lastFetch <= 30000) {
-      fetchQuery(Store, query, { id }).then(callback);
+      fetchQuery(getEnvironment(), query, { id }).then(callback);
     } else {
-      fetchQuery(Store, query, { id }, { force: true }).then(callback);
+      fetchQuery(getEnvironment(), query, { id }, { force: true }).then(
+        callback,
+      );
     }
   };
 

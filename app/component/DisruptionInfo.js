@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { QueryRenderer, graphql } from 'react-relay/compat';
-import { Store } from 'react-relay/classic';
 import { FormattedMessage } from 'react-intl';
 import { routerShape, locationShape } from 'react-router';
 
@@ -10,6 +9,7 @@ import Loading from './Loading';
 import DisruptionListContainer from './DisruptionListContainer';
 import ComponentUsageExample from './ComponentUsageExample';
 import { isBrowser } from '../util/browser';
+import getEnvironment from '../relayEnvironment';
 
 function DisruptionInfo(props, context) {
   const isOpen = () =>
@@ -51,7 +51,7 @@ function DisruptionInfo(props, context) {
             }
           `}
           variables={{ feedIds: context.config.feedIds }}
-          environment={Store}
+          environment={getEnvironment()}
           render={({ props: innerProps }) =>
             innerProps
               ? <DisruptionListContainer {...innerProps} />

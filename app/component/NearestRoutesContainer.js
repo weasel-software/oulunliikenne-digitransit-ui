@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { QueryRenderer, graphql } from 'react-relay/compat';
-import { Store } from 'react-relay/classic';
 import PlaceAtDistanceListContainer from './PlaceAtDistanceListContainer';
 import NetworkError from './NetworkError';
 import Loading from './Loading';
+import getEnvironment from '../relayEnvironment';
 
 export default class NearestRoutesContainer extends Component {
   static propTypes = {
@@ -76,7 +76,7 @@ export default class NearestRoutesContainer extends Component {
           currentTime: this.props.currentTime,
           timeRange: this.props.timeRange,
         }}
-        environment={Store}
+        environment={getEnvironment()}
         render={({ error, props, retry }) => {
           if (error) {
             this.useSpinner = true;
@@ -93,7 +93,8 @@ export default class NearestRoutesContainer extends Component {
           if (this.useSpinner === true) {
             return <Loading />;
           }
-          return undefined;
+          // TODO: render old data when re-fetched
+          return null;
         }}
       />
     );

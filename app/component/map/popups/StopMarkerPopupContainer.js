@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { QueryRenderer, graphql } from 'react-relay/compat';
-import { Store } from 'react-relay/classic';
 
 import StopMarkerPopup from '../popups/StopMarkerPopup';
 import Loading from '../../Loading';
+import getEnvironment from '../../../relayEnvironment';
 
 export default function StopMarkerPopupContainer(props) {
   return (
@@ -33,7 +33,7 @@ export default function StopMarkerPopupContainer(props) {
         timeRange: 12 * 60 * 60,
         numberOfDepartures: 5,
       }}
-      environment={Store}
+      environment={getEnvironment()}
       render={({ props: renderProps }) =>
         renderProps
           ? <StopMarkerPopup {...renderProps} currentTime={props.currentTime} />

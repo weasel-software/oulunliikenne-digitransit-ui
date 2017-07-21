@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { QueryRenderer, graphql } from 'react-relay/compat';
-import { Store } from 'react-relay/classic';
 import { routerShape, locationShape, Link } from 'react-router';
 import connectToStores from 'fluxible-addons-react/connectToStores';
 import SwipeableViews from 'react-swipeable-views';
@@ -16,6 +15,7 @@ import ComponentUsageExample from './ComponentUsageExample';
 import { setEndpoint } from '../action/EndpointActions';
 import NoFavouriteLocations from './NoFavouriteLocations';
 import { isMobile } from '../util/browser';
+import getEnvironment from '../relayEnvironment';
 
 const SwipeableViewsKB = bindKeyboard(SwipeableViews);
 
@@ -159,7 +159,7 @@ class FavouriteLocationsContainer extends React.Component {
 
             arriveBy: false,
           }}
-          environment={Store}
+          environment={getEnvironment()}
           render={({ props }) =>
             props
               ? <FavouriteLocationContainer

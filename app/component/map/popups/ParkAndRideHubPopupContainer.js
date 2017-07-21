@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { QueryRenderer, graphql } from 'react-relay/compat';
-import { Store } from 'react-relay/classic';
 
 import ParkAndRideHubPopup from '../popups/ParkAndRideHubPopup';
 import Loading from '../../Loading';
+import getEnvironment from '../../../relayEnvironment';
 
 export default function ParkAndRideHubPopupContainer(props) {
   return (
@@ -18,7 +18,7 @@ export default function ParkAndRideHubPopupContainer(props) {
         }
       `}
       variables={{ stationIds: props.ids }}
-      environment={Store}
+      environment={getEnvironment()}
       render={({ props: renderProps }) =>
         renderProps
           ? <ParkAndRideHubPopup

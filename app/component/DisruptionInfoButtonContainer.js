@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { QueryRenderer, graphql } from 'react-relay/compat';
-import { Store } from 'react-relay/classic';
 import { routerShape, locationShape } from 'react-router';
 import DisruptionInfoButton from './DisruptionInfoButton';
 import { isBrowser } from '../util/browser';
+import getEnvironment from '../relayEnvironment';
 
 function DisruptionInfoButtonContainer(
   outerProps,
@@ -32,7 +32,7 @@ function DisruptionInfoButtonContainer(
           }
         `}
         variables={{ feedIds }}
-        environment={Store}
+        environment={getEnvironment()}
         render={({ props }) =>
           <DisruptionInfoButton
             {...props}

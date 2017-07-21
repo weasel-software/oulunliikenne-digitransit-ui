@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import { QueryRenderer, graphql } from 'react-relay/compat';
-import { Store } from 'react-relay/classic';
 
 import StopMarkerLayer from './StopMarkerLayer';
+import getEnvironment from '../../../relayEnvironment';
 
 export default class StopMarkerContainer extends React.Component {
   static propTypes = {
@@ -102,7 +102,7 @@ export default class StopMarkerContainer extends React.Component {
           maxLon: this.state.maxLon,
           agency: this.context.config.preferredAgency || null,
         }}
-        environment={Store}
+        environment={getEnvironment()}
         render={({ props }) => {
           if (props) {
             this.previousProps = props.viewer.stops;

@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { QueryRenderer, graphql } from 'react-relay/compat';
-import { Store } from 'react-relay/classic';
 import connectToStores from 'fluxible-addons-react/connectToStores';
 import some from 'lodash/some';
 import flatten from 'lodash/flatten';
 import FavouritesTabLabel from './FavouritesTabLabel';
+import getEnvironment from '../relayEnvironment';
 
 const hasDisruption = routes =>
   some(flatten(routes.map(route => route.alerts.length > 0)));
@@ -24,7 +24,7 @@ function FavouritesTabLabelContainer({ routes, ...rest }) {
         }
       `}
       variables={{ ids: routes }}
-      environment={Store}
+      environment={getEnvironment()}
       render={({ props }) =>
         <FavouritesTabLabel
           hasDisruption={props && hasDisruption(props.routes)}

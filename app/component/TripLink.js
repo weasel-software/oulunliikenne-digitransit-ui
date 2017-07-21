@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { QueryRenderer, graphql } from 'react-relay/compat';
-import { Store } from 'react-relay/classic';
 import { Link } from 'react-router';
 import cx from 'classnames';
 import IconWithTail from './IconWithTail';
+import getEnvironment from '../relayEnvironment';
 
 export default function TripLink({ vehicle }) {
   const icon = (
@@ -48,7 +48,7 @@ export default function TripLink({ vehicle }) {
           vehicle.tripStartTime.substring(0, 2) * 60 * 60 +
           vehicle.tripStartTime.substring(2, 4) * 60,
       }}
-      environment={Store}
+      environment={getEnvironment()}
       render={({ props }) => {
         if (!props) {
           return (

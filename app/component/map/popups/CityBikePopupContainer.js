@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { QueryRenderer, graphql } from 'react-relay/compat';
-import { Store } from 'react-relay/classic';
 
 import CityBikePopup from '../popups/CityBikePopup';
 import Loading from '../../Loading';
+import getEnvironment from '../../../relayEnvironment';
 
 export default function StopMarkerPopupContainer(props) {
   return (
@@ -19,7 +19,7 @@ export default function StopMarkerPopupContainer(props) {
       `}
       cacheConfig={{ force: true, poll: 30 * 1000 }}
       variables={{ stationId: props.stationId }}
-      environment={Store}
+      environment={getEnvironment()}
       render={({ props: renderProps }) =>
         renderProps
           ? <CityBikePopup {...renderProps} />

@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { QueryRenderer, graphql } from 'react-relay/compat';
-import { Store } from 'react-relay/classic';
 import provideContext from 'fluxible-addons-react/provideContext';
 import { intlShape } from 'react-intl';
 
@@ -12,6 +11,7 @@ import {
 import RouteMarkerPopup from './route/RouteMarkerPopup';
 import { asString as iconAsString } from '../IconWithTail';
 import Loading from '../Loading';
+import getEnvironment from '../../relayEnvironment';
 
 import { isBrowser } from '../../util/browser';
 
@@ -178,7 +178,7 @@ export default class VehicleMarkerContainer extends React.PureComponent {
             message.tripStartTime.substring(0, 2) * 60 * 60 +
             message.tripStartTime.substring(2, 4) * 60,
         }}
-        environment={Store}
+        environment={getEnvironment()}
         render={({ props }) =>
           props
             ? <RouteMarkerPopupWithContext

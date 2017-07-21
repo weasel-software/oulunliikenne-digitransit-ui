@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { QueryRenderer, graphql } from 'react-relay/compat';
-import { Store } from 'react-relay/classic';
 import connectToStores from 'fluxible-addons-react/connectToStores';
 import FavouriteRouteListContainer from './FavouriteRouteListContainer';
 import FavouriteLocationsContainer from './FavouriteLocationsContainer';
 import NextDeparturesListHeader from './NextDeparturesListHeader';
 import NoFavouritesPanel from './NoFavouritesPanel';
 import Loading from './Loading';
+import getEnvironment from '../relayEnvironment';
 
 const FavouriteRoutes = ({ routes, currentTime }) => {
   if (routes.length > 0) {
@@ -23,7 +23,7 @@ const FavouriteRoutes = ({ routes, currentTime }) => {
           }
         `}
         variables={{ ids: routes, currentTime }}
-        environment={Store}
+        environment={getEnvironment()}
         render={({ props }) =>
           props
             ? <FavouriteRouteListContainer

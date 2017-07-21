@@ -1,5 +1,4 @@
 import { fetchQuery } from 'react-relay/compat';
-import { Store } from 'react-relay/classic';
 import { VectorTile } from '@mapbox/vector-tile';
 import compact from 'lodash/compact';
 import isEmpty from 'lodash/isEmpty';
@@ -12,6 +11,7 @@ import { isBrowser } from '../../../util/browser';
 
 import carParksQuery from './carParks';
 import carParkQuery from './carPark';
+import getEnvironment from '../../../relayEnvironment';
 
 const showFacilities = 17;
 
@@ -46,7 +46,7 @@ export default class ParkAndRide {
           if (this.tile.coords.z < showFacilities && vt.layers.hubs != null) {
             for (let i = 0, ref = vt.layers.hubs.length - 1; i <= ref; i++) {
               const feature = vt.layers.hubs.feature(i);
-              fetchQuery(Store, carParksQuery, {
+              fetchQuery(getEnvironment(), carParksQuery, {
                 ids: JSON.parse(feature.properties.facilityIds).map(id =>
                   id.toString(),
                 ),
@@ -75,7 +75,7 @@ export default class ParkAndRide {
               i++
             ) {
               const feature = vt.layers.facilities.feature(i);
-              fetchQuery(Store, carParkQuery, {
+              fetchQuery(getEnvironment(), carParkQuery, {
                 id: feature.id.toString(),
               }).then(data => {
                 const result = data.carPark;

@@ -1,5 +1,4 @@
 import { fetchQuery } from 'react-relay/compat';
-import { Store } from 'react-relay/classic';
 
 import get from 'lodash/get';
 import take from 'lodash/take';
@@ -16,6 +15,7 @@ import mapPeliasModality from './pelias-to-modality-mapper';
 import searchRoutesQuery from './searchRoutes';
 import favouriteStopsQuery from './favouriteStops';
 import favouriteRoutesQuery from './favouriteRoutes';
+import getEnvironment from '../relayEnvironment';
 
 const mapRoute = item => ({
   type: 'Route',
@@ -155,7 +155,7 @@ export function getGeocodingResult(
 }
 
 function getFavouriteRoutes(favourites, input) {
-  return fetchQuery(Store, favouriteRoutesQuery, { ids: favourites })
+  return fetchQuery(getEnvironment(), favouriteRoutesQuery, { ids: favourites })
     .then(data => data.routes.map(mapRoute))
     .then(routes =>
       routes.map(favourite => ({
@@ -179,7 +179,7 @@ function getFavouriteStops(favourites, input, origin) {
   const refLatLng =
     origin.lat && origin.lon && getLatLng(origin.lat, origin.lon);
 
-  return fetchQuery(Store, favouriteStopsQuery, { ids: favourites })
+  return fetchQuery(getEnvironment(), favouriteStopsQuery, { ids: favourites })
     .then(data =>
       mapStops(data.stops).map(favourite => ({
         ...favourite,
@@ -215,7 +215,7 @@ function getRoutes(input, config) {
     return Promise.resolve([]);
   }
 
-  return fetchQuery(Store, searchRoutesQuery, { name: input })
+  return fetchQuery(getEnvironment(), searchRoutesQuery, { name: input })
     .then(data =>
       data.viewer.routes
         .filter(
