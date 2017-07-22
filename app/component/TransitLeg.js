@@ -207,8 +207,38 @@ class TransitLeg extends React.Component {
 }
 
 TransitLeg.propTypes = {
-  leg: PropTypes.object.isRequired,
-  'leg.realTime': PropTypes.bool,
+  leg: PropTypes.shape({
+    realTime: PropTypes.bool.isRequired,
+    intermediateStops: PropTypes.arrayOf(
+      PropTypes.shape({
+        gtfsId: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+        code: PropTypes.string,
+        lat: PropTypes.number.isRequired,
+        lon: PropTypes.number.isRequired,
+      }).isRequired,
+    ).isRequired,
+    route: PropTypes.shape({
+      color: PropTypes.string,
+      gtfsId: PropTypes.string.isRequired,
+      shortName: PropTypes.string.isRequired,
+    }).isRequired,
+    trip: PropTypes.shape({
+      pattern: PropTypes.shape({
+        code: PropTypes.string.isRequired,
+      }).isRequired,
+      gtfsId: PropTypes.string.isRequired,
+    }).isRequired,
+    departureDelay: PropTypes.number.isRequired,
+    startTime: PropTypes.number.isRequired,
+    from: PropTypes.shape({
+      stop: PropTypes.shape({
+        code: PropTypes.string,
+        platformCode: PropTypes.string,
+      }).isRequired,
+      name: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
   index: PropTypes.number.isRequired,
   mode: PropTypes.string.isRequired,
   focusAction: PropTypes.func.isRequired,

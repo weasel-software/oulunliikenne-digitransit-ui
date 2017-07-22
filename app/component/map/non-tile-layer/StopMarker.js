@@ -143,6 +143,7 @@ class StopMarker extends React.Component {
         <StopMarkerPopupContainer
           stopId={this.props.stop.gtfsId}
           currentTime={currentTime}
+          context={this.context}
         />
       </GenericMarker>
     );

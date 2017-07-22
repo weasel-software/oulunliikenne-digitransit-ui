@@ -35,6 +35,7 @@ function DisruptionInfoButtonContainer(
         environment={getEnvironment()}
         render={({ props }) =>
           <DisruptionInfoButton
+            viewer={null}
             {...props}
             toggleDisruptionInfo={openDisruptionInfo}
           />}

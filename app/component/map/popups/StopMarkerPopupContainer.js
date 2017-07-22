@@ -29,14 +29,18 @@ export default function StopMarkerPopupContainer(props) {
       `}
       variables={{
         stopId: props.stopId,
-        currentTime: props.currentTime,
+        startTime: props.currentTime,
         timeRange: 12 * 60 * 60,
         numberOfDepartures: 5,
       }}
       environment={getEnvironment()}
       render={({ props: renderProps }) =>
         renderProps
-          ? <StopMarkerPopup {...renderProps} currentTime={props.currentTime} />
+          ? <StopMarkerPopup
+              {...renderProps}
+              currentTime={props.currentTime}
+              terminal={null}
+            />
           : <div className="card" style={{ height: '12rem' }}>
               <Loading />
             </div>}

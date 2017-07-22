@@ -40,7 +40,6 @@ function IntermediateLeg({ color, mode, name, stopCode, focusFunction }) {
 
 IntermediateLeg.propTypes = {
   focusFunction: PropTypes.func.isRequired,
-  waitTime: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   mode: PropTypes.string.isRequired,
   color: PropTypes.string,
