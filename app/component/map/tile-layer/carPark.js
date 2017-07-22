@@ -1,4 +1,4 @@
-import { graphql } from 'react-relay/compat';
+import { graphql } from 'relay-runtime';
 
 export default graphql`
   query carParkQuery($id: String!) {
