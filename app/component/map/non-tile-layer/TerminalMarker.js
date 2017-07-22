@@ -86,6 +86,7 @@ class TerminalMarker extends React.Component {
         <TerminalMarkerPopupContainer
           terminalId={this.props.terminal.gtfsId}
           currentTime={currentTime}
+          context={this.context}
         />
       </GenericMarker>
     );

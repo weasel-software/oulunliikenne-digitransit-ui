@@ -94,7 +94,10 @@ export default class CityBikeMarker extends React.Component {
         getIcon={this.getIcon}
         id={this.props.station.stationId}
       >
-        <CityBikePopupContainer stationId={this.props.station.stationId} />
+        <CityBikePopupContainer
+          stationId={this.props.station.stationId}
+          context={this.context}
+        />
       </GenericMarker>
     );
   }
