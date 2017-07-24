@@ -463,8 +463,6 @@ module.exports = {
       'var Object.setPrototypeOf',
     '../core-js/object/set-prototype-of': 'var Object.setPrototypeOf',
     'babel-runtime/core-js/promise': 'var Promise',
-    '../core-js/symbol': 'var Symbol',
-    '../core-js/symbol/iterator': 'var Symbol.iterator',
     'babel-runtime/core-js/weak-map': 'var WeakMap',
     'babel-runtime/helpers/extends': 'var Object.assign',
     'fbjs/lib/fetch': 'var fetch',
