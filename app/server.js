@@ -1,38 +1,18 @@
-import PropTypes from 'prop-types';
 // React
 import React from 'react';
 import ReactDOM from 'react-dom/server';
 
 // Routing and state handling
-import match from 'react-router/lib/match';
 import Helmet from 'react-helmet';
-import createHistory from 'react-router/lib/createMemoryHistory';
-import Relay from 'react-relay/classic';
-import IsomorphicRouter from 'isomorphic-relay-router';
-import {
-  RelayNetworkLayer,
-  urlMiddleware,
-  gqErrorsMiddleware,
-  retryMiddleware,
-  batchMiddleware,
-} from 'react-relay-network-layer/lib';
-import provideContext from 'fluxible-addons-react/provideContext';
-
 // Libraries
 import serialize from 'serialize-javascript';
-import { IntlProvider } from 'react-intl';
 import polyfillService from 'polyfill-service';
 import fs from 'fs';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import find from 'lodash/find';
 
 // Application
 import appCreator from './app';
-import translations from './translations';
 import ApplicationHtml from './html';
-import MUITheme from './MuiTheme';
-
 // configuration
 import { getConfiguration } from './config';
 
@@ -40,13 +20,8 @@ import { getConfiguration } from './config';
 const appRoot = `${process.cwd()}/`;
 
 // cached assets
-const networkLayers = {};
-const robotLayers = {};
 const cssDefs = {};
 const sprites = {};
-
-// Disable relay query cache in order tonot leak memory, see facebook/relay#754
-Relay.disableQueryCaching();
 
 function getStringOrArrayElement(arrayOrString, index) {
   if (Array.isArray(arrayOrString)) {
@@ -55,40 +30,6 @@ function getStringOrArrayElement(arrayOrString, index) {
     return arrayOrString;
   }
   throw new Error(`Not array or string: ${arrayOrString}`);
-}
-
-function getRobotNetworkLayer(config) {
-  if (!robotLayers[config.CONFIG]) {
-    robotLayers[config.CONFIG] = new RelayNetworkLayer([
-      retryMiddleware({ fetchTimeout: 10000, retryDelays: [] }),
-      urlMiddleware({
-        url: `${config.URL.OTP}index/graphql`,
-      }),
-      batchMiddleware({
-        batchUrl: `${config.URL.OTP}index/graphql/batch`,
-      }),
-      gqErrorsMiddleware(),
-    ]);
-  }
-  return robotLayers[config.CONFIG];
-}
-
-const RELAY_FETCH_TIMEOUT = process.env.RELAY_FETCH_TIMEOUT || 1000;
-
-function getNetworkLayer(config) {
-  if (!networkLayers[config.CONFIG]) {
-    networkLayers[config.CONFIG] = new RelayNetworkLayer([
-      retryMiddleware({ fetchTimeout: RELAY_FETCH_TIMEOUT, retryDelays: [] }),
-      urlMiddleware({
-        url: `${config.URL.OTP}index/graphql`,
-      }),
-      batchMiddleware({
-        batchUrl: `${config.URL.OTP}index/graphql/batch`,
-      }),
-      gqErrorsMiddleware(),
-    ]);
-  }
-  return networkLayers[config.CONFIG];
 }
 
 let stats;
@@ -244,38 +185,10 @@ function getScripts(req, config) {
   ];
 }
 
-const ContextProvider = provideContext(IntlProvider, {
-  config: PropTypes.object,
-  url: PropTypes.string,
-  headers: PropTypes.object,
-});
-
-function getContent(context, renderProps, locale, userAgent) {
-  // TODO: This should be moved to a place to coexist with similar content from client.js
-  return ReactDOM.renderToString(
-    <ContextProvider
-      locale={locale}
-      messages={translations[locale]}
-      context={context.getComponentContext()}
-    >
-      <MuiThemeProvider
-        muiTheme={getMuiTheme(MUITheme(context.getComponentContext().config), {
-          userAgent,
-        })}
-      >
-        {IsomorphicRouter.render(renderProps)}
-      </MuiThemeProvider>
-    </ContextProvider>,
-  );
-}
-
-function getHtml(application, context, locale, [polyfills, relayData], req) {
+function getHtml(application, context, locale, [polyfills], req) {
   const config = context.getComponentContext().config;
   // eslint-disable-next-line no-unused-vars
-  const content =
-    relayData != null
-      ? getContent(context, relayData.props, locale, req.headers['user-agent'])
-      : undefined;
+  const content = undefined;
   const head = Helmet.rewind();
   return ReactDOM.renderToStaticMarkup(
     <ApplicationHtml
@@ -290,15 +203,11 @@ function getHtml(application, context, locale, [polyfills, relayData], req) {
       locale={locale}
       scripts={getScripts(req, config)}
       fonts={config.URL.FONT}
-      relayData={relayData != null ? relayData.data : []}
+      relayData={[]}
       head={head}
     />,
   );
 }
-
-const isRobotRequest = agent =>
-  agent &&
-  (agent.indexOf('facebook') !== -1 || agent.indexOf('Twitterbot') !== -1);
 
 export default function(req, res, next) {
   const config = getConfiguration(req);
@@ -331,62 +240,17 @@ export default function(req, res, next) {
   const agent = req.headers['user-agent'];
   global.navigator = { userAgent: agent };
 
-  const location = createHistory({ basename: config.APP_PATH }).createLocation(
-    req.url,
-  );
+  const promises = [getPolyfills(agent, config)];
 
-  match(
-    {
-      routes: context.getComponent(),
-      location,
-    },
-    (error, redirectLocation, renderProps) => {
-      if (redirectLocation) {
-        res.redirect(301, redirectLocation.pathname + redirectLocation.search);
-      } else if (error) {
-        next(error);
-      } else if (!renderProps) {
-        res.status(404).send('Not found');
-      } else {
-        if (
-          renderProps.components.filter(
-            component => component && component.displayName === 'Error404',
-          ).length > 0
-        ) {
-          res.status(404);
-        }
-        let networkLayer;
-        if (isRobotRequest(agent)) {
-          networkLayer = getRobotNetworkLayer(config);
-        } else {
-          networkLayer = getNetworkLayer(config);
-        }
-        const promises = [
-          getPolyfills(agent, config),
-          // Isomorphic rendering is ok to fail due timeout
-          IsomorphicRouter.prepareData(renderProps, networkLayer).catch(
-            () => null,
-          ),
-        ];
-
-        Promise.all(promises)
-          .then(results =>
-            res.send(
-              `<!doctype html>${getHtml(
-                application,
-                context,
-                locale,
-                results,
-                req,
-              )}`,
-            ),
-          )
-          .catch(err => {
-            if (err) {
-              next(err);
-            }
-          });
+  Promise.all(promises)
+    .then(results =>
+      res.send(
+        `<!doctype html>${getHtml(application, context, locale, results, req)}`,
+      ),
+    )
+    .catch(err => {
+      if (err) {
+        next(err);
       }
-    },
-  );
+    });
 }
