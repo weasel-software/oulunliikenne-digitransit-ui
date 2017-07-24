@@ -18,6 +18,9 @@ import FavouriteCityBikeStationStore from './store/FavouriteCityBikeStationStore
 export default config => {
   const app = new Fluxible({
     component: routes(config),
+    errorHandler({ message, meta }) {
+      console.error(meta.error ? meta.error : message);
+    },
   });
 
   app.registerStore(EndpointStore);
