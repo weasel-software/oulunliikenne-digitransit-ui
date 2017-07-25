@@ -45,7 +45,7 @@ function RouteMapContainer(
 
   const toggleFullscreenMap = () => {
     if (fullscreen) {
-      router.goBack();
+      router.go(-1);
       return;
     }
     router.push(`${location.pathname}/kartta`);

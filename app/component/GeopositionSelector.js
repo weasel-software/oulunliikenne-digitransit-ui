@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import connectToStores from 'fluxible-addons-react/connectToStores';
 import { FormattedMessage } from 'react-intl';
-import { routerShape, locationShape } from 'react-router';
+import { routerShape } from 'found';
 
 import { startLocationWatch } from '../action/PositionActions';
 import PositionStore from '../store/PositionStore';
@@ -116,7 +116,10 @@ GeopositionSelector.propTypes = {
 GeopositionSelector.contextTypes = {
   executeAction: PropTypes.func.isRequired,
   router: routerShape.isRequired,
-  location: locationShape.isRequired,
+  location: PropTypes.shape({
+    pathname: PropTypes.string.isRequired,
+    query: PropTypes.object.isRequired,
+  }).isRequired,
 };
 
 export default connectToStores(

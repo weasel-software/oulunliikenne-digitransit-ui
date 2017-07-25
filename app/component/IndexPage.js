@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { routerShape, locationShape } from 'react-router';
+import { routerShape } from 'found';
 import getContext from 'recompose/getContext';
 import { clearDestination } from '../action/EndpointActions';
 import LazilyLoad, { importLazy } from './LazilyLoad';
@@ -31,7 +31,10 @@ const messageBar = (
 class IndexPage extends React.Component {
   static contextTypes = {
     executeAction: PropTypes.func.isRequired,
-    location: locationShape.isRequired,
+    location: PropTypes.shape({
+      pathname: PropTypes.string.isRequired,
+      query: PropTypes.object.isRequired,
+    }).isRequired,
     router: routerShape.isRequired,
     piwik: PropTypes.object,
     config: PropTypes.object.isRequired,
@@ -39,7 +42,7 @@ class IndexPage extends React.Component {
 
   static propTypes = {
     breakpoint: PropTypes.string.isRequired,
-    content: PropTypes.node,
+    children: PropTypes.node,
     routes: PropTypes.array,
   };
 
@@ -164,7 +167,7 @@ class IndexPage extends React.Component {
   closeTab = () => {
     if (this.context.location && this.context.location.action === 'PUSH') {
       // entered the tab from the index page, not by a direct url
-      this.context.router.goBack();
+      this.context.router.go(-1);
     } else {
       this.context.router.replace('/');
     }
@@ -203,7 +206,7 @@ class IndexPage extends React.Component {
                 nearbyClicked={this.clickNearby}
                 favouritesClicked={this.clickFavourites}
               >
-                {this.props.content}
+                {this.props.children}
               </FrontPagePanelLarge>
             </div>
           </MapWithTracking>
@@ -244,7 +247,7 @@ class IndexPage extends React.Component {
               favouritesClicked={this.clickFavourites}
               closePanel={this.closeTab}
             >
-              {this.props.content}
+              {this.props.children}
             </FrontPagePanelSmall>
             {feedbackPanel}
           </div>

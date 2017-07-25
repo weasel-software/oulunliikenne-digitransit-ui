@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Link } from 'react-router';
+import Link from 'found/lib/Link';
 import sortBy from 'lodash/sortBy';
 import Distance from './Distance';
 import RouteNumber from './RouteNumber';

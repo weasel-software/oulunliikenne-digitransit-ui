@@ -1,4 +1,3 @@
-import { createMemoryHistory } from 'history';
 import { setHistory, getHistory } from './store/localStorage';
 
 function getHistoryConsideringTime() {

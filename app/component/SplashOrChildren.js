@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import connectToStores from 'fluxible-addons-react/connectToStores';
-import { locationShape } from 'react-router';
 import Splash from './Splash';
 
 import { getIntroShown, setIntroShown } from '../store/localStorage';
@@ -15,7 +14,10 @@ class SplashOrComponent extends React.Component {
 
   static contextTypes = {
     config: PropTypes.object.isRequired,
-    location: locationShape.isRequired,
+    location: PropTypes.shape({
+      pathname: PropTypes.string.isRequired,
+      query: PropTypes.object.isRequired,
+    }).isRequired,
   };
 
   constructor(props, { config }) {

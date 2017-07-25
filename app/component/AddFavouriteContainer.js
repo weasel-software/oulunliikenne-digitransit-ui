@@ -31,7 +31,10 @@ class AddFavouriteContainer extends React.Component {
     intl: intlShape.isRequired,
     executeAction: PropTypes.func.isRequired,
     router: routerShape.isRequired,
-    location: locationShape.isRequired,
+    location: PropTypes.shape({
+      pathname: PropTypes.string.isRequired,
+      query: PropTypes.object.isRequired,
+    }).isRequired,
     getStore: PropTypes.func.isRequired,
   };
 
@@ -255,7 +258,7 @@ class AddFavouriteContainer extends React.Component {
           layers={favouriteLayers}
           customOnSuggestionSelected={(name, item) => {
             this.setCoordinatesAndAddress(name, item);
-            return this.context.router.goBack();
+            return this.context.router.go(-1);
           }}
         />
       </div>

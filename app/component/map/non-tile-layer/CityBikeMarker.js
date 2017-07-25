@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import provideContext from 'fluxible-addons-react/provideContext';
 import { intlShape } from 'react-intl';
-import { routerShape, locationShape } from 'react-router';
+import { routerShape } from 'found';
 
 import CityBikePopup from '../popups/CityBikePopupContainer';
 import Icon from '../../Icon';
@@ -25,9 +25,13 @@ if (isBrowser) {
 const CityBikePopupContainer = provideContext(CityBikePopup, {
   intl: intlShape.isRequired,
   router: routerShape.isRequired,
-  location: locationShape.isRequired,
+  location: PropTypes.shape({
+    pathname: PropTypes.string.isRequired,
+    query: PropTypes.object.isRequired,
+  }).isRequired,
   route: PropTypes.object.isRequired,
   config: PropTypes.object.isRequired,
+  store: PropTypes.object.isRequired,
 });
 
 // Small icon for zoom levels <= 15
@@ -62,10 +66,14 @@ export default class CityBikeMarker extends React.Component {
     getStore: PropTypes.func.isRequired,
     executeAction: PropTypes.func.isRequired,
     router: routerShape.isRequired,
-    location: locationShape.isRequired,
+    location: PropTypes.shape({
+      pathname: PropTypes.string.isRequired,
+      query: PropTypes.object.isRequired,
+    }).isRequired,
     route: PropTypes.object.isRequired,
     intl: intlShape.isRequired,
     config: PropTypes.object.isRequired,
+    store: PropTypes.object.isRequired,
   };
 
   getIcon = zoom =>

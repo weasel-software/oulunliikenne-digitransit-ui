@@ -4,7 +4,7 @@ import { createFragmentContainer, graphql } from 'react-relay/compat';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
 import moment from 'moment';
-import { Link } from 'react-router';
+import Link from 'found/lib/Link';
 import cx from 'classnames';
 import Departure from './Departure';
 import { isBrowser } from '../util/browser';

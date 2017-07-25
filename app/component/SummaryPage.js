@@ -32,12 +32,6 @@ function getActiveIndex(state) {
 class SummaryPage extends React.Component {
   static contextTypes = {
     breakpoint: PropTypes.string.isRequired,
-    queryAggregator: PropTypes.shape({
-      readyState: PropTypes.shape({
-        done: PropTypes.bool.isRequired,
-        error: PropTypes.string,
-      }).isRequired,
-    }).isRequired,
     router: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
     config: PropTypes.object,
@@ -54,25 +48,17 @@ class SummaryPage extends React.Component {
       }).isRequired,
     }).isRequired,
     params: PropTypes.shape({
+      from: PropTypes.string.isRequired,
+      to: PropTypes.string.isRequired,
       hash: PropTypes.string,
     }).isRequired,
     plan: PropTypes.shape({
-      plan: PropTypes.shape({
-        itineraries: PropTypes.array,
-      }).isRequired,
+      itineraries: PropTypes.array,
     }).isRequired,
     content: PropTypes.node,
     map: PropTypes.shape({
       type: PropTypes.func.isRequired,
     }),
-    from: PropTypes.shape({
-      lat: PropTypes.number.isRequired,
-      lon: PropTypes.number.isRequired,
-    }).isRequired,
-    to: PropTypes.shape({
-      lat: PropTypes.number.isRequired,
-      lon: PropTypes.number.isRequired,
-    }).isRequired,
     routes: PropTypes.arrayOf(
       PropTypes.shape({
         fullscreenMap: PropTypes.bool,
@@ -127,9 +113,9 @@ class SummaryPage extends React.Component {
     return isMatch(a, b);
   };
   renderMap() {
-    const { plan: { plan }, location: { state, query }, from, to } = this.props;
+    const { plan, location: { state, query } } = this.props;
     const activeIndex = getActiveIndex(state);
-    const itineraries = plan.itineraries || [];
+    const itineraries = (plan && plan.itineraries) || [];
 
     const leafletObjs = sortBy(
       itineraries.map((itinerary, i) =>
@@ -143,6 +129,9 @@ class SummaryPage extends React.Component {
       // Make sure active line isn't rendered over
       i => i.props.passive === false,
     );
+
+    const from = otpToLocation(this.props.params.from);
+    const to = otpToLocation(this.props.params.to);
 
     if (from.lat && from.lon) {
       leafletObjs.push(
@@ -203,18 +192,17 @@ class SummaryPage extends React.Component {
   }
 
   render() {
-    const {
-      breakpoint,
-      queryAggregator: { readyState: { done, error } },
-    } = this.context;
+    const { breakpoint } = this.context;
     // Call props.map directly in order to render to same map instance
     const map = this.props.map
       ? this.props.map.type(
           {
             itinerary:
-              this.props.plan.plan.itineraries &&
-              this.props.plan.plan.itineraries[this.props.params.hash],
+              this.props.plan.itineraries &&
+              this.props.plan.itineraries[this.props.params.hash],
             center: this.state.center,
+            from: otpToLocation(this.props.params.from),
+            to: otpToLocation(this.props.params.to),
             ...this.props,
           },
           this.context,
@@ -224,16 +212,12 @@ class SummaryPage extends React.Component {
     let earliestStartTime;
     let latestArrivalTime;
 
-    if (
-      this.props.plan &&
-      this.props.plan.plan &&
-      this.props.plan.plan.itineraries
-    ) {
+    if (this.props.plan && this.props.plan.itineraries) {
       earliestStartTime = Math.min(
-        ...this.props.plan.plan.itineraries.map(i => i.startTime),
+        ...this.props.plan.itineraries.map(i => i.startTime),
       );
       latestArrivalTime = Math.max(
-        ...this.props.plan.plan.itineraries.map(i => i.endTime),
+        ...this.props.plan.itineraries.map(i => i.endTime),
       );
     }
 
@@ -253,24 +237,20 @@ class SummaryPage extends React.Component {
     if (breakpoint === 'large') {
       let content;
 
-      if (done || error !== null) {
+      if (this.props.plan) {
         content = (
           <SummaryPlanContainer
-            plan={this.props.plan.plan}
-            itineraries={this.props.plan.plan.itineraries}
+            plan={this.props.plan}
+            itineraries={this.props.plan.itineraries}
             params={this.props.params}
-            error={error}
-            from={this.props.from}
-            to={this.props.to}
+            // error={error}
             intermediatePlaces={intermediatePlaces}
           >
             {this.props.content &&
               React.cloneElement(this.props.content, {
-                itinerary: this.props.plan.plan.itineraries[
-                  this.props.params.hash
-                ],
+                itinerary: this.props.plan.itineraries[this.props.params.hash],
                 focus: this.updateCenter,
-                plan: this.props.plan.plan,
+                plan: this.props.plan,
               })}
           </SummaryPlanContainer>
         );
@@ -307,7 +287,7 @@ class SummaryPage extends React.Component {
 
     let content;
 
-    if (!done && !error) {
+    if (!this.props.plan) {
       content = (
         <div style={{ position: 'relative', height: 200 }}>
           <Loading />
@@ -316,7 +296,7 @@ class SummaryPage extends React.Component {
     } else if (this.props.params.hash) {
       content = (
         <MobileItineraryWrapper
-          itineraries={this.props.plan.plan.itineraries}
+          itineraries={this.props.plan.itineraries}
           params={this.props.params}
           fullscreenMap={some(
             this.props.routes.map(route => route.fullscreenMap),
@@ -324,11 +304,11 @@ class SummaryPage extends React.Component {
           focus={this.updateCenter}
         >
           {this.props.content &&
-            this.props.plan.plan.itineraries.map((itinerary, i) =>
+            this.props.plan.itineraries.map((itinerary, i) =>
               React.cloneElement(this.props.content, {
                 key: i,
                 itinerary,
-                plan: this.props.plan.plan,
+                plan: this.props.plan,
               }),
             )}
         </MobileItineraryWrapper>
@@ -336,11 +316,11 @@ class SummaryPage extends React.Component {
     } else {
       content = (
         <SummaryPlanContainer
-          plan={this.props.plan.plan}
-          itineraries={this.props.plan.plan.itineraries}
+          plan={this.props.plan}
+          itineraries={this.props.plan.itineraries}
           params={this.props.params}
-          from={this.props.from}
-          to={this.props.to}
+          from={this.props.params.from}
+          to={this.props.params.to}
           intermediatePlaces={intermediatePlaces}
         />
       );
@@ -366,63 +346,20 @@ class SummaryPage extends React.Component {
 }
 
 export default createFragmentContainer(SummaryPage, {
-  /* TODO manually deal with:
-  initialVariables: {
-    ...{
-      from: null,
-      to: null,
-      fromPlace: null,
-      toPlace: null,
-      intermediatePlaces: null,
-      numItineraries:
-        typeof matchMedia !== 'undefined' &&
-        matchMedia('(min-width: 900px)').matches
-          ? 5
-          : 3,
-      date: moment().format('YYYY-MM-DD'),
-      time: moment().format('HH:mm:ss'),
-      arriveBy: false,
-      disableRemainingWeightHeuristic: false,
-      modes: null,
-      maxWalkDistance: 0,
-      preferred: null,
-    },
-    ...SummaryPage.hcParameters,
-  }
-  */
   plan: graphql`
-    fragment SummaryPage_plan on QueryType {
-      plan(
-        fromPlace: $fromPlace
-        toPlace: $toPlace
-        intermediatePlaces: $intermediatePlaces
-        numItineraries: $numItineraries
-        modes: $modes
-        date: $date
-        time: $time
-        walkReluctance: $walkReluctance
-        walkBoardCost: $walkBoardCost
-        minTransferTime: $minTransferTime
-        walkSpeed: $walkSpeed
-        maxWalkDistance: $maxWalkDistance
-        wheelchair: $wheelchair
-        disableRemainingWeightHeuristic: $disableRemainingWeightHeuristic
-        arriveBy: $arriveBy
-        preferred: $preferred
-      ) {
-        ...SummaryPlanContainer_plan
-        ...ItineraryTab_plan
-        itineraries {
-          startTime
-          endTime
-          ...ItineraryTab_itinerary
-          ...SummaryPlanContainer_itineraries
-          legs {
-            ...ItineraryLine_legs
-            transitLeg
-            legGeometry {
-              points
-            }
+    fragment SummaryPage_plan on Plan {
+      ...SummaryPlanContainer_plan
+      ...ItineraryTab_plan
+      itineraries {
+        startTime
+        endTime
+        ...ItineraryTab_itinerary
+        ...SummaryPlanContainer_itineraries
+        legs {
+          ...ItineraryLine_legs
+          transitLeg
+          legGeometry {
+            points
           }
         }
       }

@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { createFragmentContainer, graphql } from 'react-relay/compat';
+import { graphql } from 'relay-runtime';
+import { createContainer as createFragmentContainer } from 'react-relay/lib/ReactRelayFragmentContainer';
 import MarkerPopupBottom from '../MarkerPopupBottom';
 import CityBikeContent from '../../CityBikeContent';
 import CityBikeCardContainer from '../../CityBikeCardContainer';
@@ -27,7 +28,6 @@ class CityBikePopup extends React.Component {
 
   static propTypes = {
     station: PropTypes.object.isRequired,
-    context: PropTypes.object.isRequired,
   };
 
   render() {

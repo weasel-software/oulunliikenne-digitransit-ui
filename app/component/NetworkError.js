@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import { FormattedMessage } from 'react-intl';
-import { Link, locationShape } from 'react-router';
+import Link from 'found/lib/Link';
 import Icon from './Icon';
 
 const NetworkError = ({ retry }, { location }) =>
@@ -22,6 +22,11 @@ const NetworkError = ({ retry }, { location }) =>
   </div>;
 
 NetworkError.propTypes = { retry: PropTypes.func.isRequired };
-NetworkError.contextTypes = { location: locationShape.isRequired };
+NetworkError.contextTypes = {
+  location: PropTypes.shape({
+    pathname: PropTypes.string.isRequired,
+    query: PropTypes.object.isRequired,
+  }).isRequired,
+};
 
 export default NetworkError;

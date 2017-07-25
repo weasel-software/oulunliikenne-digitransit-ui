@@ -1,8 +1,13 @@
+/* eslint-disable react/jsx-key */
+
 import PropTypes from 'prop-types';
 // Libraries
 import React from 'react';
-import Relay from 'react-relay/classic';
-import { Route, IndexRoute, IndexRedirect } from 'react-router';
+import Route from 'found/lib/Route';
+import Redirect from 'found/lib/Redirect';
+import queryMiddleware from 'farce/lib/queryMiddleware';
+import createRender from 'found/lib/createRender';
+import { graphql } from 'relay-runtime';
 import ContainerDimensions from 'react-container-dimensions';
 
 import omitBy from 'lodash/omitBy';
@@ -26,6 +31,10 @@ import { isBrowser } from './util/browser';
 
 // Localstorage data
 import { getCustomizedSettings } from './store/localStorage';
+
+export const historyMiddlewares = [queryMiddleware];
+
+export const render = createRender({});
 
 const ComponentLoading404Renderer = {
   /* eslint-disable react/prop-types */
@@ -58,66 +67,8 @@ const ComponentLoading404Renderer = {
   /* eslint-enable react/prop-types */
 };
 
-const StopQueries = {
-  stop: () => Relay.QL`
-    query  {
-      stop(id: $stopId)
-    }
-  `,
-};
-
-const RouteQueries = {
-  route: () => Relay.QL`
-    query {
-      route(id: $routeId)
-    }
-  `,
-};
-
-const PatternQueries = {
-  pattern: () => Relay.QL`
-    query {
-      pattern(id: $patternId)
-    }
-  `,
-};
-
-const TripQueries = {
-  trip: () => Relay.QL`
-    query {
-      trip(id: $tripId)
-    }
-  `,
-  pattern: () => Relay.QL`
-    query {
-      pattern(id: $patternId)
-    }
-  `,
-};
-
-const terminalQueries = {
-  stop: () => Relay.QL`
-    query  {
-      station(id: $terminalId)
-    }
-  `,
-};
-
-const planQueries = {
-  plan: (Component, variables) => Relay.QL`
-    query {
-      viewer {
-        ${Component.getFragment('plan', variables)}
-      }
-    }`,
-};
-
 function errorLoading(err) {
   console.error('Dynamic page loading failed', err);
-}
-
-function loadRoute(cb) {
-  return module => cb(null, module.default);
 }
 
 function getDefault(module) {
@@ -172,7 +123,6 @@ export default config => {
       location: {
         query: {
           intermediatePlaces,
-          numItineraries,
           time,
           arriveBy,
           walkReluctance,
@@ -193,7 +143,11 @@ export default config => {
         from: otpToLocation(from),
         to: otpToLocation(to),
         intermediatePlaces: getIntermediatePlaces(intermediatePlaces),
-        numItineraries: numItineraries ? Number(numItineraries) : undefined,
+        numItineraries:
+          typeof matchMedia !== 'undefined' &&
+          matchMedia('(min-width: 900px)').matches
+            ? 5
+            : 3,
         modes: modes
           ? modes
               .split(',')
@@ -201,8 +155,8 @@ export default config => {
               .sort()
               .join(',')
           : settings.modes,
-        date: time ? moment(time * 1000).format('YYYY-MM-DD') : undefined,
-        time: time ? moment(time * 1000).format('HH:mm:ss') : undefined,
+        date: (time ? moment(time * 1000) : moment()).format('YYYY-MM-DD'),
+        time: (time ? moment(time * 1000) : moment()).format('HH:mm:ss'),
         walkReluctance: walkReluctance
           ? Number(walkReluctance)
           : settings.walkReluctance,
@@ -213,7 +167,7 @@ export default config => {
           ? Number(minTransferTime)
           : settings.minTransferTime,
         walkSpeed: walkSpeed ? Number(walkSpeed) : settings.walkSpeed,
-        arriveBy: arriveBy ? arriveBy === 'true' : undefined,
+        arriveBy: arriveBy === 'true',
         maxWalkDistance:
           typeof modes === 'undefined' ||
           (typeof modes === 'string' && !modes.split(',').includes('BICYCLE'))
@@ -231,24 +185,9 @@ export default config => {
     );
   };
 
-  const SummaryPageWrapper = ({ props, routerProps, element }) =>
-    props
-      ? React.cloneElement(element, props)
-      : React.cloneElement(element, {
-          ...routerProps,
-          ...preparePlanParams(routerProps.params, routerProps),
-          plan: { plan: {} },
-          loading: true,
-        });
-
-  SummaryPageWrapper.propTypes = {
-    props: PropTypes.object.isRequired,
-    routerProps: PropTypes.object.isRequired,
-  };
-
   return (
     <Route
-      component={props =>
+      Component={props =>
         isBrowser
           ? <ContainerDimensions>
               <TopLevel {...props} />
@@ -258,390 +197,504 @@ export default config => {
       <Route
         path="/"
         topBarOptions={{ disableBackButton: true }}
-        components={{
-          title: Title,
-          content: props =>
-            <SplashOrChildren>
-              <IndexPage {...props} />
-            </SplashOrChildren>,
+        groups={{
+          title: (
+            <Route Component={Title}>
+              <Route path={'*'} />
+            </Route>
+          ),
+          content: (
+            <Route
+              Component={props =>
+                <SplashOrChildren>
+                  <IndexPage {...props} />
+                </SplashOrChildren>}
+            >
+              <Route
+                path="lahellasi"
+                getComponent={() =>
+                  import(/* webpackChunkName: "nearby" */ './component/NearbyRoutesPanel')
+                    .then(getDefault)
+                    .catch(errorLoading)}
+              />
+              <Route
+                path="suosikit"
+                getComponent={() =>
+                  import(/* webpackChunkName: "nearby" */ './component/FavouritesPanel')
+                    .then(getDefault)
+                    .catch(errorLoading)}
+              />
+            </Route>
+          ),
         }}
-      >
-        <Route
-          path="lahellasi"
-          getComponents={(location, cb) =>
-            import(/* webpackChunkName: "nearby" */ './component/NearbyRoutesPanel')
-              .then(getDefault)
-              .then(content => cb(null, { content }))
-              .catch(errorLoading)}
-        />
-        <Route
-          path="suosikit"
-          getComponents={(location, cb) =>
-            import(/* webpackChunkName: "nearby" */ './component/FavouritesPanel')
-              .then(getDefault)
-              .then(content => cb(null, { content }))
-              .catch(errorLoading)}
-        />
-      </Route>
-      <Route
-        path="/?mock"
-        topBarOptions={{ disableBackButton: true }}
-        components={{
-          title: Title,
-          content: props =>
-            <SplashOrChildren>
-              <IndexPage {...props} />
-            </SplashOrChildren>,
-        }}
-      >
-        <Route
-          path="lahellasi"
-          getComponents={(location, cb) =>
-            import(/* webpackChunkName: "nearby" */ './component/NearbyRoutesPanel')
-              .then(getDefault)
-              .then(content => cb(null, { content }))
-              .catch(errorLoading)}
-        />
-        <Route
-          path="suosikit"
-          getComponents={(location, cb) =>
-            import(/* webpackChunkName: "nearby" */ './component/FavouritesPanel')
-              .then(getDefault)
-              .then(content => cb(null, { content }))
-              .catch(errorLoading)}
-        />
-      </Route>
-
+      />
       <Route path="/pysakit">
-        <IndexRoute component={Error404} />{' '}
-        {/* TODO: Should return list of all routes*/}
+        <Route Component={Error404} />
+        {/* TODO: Should return list of all stops*/}
         <Route
           path=":stopId"
-          getComponents={(location, cb) => {
-            Promise.all([
-              import(/* webpackChunkName: "stop" */ './component/StopTitle').then(
-                getDefault,
-              ),
-              import(/* webpackChunkName: "stop" */ './component/StopPageHeaderContainer').then(
-                getDefault,
-              ),
-              import(/* webpackChunkName: "stop" */ './component/StopPage').then(
-                getDefault,
-              ),
-              import(/* webpackChunkName: "stop" */ './component/StopPageMap').then(
-                getDefault,
-              ),
-              import(/* webpackChunkName: "stop" */ './component/StopPageMeta').then(
-                getDefault,
-              ),
-            ]).then(([title, header, content, map, meta]) =>
-              cb(null, { title, header, content, map, meta }),
-            );
+          groups={{
+            title: (
+              <Route
+                getComponent={() =>
+                  import(/* webpackChunkName: "stop" */ './component/StopTitle').then(
+                    getDefault,
+                  )}
+              />
+            ),
+            header: (
+              <Route
+                getComponent={() =>
+                  import(/* webpackChunkName: "stop" */ './component/StopPageHeaderContainer').then(
+                    getDefault,
+                  )}
+                query={graphql`
+                  query routes_StopPageHeaderContainer_Query($stopId: String!) {
+                    stop(id: $stopId) {
+                      ...StopPageHeaderContainer_stop
+                    }
+                  }
+                `}
+              />
+            ),
+            content: (
+              <Route
+                getComponent={() =>
+                  import(/* webpackChunkName: "stop" */ './component/StopPage').then(
+                    getDefault,
+                  )}
+              />
+            ),
+            map: (
+              <Route
+                getComponent={() =>
+                  import(/* webpackChunkName: "stop" */ './component/StopPageMap').then(
+                    getDefault,
+                  )}
+                query={graphql`
+                  query routes_StopPageMap_Query($stopId: String!) {
+                    stop(id: $stopId) {
+                      ...StopPageMap_stop
+                    }
+                  }
+                `}
+              />
+            ),
+            meta: (
+              <Route
+                getComponent={() =>
+                  import(/* webpackChunkName: "stop" */ './component/StopPageMeta').then(
+                    getDefault,
+                  )}
+                query={graphql`
+                  query routes_StopPageMeta_Query($stopId: String!) {
+                    stop(id: $stopId) {
+                      ...StopPageMeta_stop
+                    }
+                  }
+                `}
+              />
+            ),
           }}
-          queries={{
-            header: StopQueries,
-            map: StopQueries,
-            meta: StopQueries,
-          }}
-          render={ComponentLoading404Renderer}
-        >
-          <Route path="kartta" fullscreenMap />
-        </Route>
+        />
       </Route>
       <Route path="/terminaalit">
-        <IndexRoute component={Error404} />{' '}
+        <Route Component={Error404} />
         {/* TODO: Should return list of all terminals*/}
         <Route
           path=":terminalId"
-          getComponents={(location, cb) => {
-            Promise.all([
-              import(/* webpackChunkName: "stop" */ './component/TerminalTitle').then(
-                getDefault,
-              ),
-              import(/* webpackChunkName: "stop" */ './component/StopPageHeaderContainer').then(
-                getDefault,
-              ),
-              import(/* webpackChunkName: "stop" */ './component/TerminalPage').then(
-                getDefault,
-              ),
-              import(/* webpackChunkName: "stop" */ './component/StopPageMap').then(
-                getDefault,
-              ),
-              import(/* webpackChunkName: "stop" */ './component/StopPageMeta').then(
-                getDefault,
-              ),
-            ]).then(([title, header, content, map, meta]) =>
-              cb(null, { title, header, content, map, meta }),
-            );
+          groups={{
+            title: (
+              <Route
+                getComponent={() =>
+                  import(/* webpackChunkName: "stop" */ './component/TerminalTitle').then(
+                    getDefault,
+                  )}
+              />
+            ),
+            header: (
+              <Route
+                getComponent={() =>
+                  import(/* webpackChunkName: "stop" */ './component/StopPageHeaderContainer').then(
+                    getDefault,
+                  )}
+                query={graphql`
+                  query routes_TerminalPageHeaderContainer_Query(
+                    $terminalId: String!
+                  ) {
+                    stop: station(id: $terminalId) {
+                      ...StopPageHeaderContainer_stop
+                    }
+                  }
+                `}
+              />
+            ),
+            content: (
+              <Route
+                getComponent={() =>
+                  import(/* webpackChunkName: "stop" */ './component/TerminalPage').then(
+                    getDefault,
+                  )}
+              />
+            ),
+            map: (
+              <Route
+                getComponent={() =>
+                  import(/* webpackChunkName: "stop" */ './component/StopPageMap').then(
+                    getDefault,
+                  )}
+                query={graphql`
+                  query routes_TerminalPageMap_Query($terminalId: String!) {
+                    stop: station(id: $terminalId) {
+                      ...StopPageMap_stop
+                    }
+                  }
+                `}
+              />
+            ),
+            meta: (
+              <Route
+                getComponent={() =>
+                  import(/* webpackChunkName: "stop" */ './component/StopPageMeta').then(
+                    getDefault,
+                  )}
+                query={graphql`
+                  query routes_TerminalPageMeta_Query($terminalId: String!) {
+                    stop: station(id: $terminalId) {
+                      ...StopPageMeta_stop
+                    }
+                  }
+                `}
+              />
+            ),
           }}
-          queries={{
-            header: terminalQueries,
-            map: terminalQueries,
-            meta: terminalQueries,
-          }}
-          render={ComponentLoading404Renderer}
-        >
-          <Route path="kartta" fullscreenMap />
-        </Route>
+        />
       </Route>
       <Route path="/linjat">
-        <IndexRoute component={Error404} />{' '}
+        <Route Component={Error404} />
         {/* TODO: Should return list of all routes */}
-        <Route path=":routeId">
-          <IndexRedirect to="pysakit" />
-          <Route path="pysakit">
-            <IndexRedirect to=":routeId%3A0%3A01" />{' '}
-            {/* Redirect to first pattern of route*/}
-            <Route path=":patternId">
-              <IndexRoute
-                getComponents={(location, cb) => {
-                  Promise.all([
-                    import(/* webpackChunkName: "route" */ './component/RouteTitle').then(
-                      getDefault,
-                    ),
-                    import(/* webpackChunkName: "route" */ './component/RoutePage').then(
-                      getDefault,
-                    ),
-                    import(/* webpackChunkName: "route" */ './component/RouteMapContainer').then(
-                      getDefault,
-                    ),
-                    import(/* webpackChunkName: "route" */ './component/PatternStopsContainer').then(
-                      getDefault,
-                    ),
-                    import(/* webpackChunkName: "route" */ './component/RoutePageMeta').then(
-                      getDefault,
-                    ),
-                  ]).then(([title, header, map, content, meta]) =>
-                    cb(null, { title, header, map, content, meta }),
-                  );
-                }}
-                queries={{
-                  title: RouteQueries,
-                  header: RouteQueries,
-                  map: PatternQueries,
-                  content: PatternQueries,
-                  meta: RouteQueries,
-                }}
-                render={ComponentLoading404Renderer}
-              />
+        <Route
+          path=":routeId"
+          groups={{
+            title: (
               <Route
-                path="kartta"
-                getComponents={(location, cb) => {
-                  Promise.all([
-                    import(/* webpackChunkName: "route" */ './component/RouteTitle').then(
-                      getDefault,
-                    ),
-                    import(/* webpackChunkName: "route" */ './component/RoutePage').then(
-                      getDefault,
-                    ),
-                    import(/* webpackChunkName: "route" */ './component/RouteMapContainer').then(
-                      getDefault,
-                    ),
-                    import(/* webpackChunkName: "route" */ './component/PatternStopsContainer').then(
-                      getDefault,
-                    ),
-                    import(/* webpackChunkName: "route" */ './component/RoutePageMeta').then(
-                      getDefault,
-                    ),
-                  ]).then(([title, header, map, content, meta]) =>
-                    cb(null, { title, header, map, content, meta }),
-                  );
-                }}
-                queries={{
-                  title: RouteQueries,
-                  header: RouteQueries,
-                  map: PatternQueries,
-                  content: PatternQueries,
-                  meta: RouteQueries,
-                }}
-                render={ComponentLoading404Renderer}
-                fullscreenMap
-              />
-              <Route
-                path=":tripId"
-                getComponents={(location, cb) => {
-                  Promise.all([
-                    import(/* webpackChunkName: "route" */ './component/RouteTitle').then(
-                      getDefault,
-                    ),
-                    import(/* webpackChunkName: "route" */ './component/RoutePage').then(
-                      getDefault,
-                    ),
-                    import(/* webpackChunkName: "route" */ './component/RouteMapContainer').then(
-                      getDefault,
-                    ),
-                    import(/* webpackChunkName: "route" */ './component/TripStopsContainer').then(
-                      getDefault,
-                    ),
-                    import(/* webpackChunkName: "route" */ './component/RoutePageMeta').then(
-                      getDefault,
-                    ),
-                  ]).then(([title, header, map, content, meta]) =>
-                    cb(null, { title, header, map, content, meta }),
-                  );
-                }}
-                queries={{
-                  title: RouteQueries,
-                  header: RouteQueries,
-                  map: TripQueries,
-                  content: TripQueries,
-                  meta: RouteQueries,
-                }}
-                render={ComponentLoading404Renderer}
-              >
-                <Route path="kartta" fullscreenMap />
-              </Route>
-            </Route>
-          </Route>
-          <Route path="aikataulu">
-            <IndexRedirect to=":routeId%3A0%3A01" />
-            <Route
-              path=":patternId"
-              disableMapOnMobile
-              getComponents={(location, cb) => {
-                Promise.all([
+                getComponent={() =>
                   import(/* webpackChunkName: "route" */ './component/RouteTitle').then(
                     getDefault,
-                  ),
-                  import(/* webpackChunkName: "route" */ './component/RoutePage').then(
-                    getDefault,
-                  ),
-                  import(/* webpackChunkName: "route" */ './component/RouteMapContainer').then(
-                    getDefault,
-                  ),
-                  import(/* webpackChunkName: "route" */ './component/RouteScheduleContainer').then(
-                    getDefault,
-                  ),
+                  )}
+                query={graphql`
+                  query routes_RouteTitle_Query($routeId: String!) {
+                    route(id: $routeId) {
+                      ...RouteTitle_route
+                    }
+                  }
+                `}
+              >
+                <Route path="*" />
+              </Route>
+            ),
+            meta: (
+              <Route
+                getComponent={() =>
                   import(/* webpackChunkName: "route" */ './component/RoutePageMeta').then(
                     getDefault,
-                  ),
-                ]).then(([title, header, map, content, meta]) =>
-                  cb(null, { title, header, map, content, meta }),
-                );
-              }}
-              queries={{
-                title: RouteQueries,
-                header: RouteQueries,
-                map: PatternQueries,
-                content: PatternQueries,
-                meta: RouteQueries,
-              }}
-              render={ComponentLoading404Renderer}
-            />
-          </Route>
-          <Route
-            path="hairiot"
-            getComponents={(location, cb) => {
-              Promise.all([
-                import(/* webpackChunkName: "route" */ './component/RouteTitle').then(
-                  getDefault,
-                ),
-                import(/* webpackChunkName: "route" */ './component/RoutePage').then(
-                  getDefault,
-                ),
-                import(/* webpackChunkName: "route" */ './component/RouteAlertsContainer').then(
-                  getDefault,
-                ),
-                import(/* webpackChunkName: "route" */ './component/RoutePageMeta').then(
-                  getDefault,
-                ),
-              ]).then(([title, header, content, meta]) =>
-                cb(null, { title, header, content, meta }),
-              );
-            }}
-            queries={{
-              title: RouteQueries,
-              header: RouteQueries,
-              content: RouteQueries,
-              meta: RouteQueries,
-            }}
-            render={ComponentLoading404Renderer}
-          />
-        </Route>
+                  )}
+                query={graphql`
+                  query routes_RoutePageMeta_Query($routeId: String!) {
+                    route(id: $routeId) {
+                      ...RoutePageMeta_route
+                    }
+                  }
+                `}
+              >
+                <Route path="*" />
+              </Route>
+            ),
+            header: (
+              <Route
+                getComponent={() =>
+                  import(/* webpackChunkName: "route" */ './component/RoutePage').then(
+                    getDefault,
+                  )}
+                query={graphql`
+                  query routes_RoutePage_Query($routeId: String!) {
+                    route(id: $routeId) {
+                      ...RoutePage_route
+                    }
+                  }
+                `}
+              >
+                <Route path="*" />
+              </Route>
+            ),
+            map: (
+              <Route>
+                <Route
+                  path="/:type"
+                  Component={({ children }) => children || <div />}
+                >
+                  <Route
+                    path=":patternId"
+                    getComponent={() =>
+                      import(/* webpackChunkName: "route" */ './component/RouteMapContainer').then(
+                        getDefault,
+                      )}
+                    query={graphql`
+                      query routes_RouteMapContainer_Query(
+                        $patternId: String!
+                      ) {
+                        pattern(id: $patternId) {
+                          ...RouteMapContainer_pattern
+                        }
+                      }
+                    `}
+                  />
+                  <Route
+                    path=":patternId/:tripId"
+                    getComponent={() =>
+                      import(/* webpackChunkName: "route" */ './component/RouteMapContainer').then(
+                        getDefault,
+                      )}
+                    query={graphql`
+                      query routes_RouteMapContainer_withTrip_Query(
+                        $patternId: String!
+                        $tripId: String!
+                      ) {
+                        pattern(id: $patternId) {
+                          ...RouteMapContainer_pattern
+                        }
+                        trip(id: $tripId) {
+                          ...RouteMapContainer_trip
+                        }
+                      }
+                    `}
+                  />
+                </Route>
+              </Route>
+            ),
+            content: [
+              <Redirect to="/linjat/:routeId/pysakit" />,
+              <Route path="pysakit">
+                <Redirect to="/linjat/:routeId/pysakit/:routeId%3A0%3A01" />
+                {/* Redirect to first pattern of route*/}
+                <Route
+                  path=":patternId"
+                  getComponent={() =>
+                    import(/* webpackChunkName: "route" */ './component/PatternStopsContainer').then(
+                      getDefault,
+                    )}
+                  query={graphql`
+                    query routes_PatternStopsContainer_Query(
+                      $patternId: String!
+                    ) {
+                      pattern(id: $patternId) {
+                        ...PatternStopsContainer_pattern
+                      }
+                    }
+                  `}
+                />
+                <Route
+                  path=":patternId/:tripId"
+                  getComponent={() =>
+                    import(/* webpackChunkName: "route" */ './component/TripStopsContainer').then(
+                      getDefault,
+                    )}
+                  query={graphql`
+                    query routes_TripStopsContainer_Query(
+                      $patternId: String!
+                      $tripId: String!
+                    ) {
+                      pattern(id: $patternId) {
+                        ...TripStopsContainer_pattern
+                      }
+                      trip(id: $tripId) {
+                        ...TripStopsContainer_trip
+                      }
+                    }
+                  `}
+                />
+              </Route>,
+              <Route path="aikataulu">
+                <Redirect to="/linjat/:routeId/aikataulu/:routeId%3A0%3A01" />
+                <Route
+                  path=":patternId"
+                  getComponent={() =>
+                    import(/* webpackChunkName: "route" */ './component/RouteScheduleContainer').then(
+                      getDefault,
+                    )}
+                  query={graphql`
+                    query routes_RouteScheduleContainer_Query(
+                      $patternId: String!
+                    ) {
+                      pattern(id: $patternId) {
+                        ...RouteScheduleContainer_pattern
+                      }
+                    }
+                  `}
+                />
+              </Route>,
+              <Route
+                path="hairiot"
+                getComponent={() =>
+                  import(/* webpackChunkName: "route" */ './component/RouteAlertsContainer').then(
+                    getDefault,
+                  )}
+                query={graphql`
+                  query routes_RouteAlertsContainer_Query($routeId: String!) {
+                    route(id: $routeId) {
+                      ...RouteAlertsContainer_route
+                    }
+                  }
+                `}
+              />,
+            ],
+          }}
+        />
       </Route>
       <Route
         path="/reitti/:from/:to"
-        getComponents={(location, cb) => {
-          Promise.all([
-            import(/* webpackChunkName: "itinerary" */ './component/SummaryTitle').then(
-              getDefault,
-            ),
-            import(/* webpackChunkName: "itinerary" */ './component/SummaryPage').then(
-              getDefault,
-            ),
-            import(/* webpackChunkName: "itinerary" */ './component/SummaryPageMeta').then(
-              getDefault,
-            ),
-          ]).then(([title, content, meta]) =>
-            cb(null, { title, content, meta }),
-          );
+        groups={{
+          title: (
+            <Route
+              getComponent={() =>
+                import(/* webpackChunkName: "itinerary" */ './component/SummaryTitle').then(
+                  getDefault,
+                )}
+            >
+              <Route path=":hash" />
+            </Route>
+          ),
+          content: (
+            <Route
+              getComponent={() =>
+                import(/* webpackChunkName: "itinerary" */ './component/SummaryPage').then(
+                  getDefault,
+                )}
+              query={graphql`
+                query routes_Plan_Query(
+                  $fromPlace: String!
+                  $toPlace: String!
+                  $intermediatePlaces: [InputCoordinates!]
+                  $numItineraries: Int!
+                  $modes: String
+                  $date: String!
+                  $time: String!
+                  $walkReluctance: Float
+                  $walkBoardCost: Int
+                  $minTransferTime: Int
+                  $walkSpeed: Float
+                  $maxWalkDistance: Float
+                  $wheelchair: Boolean
+                  $disableRemainingWeightHeuristic: Boolean
+                  $arriveBy: Boolean
+                  $preferred: InputPreferred
+                ) {
+                  plan(
+                    fromPlace: $fromPlace
+                    toPlace: $toPlace
+                    intermediatePlaces: $intermediatePlaces
+                    numItineraries: $numItineraries
+                    modes: $modes
+                    date: $date
+                    time: $time
+                    walkReluctance: $walkReluctance
+                    walkBoardCost: $walkBoardCost
+                    minTransferTime: $minTransferTime
+                    walkSpeed: $walkSpeed
+                    maxWalkDistance: $maxWalkDistance
+                    wheelchair: $wheelchair
+                    disableRemainingWeightHeuristic: $disableRemainingWeightHeuristic
+                    arriveBy: $arriveBy
+                    preferred: $preferred
+                  ) {
+                    ...SummaryPage_plan
+                  }
+                }
+              `}
+              prepareVariables={preparePlanParams}
+              render={({ Component, props, match }) => {
+                if (!Component) {
+                  return null;
+                }
+                return props
+                  ? <Component {...props} />
+                  : <Component {...match} plan={null} />;
+              }}
+            >
+              <Route
+                path=":hash"
+                groups={{
+                  content: (
+                    <Route
+                      getComponent={() =>
+                        import(/* webpackChunkName: "itinerary" */ './component/ItineraryTab').then(
+                          getDefault,
+                        )}
+                    />
+                  ),
+                  map: (
+                    <Route
+                      getComponent={() =>
+                        import(/* webpackChunkName: "itinerary" */ './component/ItineraryPageMap').then(
+                          getDefault,
+                        )}
+                    />
+                  ),
+                }}
+              />
+              }}
+            </Route>
+          ),
+          meta: (
+            <Route
+              getComponent={() =>
+                import(/* webpackChunkName: "itinerary" */ './component/SummaryPageMeta').then(
+                  getDefault,
+                )}
+            >
+              <Route path=":hash" />
+            </Route>
+          ),
         }}
-        queries={{ content: planQueries }}
-        prepareParams={preparePlanParams}
-        render={{ content: SummaryPageWrapper }}
-      >
-        <Route
-          path=":hash"
-          getComponents={(location, cb) => {
-            Promise.all([
-              import(/* webpackChunkName: "itinerary" */ './component/ItineraryTab').then(
-                getDefault,
-              ),
-              import(/* webpackChunkName: "itinerary" */ './component/ItineraryPageMap').then(
-                getDefault,
-              ),
-            ]).then(([content, map]) => cb(null, { content, map }));
-          }}
-        >
-          <Route path="kartta" fullscreenMap />
-        </Route>
-      </Route>
+      />
       <Route
         path="/styleguide"
-        getComponent={(location, cb) => {
+        getComponent={() =>
           import(/* webpackChunkName: "styleguide" */ './component/StyleGuidePage')
-            .then(loadRoute(cb))
-            .catch(errorLoading);
-        }}
+            .then(getDefault)
+            .catch(errorLoading)}
       />
       <Route
         path="/styleguide/component/:componentName"
         topBarOptions={{ hidden: true }}
-        getComponent={(location, cb) => {
+        getComponent={() =>
           import(/* webpackChunkName: "styleguide" */ './component/StyleGuidePage')
-            .then(loadRoute(cb))
-            .catch(errorLoading);
-        }}
+            .then(getDefault)
+            .catch(errorLoading)}
       />
       <Route
         path="/suosikki/uusi"
-        getComponent={(location, cb) => {
+        getComponent={() =>
           import(/* webpackChunkName: "add-favourite" */ './component/AddFavouritePage')
-            .then(loadRoute(cb))
-            .catch(errorLoading);
-        }}
+            .then(getDefault)
+            .catch(errorLoading)}
       />
       <Route
         path="/suosikki/muokkaa/:id"
-        getComponent={(location, cb) => {
+        getComponent={() =>
           import(/* webpackChunkName: "add-favourite" */ './component/AddFavouritePage')
-            .then(loadRoute(cb))
-            .catch(errorLoading);
-        }}
+            .then(getDefault)
+            .catch(errorLoading)}
       />
       <Route
         path="/tietoja-palvelusta"
-        getComponents={(location, cb) => {
-          Promise.all([
-            Promise.resolve(Title),
-            import(/* webpackChunkName: "about" */ './component/AboutPage').then(
-              getDefault,
-            ),
-          ]).then(([title, content]) => cb(null, { title, content }));
-        }}
+        getComponent={() =>
+          import(/* webpackChunkName: "about" */ './component/AboutPage').then(
+            getDefault,
+          )}
       />
       {/* For all the rest render 404 */}
-      <Route path="*" component={Error404} />
+      <Route path="*" Component={Error404} />
     </Route>
   );
 };

@@ -1,5 +1,3 @@
-import { createHistory, createMemoryHistory, useQueries } from 'history';
-import { useRouterHistory } from 'react-router';
 import createLocalStorageHistory from './localStorageHistory';
 import { isIOSApp, isBrowser } from './util/browser';
 

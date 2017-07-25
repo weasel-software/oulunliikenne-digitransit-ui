@@ -13,10 +13,11 @@ import { getLabel, getGTFSId, isStop } from '../util/suggestionUtils';
 import { saveSearch } from '../action/SearchActions';
 import { isBrowser } from '../util/browser';
 import Loading from './Loading';
+import getRelayEnvironment from '../util/getRelayEnvironment';
 
 const L = isBrowser ? require('leaflet') : null;
 
-export default class SearchInputContainer extends Component {
+class SearchInputContainer extends Component {
   static contextTypes = {
     executeAction: PropTypes.func.isRequired,
     getStore: PropTypes.func.isRequired,
@@ -33,6 +34,7 @@ export default class SearchInputContainer extends Component {
     close: PropTypes.func.isRequired,
     sections: PropTypes.bool,
     layers: PropTypes.array,
+    relayEnvironment: PropTypes.object.isRequired,
   };
 
   state = {
@@ -50,6 +52,7 @@ export default class SearchInputContainer extends Component {
         layers: this.props.layers,
         config: this.context.config,
       },
+      this.props.relayEnvironment,
       this.onSearchChange,
     );
   }
@@ -214,6 +217,7 @@ export default class SearchInputContainer extends Component {
         layers: this.props.layers,
         config: this.context.config,
       },
+      this.props.relayEnvironment,
       this.onSearchChange,
     );
   };
@@ -375,3 +379,5 @@ export default class SearchInputContainer extends Component {
     );
   }
 }
+
+export default getRelayEnvironment(SearchInputContainer);

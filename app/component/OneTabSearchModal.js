@@ -59,7 +59,7 @@ class OneTabSearchModal extends React.Component {
         location: newLocation,
       });
     }
-    this.context.router.goBack();
+    this.context.router.go(-1);
   };
 
   modalIsOpen = () =>

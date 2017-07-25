@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import connectToStores from 'fluxible-addons-react/connectToStores';
-import { routerShape, locationShape } from 'react-router';
+import { routerShape } from 'found';
 
 import { setEndpoint } from '../action/EndpointActions';
 import Icon from './Icon';
@@ -38,7 +38,10 @@ OriginSelectorRow.propTypes = {
 OriginSelectorRow.contextTypes = {
   executeAction: PropTypes.func.isRequired,
   router: routerShape.isRequired,
-  location: locationShape.isRequired,
+  location: PropTypes.shape({
+    pathname: PropTypes.string.isRequired,
+    query: PropTypes.object.isRequired,
+  }).isRequired,
 };
 
 const OriginSelector = ({ favourites, oldSearches }, { config }) => {

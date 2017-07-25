@@ -49,7 +49,7 @@ class MainMenuContainer extends Component {
         },
       });
     } else {
-      this.context.router.goBack();
+      this.context.router.go(-1);
     }
   };
 

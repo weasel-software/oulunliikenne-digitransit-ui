@@ -6,6 +6,7 @@ import ItinerarySummaryListContainer from './ItinerarySummaryListContainer';
 import TimeNavigationButtons from './TimeNavigationButtons';
 import { getRoutePath } from '../util/path';
 import Loading from './Loading';
+import { otpToLocation } from '../util/otpStrings';
 
 class SummaryPlanContainer extends React.Component {
   static propTypes = {
@@ -19,16 +20,6 @@ class SummaryPlanContainer extends React.Component {
       hash: PropTypes.string,
     }).isRequired,
     intermediatePlaces: PropTypes.array,
-    to: PropTypes.shape({
-      lat: PropTypes.number,
-      lon: PropTypes.number,
-      address: PropTypes.string.isRequired,
-    }).isRequired,
-    from: PropTypes.shape({
-      lat: PropTypes.number,
-      lon: PropTypes.number,
-      address: PropTypes.string.isRequired,
-    }).isRequired,
   };
 
   static contextTypes = {
@@ -64,7 +55,7 @@ class SummaryPlanContainer extends React.Component {
           pathname: getRoutePath(this.props.params.from, this.props.params.to),
         });
       } else {
-        this.context.router.goBack();
+        this.context.router.go(-1);
       }
     } else {
       const newState = {
@@ -124,8 +115,8 @@ class SummaryPlanContainer extends React.Component {
           onSelectImmediately={this.onSelectImmediately}
           activeIndex={activeIndex}
           open={Number(this.props.params.hash)}
-          from={this.props.from}
-          to={this.props.to}
+          from={otpToLocation(this.props.params.from)}
+          to={otpToLocation(this.props.params.to)}
           intermediatePlaces={this.props.intermediatePlaces}
         >
           {this.props.children}

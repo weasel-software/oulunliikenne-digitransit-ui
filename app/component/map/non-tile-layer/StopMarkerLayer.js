@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { createFragmentContainer, graphql } from 'react-relay/compat';
 import uniq from 'lodash/uniq';
-import { routerShape } from 'react-router';
+import { routerShape } from 'found';
 
 import StopMarker from './StopMarker';
 import TerminalMarker from './TerminalMarker';

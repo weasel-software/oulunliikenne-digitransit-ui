@@ -4,11 +4,12 @@ import React from 'react';
 import { QueryRenderer, graphql } from 'react-relay/compat';
 
 import StopMarkerLayer from './StopMarkerLayer';
-import getEnvironment from '../../../relayEnvironment';
+import getRelayEnvironment from '../../../util/getRelayEnvironment';
 
-export default class StopMarkerContainer extends React.Component {
+class StopMarkerContainer extends React.Component {
   static propTypes = {
     hilightedStops: PropTypes.arrayOf(PropTypes.string.isRequired),
+    relayEnvironment: PropTypes.object.isRequired,
   };
 
   static defaultProps = {
@@ -102,7 +103,7 @@ export default class StopMarkerContainer extends React.Component {
           maxLon: this.state.maxLon,
           agency: this.context.config.preferredAgency || null,
         }}
-        environment={getEnvironment()}
+        environment={this.props.relayEnvironment}
         render={({ props }) => {
           if (props) {
             this.previousProps = props.viewer.stops;
@@ -124,3 +125,5 @@ export default class StopMarkerContainer extends React.Component {
     );
   }
 }
+
+export default getRelayEnvironment(StopMarkerContainer);

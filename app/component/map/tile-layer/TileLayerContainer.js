@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Popup from 'react-leaflet/lib/Popup';
 import { intlShape } from 'react-intl';
-import { routerShape, locationShape } from 'react-router';
+import { routerShape } from 'found';
 import GridLayer from 'react-leaflet/lib/GridLayer';
 import provideContext from 'fluxible-addons-react/provideContext';
 import SphericalMercator from '@mapbox/sphericalmercator';
@@ -18,13 +18,18 @@ import ParkAndRideFacilityPopup from '../popups/ParkAndRideFacilityPopupContaine
 import TicketSalesPopup from '../popups/TicketSalesPopup';
 import LocationPopup from '../popups/LocationPopup';
 import TileContainer from './TileContainer';
+import getRelayEnvironment from '../../../util/getRelayEnvironment';
 
 const contextTypes = {
   intl: intlShape.isRequired,
   router: routerShape.isRequired,
-  location: locationShape.isRequired,
-  route: PropTypes.object.isRequired,
+  location: PropTypes.shape({
+    pathname: PropTypes.string.isRequired,
+    query: PropTypes.object.isRequired,
+  }).isRequired,
   config: PropTypes.object.isRequired,
+  relayEnvironment: PropTypes.object.isRequired,
+  store: PropTypes.object.isRequired,
 };
 
 const StopMarkerPopupWithContext = provideContext(
@@ -79,6 +84,7 @@ class TileLayerContainer extends GridLayer {
     tileSize: PropTypes.number.isRequired,
     zoomOffset: PropTypes.number.isRequired,
     disableMapTracking: PropTypes.func,
+    relayEnvironment: PropTypes.object.isRequired,
   };
 
   static contextTypes = {
@@ -88,8 +94,9 @@ class TileLayerContainer extends GridLayer {
     map: PropTypes.object.isRequired,
     router: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
-    route: PropTypes.object.isRequired,
     config: PropTypes.object.isRequired,
+    relayEnvironment: PropTypes.object.isRequired,
+    store: PropTypes.object.isRequired,
   };
 
   state = {
@@ -172,6 +179,7 @@ class TileLayerContainer extends GridLayer {
       done,
       this.props,
       this.context.config,
+      this.props.relayEnvironment,
     );
 
     tile.onSelectableTargetClicked = (selectableTargets, coords) => {
@@ -310,4 +318,4 @@ class TileLayerContainer extends GridLayer {
   }
 }
 
-export default TileLayerContainer;
+export default getRelayEnvironment(TileLayerContainer);

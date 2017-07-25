@@ -1,5 +1,5 @@
 import React from 'react';
-import { routerShape } from 'react-router';
+import { routerShape } from 'found';
 import FlatButton from 'material-ui/FlatButton';
 import { intlShape } from 'react-intl';
 import Icon from './Icon';
@@ -24,7 +24,7 @@ export default class BackButton extends React.Component {
   goBack = () => {
     setTimeout(() => {
       if (hasHistoryEntries()) {
-        this.context.router.goBack();
+        this.context.router.go(-1);
       } else {
         this.context.router.push('/');
       }

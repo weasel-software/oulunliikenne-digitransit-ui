@@ -5,9 +5,9 @@ import { QueryRenderer, graphql } from 'react-relay/compat';
 
 import StopMarkerPopup from '../popups/StopMarkerPopup';
 import Loading from '../../Loading';
-import getEnvironment from '../../../relayEnvironment';
+import getRelayEnvironment from '../../../util/getRelayEnvironment';
 
-export default function StopMarkerPopupContainer(props) {
+function StopMarkerPopupContainer(props) {
   return (
     <QueryRenderer
       query={graphql.experimental`
@@ -33,7 +33,7 @@ export default function StopMarkerPopupContainer(props) {
         timeRange: 12 * 60 * 60,
         numberOfDepartures: 5,
       }}
-      environment={getEnvironment()}
+      environment={props.relayEnvironment}
       render={({ props: renderProps }) =>
         renderProps
           ? <StopMarkerPopup
@@ -51,4 +51,7 @@ export default function StopMarkerPopupContainer(props) {
 StopMarkerPopupContainer.propTypes = {
   currentTime: PropTypes.number.isRequired,
   stopId: PropTypes.string.isRequired,
+  relayEnvironment: PropTypes.object.isRequired,
 };
+
+export default getRelayEnvironment(StopMarkerPopupContainer);

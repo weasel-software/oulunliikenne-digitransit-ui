@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { QueryRenderer, graphql } from 'react-relay/compat';
-import { routerShape, locationShape, Link } from 'react-router';
+import { routerShape } from 'found';
+import Link from 'found/lib/Link';
 import connectToStores from 'fluxible-addons-react/connectToStores';
 import SwipeableViews from 'react-swipeable-views';
 import { bindKeyboard } from 'react-swipeable-views-utils';
@@ -15,7 +16,7 @@ import ComponentUsageExample from './ComponentUsageExample';
 import { setEndpoint } from '../action/EndpointActions';
 import NoFavouriteLocations from './NoFavouriteLocations';
 import { isMobile } from '../util/browser';
-import getEnvironment from '../relayEnvironment';
+import getRelayEnvironment from '../util/getRelayEnvironment';
 
 const SwipeableViewsKB = bindKeyboard(SwipeableViews);
 
@@ -23,7 +24,10 @@ class FavouriteLocationsContainer extends React.Component {
   static contextTypes = {
     executeAction: PropTypes.func.isRequired,
     router: routerShape.isRequired,
-    location: locationShape.isRequired,
+    location: PropTypes.shape({
+      pathname: PropTypes.string.isRequired,
+      query: PropTypes.object.isRequired,
+    }).isRequired,
     config: PropTypes.object.isRequired,
   };
 
@@ -43,6 +47,7 @@ class FavouriteLocationsContainer extends React.Component {
       lat: PropTypes.number.isRequired,
       lon: PropTypes.number.isRequired,
     }),
+    relayEnvironment: PropTypes.object.isRequired,
   };
 
   static SLOTS_PER_CLICK = 3;
@@ -159,7 +164,7 @@ class FavouriteLocationsContainer extends React.Component {
 
             arriveBy: false,
           }}
-          environment={getEnvironment()}
+          environment={this.props.relayEnvironment}
           render={({ props }) =>
             props
               ? <FavouriteLocationContainer
@@ -254,7 +259,7 @@ class FavouriteLocationsContainer extends React.Component {
 }
 
 export default connectToStores(
-  FavouriteLocationsContainer,
+  getRelayEnvironment(FavouriteLocationsContainer),
   ['TimeStore', 'FavouriteLocationStore', 'EndpointStore'],
   context => {
     const position = context.getStore('PositionStore').getLocationState();

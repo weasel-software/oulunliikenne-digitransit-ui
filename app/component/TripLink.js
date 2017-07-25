@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { QueryRenderer, graphql } from 'react-relay/compat';
-import { Link } from 'react-router';
+import Link from 'found/lib/Link';
 import cx from 'classnames';
 import IconWithTail from './IconWithTail';
-import getEnvironment from '../relayEnvironment';
+import getRelayEnvironment from '../util/getRelayEnvironment';
 
-export default function TripLink({ vehicle }) {
+function TripLink({ vehicle, relayEnvironment }) {
   const icon = (
     <IconWithTail
       className={cx(vehicle.mode, 'tail-icon')}
@@ -48,7 +48,7 @@ export default function TripLink({ vehicle }) {
           vehicle.tripStartTime.substring(0, 2) * 60 * 60 +
           vehicle.tripStartTime.substring(2, 4) * 60,
       }}
-      environment={getEnvironment()}
+      environment={relayEnvironment}
       render={({ props }) => {
         if (!props) {
           return (
@@ -82,4 +82,7 @@ TripLink.propTypes = {
     time: PropTypes.number.isRequired,
     date: PropTypes.string.isRequired,
   }).isRequired,
+  relayEnvironment: PropTypes.object.isRequired,
 };
+
+export default getRelayEnvironment(TripLink);

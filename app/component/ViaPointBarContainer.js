@@ -1,4 +1,5 @@
-import { routerShape, locationShape } from 'react-router';
+import PropTypes from 'prop-types';
+import { routerShape } from 'found';
 
 import mapProps from 'recompose/mapProps';
 import getContext from 'recompose/getContext';
@@ -10,7 +11,10 @@ import ViaPointBar from './ViaPointBar';
 
 const getRouterContext = getContext({
   router: routerShape.isRequired,
-  location: locationShape.isRequired,
+  location: PropTypes.shape({
+    pathname: PropTypes.string.isRequired,
+    query: PropTypes.object.isRequired,
+  }).isRequired,
 });
 
 const mapFunctions = mapProps(({ className, router, location }) => ({

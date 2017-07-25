@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import cx from 'classnames';
 import pure from 'recompose/pure';
-import { Link } from 'react-router';
 import { FormattedMessage } from 'react-intl';
 import get from 'lodash/get';
 
@@ -60,16 +59,16 @@ const SuggestionItem = pure(
       return (
         <div className="suggestion-item-stop">
           <div>
-            <Link
+            <a
               onClick={() => {
                 item.timetableClicked = false;
               }}
             >
               {ri}
-            </Link>
+            </a>
           </div>
           <div className="suggestion-item-timetable">
-            <Link
+            <a
               onClick={() => {
                 item.timetableClicked = true;
               }}
@@ -78,7 +77,7 @@ const SuggestionItem = pure(
               <div className="suggestion-item-timetable-label">
                 <FormattedMessage id="timetable" defaultMessage="Timetable" />
               </div>
-            </Link>
+            </a>
           </div>
         </div>
       );

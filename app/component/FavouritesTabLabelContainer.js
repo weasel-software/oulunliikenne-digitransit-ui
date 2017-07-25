@@ -5,12 +5,12 @@ import connectToStores from 'fluxible-addons-react/connectToStores';
 import some from 'lodash/some';
 import flatten from 'lodash/flatten';
 import FavouritesTabLabel from './FavouritesTabLabel';
-import getEnvironment from '../relayEnvironment';
+import getRelayEnvironment from '../util/getRelayEnvironment';
 
 const hasDisruption = routes =>
   some(flatten(routes.map(route => route.alerts.length > 0)));
 
-function FavouritesTabLabelContainer({ routes, ...rest }) {
+function FavouritesTabLabelContainer({ routes, relayEnvironment, ...rest }) {
   return (
     <QueryRenderer
       cacheConfig={{ force: true, poll: 30 * 1000 }}
@@ -24,7 +24,7 @@ function FavouritesTabLabelContainer({ routes, ...rest }) {
         }
       `}
       variables={{ ids: routes }}
-      environment={getEnvironment()}
+      environment={relayEnvironment}
       render={({ props }) =>
         <FavouritesTabLabel
           hasDisruption={props && hasDisruption(props.routes)}
@@ -36,10 +36,11 @@ function FavouritesTabLabelContainer({ routes, ...rest }) {
 
 FavouritesTabLabelContainer.propTypes = {
   routes: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+  relayEnvironment: PropTypes.object.isRequired,
 };
 
 export default connectToStores(
-  FavouritesTabLabelContainer,
+  getRelayEnvironment(FavouritesTabLabelContainer),
   ['FavouriteRoutesStore'],
   context => ({
     routes: context.getStore('FavouriteRoutesStore').getRoutes(),

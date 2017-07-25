@@ -2,9 +2,10 @@ import React from 'react';
 import { QueryRenderer, graphql } from 'react-relay/compat';
 import connectToStores from 'fluxible-addons-react/connectToStores';
 import withState from 'recompose/withState';
+import compose from 'recompose/compose';
 import moment from 'moment';
 import StopPageContentContainer from './StopPageContentContainer';
-import getEnvironment from '../relayEnvironment';
+import getRelayEnvironment from '../util/getRelayEnvironment';
 
 const StopPageRootContainer = routeProps =>
   <QueryRenderer
@@ -34,7 +35,7 @@ const StopPageRootContainer = routeProps =>
       timeRange: 12 * 60 * 60,
       numberOfDepartures: 100,
     }}
-    environment={getEnvironment()}
+    environment={routeProps.relayEnvironment}
     render={({ props }) =>
       props &&
       <StopPageContentContainer
@@ -45,10 +46,9 @@ const StopPageRootContainer = routeProps =>
       />}
   />;
 
-const StopPageContainerWithState = withState(
-  'date',
-  'setDate',
-  moment().format('YYYYMMDD'),
+const StopPageContainerWithState = compose(
+  getRelayEnvironment,
+  withState('date', 'setDate', moment().format('YYYYMMDD')),
 )(StopPageRootContainer);
 
 export default connectToStores(

@@ -15,7 +15,7 @@ const getFullscreenTogglePath = (fullscreenMap, params) =>
 
 const toggleFullscreenMap = (fullscreenMap, params, router) => {
   if (fullscreenMap) {
-    router.goBack();
+    router.go(-1);
     return;
   }
   router.push(getFullscreenTogglePath(fullscreenMap, params));

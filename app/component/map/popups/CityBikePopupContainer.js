@@ -5,9 +5,9 @@ import { QueryRenderer, graphql } from 'react-relay/compat';
 
 import CityBikePopup from '../popups/CityBikePopup';
 import Loading from '../../Loading';
-import getEnvironment from '../../../relayEnvironment';
+import getRelayEnvironment from '../../../util/getRelayEnvironment';
 
-export default function StopMarkerPopupContainer(props) {
+function StopMarkerPopupContainer(props) {
   return (
     <QueryRenderer
       query={graphql`
@@ -19,7 +19,7 @@ export default function StopMarkerPopupContainer(props) {
       `}
       cacheConfig={{ force: true, poll: 30 * 1000 }}
       variables={{ stationId: props.stationId }}
-      environment={getEnvironment()}
+      environment={props.relayEnvironment}
       render={({ props: renderProps }) =>
         renderProps
           ? <CityBikePopup {...renderProps} />
@@ -32,4 +32,7 @@ export default function StopMarkerPopupContainer(props) {
 
 StopMarkerPopupContainer.propTypes = {
   stationId: PropTypes.string.isRequired,
+  relayEnvironment: PropTypes.object.isRequired,
 };
+
+export default getRelayEnvironment(StopMarkerPopupContainer);

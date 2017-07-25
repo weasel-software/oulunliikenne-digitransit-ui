@@ -7,9 +7,9 @@ import FavouriteLocationsContainer from './FavouriteLocationsContainer';
 import NextDeparturesListHeader from './NextDeparturesListHeader';
 import NoFavouritesPanel from './NoFavouritesPanel';
 import Loading from './Loading';
-import getEnvironment from '../relayEnvironment';
+import getRelayEnvironment from '../util/getRelayEnvironment';
 
-const FavouriteRoutes = ({ routes, currentTime }) => {
+const FavouriteRoutes = ({ routes, currentTime, relayEnvironment }) => {
   if (routes.length > 0) {
     return (
       <QueryRenderer
@@ -23,7 +23,7 @@ const FavouriteRoutes = ({ routes, currentTime }) => {
           }
         `}
         variables={{ ids: routes, currentTime }}
-        environment={getEnvironment()}
+        environment={relayEnvironment}
         render={({ props }) =>
           props
             ? <FavouriteRouteListContainer
@@ -40,14 +40,22 @@ const FavouriteRoutes = ({ routes, currentTime }) => {
 FavouriteRoutes.propTypes = {
   routes: PropTypes.array.isRequired,
   currentTime: PropTypes.number.isRequired,
+  relayEnvironment: PropTypes.object.isRequired,
 };
+
+const FavouriteRoutesWithRelayEnvironment = getRelayEnvironment(
+  FavouriteRoutes,
+);
 
 const FavouritesPanel = ({ routes, currentTime }) =>
   <div className="frontpage-panel">
     <FavouriteLocationsContainer />
     <NextDeparturesListHeader />
     <div className="scrollable momentum-scroll favourites">
-      <FavouriteRoutes routes={routes} currentTime={currentTime} />
+      <FavouriteRoutesWithRelayEnvironment
+        routes={routes}
+        currentTime={currentTime}
+      />
     </div>
   </div>;
 

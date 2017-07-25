@@ -5,7 +5,7 @@ import L from 'leaflet';
 import { isBrowser } from '../../../util/browser';
 
 class TileContainer {
-  constructor(coords, done, props, config) {
+  constructor(coords, done, props, config, relayEnvironment) {
     const markersMinZoom = Math.min(
       config.cityBike.cityBikeMinZoom,
       config.stopsMinZoom,
@@ -53,7 +53,7 @@ class TileContainer {
         }
         return false;
       })
-      .map(Layer => new Layer(this, config));
+      .map(Layer => new Layer(this, config, relayEnvironment));
 
     this.el.layers = this.layers.map(layer => omit(layer, 'tile'));
 

@@ -4,9 +4,9 @@ import { QueryRenderer, graphql } from 'react-relay/compat';
 import PlaceAtDistanceListContainer from './PlaceAtDistanceListContainer';
 import NetworkError from './NetworkError';
 import Loading from './Loading';
-import getEnvironment from '../relayEnvironment';
+import getRelayEnvironment from '../util/getRelayEnvironment';
 
-export default class NearestRoutesContainer extends Component {
+class NearestRoutesContainer extends Component {
   static propTypes = {
     lat: PropTypes.number.isRequired,
     lon: PropTypes.number.isRequired,
@@ -16,6 +16,7 @@ export default class NearestRoutesContainer extends Component {
     maxDistance: PropTypes.number.isRequired,
     maxResults: PropTypes.number.isRequired,
     timeRange: PropTypes.number.isRequired,
+    relayEnvironment: PropTypes.object.isRequired,
   };
 
   constructor() {
@@ -76,7 +77,7 @@ export default class NearestRoutesContainer extends Component {
           currentTime: this.props.currentTime,
           timeRange: this.props.timeRange,
         }}
-        environment={getEnvironment()}
+        environment={this.props.relayEnvironment}
         render={({ error, props, retry }) => {
           if (error) {
             this.useSpinner = true;
@@ -100,3 +101,5 @@ export default class NearestRoutesContainer extends Component {
     );
   }
 }
+
+export default getRelayEnvironment(NearestRoutesContainer);

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { routerShape } from 'react-router';
+import { routerShape } from 'found';
 import getContext from 'recompose/getContext';
 import AppBarSmall from './AppBarSmall';
 import AppBarLarge from './AppBarLarge';

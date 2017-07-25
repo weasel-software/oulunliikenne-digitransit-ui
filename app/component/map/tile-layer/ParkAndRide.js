@@ -11,14 +11,14 @@ import { isBrowser } from '../../../util/browser';
 
 import carParksQuery from './carParks';
 import carParkQuery from './carPark';
-import getEnvironment from '../../../relayEnvironment';
 
 const showFacilities = 17;
 
 export default class ParkAndRide {
-  constructor(tile, config) {
+  constructor(tile, config, relayEnvironment) {
     this.tile = tile;
     this.config = config;
+    this.relayEnvironment = relayEnvironment;
     const scaleratio = (isBrowser && window.devicePixelRatio) || 1;
     this.width = 24 * scaleratio;
     this.height = 12 * scaleratio;
@@ -46,7 +46,7 @@ export default class ParkAndRide {
           if (this.tile.coords.z < showFacilities && vt.layers.hubs != null) {
             for (let i = 0, ref = vt.layers.hubs.length - 1; i <= ref; i++) {
               const feature = vt.layers.hubs.feature(i);
-              fetchQuery(getEnvironment(), carParksQuery, {
+              fetchQuery(this.relayEnvironment, carParksQuery, {
                 ids: JSON.parse(feature.properties.facilityIds).map(id =>
                   id.toString(),
                 ),
@@ -75,7 +75,7 @@ export default class ParkAndRide {
               i++
             ) {
               const feature = vt.layers.facilities.feature(i);
-              fetchQuery(getEnvironment(), carParkQuery, {
+              fetchQuery(this.relayEnvironment, carParkQuery, {
                 id: feature.id.toString(),
               }).then(data => {
                 const result = data.carPark;

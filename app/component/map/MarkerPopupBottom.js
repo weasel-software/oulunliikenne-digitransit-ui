@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { routerShape, locationShape } from 'react-router';
+import { routerShape } from 'found';
 import { FormattedMessage } from 'react-intl';
 import { setEndpoint } from '../../action/EndpointActions';
 import { withCurrentTime } from '../../util/searchUtils';
@@ -15,7 +15,10 @@ class MarkerPopupBottom extends React.Component {
   static contextTypes = {
     executeAction: PropTypes.func.isRequired,
     router: routerShape.isRequired,
-    location: locationShape.isRequired,
+    location: PropTypes.shape({
+      pathname: PropTypes.string.isRequired,
+      query: PropTypes.object.isRequired,
+    }).isRequired,
     getStore: PropTypes.func.isRequired,
   };
 

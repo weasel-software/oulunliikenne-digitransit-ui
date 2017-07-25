@@ -9,7 +9,7 @@ import RightOffcanvasToggle from './RightOffcanvasToggle';
 import ViaPointBarContainer from './ViaPointBarContainer';
 import LazilyLoad, { importLazy } from './LazilyLoad';
 import { otpToLocation } from '../util/otpStrings';
-import getEnvironment from '../relayEnvironment';
+import getRelayEnvironment from '../util/getRelayEnvironment';
 
 class SummaryNavigation extends React.Component {
   static propTypes = {
@@ -20,6 +20,7 @@ class SummaryNavigation extends React.Component {
     hasDefaultPreferences: PropTypes.bool.isRequired,
     startTime: PropTypes.number,
     endTime: PropTypes.number,
+    relayEnvironment: PropTypes.object.isRequired,
   };
 
   static defaultProps = {
@@ -35,7 +36,7 @@ class SummaryNavigation extends React.Component {
   };
 
   componentDidMount() {
-    this.unlisten = this.context.router.listen(location => {
+    this.unlisten = this.context.router.addTransitionHook(location => {
       if (
         this.context.location.state &&
         this.context.location.state.customizeSearchOffcanvas &&
@@ -90,7 +91,7 @@ class SummaryNavigation extends React.Component {
         },
       });
     } else {
-      this.context.router.goBack();
+      this.context.router.go(-1);
     }
   };
 
@@ -151,7 +152,7 @@ class SummaryNavigation extends React.Component {
                 }
               }
             `}
-            environment={getEnvironment()}
+            environment={this.props.relayEnvironment}
             render={({ props }) =>
               props &&
               <TimeSelectorContainer
@@ -170,4 +171,4 @@ class SummaryNavigation extends React.Component {
   }
 }
 
-export default SummaryNavigation;
+export default getRelayEnvironment(SummaryNavigation);

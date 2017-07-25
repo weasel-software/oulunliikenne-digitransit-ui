@@ -4,7 +4,7 @@ import { QueryRenderer, graphql } from 'react-relay/compat';
 
 import CityBikeMarker from './CityBikeMarker';
 import ComponentUsageExample from '../../ComponentUsageExample';
-import getEnvironment from '../../../relayEnvironment';
+import getRelayEnvironment from '../../../util/getRelayEnvironment';
 
 class CityBikeMarkerContainer extends React.Component {
   static description = (
@@ -18,6 +18,10 @@ class CityBikeMarkerContainer extends React.Component {
       </ComponentUsageExample>
     </div>
   );
+
+  static propTypes = {
+    relayEnvironment: PropTypes.object.isRequired,
+  };
 
   static contextTypes = {
     map: PropTypes.object.isRequired,
@@ -42,7 +46,7 @@ class CityBikeMarkerContainer extends React.Component {
     }
     return (
       <QueryRenderer
-        environment={getEnvironment()}
+        environment={this.props.relayEnvironment}
         query={graphql`
           query CityBikeMarkerContainerQuery {
             viewer {
@@ -67,4 +71,4 @@ class CityBikeMarkerContainer extends React.Component {
   }
 }
 
-export default CityBikeMarkerContainer;
+export default getRelayEnvironment(CityBikeMarkerContainer);

@@ -11,7 +11,6 @@ import {
   drawCitybikeNotInUseIcon,
   drawAvailabilityBadge,
 } from '../../../util/mapIconUtils';
-import getEnvironment from '../../../relayEnvironment';
 
 const getScale = glfun(
   {
@@ -34,9 +33,10 @@ const query = graphql`
 `;
 
 class CityBikes {
-  constructor(tile, config) {
+  constructor(tile, config, relayEnvironment) {
     this.tile = tile;
     this.config = config;
+    this.relayEnvironment = relayEnvironment;
 
     this.scaleratio = (isBrowser && window.devicePixelRatio) || 1;
     this.citybikeImageSize =
@@ -128,9 +128,9 @@ class CityBikes {
     };
 
     if (lastFetch && currentTime - lastFetch <= 30000) {
-      fetchQuery(getEnvironment(), query, { id }).then(callback);
+      fetchQuery(this.relayEnvironment, query, { id }).then(callback);
     } else {
-      fetchQuery(getEnvironment(), query, { id }, { force: true }).then(
+      fetchQuery(this.relayEnvironment, query, { id }, { force: true }).then(
         callback,
       );
     }

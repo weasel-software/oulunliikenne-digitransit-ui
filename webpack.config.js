@@ -356,8 +356,7 @@ function getEntry() {
       // These come from all imports in client.js
       'react',
       'react-dom',
-      'react-relay/classic',
-      'react-relay/compat',
+      'relay-runtime',
       'react-tap-event-plugin',
       'moment',
     ],
@@ -421,14 +420,6 @@ module.exports = {
         'react-router-relay/es/QueryAggregator',
       moment$: 'moment/moment.js',
       lodash: 'lodash-es',
-      'babel-runtime/helpers/slicedToArray': path.join(
-        __dirname,
-        'app/util/slicedToArray',
-      ),
-      'babel-runtime/core-js/get-iterator': path.join(
-        __dirname,
-        'app/util/getIterator',
-      ),
     },
   },
   resolveLoader: {

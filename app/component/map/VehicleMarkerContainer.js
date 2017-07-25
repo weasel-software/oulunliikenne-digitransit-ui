@@ -11,7 +11,7 @@ import {
 import RouteMarkerPopup from './route/RouteMarkerPopup';
 import { asString as iconAsString } from '../IconWithTail';
 import Loading from '../Loading';
-import getEnvironment from '../../relayEnvironment';
+import getRelayEnvironment from '../../util/getRelayEnvironment';
 
 import { isBrowser } from '../../util/browser';
 
@@ -60,7 +60,7 @@ const RouteMarkerPopupWithContext = provideContext(
   },
 );
 
-export default class VehicleMarkerContainer extends React.PureComponent {
+class VehicleMarkerContainer extends React.PureComponent {
   static contextTypes = {
     getStore: PropTypes.func.isRequired,
     executeAction: PropTypes.func.isRequired,
@@ -74,6 +74,7 @@ export default class VehicleMarkerContainer extends React.PureComponent {
     tripStart: PropTypes.string,
     direction: PropTypes.number,
     useSmallIcons: PropTypes.bool,
+    relayEnvironment: PropTypes.object.isRequired,
   };
 
   componentWillMount() {
@@ -178,7 +179,7 @@ export default class VehicleMarkerContainer extends React.PureComponent {
             message.tripStartTime.substring(0, 2) * 60 * 60 +
             message.tripStartTime.substring(2, 4) * 60,
         }}
-        environment={getEnvironment()}
+        environment={this.props.relayEnvironment}
         render={({ props }) =>
           props
             ? <RouteMarkerPopupWithContext
@@ -226,3 +227,5 @@ export default class VehicleMarkerContainer extends React.PureComponent {
     );
   }
 }
+
+export default getRelayEnvironment(VehicleMarkerContainer);

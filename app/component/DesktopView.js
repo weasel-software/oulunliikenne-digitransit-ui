@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Link } from 'react-router';
+import Link from 'found/lib/Link';
 import { intlShape } from 'react-intl';
 
 import Icon from './Icon';
@@ -15,6 +15,7 @@ export default function DesktopView(
         <div className="desktop-title">
           <h2>
             <Link
+              // TODO: make sure this follows ARIA guidelines
               title={formatMessage({
                 id: 'back-to-front-page',
                 defaultMessage: 'Back to the front page',

@@ -2,14 +2,14 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { QueryRenderer, graphql } from 'react-relay/compat';
 import { FormattedMessage } from 'react-intl';
-import { routerShape, locationShape } from 'react-router';
+import { routerShape } from 'found';
 
 import Modal from './Modal';
 import Loading from './Loading';
 import DisruptionListContainer from './DisruptionListContainer';
 import ComponentUsageExample from './ComponentUsageExample';
 import { isBrowser } from '../util/browser';
-import getEnvironment from '../relayEnvironment';
+import getRelayEnvironment from '../util/getRelayEnvironment';
 
 function DisruptionInfo(props, context) {
   const isOpen = () =>
@@ -17,7 +17,7 @@ function DisruptionInfo(props, context) {
 
   const toggleVisibility = () => {
     if (isOpen()) {
-      context.router.goBack();
+      context.router.go(-1);
     } else {
       context.router.push({
         ...location,
@@ -51,7 +51,7 @@ function DisruptionInfo(props, context) {
             }
           `}
           variables={{ feedIds: context.config.feedIds }}
-          environment={getEnvironment()}
+          environment={props.relayEnvironment}
           render={({ props: innerProps }) =>
             innerProps
               ? <DisruptionListContainer {...innerProps} />
@@ -65,10 +65,14 @@ function DisruptionInfo(props, context) {
 
 DisruptionInfo.contextTypes = {
   router: routerShape.isRequired,
-  location: locationShape.isRequired,
+  location: PropTypes.shape({
+    pathname: PropTypes.string.isRequired,
+    query: PropTypes.object.isRequired,
+  }).isRequired,
   config: PropTypes.shape({
     feedIds: PropTypes.arrayOf(PropTypes.string.isRequired),
   }).isRequired,
+  relayEnvironment: PropTypes.object.isRequired,
 };
 
 DisruptionInfo.description = () =>
@@ -84,4 +88,4 @@ DisruptionInfo.description = () =>
     </ComponentUsageExample>
   </div>;
 
-export default DisruptionInfo;
+export default getRelayEnvironment(DisruptionInfo);

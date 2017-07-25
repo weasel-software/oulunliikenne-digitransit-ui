@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { intlShape, FormattedMessage } from 'react-intl';
-import { routerShape, locationShape } from 'react-router';
+import { routerShape } from 'found';
 import Tab from 'material-ui/Tabs/Tab';
 import cx from 'classnames';
 import without from 'lodash/without';
@@ -20,7 +20,10 @@ class SearchMainContainer extends React.Component {
     executeAction: PropTypes.func.isRequired,
     getStore: PropTypes.func.isRequired,
     router: routerShape.isRequired,
-    location: locationShape.isRequired,
+    location: PropTypes.shape({
+      pathname: PropTypes.string.isRequired,
+      query: PropTypes.object.isRequired,
+    }).isRequired,
     intl: intlShape.isRequired,
     breakpoint: PropTypes.string.isRequired,
   };
@@ -105,7 +108,7 @@ class SearchMainContainer extends React.Component {
 
   focusInput = tab => this.searchInputs[tab] && this.searchInputs[tab].focus();
 
-  closeModal = () => this.context.router.goBack();
+  closeModal = () => this.context.router.go(-1);
 
   changeToTab(tabname) {
     this.context.router.replace({

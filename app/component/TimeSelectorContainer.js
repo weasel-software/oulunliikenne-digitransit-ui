@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { routerShape, locationShape } from 'react-router';
+import { routerShape } from 'found';
 import moment from 'moment';
 import { intlShape } from 'react-intl';
 import debounce from 'lodash/debounce';
@@ -11,7 +11,10 @@ import TimeSelectors from './TimeSelectors';
 export default class TimeSelectorContainer extends Component {
   static contextTypes = {
     intl: intlShape.isRequired,
-    location: locationShape.isRequired,
+    location: PropTypes.shape({
+      pathname: PropTypes.string.isRequired,
+      query: PropTypes.object.isRequired,
+    }).isRequired,
     router: routerShape.isRequired,
     getStore: PropTypes.func.isRequired,
     executeAction: PropTypes.func.isRequired,
@@ -33,15 +36,17 @@ export default class TimeSelectorContainer extends Component {
   };
 
   componentDidMount() {
-    this.context.router.listen(location => {
-      if (
-        location.query.time &&
-        Number(location.query.time) !== this.state.time.unix() &&
-        location.query.arriveBy === 'true' === this.state.arriveBy
-      ) {
-        this.setState({ time: moment.unix(location.query.time) });
-      } else if (location.query.arriveBy === 'true' !== this.state.arriveBy) {
-        this.setState({ setTimefromProps: true });
+    this.context.router.addTransitionHook(location => {
+      if (location.pathname.startsWith('/reitti') && location.query) {
+        if (
+          location.query.time &&
+          Number(location.query.time) !== this.state.time.unix() &&
+          location.query.arriveBy === 'true' === this.state.arriveBy
+        ) {
+          this.setState({ time: moment.unix(location.query.time) });
+        } else if (location.query.arriveBy === 'true' !== this.state.arriveBy) {
+          this.setState({ setTimefromProps: true });
+        }
       }
     });
   }
