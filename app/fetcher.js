@@ -24,6 +24,25 @@ class FetcherBase {
   }
 }
 
+export class ServerFetcher extends FetcherBase {
+  constructor(url) {
+    super(url);
+
+    this.cache = new QueryResponseCache({ size: CACHE_SIZE, ttl: TTL });
+  }
+
+  async fetch(operation, variables) {
+    const payload = await super.fetch(operation, variables);
+    this.cache.set(operation.name, variables, payload);
+    return payload;
+  }
+
+  toJSON() {
+    // eslint-disable-next-line no-underscore-dangle
+    return this.cache._responses;
+  }
+}
+
 export class ClientFetcher extends FetcherBase {
   constructor(url) {
     super(url);

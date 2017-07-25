@@ -30,8 +30,10 @@ class RouteStopListContainer extends React.Component {
   }
 
   componentWillReceiveProps({ relay, currentTime }) {
-    // TODO: re-enable this
-    // relay.setVariables({ currentTime: currentTime.unix() });
+    relay.refetch({
+      currentTime: currentTime.unix(),
+      patternId: this.props.pattern.code,
+    });
   }
 
   setNearestStop = element => {
@@ -107,7 +109,7 @@ class RouteStopListContainer extends React.Component {
   }
 }
 
-export default createFragmentContainer(
+export default createRefetchContainer(
   connectToStores(
     RouteStopListContainer,
     ['RealTimeInformationStore', 'PositionStore', 'TimeStore'],
@@ -118,8 +120,10 @@ export default createFragmentContainer(
     }),
   ),
   {
-    pattern: graphql`
-      fragment RouteStopListContainer_pattern on Pattern {
+    pattern: graphql.experimental`
+      fragment RouteStopListContainer_pattern on Pattern
+        @argumentDefinitions(currentTime: { type: "Long!", defaultValue: 0 }) {
+        code
         directionId
         route {
           mode
@@ -143,4 +147,14 @@ export default createFragmentContainer(
       }
     `,
   },
+  graphql.experimental`
+    query RouteStopListContainerQuery(
+      $patternId: String!
+      $currentTime: Long!
+    ) {
+      pattern(id: $patternId) {
+        ...RouteStopListContainer_pattern @arguments(currentTime: $currentTime)
+      }
+    }
+  `,
 );
