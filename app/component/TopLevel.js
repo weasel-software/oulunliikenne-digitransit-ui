@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Helmet from 'react-helmet';
 import { intlShape } from 'react-intl';
+import { matchShape } from 'found';
 import some from 'lodash/some';
 import get from 'lodash/get';
 
@@ -22,6 +23,7 @@ class TopLevel extends React.Component {
     content: PropTypes.node,
     title: PropTypes.node,
     meta: PropTypes.node,
+    match: matchShape.isRequired,
     routes: PropTypes.arrayOf(
       PropTypes.shape({
         topBarOptions: PropTypes.object,
@@ -122,7 +124,11 @@ class TopLevel extends React.Component {
     return (
       <div className="fullscreen">
         {!this.topBarOptions.hidden &&
-          <AppBarContainer title={this.props.title} {...this.topBarOptions} />}
+          <AppBarContainer
+            title={this.props.title}
+            match={this.props.match}
+            {...this.topBarOptions}
+          />}
         <Helmet {...this.metadata} />
         <section
           className="content"
