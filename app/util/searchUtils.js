@@ -1,4 +1,4 @@
-import { fetchQuery } from 'react-relay/compat';
+import { fetchQuery } from 'relay-runtime';
 
 import get from 'lodash/get';
 import take from 'lodash/take';
