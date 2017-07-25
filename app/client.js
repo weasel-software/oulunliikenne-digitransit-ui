@@ -90,10 +90,6 @@ app.plug(piwikPlugin);
     await Promise.all(modules);
   }
 
-  Object.defineProperty(Symbol, 'asyncIterator', {
-    value: Symbol('asyncIterator'),
-  });
-
   const context = await app.rehydrate(window.state);
 
   window.context = context;
