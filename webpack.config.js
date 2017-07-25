@@ -18,10 +18,7 @@ const fs = require('fs');
 
 require('babel-core/register')({
   presets: [['env', { targets: { node: 'current' } }], 'stage-2', 'react'],
-  plugins: [
-    'dynamic-import-node',
-    ['relay', { compat: true, schema: 'build/schema.json' }],
-  ],
+  plugins: ['dynamic-import-node', ['relay', { schema: 'build/schema.json' }]],
   ignore: [/node_modules/, 'app/util/piwik.js'],
 });
 
@@ -47,7 +44,7 @@ function getRulesConfig(env) {
           ],
           plugins: [
             'transform-import-commonjs',
-            ['relay', { compat: true, schema: 'build/schema.json' }],
+            ['relay', { schema: 'build/schema.json' }],
             [
               'transform-runtime',
               {
@@ -86,7 +83,7 @@ function getRulesConfig(env) {
         ],
         plugins: [
           'transform-react-remove-prop-types',
-          ['relay', { compat: true, schema: 'build/schema.json' }],
+          ['relay', { schema: 'build/schema.json' }],
           [
             'transform-runtime',
             {
