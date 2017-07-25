@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { QueryRenderer, graphql } from 'react-relay/compat';
+import { graphql } from 'relay-runtime';
+import QueryRenderer from 'react-relay/lib/ReactRelayQueryRenderer';
 import connectToStores from 'fluxible-addons-react/connectToStores';
 import some from 'lodash/some';
 import flatten from 'lodash/flatten';

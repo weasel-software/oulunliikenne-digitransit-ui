@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { createFragmentContainer, graphql } from 'react-relay/compat';
+import { graphql } from 'relay-runtime';
+import { createContainer as createFragmentContainer } from 'react-relay/lib/ReactRelayFragmentContainer';
 
 import StopMarker from '../non-tile-layer/StopMarker';
 import StopCardHeaderContainer from '../../StopCardHeaderContainer';

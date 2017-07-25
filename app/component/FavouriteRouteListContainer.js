@@ -1,4 +1,5 @@
-import { createFragmentContainer, graphql } from 'react-relay/compat';
+import { graphql } from 'relay-runtime';
+import { createContainer as createFragmentContainer } from 'react-relay/lib/ReactRelayFragmentContainer';
 import connectToStores from 'fluxible-addons-react/connectToStores';
 
 import NextDeparturesList from './NextDeparturesList';

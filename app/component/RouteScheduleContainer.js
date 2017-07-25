@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { createRefetchContainer, graphql } from 'react-relay/compat';
+import { graphql } from 'relay-runtime';
+import { createContainer as createRefetchContainer } from 'react-relay/lib/ReactRelayRefetchContainer';
 import moment from 'moment';
 import connectToStores from 'fluxible-addons-react/connectToStores';
 import { intlShape } from 'react-intl';

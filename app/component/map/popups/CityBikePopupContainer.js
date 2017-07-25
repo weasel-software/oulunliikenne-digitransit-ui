@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { QueryRenderer, graphql } from 'react-relay/compat';
+import { graphql } from 'relay-runtime';
+import QueryRenderer from 'react-relay/lib/ReactRelayQueryRenderer';
 
 import CityBikePopup from '../popups/CityBikePopup';
 import Loading from '../../Loading';

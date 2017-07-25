@@ -1,4 +1,5 @@
-import { createFragmentContainer, graphql } from 'react-relay/compat';
+import { graphql } from 'relay-runtime';
+import { createContainer as createFragmentContainer } from 'react-relay/lib/ReactRelayFragmentContainer';
 import withProps from 'recompose/withProps';
 import compact from 'lodash/compact';
 import every from 'lodash/every';

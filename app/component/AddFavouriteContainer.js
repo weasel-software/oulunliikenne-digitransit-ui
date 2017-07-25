@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import cx from 'classnames';
-import { Link, routerShape, locationShape } from 'react-router';
+import { routerShape } from 'found';
+import Link from 'found/lib/Link';
 import { FormattedMessage, intlShape } from 'react-intl';
 import connectToStores from 'fluxible-addons-react/connectToStores';
 import isEmpty from 'lodash/isEmpty';

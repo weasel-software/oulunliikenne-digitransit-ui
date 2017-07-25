@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { createFragmentContainer, graphql } from 'react-relay/compat';
+import { graphql } from 'relay-runtime';
+import { createContainer as createRefetchContainer } from 'react-relay/lib/ReactRelayRefetchContainer';
 import connectToStores from 'fluxible-addons-react/connectToStores';
 import groupBy from 'lodash/groupBy';
 import values from 'lodash/values';

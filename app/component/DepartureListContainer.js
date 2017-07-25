@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { createFragmentContainer, graphql } from 'react-relay/compat';
+import { graphql } from 'relay-runtime';
+import { createContainer as createFragmentContainer } from 'react-relay/lib/ReactRelayFragmentContainer';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
 import moment from 'moment';

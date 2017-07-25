@@ -1,5 +1,6 @@
 import React from 'react';
-import { QueryRenderer, graphql } from 'react-relay/compat';
+import { graphql } from 'relay-runtime';
+import QueryRenderer from 'react-relay/lib/ReactRelayQueryRenderer';
 import connectToStores from 'fluxible-addons-react/connectToStores';
 import withState from 'recompose/withState';
 import compose from 'recompose/compose';

@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { QueryRenderer, graphql } from 'react-relay/compat';
+import { graphql } from 'relay-runtime';
+import QueryRenderer from 'react-relay/lib/ReactRelayQueryRenderer';
 
 import CityBikeMarker from './CityBikeMarker';
 import ComponentUsageExample from '../../ComponentUsageExample';

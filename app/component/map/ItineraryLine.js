@@ -2,7 +2,8 @@ import PropTypes from 'prop-types';
 /* eslint-disable react/no-array-index-key */
 
 import React from 'react';
-import { createFragmentContainer, graphql } from 'react-relay/compat';
+import { graphql } from 'relay-runtime';
+import { createContainer as createFragmentContainer } from 'react-relay/lib/ReactRelayFragmentContainer';
 import polyUtil from 'polyline-encoded';
 import get from 'lodash/get';
 

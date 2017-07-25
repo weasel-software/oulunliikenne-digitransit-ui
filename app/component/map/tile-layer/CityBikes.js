@@ -1,6 +1,6 @@
 import { VectorTile } from '@mapbox/vector-tile';
 import Protobuf from 'pbf';
-import { fetchQuery, graphql } from 'react-relay/compat';
+import { graphql, fetchQuery } from 'relay-runtime';
 import glfun from '@mapbox/mapbox-gl-style-spec/function';
 import pick from 'lodash/pick';
 
