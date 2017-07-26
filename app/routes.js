@@ -185,15 +185,22 @@ export default config => {
     );
   };
 
+  const TopLevelContainer = (props, { headers }) =>
+    isBrowser
+      ? <ContainerDimensions>
+          <TopLevel {...props} />
+        </ContainerDimensions>
+      : <TopLevel
+          {...props}
+          width={headers['user-agent'].includes('Mobile') ? 400 : 1000}
+        />;
+
+  TopLevelContainer.contextTypes = {
+    headers: PropTypes.object.isRequired,
+  };
+
   return (
-    <Route
-      Component={props =>
-        isBrowser
-          ? <ContainerDimensions>
-              <TopLevel {...props} />
-            </ContainerDimensions>
-          : <TopLevel {...props} />}
-    >
+    <Route Component={TopLevelContainer}>
       <Route
         path="/"
         topBarOptions={{ disableBackButton: true }}
