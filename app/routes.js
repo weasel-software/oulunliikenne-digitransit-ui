@@ -518,6 +518,7 @@ export default config => {
                 <Redirect to="/linjat/:routeId/aikataulu/:routeId%3A0%3A01" />
                 <Route
                   path=":patternId"
+                  disableMapOnMobile
                   getComponent={() =>
                     import(/* webpackChunkName: "route" */ './component/RouteScheduleContainer').then(
                       getDefault,

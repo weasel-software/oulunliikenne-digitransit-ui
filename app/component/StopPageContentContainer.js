@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { graphql } from 'relay-runtime';
 import { createContainer as createFragmentContainer } from 'react-relay/lib/ReactRelayFragmentContainer';
-import some from 'lodash/some';
 import mapProps from 'recompose/mapProps';
 import getContext from 'recompose/getContext';
 
@@ -87,9 +86,14 @@ const DepartureListContainerWithProps = mapProps(props => ({
   currentTime: props.startTime,
 }))(DepartureListContainer);
 
-const StopPageContent = getContext({ breakpoint: PropTypes.string.isRequired })(
+const StopPageContent = getContext({
+  breakpoint: PropTypes.string.isRequired,
+  location: PropTypes.object.isRequired,
+})(
   props =>
-    some(props.routes, 'fullscreenMap') && props.breakpoint !== 'large'
+    props.location.state &&
+    props.location.state.fullscreenMap === true &&
+    props.breakpoint !== 'large'
       ? null
       : <StopPageContentOptions
           printUrl={props.stop.url}

@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { graphql } from 'relay-runtime';
 import { createContainer as createFragmentContainer } from 'react-relay/lib/ReactRelayFragmentContainer';
-import some from 'lodash/some';
 import cx from 'classnames';
 
 import { getStartTime } from '../util/timeUtils';
@@ -14,7 +13,8 @@ function TripStopsContainer(props, { breakpoint }) {
     props.trip.stoptimesForDate[0].scheduledDeparture,
   );
 
-  const fullscreen = some(props.routes, route => route.fullscreenMap);
+  const fullscreen =
+    props.location.state && props.location.state.fullscreenMap === true;
 
   return (
     <div
@@ -49,6 +49,7 @@ TripStopsContainer.propTypes = {
   ).isRequired,
   location: PropTypes.shape({
     pathname: PropTypes.string.isRequired,
+    state: PropTypes.object,
   }).isRequired,
 };
 

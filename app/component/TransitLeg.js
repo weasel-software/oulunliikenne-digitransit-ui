@@ -50,7 +50,7 @@ class TransitLeg extends React.Component {
         />,
       );
       return (
-        <div className="itinerary-leg-container">
+        <div className="itinerary-leg-container" key="intermediates">
           {stopList}
         </div>
       );

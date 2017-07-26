@@ -3,7 +3,6 @@ import React from 'react';
 import { graphql } from 'relay-runtime';
 import { createContainer as createFragmentContainer } from 'react-relay/lib/ReactRelayFragmentContainer';
 import connectToStores from 'fluxible-addons-react/connectToStores';
-import some from 'lodash/some';
 
 import Icon from './Icon';
 import Map from './map/Map';
@@ -13,7 +12,7 @@ import StopCardHeaderContainer from './StopCardHeaderContainer';
 import { getStartTime } from '../util/timeUtils';
 
 function RouteMapContainer(
-  { pattern, trip, vehicles, routes },
+  { pattern, trip, vehicles },
   { router, location, breakpoint },
 ) {
   if (!pattern) {
@@ -42,15 +41,15 @@ function RouteMapContainer(
     }
   }
 
-  const fullscreen = some(routes, route => route.fullscreenMap);
+  const fullscreen = location.state && location.state.fullscreenMap === true;
 
-  const toggleFullscreenMap = () => {
-    if (fullscreen) {
-      router.go(-1);
-      return;
-    }
-    router.push(`${location.pathname}/kartta`);
-  };
+  const toggleFullscreenMap = () =>
+    fullscreen
+      ? router.go(-1)
+      : router.push({
+          ...location,
+          state: { ...location.state, fullscreenMap: true },
+        });
 
   const leafletObjs = [
     <RouteLine key="line" pattern={pattern} />,
@@ -113,11 +112,6 @@ RouteMapContainer.propTypes = {
       }),
     ).isRequired,
   }),
-  routes: PropTypes.arrayOf(
-    PropTypes.shape({
-      fullscreenMap: PropTypes.bool,
-    }),
-  ).isRequired,
   pattern: PropTypes.object.isRequired,
   vehicles: PropTypes.object,
 };

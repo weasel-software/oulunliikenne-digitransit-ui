@@ -9,7 +9,6 @@ import isMatch from 'lodash/isMatch';
 import keys from 'lodash/keys';
 import pick from 'lodash/pick';
 import sortBy from 'lodash/sortBy';
-import some from 'lodash/some';
 import polyline from 'polyline-encoded';
 import { FormattedMessage } from 'react-intl';
 
@@ -61,11 +60,6 @@ class SummaryPage extends React.Component {
     map: PropTypes.shape({
       type: PropTypes.func.isRequired,
     }),
-    routes: PropTypes.arrayOf(
-      PropTypes.shape({
-        fullscreenMap: PropTypes.bool,
-      }).isRequired,
-    ).isRequired,
   };
 
   static hcParameters = {
@@ -300,9 +294,6 @@ class SummaryPage extends React.Component {
         <MobileItineraryWrapper
           itineraries={this.props.plan.itineraries}
           params={this.props.params}
-          fullscreenMap={some(
-            this.props.routes.map(route => route.fullscreenMap),
-          )}
           focus={this.updateCenter}
         >
           {this.props.content &&

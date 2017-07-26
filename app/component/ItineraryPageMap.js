@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import some from 'lodash/some';
 import polyline from 'polyline-encoded';
 
 import LocationMarker from './map/LocationMarker';
@@ -72,14 +71,14 @@ export default function ItineraryPageMap(
       />,
     );
   }
-  const fullscreen = some(routes.map(route => route.fullscreenMap));
+  const fullscreen = location.state && location.state.fullscreenMap === true;
 
-  const toggleFullscreenMap = fullscreen
-    ? router.goBack
-    : () =>
-        router.push({
+  const toggleFullscreenMap = () =>
+    fullscreen
+      ? router.go(-1)
+      : router.push({
           ...location,
-          pathname: `${location.pathname}/kartta`,
+          state: { ...location.state, fullscreenMap: true },
         });
 
   const overlay = fullscreen

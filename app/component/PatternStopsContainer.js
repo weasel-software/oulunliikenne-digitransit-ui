@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { graphql } from 'relay-runtime';
 import { createContainer as createFragmentContainer } from 'react-relay/lib/ReactRelayFragmentContainer';
-import some from 'lodash/some';
 
 import RouteListHeader from './RouteListHeader';
 import RouteStopListContainer from './RouteStopListContainer';
@@ -12,13 +11,9 @@ class PatternStopsContainer extends React.Component {
     pattern: PropTypes.shape({
       code: PropTypes.string.isRequired,
     }).isRequired,
-    routes: PropTypes.arrayOf(
-      PropTypes.shape({
-        fullscreenMap: PropTypes.bool,
-      }).isRequired,
-    ).isRequired,
     location: PropTypes.shape({
       pathname: PropTypes.string.isRequired,
+      state: PropTypes.object,
     }).isRequired,
   };
 
@@ -28,11 +23,17 @@ class PatternStopsContainer extends React.Component {
   };
 
   toggleFullscreenMap = () => {
-    if (some(this.props.routes, route => route.fullscreenMap)) {
+    if (
+      this.props.location.state &&
+      this.props.location.state.fullscreenMap === true
+    ) {
       this.context.router.go(-1);
       return;
     }
-    this.context.router.push(`${this.props.location.pathname}/kartta`);
+    this.context.router.push({
+      ...this.props.location,
+      state: { ...this.props.location.state, fullscreenMap: true },
+    });
   };
 
   render() {
@@ -41,7 +42,8 @@ class PatternStopsContainer extends React.Component {
     }
 
     if (
-      some(this.props.routes, route => route.fullscreenMap) &&
+      this.props.location.state &&
+      this.props.location.state.fullscreenMap === true &&
       this.context.breakpoint !== 'large'
     ) {
       return <div className="route-page-content" />;

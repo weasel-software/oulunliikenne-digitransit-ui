@@ -10,7 +10,6 @@ import { getRoutePath } from '../util/path';
 
 export default class MobileItineraryWrapper extends React.Component {
   static propTypes = {
-    fullscreenMap: PropTypes.bool,
     focus: PropTypes.func.isRequired,
     children: PropTypes.arrayOf(PropTypes.node.isRequired).isRequired,
     params: PropTypes.shape({
@@ -55,12 +54,15 @@ export default class MobileItineraryWrapper extends React.Component {
   itineraryTabs = [];
 
   toggleFullscreenMap = () => {
-    if (this.props.fullscreenMap) {
+    if (
+      this.context.location.state &&
+      this.context.location.state.fullscreenMap === true
+    ) {
       this.context.router.go(-1);
     } else {
       this.context.router.push({
         ...this.context.location,
-        pathname: `${this.context.location.pathname}/kartta`,
+        state: { ...location.state, fullscreenMap: true },
       });
     }
   };
@@ -100,7 +102,11 @@ export default class MobileItineraryWrapper extends React.Component {
       );
     }
 
-    const swipe = this.props.fullscreenMap
+    const fullscreenMap =
+      this.context.location.state &&
+      this.context.location.state.fullscreenMap === true;
+
+    const swipe = fullscreenMap
       ? undefined
       : <SwipeableViews
           index={index}
@@ -119,7 +125,7 @@ export default class MobileItineraryWrapper extends React.Component {
             }),
           )}
         </SwipeableViews>;
-    const tabs = this.props.fullscreenMap
+    const tabs = fullscreenMap
       ? undefined
       : <div className="itinerary-tabs-container" key="tabs">
           <Tabs
