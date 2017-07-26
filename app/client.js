@@ -3,7 +3,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import BrowserProtocol from 'farce/lib/BrowserProtocol';
 import createFarceRouter from 'found/lib/createFarceRouter';
+import createFarceStore from 'found/lib/utils/createFarceStore';
 import makeRouteConfig from 'found/lib/makeRouteConfig';
+import getStoreRenderArgs from 'found/lib/getStoreRenderArgs';
 import { Resolver } from 'found-relay';
 import provideContext from 'fluxible-addons-react/provideContext';
 import tapEventPlugin from 'react-tap-event-plugin';
@@ -117,10 +119,25 @@ app.plug(piwikPlugin);
 
   const resolver = new Resolver(environment);
 
-  const Router = await createFarceRouter({
-    historyProtocol: new BrowserProtocol(),
+  const routeConfig = makeRouteConfig(app.getComponent());
+
+  const historyProtocol = new BrowserProtocol();
+
+  const store = createFarceStore({
+    historyProtocol,
     historyMiddlewares,
-    routeConfig: makeRouteConfig(app.getComponent()),
+    routeConfig,
+  });
+
+  await getStoreRenderArgs({
+    store,
+    resolver,
+  });
+
+  const Router = await createFarceRouter({
+    historyProtocol,
+    historyMiddlewares,
+    routeConfig,
     resolver,
     render,
   });
