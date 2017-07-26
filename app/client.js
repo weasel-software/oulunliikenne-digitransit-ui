@@ -13,7 +13,7 @@ import debug from 'debug';
 import OfflinePlugin from 'offline-plugin/runtime';
 import { Environment, Network, RecordSource, Store } from 'relay-runtime';
 
-import { ClientFetcher } from './fetcher';
+import Fetcher from './fetcher';
 import { historyMiddlewares, render } from './routes';
 
 import Raven from './util/Raven';
@@ -104,9 +104,10 @@ app.plug(piwikPlugin);
     }
   }
 
-  const fetcher = new ClientFetcher(
+  const fetcher = new Fetcher(
     `${config.URL.OTP}index/graphql`,
-    // window.__RELAY_PAYLOADS__,
+    // eslint-disable-next-line no-underscore-dangle
+    JSON.parse(document.getElementById('relayData').textContent),
   );
 
   const environment = new Environment({

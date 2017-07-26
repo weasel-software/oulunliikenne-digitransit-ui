@@ -7,47 +7,14 @@ import { QueryResponseCache } from 'relay-runtime';
 const CACHE_SIZE = 100;
 const TTL = 60 * 1000;
 
-class FetcherBase {
-  constructor(url) {
+export default class Fetcher {
+  constructor(url, initialCache) {
     this.url = url;
-  }
-
-  async fetch(operation, variables) {
-    const response = await fetch(this.url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ query: operation.text, variables }),
-    });
-    return response.json();
-  }
-}
-
-export class ServerFetcher extends FetcherBase {
-  constructor(url) {
-    super(url);
-
     this.cache = new QueryResponseCache({ size: CACHE_SIZE, ttl: TTL });
-  }
-
-  async fetch(operation, variables) {
-    const payload = await super.fetch(operation, variables);
-    this.cache.set(operation.name, variables, payload);
-    return payload;
-  }
-
-  toJSON() {
-    // eslint-disable-next-line no-underscore-dangle
-    return this.cache._responses;
-  }
-}
-
-export class ClientFetcher extends FetcherBase {
-  constructor(url) {
-    super(url);
-
-    this.cache = new QueryResponseCache({ size: CACHE_SIZE, ttl: TTL });
+    if (initialCache) {
+      // eslint-disable-next-line no-underscore-dangle
+      this.cache._responses = new Map(initialCache);
+    }
   }
 
   async fetch(operation, variables) {
@@ -56,8 +23,21 @@ export class ClientFetcher extends FetcherBase {
       return cachedPayload;
     }
 
-    const payload = await super.fetch(operation, variables);
+    const response = await fetch(this.url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ query: operation.text, variables }),
+    });
+
+    const payload = await response.json();
     this.cache.set(operation.name, variables, payload);
     return payload;
+  }
+
+  toJSON() {
+    // eslint-disable-next-line no-underscore-dangle
+    return [...this.cache._responses];
   }
 }

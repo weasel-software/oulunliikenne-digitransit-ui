@@ -1,20 +1,36 @@
 // React
 import React from 'react';
 import ReactDOM from 'react-dom/server';
+import PropTypes from 'prop-types';
 
 // Routing and state handling
+import { Environment, Network, RecordSource, Store } from 'relay-runtime';
+import { getFarceResult } from 'found/lib/server';
+import makeRouteConfig from 'found/lib/makeRouteConfig';
+import { Resolver } from 'found-relay';
 import Helmet from 'react-helmet';
+import provideContext from 'fluxible-addons-react/provideContext';
+
 // Libraries
 import serialize from 'serialize-javascript';
+import { IntlProvider } from 'react-intl';
 import polyfillService from 'polyfill-service';
 import fs from 'fs';
 import find from 'lodash/find';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 // Application
 import appCreator from './app';
+import translations from './translations';
 import ApplicationHtml from './html';
+import MUITheme from './MuiTheme';
+
 // configuration
 import { getConfiguration } from './config';
+
+import Fetcher from './fetcher';
+import { historyMiddlewares, render } from './routes';
 
 // Look up paths for various asset files
 const appRoot = `${process.cwd()}/`;
@@ -185,72 +201,110 @@ function getScripts(req, config) {
   ];
 }
 
-function getHtml(application, context, locale, [polyfills], req) {
-  const config = context.getComponentContext().config;
-  // eslint-disable-next-line no-unused-vars
-  const content = undefined;
-  const head = Helmet.rewind();
-  return ReactDOM.renderToStaticMarkup(
-    <ApplicationHtml
-      css={process.env.NODE_ENV === 'development' ? false : getCss(config)}
-      svgSprite={getSprite(config)}
-      content=""
-      // TODO: temporarely disable server-side rendering in order to fix issue with having different
-      // content from the server, which breaks leaflet integration. Should be:
-      // content={content}
-      polyfill={polyfills}
-      state={`window.state=${serialize(application.dehydrate(context))};`}
-      locale={locale}
-      scripts={getScripts(req, config)}
-      fonts={config.URL.FONT}
-      relayData={[]}
-      head={head}
-    />,
-  );
-}
+const ContextProvider = provideContext(IntlProvider, {
+  config: PropTypes.object,
+  url: PropTypes.string,
+  headers: PropTypes.object,
+  relayEnvironment: PropTypes.object,
+});
 
-export default function(req, res, next) {
-  const config = getConfiguration(req);
-  const application = appCreator(config);
+export default async function(req, res, next) {
+  try {
+    const config = getConfiguration(req);
+    const application = appCreator(config);
 
-  // TODO: Move this to PreferencesStore
-  // 1. use locale from cookie (user selected) 2. browser preferred 3. default
-  let locale =
-    req.cookies.lang || req.acceptsLanguages(config.availableLanguages);
+    // TODO: Move this to PreferencesStore
+    // 1. use locale from cookie (user selected) 2. browser preferred 3. default
+    let locale =
+      req.cookies.lang || req.acceptsLanguages(config.availableLanguages);
 
-  if (config.availableLanguages.indexOf(locale) === -1) {
-    locale = config.defaultLanguage;
-  }
+    if (config.availableLanguages.indexOf(locale) === -1) {
+      locale = config.defaultLanguage;
+    }
 
-  if (req.cookies.lang === undefined || req.cookies.lang !== locale) {
-    res.cookie('lang', locale);
-  }
-  const context = application.createContext({
-    url: req.url,
-    headers: req.headers,
-    config,
-  });
+    if (req.cookies.lang === undefined || req.cookies.lang !== locale) {
+      res.cookie('lang', locale);
+    }
 
-  context
-    .getComponentContext()
-    .getStore('MessageStore')
-    .addConfigMessages(config);
+    const fetcher = new Fetcher(`${config.URL.OTP}index/graphql`);
 
-  // required by material-ui
-  const agent = req.headers['user-agent'];
-  global.navigator = { userAgent: agent };
-
-  const promises = [getPolyfills(agent, config)];
-
-  Promise.all(promises)
-    .then(results =>
-      res.send(
-        `<!doctype html>${getHtml(application, context, locale, results, req)}`,
-      ),
-    )
-    .catch(err => {
-      if (err) {
-        next(err);
-      }
+    const environment = new Environment({
+      network: Network.create((...args) => fetcher.fetch(...args)),
+      store: new Store(new RecordSource()),
     });
+
+    const resolver = new Resolver(environment);
+
+    const { redirect, status, element } = await getFarceResult({
+      url: req.url,
+      historyMiddlewares,
+      routeConfig: makeRouteConfig(application.getComponent()),
+      resolver,
+      render,
+    });
+
+    if (redirect) {
+      res.redirect(302, redirect.url);
+      return;
+    }
+
+    const context = application.createContext({
+      url: req.url,
+      headers: req.headers,
+      config,
+      relayEnvironment: environment,
+    });
+
+    context
+      .getComponentContext()
+      .getStore('MessageStore')
+      .addConfigMessages(config);
+
+    // required by material-ui
+    const agent = req.headers['user-agent'];
+    global.navigator = { userAgent: agent };
+
+    const polyfills = await getPolyfills(agent, config);
+
+    const content = ReactDOM.renderToString(
+      <ContextProvider
+        locale={locale}
+        messages={translations[locale]}
+        context={context.getComponentContext()}
+      >
+        <MuiThemeProvider
+          muiTheme={getMuiTheme(
+            MUITheme(context.getComponentContext().config),
+            {
+              userAgent: agent,
+            },
+          )}
+        >
+          {element}
+        </MuiThemeProvider>
+      </ContextProvider>,
+    );
+
+    const head = Helmet.rewind();
+
+    res.status(status).send(`<!doctype html>
+        ${ReactDOM.renderToStaticMarkup(
+          <ApplicationHtml
+            css={
+              process.env.NODE_ENV === 'development' ? false : getCss(config)
+            }
+            svgSprite={getSprite(config)}
+            content={content}
+            polyfill={polyfills}
+            state={`window.state=${serialize(application.dehydrate(context))};`}
+            locale={locale}
+            scripts={getScripts(req, config)}
+            fonts={config.URL.FONT}
+            relayData={fetcher.toJSON()}
+            head={head}
+          />,
+        )}`);
+  } catch (err) {
+    next(err);
+  }
 }
