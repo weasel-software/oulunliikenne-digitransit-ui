@@ -16,6 +16,7 @@ import { FormattedMessage } from 'react-intl';
 import DesktopView from '../component/DesktopView';
 import MobileView from '../component/MobileView';
 import Map from '../component/map/Map';
+// eslint-disable-next-line no-unused-vars
 import ItineraryTab from './ItineraryTab';
 
 import SummaryPlanContainer from './SummaryPlanContainer';

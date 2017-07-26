@@ -3,18 +3,12 @@ import React from 'react';
 import { graphql } from 'relay-runtime';
 import { createContainer as createFragmentContainer } from 'react-relay/lib/ReactRelayFragmentContainer';
 import uniq from 'lodash/uniq';
-import { routerShape } from 'found';
 
 import StopMarker from './StopMarker';
 import TerminalMarker from './TerminalMarker';
 
 class StopMarkerLayer extends React.Component {
   static contextTypes = {
-    // Needed for passing context to dynamic popup, maybe should be done in there?
-    getStore: PropTypes.func.isRequired,
-    executeAction: PropTypes.func.isRequired,
-    router: routerShape.isRequired,
-    route: PropTypes.object.isRequired,
     map: PropTypes.object.isRequired,
     config: PropTypes.object.isRequired,
   };

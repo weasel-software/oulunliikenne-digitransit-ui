@@ -29,7 +29,6 @@ const CityBikePopupContainer = provideContext(CityBikePopup, {
     pathname: PropTypes.string.isRequired,
     query: PropTypes.object.isRequired,
   }).isRequired,
-  route: PropTypes.object.isRequired,
   config: PropTypes.object.isRequired,
   store: PropTypes.object.isRequired,
 });
@@ -70,7 +69,6 @@ export default class CityBikeMarker extends React.Component {
       pathname: PropTypes.string.isRequired,
       query: PropTypes.object.isRequired,
     }).isRequired,
-    route: PropTypes.object.isRequired,
     intl: intlShape.isRequired,
     config: PropTypes.object.isRequired,
     store: PropTypes.object.isRequired,

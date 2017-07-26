@@ -28,7 +28,6 @@ const TerminalMarkerPopupContainer = provideContext(StopMarkerPopup, {
     pathname: PropTypes.string.isRequired,
     query: PropTypes.object.isRequired,
   }).isRequired,
-  route: PropTypes.object.isRequired,
   config: PropTypes.object.isRequired,
   store: PropTypes.object.isRequired,
 });
@@ -42,7 +41,6 @@ class TerminalMarker extends React.Component {
       pathname: PropTypes.string.isRequired,
       query: PropTypes.object.isRequired,
     }).isRequired,
-    route: PropTypes.object.isRequired,
     intl: intlShape.isRequired,
     config: PropTypes.object.isRequired,
     store: PropTypes.object.isRequired,
