@@ -252,7 +252,6 @@ export default async function(req, res, next) {
       url: req.url,
       headers: req.headers,
       config,
-      relayEnvironment: environment,
     });
 
     context
@@ -270,7 +269,10 @@ export default async function(req, res, next) {
       <ContextProvider
         locale={locale}
         messages={translations[locale]}
-        context={context.getComponentContext()}
+        context={{
+          ...context.getComponentContext(),
+          relayEnvironment: environment,
+        }}
       >
         <MuiThemeProvider
           muiTheme={getMuiTheme(
