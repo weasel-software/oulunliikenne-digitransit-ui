@@ -46,6 +46,10 @@ class IndexPage extends React.Component {
     routes: PropTypes.array,
   };
 
+  static defaultProps = {
+    children: <div className="frontpage-panel nearby-routes fullscreen" />,
+  };
+
   componentWillMount = () => {
     this.resetToCleanState();
   };

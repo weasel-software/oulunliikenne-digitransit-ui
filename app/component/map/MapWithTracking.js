@@ -69,6 +69,7 @@ const onlyUpdateCoordChanges = onlyUpdateForKeys(
     'tab',
     'searchModalIsOpen',
     'selectedTab',
+    'children',
   ],
 );
 
