@@ -24,10 +24,7 @@ import StoreListeningIntlProvider from './util/StoreListeningIntlProvider';
 import MUITheme from './MuiTheme';
 import appCreator from './app';
 import translations from './translations';
-import { openFeedbackModal } from './action/feedbackActions';
-import { shouldDisplayPopup } from './util/Feedback';
 import { initGeolocation } from './action/PositionActions';
-import historyCreator from './history';
 import { COMMIT_ID, BUILD_TIME } from './buildInfo';
 import Piwik from './util/piwik';
 
