@@ -4,8 +4,8 @@ import { QueryResponseCache } from 'relay-runtime';
 // for handling universal rendering with Relay Modern. For now, this is just
 // enough to get things working.
 
-const CACHE_SIZE = 100;
-const TTL = 60 * 1000;
+const CACHE_SIZE = 200;
+const TTL = 60 * 60 * 1000;
 
 export default class Fetcher {
   constructor(url, initialCache) {
@@ -17,10 +17,12 @@ export default class Fetcher {
     }
   }
 
-  async fetch(operation, variables) {
-    const cachedPayload = this.cache.get(operation.name, variables);
-    if (cachedPayload) {
-      return cachedPayload;
+  async fetch(operation, variables, config) {
+    if (config && config.force !== true) {
+      const cachedPayload = this.cache.get(operation.name, variables);
+      if (cachedPayload) {
+        return cachedPayload;
+      }
     }
 
     const response = await fetch(this.url, {
