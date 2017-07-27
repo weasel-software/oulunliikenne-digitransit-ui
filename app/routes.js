@@ -256,6 +256,7 @@ export default config => {
                     }
                   }
                 `}
+                render={PreviousPropsRenderer}
               />
             ),
             content: (
@@ -279,6 +280,7 @@ export default config => {
                     }
                   }
                 `}
+                render={PreviousPropsRenderer}
               />
             ),
             meta: (
@@ -294,6 +296,7 @@ export default config => {
                     }
                   }
                 `}
+                render={PreviousPropsRenderer}
               />
             ),
           }}
@@ -327,6 +330,7 @@ export default config => {
                     }
                   }
                 `}
+                render={PreviousPropsRenderer}
               />
             ),
             content: (
@@ -350,6 +354,7 @@ export default config => {
                     }
                   }
                 `}
+                render={PreviousPropsRenderer}
               />
             ),
             meta: (
@@ -365,6 +370,7 @@ export default config => {
                     }
                   }
                 `}
+                render={PreviousPropsRenderer}
               />
             ),
           }}
@@ -389,6 +395,7 @@ export default config => {
                     }
                   }
                 `}
+                render={PreviousPropsRenderer}
               />
             ),
             meta: (
@@ -405,6 +412,7 @@ export default config => {
                     }
                   }
                 `}
+                render={PreviousPropsRenderer}
               />
             ),
             header: (
@@ -421,6 +429,7 @@ export default config => {
                     }
                   }
                 `}
+                render={PreviousPropsRenderer}
               />
             ),
             map: (
@@ -444,6 +453,7 @@ export default config => {
                         }
                       }
                     `}
+                    render={PreviousPropsRenderer}
                   />
                   <Route
                     path=":patternId/:tripId"
@@ -464,6 +474,7 @@ export default config => {
                         }
                       }
                     `}
+                    render={PreviousPropsRenderer}
                   />
                 </Route>
               </Route>
@@ -488,6 +499,7 @@ export default config => {
                       }
                     }
                   `}
+                  render={PreviousPropsRenderer}
                 />
                 <Route
                   path=":patternId/:tripId"
@@ -508,6 +520,7 @@ export default config => {
                       }
                     }
                   `}
+                  render={PreviousPropsRenderer}
                 />
               </Route>,
               <Route path="aikataulu">
@@ -528,6 +541,7 @@ export default config => {
                       }
                     }
                   `}
+                  render={PreviousPropsRenderer}
                 />
               </Route>,
               <Route
@@ -543,7 +557,7 @@ export default config => {
                     }
                   }
                 `}
-                // render={props => <PreviousPropsRenderer {...props} />}
+                render={PreviousPropsRenderer}
               />,
             ],
           }}
