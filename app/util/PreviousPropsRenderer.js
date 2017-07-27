@@ -7,7 +7,7 @@ import StaticContainer from 'react-static-container';
 export default function PreviousPropsRenderer({ Component, props }) {
   return (
     <StaticContainer shouldUpdate={Component && props}>
-      {Component ? <Component {...props} /> : null}
+      {Component && props ? <Component {...props} /> : null}
     </StaticContainer>
   );
 }
