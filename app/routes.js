@@ -28,6 +28,7 @@ import TopLevel from './component/TopLevel';
 import Title from './component/Title';
 
 import { isBrowser } from './util/browser';
+import PreviousPropsRenderer from './util/PreviousPropsRenderer';
 
 // Localstorage data
 import { getCustomizedSettings } from './store/localStorage';
@@ -201,15 +202,9 @@ export default config => {
 
   return (
     <Route Component={TopLevelContainer}>
-      <Route
-        path="/"
-        topBarOptions={{ disableBackButton: true }}
-        groups={{
-          title: (
-            <Route Component={Title}>
-              <Route path={'*'} />
-            </Route>
-          ),
+      <Route path="/" topBarOptions={{ disableBackButton: true }}>
+        {{
+          title: <Route Component={Title} path="(.*)?" />,
           content: (
             <Route
               Component={props =>
@@ -234,13 +229,12 @@ export default config => {
             </Route>
           ),
         }}
-      />
+      </Route>
       <Route path="/pysakit">
         <Route Component={Error404} />
         {/* TODO: Should return list of all stops*/}
-        <Route
-          path=":stopId"
-          groups={{
+        <Route path=":stopId">
+          {{
             title: (
               <Route
                 getComponent={() =>
@@ -303,14 +297,13 @@ export default config => {
               />
             ),
           }}
-        />
+        </Route>
       </Route>
       <Route path="/terminaalit">
         <Route Component={Error404} />
         {/* TODO: Should return list of all terminals*/}
-        <Route
-          path=":terminalId"
-          groups={{
+        <Route path=":terminalId">
+          {{
             title: (
               <Route
                 getComponent={() =>
@@ -375,16 +368,16 @@ export default config => {
               />
             ),
           }}
-        />
+        </Route>
       </Route>
       <Route path="/linjat">
         <Route Component={Error404} />
         {/* TODO: Should return list of all routes */}
-        <Route
-          path=":routeId"
-          groups={{
+        <Route path=":routeId">
+          {{
             title: (
               <Route
+                path="(.*)?"
                 getComponent={() =>
                   import(/* webpackChunkName: "route" */ './component/RouteTitle').then(
                     getDefault,
@@ -396,12 +389,11 @@ export default config => {
                     }
                   }
                 `}
-              >
-                <Route path="*" />
-              </Route>
+              />
             ),
             meta: (
               <Route
+                path="(.*)?"
                 getComponent={() =>
                   import(/* webpackChunkName: "route" */ './component/RoutePageMeta').then(
                     getDefault,
@@ -413,12 +405,11 @@ export default config => {
                     }
                   }
                 `}
-              >
-                <Route path="*" />
-              </Route>
+              />
             ),
             header: (
               <Route
+                path="(.*)?"
                 getComponent={() =>
                   import(/* webpackChunkName: "route" */ './component/RoutePage').then(
                     getDefault,
@@ -430,9 +421,7 @@ export default config => {
                     }
                   }
                 `}
-              >
-                <Route path="*" />
-              </Route>
+              />
             ),
             map: (
               <Route>
@@ -554,14 +543,14 @@ export default config => {
                     }
                   }
                 `}
+                // render={props => <PreviousPropsRenderer {...props} />}
               />,
             ],
           }}
-        />
+        </Route>
       </Route>
-      <Route
-        path="/reitti/:from/:to"
-        groups={{
+      <Route path="/reitti/:from/:to">
+        {{
           title: (
             <Route
               getComponent={() =>
@@ -629,9 +618,8 @@ export default config => {
                   : <Component {...match} plan={null} />;
               }}
             >
-              <Route
-                path=":hash"
-                groups={{
+              <Route path=":hash">
+                {{
                   content: (
                     <Route
                       getComponent={() =>
@@ -649,8 +637,7 @@ export default config => {
                     />
                   ),
                 }}
-              />
-              }}
+              </Route>
             </Route>
           ),
           meta: (
@@ -664,7 +651,7 @@ export default config => {
             </Route>
           ),
         }}
-      />
+      </Route>
       <Route
         path="/styleguide"
         getComponent={() =>

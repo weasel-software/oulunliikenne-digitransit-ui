@@ -3520,9 +3520,9 @@ forwarded@~0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/forwarded/-/forwarded-0.1.0.tgz#19ef9874c4ae1c297bcf078fde63a09b66a84363"
 
-found-relay@0.3.0-alpha.4:
-  version "0.3.0-alpha.4"
-  resolved "https://registry.yarnpkg.com/found-relay/-/found-relay-0.3.0-alpha.4.tgz#409b9696b0896d06dfcd919e616dadfbd6fcb586"
+found-relay@0.3.0-alpha.5:
+  version "0.3.0-alpha.5"
+  resolved "https://registry.yarnpkg.com/found-relay/-/found-relay-0.3.0-alpha.5.tgz#ff09b0006dc73d64f1d7de0b409cca1ebc75e2de"
   dependencies:
     babel-runtime "^6.23.0"
     invariant "^2.2.2"
@@ -3532,9 +3532,9 @@ found-relay@0.3.0-alpha.4:
     prop-types-extra "^1.0.1"
     warning "^3.0.0"
 
-found@hannesj/found#bafb02b1de0ae8747c3f845498c2e0e78ae5e0b2:
+found@hannesj/found#3b16fb4ec3a4c12493413f14158008352aeb277b:
   version "0.3.2"
-  resolved "https://codeload.github.com/hannesj/found/tar.gz/bafb02b1de0ae8747c3f845498c2e0e78ae5e0b2"
+  resolved "https://codeload.github.com/hannesj/found/tar.gz/3b16fb4ec3a4c12493413f14158008352aeb277b"
   dependencies:
     babel-runtime "^6.23.0"
     farce "^0.2.1"
@@ -3545,7 +3545,7 @@ found@hannesj/found#bafb02b1de0ae8747c3f845498c2e0e78ae5e0b2:
     prop-types-extra "^1.0.1"
     react-redux "^5.0.5"
     react-static-container "^1.0.1"
-    redux "^3.7.1"
+    redux "^3.7.2"
     warning "^3.0.0"
 
 foundation-apps@1.2.0:
@@ -7767,7 +7767,7 @@ reduce-function-call@^1.0.1:
   dependencies:
     balanced-match "^0.4.2"
 
-redux@^3.6.0, redux@^3.7.1:
+redux@^3.6.0, redux@^3.7.2:
   version "3.7.2"
   resolved "https://registry.yarnpkg.com/redux/-/redux-3.7.2.tgz#06b73123215901d25d065be342eb026bc1c8537b"
   dependencies:
