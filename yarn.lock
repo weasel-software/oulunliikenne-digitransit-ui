@@ -3532,9 +3532,9 @@ found-relay@0.3.0-alpha.5:
     prop-types-extra "^1.0.1"
     warning "^3.0.0"
 
-found@hannesj/found#3b16fb4ec3a4c12493413f14158008352aeb277b:
-  version "0.3.2"
-  resolved "https://codeload.github.com/hannesj/found/tar.gz/3b16fb4ec3a4c12493413f14158008352aeb277b"
+found@0.3.3:
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/found/-/found-0.3.3.tgz#575526ad5c8fa140080fe602e91ae1e11cf1bbaa"
   dependencies:
     babel-runtime "^6.23.0"
     farce "^0.2.1"
