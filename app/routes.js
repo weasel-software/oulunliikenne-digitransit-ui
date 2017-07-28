@@ -432,53 +432,45 @@ export default config => {
                 render={PreviousPropsRenderer}
               />
             ),
-            map: (
-              <Route>
-                <Route
-                  path="/:type"
-                  Component={({ children }) => children || <div />}
-                >
-                  <Route
-                    path=":patternId"
-                    getComponent={() =>
-                      import(/* webpackChunkName: "route" */ './component/RouteMapContainer').then(
-                        getDefault,
-                      )}
-                    query={graphql`
-                      query routes_RouteMapContainer_Query(
-                        $patternId: String!
-                      ) {
-                        pattern(id: $patternId) {
-                          ...RouteMapContainer_pattern
-                        }
-                      }
-                    `}
-                    render={PreviousPropsRenderer}
-                  />
-                  <Route
-                    path=":patternId/:tripId"
-                    getComponent={() =>
-                      import(/* webpackChunkName: "route" */ './component/RouteMapContainer').then(
-                        getDefault,
-                      )}
-                    query={graphql`
-                      query routes_RouteMapContainer_withTrip_Query(
-                        $patternId: String!
-                        $tripId: String!
-                      ) {
-                        pattern(id: $patternId) {
-                          ...RouteMapContainer_pattern
-                        }
-                        trip(id: $tripId) {
-                          ...RouteMapContainer_trip
-                        }
-                      }
-                    `}
-                    render={PreviousPropsRenderer}
-                  />
-                </Route>
-              </Route>
-            ),
+            map: [
+              <Route
+                path="pysakit/:patternId/:tripId"
+                getComponent={() =>
+                  import(/* webpackChunkName: "route" */ './component/RouteMapContainer').then(
+                    getDefault,
+                  )}
+                query={graphql`
+                  query routes_RouteMapContainer_withTrip_Query(
+                    $patternId: String!
+                    $tripId: String!
+                  ) {
+                    pattern(id: $patternId) {
+                      ...RouteMapContainer_pattern
+                    }
+                    trip(id: $tripId) {
+                      ...RouteMapContainer_trip
+                    }
+                  }
+                `}
+                render={PreviousPropsRenderer}
+              />,
+              <Route
+                path=":type/:patternId/(.*)?"
+                getComponent={() =>
+                  import(/* webpackChunkName: "route" */ './component/RouteMapContainer').then(
+                    getDefault,
+                  )}
+                query={graphql`
+                  query routes_RouteMapContainer_Query($patternId: String!) {
+                    pattern(id: $patternId) {
+                      ...RouteMapContainer_pattern
+                    }
+                  }
+                `}
+                render={PreviousPropsRenderer}
+              />,
+              <Route path="(.?)*" />,
+            ],
             content: [
               <Redirect to="/linjat/:routeId/pysakit" />,
               <Route path="pysakit">
