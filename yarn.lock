@@ -7511,15 +7511,15 @@ react-relay-network-layer@2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/react-relay-network-layer/-/react-relay-network-layer-2.0.1.tgz#6db91b199f74733e980d0776ec6fa7961e0154d0"
 
-react-relay@1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/react-relay/-/react-relay-1.1.0.tgz#56cd76885a886d93dd052efebbc0af5b6ceea998"
+react-relay@1.2.0-rc.1:
+  version "1.2.0-rc.1"
+  resolved "https://registry.yarnpkg.com/react-relay/-/react-relay-1.2.0-rc.1.tgz#e60112be68f19586310dbe950f7f34db275664df"
   dependencies:
     babel-runtime "^6.23.0"
     fbjs "^0.8.1"
     prop-types "^15.5.8"
     react-static-container "^1.0.1"
-    relay-runtime "1.1.0"
+    relay-runtime "1.2.0-rc.1"
 
 react-side-effect@^1.1.0:
   version "1.1.3"
@@ -7860,6 +7860,13 @@ relay-compiler@^1.1.0:
 relay-runtime@1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/relay-runtime/-/relay-runtime-1.1.0.tgz#2441a97c18e3c9035960cad48414a95844623b69"
+  dependencies:
+    babel-runtime "^6.23.0"
+    fbjs "^0.8.1"
+
+relay-runtime@1.2.0-rc.1:
+  version "1.2.0-rc.1"
+  resolved "https://registry.yarnpkg.com/relay-runtime/-/relay-runtime-1.2.0-rc.1.tgz#4ca7432efc2176a11d87af7015cf105705b8144f"
   dependencies:
     babel-runtime "^6.23.0"
     fbjs "^0.8.1"
