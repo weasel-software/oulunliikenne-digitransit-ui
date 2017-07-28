@@ -18,7 +18,7 @@ export default class Fetcher {
   }
 
   async fetch(operation, variables, config) {
-    if (config && config.force !== true) {
+    if (!config || config.force !== true) {
       const cachedPayload = this.cache.get(operation.name, variables);
       if (cachedPayload) {
         return cachedPayload;
