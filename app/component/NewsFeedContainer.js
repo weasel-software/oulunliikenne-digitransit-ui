@@ -4,10 +4,15 @@ import styled from 'styled-components';
 import NewsFeed, { NewsFeedItem } from 'hsl-shared-components/lib/NewsFeed';
 
 const StyledNewsFeed = styled(NewsFeed)`
+  align-self: center;
+  align-items: center;
   width: 100%;
   max-width: 800px;
+  margin-bottom: 3em;
+`;
+
+const StyledNewsItem = styled(NewsFeedItem)`
   background: white;
-  align-self: center;
 `;
 
 const NUMBER_OF_ENTRIES = 3;
@@ -101,7 +106,7 @@ export default class NewsFeedContainer extends React.Component {
             key={entity.entityId}
             style={{ textDecoration: 'none' }}
           >
-            <NewsFeedItem
+            <StyledNewsItem
               category={entity.__typename.replace('Node', '')} // eslint-disable-line no-underscore-dangle
               title={entity.title}
               image={
