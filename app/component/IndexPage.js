@@ -10,15 +10,7 @@ import MapWithTracking from '../component/map/MapWithTracking';
 import SearchMainContainer from './SearchMainContainer';
 import PageFooter from './PageFooter';
 
-const feedbackPanelMudules = {
-  Panel: () => importLazy(import('./FeedbackPanel')),
-};
-
-const feedbackPanel = (
-  <LazilyLoad modules={feedbackPanelMudules}>
-    {({ Panel }) => <Panel />}
-  </LazilyLoad>
-);
+import NewsFeedContainer from './NewsFeedContainer';
 
 const messageBarModules = { Bar: () => importLazy(import('./MessageBar')) };
 
@@ -207,16 +199,7 @@ class IndexPage extends React.Component {
               </FrontPagePanelLarge>
             </div>
           </MapWithTracking>
-          <div id="page-footer-container">
-            <PageFooter
-              content={
-                (this.context.config.footer &&
-                  this.context.config.footer.content) ||
-                []
-              }
-            />
-          </div>
-          {feedbackPanel}
+          <NewsFeedContainer />
         </div>
       : <div
           className={`front-page flex-vertical fullscreen bp-${this.props
@@ -246,7 +229,6 @@ class IndexPage extends React.Component {
             >
               {this.props.content}
             </FrontPagePanelSmall>
-            {feedbackPanel}
           </div>
         </div>;
   }

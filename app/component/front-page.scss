@@ -257,11 +257,14 @@ $heading-color: #858585;
 .front-page { //small, mid
   display: flex;
   flex-direction: column;
+  &.bp-large > .map {
+    min-height: 500px;
+  }
 }
 
 .map-container {
     display: flex;
-    flexBasis: 50%;
+    flex-basis: 50%;
 }
 
 // <Tab> component

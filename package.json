@@ -76,6 +76,7 @@
     "fluxible-addons-react": "0.2.13",
     "foundation-apps": "1.2.0",
     "history": "3.3.0",
+    "hsl-shared-components": "^0.12.0",
     "htm-to-json": "^0.1.4",
     "intl": "1.2.5",
     "isomorphic-relay": "hannesj/isomorphic-relay#feature-relay-1-public",
@@ -117,6 +118,7 @@
     "react-tap-event-plugin": "2.0.1",
     "recompose": "0.24.0",
     "serialize-javascript": "1.4.0",
+    "styled-components": "^2.1.2",
     "zurb-foundation-5": "5.4.7"
   },
   "devDependencies": {

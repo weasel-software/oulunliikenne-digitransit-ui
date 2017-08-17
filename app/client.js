@@ -9,6 +9,7 @@ import provideContext from 'fluxible-addons-react/provideContext';
 import tapEventPlugin from 'react-tap-event-plugin';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import { ThemeProvider } from 'styled-components';
 import debug from 'debug';
 import {
   RelayNetworkLayer,
@@ -23,6 +24,7 @@ import Raven from './util/Raven';
 import configureMoment from './util/configure-moment';
 import StoreListeningIntlProvider from './util/StoreListeningIntlProvider';
 import MUITheme from './MuiTheme';
+import HSLTheme from './theme.hsl';
 import appCreator from './app';
 import translations from './translations';
 import { openFeedbackModal } from './action/feedbackActions';
@@ -188,7 +190,9 @@ const callback = () =>
                     userAgent: navigator.userAgent,
                   })}
                 >
-                  <Router {...props} onUpdate={track} />
+                  <ThemeProvider theme={HSLTheme}>
+                    <Router {...props} onUpdate={track} />
+                  </ThemeProvider>
                 </MuiThemeProvider>
               </ContextProvider>,
               document.getElementById('app'),
