@@ -8,7 +8,7 @@ import FrontPagePanelLarge from './FrontPagePanelLarge';
 import FrontPagePanelSmall from './FrontPagePanelSmall';
 import MapWithTracking from '../component/map/MapWithTracking';
 import SearchMainContainer from './SearchMainContainer';
-import PageFooter from './PageFooter';
+import FooterContainer from './FooterContainer';
 
 import NewsFeedContainer from './NewsFeedContainer';
 
@@ -200,6 +200,7 @@ class IndexPage extends React.Component {
             </div>
           </MapWithTracking>
           <NewsFeedContainer />
+          <FooterContainer />
         </div>
       : <div
           className={`front-page flex-vertical fullscreen bp-${this.props
