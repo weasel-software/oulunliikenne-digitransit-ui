@@ -117,17 +117,12 @@ class TopLevel extends React.Component {
       );
     }
 
-    const menuHeight = (this.getBreakpoint() === 'large' && '60px') || '40px';
-
     return (
       <div className="fullscreen">
         {!this.topBarOptions.hidden &&
           <AppBarContainer title={this.props.title} {...this.topBarOptions} />}
         <Helmet {...this.metadata} />
-        <section
-          className="content"
-          style={{ height: `calc(100% - ${menuHeight})` }}
-        >
+        <section className="content">
           {this.props.meta}
           {content}
         </section>
