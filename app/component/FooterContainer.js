@@ -9,7 +9,9 @@ const account = {
   title: 'Ota HSL -tunnus käyttöön',
   button: {
     text: 'Luo tunnus',
-    onPress: () => {},
+    onPress: () => {
+      window.location = 'https://login.hsl.fi/user/register';
+    },
   },
   benefits: [
     'Lataa matkakorttia verkossa',
@@ -24,27 +26,37 @@ const socialMedia = {
   icons: [
     {
       icon: <Icons.Facebook height="36px" width="18px" fill="#007ac9" />,
-      onPress: () => {},
+      onPress: () => {
+        window.location = 'https://www.facebook.com/helsinginseudunliikenne/';
+      },
       onLongPress: () => {},
     },
     {
       icon: <Icons.Twitter height="27px" width="36px" fill="#007ac9" />,
-      onPress: () => {},
+      onPress: () => {
+        window.location = 'https://twitter.com/hsl_hrt';
+      },
       onLongPress: () => {},
     },
     {
       icon: <Icons.Instagram height="30px" width="30px" fill="#007ac9" />,
-      onPress: () => {},
+      onPress: () => {
+        window.location = 'https://www.instagram.com/hsl_hrt/';
+      },
       onLongPress: () => {},
     },
     {
       icon: <Icons.Linkedin height="30px" width="36px" fill="#007ac9" />,
-      onPress: () => {},
+      onPress: () => {
+        window.location = 'https://www.linkedin.com/company-beta/1032423/';
+      },
       onLongPress: () => {},
     },
     {
       icon: <Icons.Youtube height="34px" width="34px" fill="#007ac9" />,
-      onPress: () => {},
+      onPress: () => {
+        window.location = 'https://www.youtube.com/user/hslhrt';
+      },
       onLongPress: () => {},
     },
   ],
