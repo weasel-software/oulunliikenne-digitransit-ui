@@ -1,6 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import moment from 'moment';
 import styled from 'styled-components';
+import connectToStores from 'fluxible-addons-react/connectToStores';
 import NewsFeed, { NewsFeedItem } from 'hsl-shared-components/lib/NewsFeed';
 
 const StyledNewsFeed = styled(NewsFeed)`
@@ -17,14 +19,27 @@ const StyledNewsItem = styled(NewsFeedItem)`
 
 const NUMBER_OF_ENTRIES = 3;
 
-export default class NewsFeedContainer extends React.Component {
-  state = {
-    entities: [],
-    offset: 0,
+const initialState = {
+  entities: [],
+  offset: 0,
+  count: 0,
+};
+
+class NewsFeedContainer extends React.Component {
+  static propTypes = {
+    locale: PropTypes.string.isRequired,
   };
+
+  state = initialState;
 
   componentWillMount() {
     this.fetchMore();
+  }
+
+  componentWillReceiveProps({ locale }) {
+    if (locale !== this.props.locale) {
+      this.setState(initialState, this.fetchMore);
+    }
   }
 
   fetchMore = () => {
@@ -41,10 +56,11 @@ export default class NewsFeedContainer extends React.Component {
             query: `
               query NewsQuery {
                 nodeQuery(
-                  filter: { langcode: "fi"},
+                  filter: { langcode: "${this.props.locale}"},
                   offset: ${offset},
                   limit: ${NUMBER_OF_ENTRIES}
                 ) {
+                  count
                   entities {
                     entityId
                     __typename
@@ -89,6 +105,7 @@ export default class NewsFeedContainer extends React.Component {
           .then(({ data }) =>
             this.setState({
               entities: [...this.state.entities, ...data.nodeQuery.entities],
+              count: data.count,
             }),
           ),
     );
@@ -98,7 +115,13 @@ export default class NewsFeedContainer extends React.Component {
     return (
       <StyledNewsFeed
         header="Header"
-        more={{ text: 'Näytä lisää', action: this.fetchMore }}
+        more={{
+          text:
+            this.state.offset >= this.state.count
+              ? 'Ei vanhempia uutisia'
+              : 'Näytä lisää',
+          action: this.fetchMore,
+        }}
       >
         {this.state.entities.map(entity =>
           <a
@@ -123,3 +146,12 @@ export default class NewsFeedContainer extends React.Component {
     );
   }
 }
+
+export default connectToStores(
+  NewsFeedContainer,
+  ['PreferencesStore'],
+  context => {
+    const language = context.getStore('PreferencesStore').getLanguage();
+    return { locale: language };
+  },
+);
