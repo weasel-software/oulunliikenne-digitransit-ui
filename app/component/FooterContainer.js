@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import { Link } from 'react-router';
+
 import Footer from 'hsl-shared-components/lib/Footer';
 import Icons from 'hsl-shared-components/lib/Icons';
 import Text from 'hsl-shared-components/lib/Typography';
@@ -64,13 +66,23 @@ const socialMedia = {
 
 const LinkText = Text.extend`color: ${props => props.theme.primary};`;
 
+const StyledLink = styled(Link)`text-decoration: none;`;
+
 const info = {
   copyright: '© Copyright HSL',
   links: [
-    <LinkText key="contact">Yhteystiedot</LinkText>,
-    <LinkText key="data_protection">Tietosuojalauseke</LinkText>,
-    <LinkText key="register">Rekisteriseloste</LinkText>,
-    <LinkText key="info">Tietoa sivustosta</LinkText>,
+    <StyledLink key="contact" to="https://www.hsl.fi/yhteystiedot">
+      <LinkText>Yhteystiedot</LinkText>
+    </StyledLink>,
+    <StyledLink key="data_protection" to="https://www.hsl.fi/tietosuojaseloste">
+      <LinkText>Tietosuojalauseke</LinkText>
+    </StyledLink>,
+    <StyledLink key="register" to="https://www.hsl.fi/tietoa-sivustosta">
+      <LinkText>Rekisteriseloste</LinkText>
+    </StyledLink>,
+    <StyledLink key="info" to="/tietoja-palvelusta">
+      <LinkText>Tietoa sivustosta</LinkText>
+    </StyledLink>,
   ],
 };
 
