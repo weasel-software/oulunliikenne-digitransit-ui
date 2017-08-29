@@ -7,7 +7,7 @@ import { routerShape, locationShape, Link } from 'react-router';
 import styled from 'styled-components';
 
 import Menu, { MenuItem } from 'hsl-shared-components/lib/Menu';
-import { NavItem, NavDesktop } from 'hsl-shared-components/lib/Nav';
+import Nav, { NavItem } from 'hsl-shared-components/lib/Nav';
 import DropdownMenu from 'hsl-shared-components/lib/DropdownMenu';
 
 import Icons from 'hsl-shared-components/lib/Icons';
@@ -26,6 +26,10 @@ const StyledLink = styled(Link)`
   &:link, &:visited, &:link:active, &:visited:active {
     color: inherit;
   }
+`;
+
+const StyledNav = styled(Nav)`
+  z-index: 2000;
 `;
 
 const cog = <Icons.Cog height="2.5rem" width="2.5rem" />;
@@ -130,7 +134,7 @@ const AppBarLarge = (props, { executeAction, location }) => {
   );
 
   return (
-    <NavDesktop logo={logo} menu={menu}>
+    <StyledNav logo={logo} menu={menu}>
       <NavItem
         key="Reittiopas"
         link={<StyledLink to="/" />}
@@ -153,7 +157,7 @@ const AppBarLarge = (props, { executeAction, location }) => {
         />,
       )}
       {Dropdown}
-    </NavDesktop>
+    </StyledNav>
   );
 };
 
