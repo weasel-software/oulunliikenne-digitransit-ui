@@ -32,7 +32,7 @@ const StyledNav = styled(Nav)`
   z-index: 2000;
 `;
 
-const cog = <Icons.Cog height="2.5rem" width="2.5rem" />;
+const cog = <Icons.Cog style={{ height: '2.5rem', width: '2.5rem' }} />;
 const DropdownContent = [
   <List header="Liikkumisen palveluita" key="1">
     <ListItem>
@@ -93,27 +93,29 @@ const Dropdown = (
 
 const icons = [
   [
-    <Icons.Tickets key="tickets" height="2.5rem" width="2.5rem" />,
+    <Icons.Tickets
+      key="tickets"
+      style={{ height: '2.5rem', width: '2.5rem' }}
+    />,
     'Liput ja hinnat',
     'https://www.hsl.fi/liput-ja-hinnat',
   ],
   [
     <Icons.CustomerService
       key="customer_service"
-      height="2.5rem"
-      width="2.5rem"
+      style={{ height: '2.5rem', width: '2.5rem' }}
     />,
     'Asiakaspalvelu',
     'https://www.hsl.fi/asiakaspalvelu',
   ],
   [
-    <Icons.Latest key="latest" height="2.5rem" width="2.5rem" />,
+    <Icons.Latest key="latest" style={{ height: '2.5rem', width: '2.5rem' }} />,
     'Uutta',
     'https://www.hsl.fi/ajankohtaista?qt-archives=2#qt-archives',
   ],
 ];
 
-const logo = <Icons.HSLLogo height="3.75rem" />;
+const logo = <Icons.HSLLogo style={{ height: '3.75rem' }} />;
 
 const AppBarLarge = (props, { executeAction, location }) => {
   const menu = (
@@ -125,7 +127,7 @@ const AppBarLarge = (props, { executeAction, location }) => {
         link={
           <StyledLink href="https://www.hsl.fi/saml/drupal_login?returnTo=https%3A//beta.hsl.fi/" />
         }
-        icon={<Icons.SignIn height="3.5rem" />}
+        icon={<Icons.SignIn style={{ height: '2.5rem' }} />}
         text="Kirjaudu"
         textPosition="Right"
         key="signin"
@@ -138,7 +140,9 @@ const AppBarLarge = (props, { executeAction, location }) => {
       <NavItem
         key="Reittiopas"
         link={<StyledLink to="/" />}
-        icon={<Icons.JourneyPlanner height="2.5rem" width="2.5rem" />}
+        icon={
+          <Icons.JourneyPlanner style={{ height: '2.5rem', width: '2.5rem' }} />
+        }
         text="Reittiopas"
         textPosition={'Bottom'}
         active={

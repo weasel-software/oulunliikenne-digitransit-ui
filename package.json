@@ -76,7 +76,7 @@
     "fluxible-addons-react": "0.2.13",
     "foundation-apps": "1.2.0",
     "history": "3.3.0",
-    "hsl-shared-components": "^0.13.0-1",
+    "hsl-shared-components": "^0.13.0-2",
     "htm-to-json": "^0.1.4",
     "intl": "1.2.5",
     "isomorphic-relay": "hannesj/isomorphic-relay#feature-relay-1-public",

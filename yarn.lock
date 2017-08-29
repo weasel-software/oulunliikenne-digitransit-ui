@@ -4232,9 +4232,9 @@ hpack.js@^2.1.6:
     readable-stream "^2.0.1"
     wbuf "^1.1.0"
 
-hsl-shared-components@^0.13.0-1:
-  version "0.13.0-1"
-  resolved "https://registry.yarnpkg.com/hsl-shared-components/-/hsl-shared-components-0.13.0-1.tgz#55f162dc9c0ff8b4973cf82e710e9d7112fe9fa3"
+hsl-shared-components@^0.13.0-2:
+  version "0.13.0-2"
+  resolved "https://registry.yarnpkg.com/hsl-shared-components/-/hsl-shared-components-0.13.0-2.tgz#a2584fbf0d2b75702e6b49e6a03de46c35920f66"
   dependencies:
     classnames "^2.2.5"
     lodash "^4.17.4"
