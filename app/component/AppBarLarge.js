@@ -125,7 +125,7 @@ const AppBarLarge = (props, { executeAction, location }) => {
     >
       <MenuItem
         link={
-          <StyledLink href="https://www.hsl.fi/saml/drupal_login?returnTo=https%3A//beta.hsl.fi/" />
+          <A href="https://www.hsl.fi/saml/drupal_login?returnTo=https%3A//beta.hsl.fi/" />
         }
         icon={<Icons.SignIn style={{ height: '2.5rem' }} />}
         text="Kirjaudu"
@@ -154,7 +154,7 @@ const AppBarLarge = (props, { executeAction, location }) => {
       {icons.map(icon =>
         <NavItem
           key={icon[1]}
-          link={<StyledLink to={icon[2]} />}
+          link={<A to={icon[2]} />}
           icon={icon[0]}
           text={icon[1]}
           textPosition={'Bottom'}
