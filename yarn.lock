@@ -4232,9 +4232,9 @@ hpack.js@^2.1.6:
     readable-stream "^2.0.1"
     wbuf "^1.1.0"
 
-hsl-shared-components@^0.12.0:
-  version "0.12.0"
-  resolved "https://registry.yarnpkg.com/hsl-shared-components/-/hsl-shared-components-0.12.0.tgz#4f1c05cbdceaecc1af2ca2bd81c5c077d2d3fca1"
+hsl-shared-components@^0.13.0-1:
+  version "0.13.0-1"
+  resolved "https://registry.yarnpkg.com/hsl-shared-components/-/hsl-shared-components-0.13.0-1.tgz#55f162dc9c0ff8b4973cf82e710e9d7112fe9fa3"
   dependencies:
     classnames "^2.2.5"
     lodash "^4.17.4"
@@ -7660,11 +7660,11 @@ react-native-web@0.0.x:
     prop-types "^15.5.10"
     react-timer-mixin "^0.13.3"
 
-react-primitives-svg@ktj/primitives-svg-build:
+"react-primitives-svg@github:ktj/primitives-svg-build":
   version "0.0.2"
   resolved "https://codeload.github.com/ktj/primitives-svg-build/tar.gz/52c80927f050f3a761a4373d09b3a12035343862"
 
-react-primitives@ktj/primitives-build:
+"react-primitives@github:ktj/primitives-build":
   version "0.4.3"
   resolved "https://codeload.github.com/ktj/primitives-build/tar.gz/8f19f48e06be7cc9588537312dd99db93d551e7b"
   dependencies:
