@@ -16,6 +16,8 @@ import {
 import FakeSearchBar from './FakeSearchBar';
 import OneTabSearchModal from './OneTabSearchModal';
 import { getAllEndpointLayers } from '../util/searchUtils';
+import { Theme, Button } from 'hsl-shared-components';
+import { ThemeProvider } from 'styled-components';
 
 class AddFavouriteContainer extends React.Component {
   static FavouriteIconIds = [
@@ -222,14 +224,11 @@ class AddFavouriteContainer extends React.Component {
                 />
               </div>
               <div className="add-favourite-container__save">
-                <button
-                  className={`add-favourite-container-button ${this.canSave()
-                    ? ''
-                    : 'disabled'}`}
-                  onClick={this.save}
-                >
-                  <FormattedMessage id="save" defaultMessage="Save" />
-                </button>
+                <ThemeProvider theme={Theme}>
+                  <Button onClick={this.save} disabled={!this.canSave()} primary>
+                    <FormattedMessage id="save" defaultMessage="Save" />
+                  </Button>
+                </ThemeProvider>
               </div>
               {this.isEdit() && [
                 <div key="delete" className="add-favourite-container__save">

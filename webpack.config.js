@@ -411,7 +411,6 @@ module.exports = {
   resolve: {
     mainFields: ['browser', 'module', 'jsnext:main', 'main'],
     alias: {
-      'lodash.merge': 'lodash-es/merge',
       'react-router/lib/getRouteParams': 'react-router/es/getRouteParams',
       'react-router-relay/lib': 'react-router-relay/es',
       'react-router-relay/lib/RelayRouterContext':
@@ -419,7 +418,6 @@ module.exports = {
       'react-router-relay/lib/QueryAggregator':
         'react-router-relay/es/QueryAggregator',
       moment$: 'moment/moment.js',
-      lodash: 'lodash-es',
       'babel-runtime/helpers/slicedToArray': path.join(
         __dirname,
         'app/util/slicedToArray',
