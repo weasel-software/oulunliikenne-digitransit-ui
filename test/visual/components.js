@@ -9,7 +9,7 @@
  * @ignoreElements ignore ignoreElements selector (string) or selectors (Array of string)
  * @fn callback(actions, find) –  Optional callback describes a sequence of actions to bring the
  * page to this state, starting from a previous state of the suite.
-* */
+ * */
 function testVariation(
   componentName,
   variationName = 'normal',
@@ -150,14 +150,10 @@ testVariation('RouteScheduleHeader');
 testVariation('RouteScheduleStopSelect');
 testVariation('RouteScheduleTripRow');
 
-testVariation('AppBarSmall', 'with-back-arrow');
-testVariation('AppBarSmall', 'without-back-arrow', 2);
-testVariation('AppBarSmall', 'with-logo', 3);
-
-testVariation('AppBarLarge');
-
-testVariation('FakeSearchWithButton', 'basic');
-testVariation('FakeSearchWithButton', 'large', 2);
+// testVariation('AppBarSmall', 'with-back-arrow');
+// testVariation('AppBarSmall', 'without-back-arrow', 2);
+// testVariation('AppBarSmall', 'with-logo', 3);
+// testVariation('AppBarLarge');
 
 testVariation('FrontPagePanelLarge');
 testVariation('FrontPagePanelSmall');
@@ -219,8 +215,12 @@ testVariation('SummaryRow', 'active-large-call-agency', 14);
 
 testVariation('CallAgencyWarning');
 
-testVariation('CurrentPositionSuggestionItem', 'with-position');
-testVariation('CurrentPositionSuggestionItem', 'no-position', 2);
+testVariation('CurrentPositionSuggestionItem', 'with-position').then(
+  skip('ie11'),
+);
+testVariation('CurrentPositionSuggestionItem', 'no-position', 2).then(
+  skip('ie11'),
+);
 
 testVariation('SuggestionItem', 'Favourite');
 testVariation('SuggestionItem', 'Address', 2);
@@ -229,10 +229,6 @@ testVariation('SuggestionItem', 'Stop', 4);
 testVariation('SuggestionItem', 'Stop-without-timetable', 5);
 
 testVariation('DateWarning', 'tomorrow-show-warning', 2);
-
-testVariation('ViaPointSelector', 'no-via-point');
-testVariation('ViaPointSelector', 'with-via-point', 2);
-testVariation('ViaPointBar', 'with-via-point', 2);
 
 testVariation('WalkLeg', 'walk-start');
 testVariation('WalkLeg', 'walk-middle', 2);

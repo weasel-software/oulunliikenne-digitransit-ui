@@ -38,8 +38,8 @@ class RouteStopListContainer extends React.Component {
   };
 
   getStops() {
-    const position = this.props.position;
-    const stops = this.props.pattern.stops;
+    const { position } = this.props;
+    const { stops } = this.props.pattern;
     const nearest =
       position.hasLocation === true
         ? getDistanceToNearestStop(position.lat, position.lon, stops)
@@ -83,7 +83,9 @@ class RouteStopListContainer extends React.Component {
           key={stop.gtfsId}
           stop={stop}
           mode={mode}
-          vehicles={vehicleStops[stop.gtfsId]}
+          vehicle={
+            vehicleStops[stop.gtfsId] ? vehicleStops[stop.gtfsId][0] : null
+          }
           distance={isNearest ? nearest.distance : null}
           ref={isNearest ? this.setNearestStop : null}
           currentTime={this.props.currentTime.unix()}

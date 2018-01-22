@@ -14,7 +14,7 @@ let L;
 //      Perhaps still using the require from webpack?
 if (isBrowser) {
   Marker = require('react-leaflet/es/Marker').default;
-  Popup = require('react-leaflet/es/Popup').default;
+  Popup = require('./Popup').default;
   L = require('leaflet');
 }
 /* eslint-enable global-require */
@@ -30,7 +30,6 @@ export default class GenericMarker extends React.Component {
           icons={{ smallIconSvg: 'smallIcon in svg', iconSvg: 'icon in svg' }}
           iconSizes={{ smallIconSvg: [8, 8], iconSvg: [20, 20] }}
           map="leaflet map object"
-          id="marker id here"
         />
       </ComponentUsageExample>
     </div>
@@ -46,34 +45,30 @@ export default class GenericMarker extends React.Component {
   static propTypes = {
     position: PropTypes.object.isRequired,
     getIcon: PropTypes.func.isRequired,
-    id: PropTypes.string,
     renderName: PropTypes.bool,
     name: PropTypes.string,
     children: PropTypes.node,
   };
 
+  state = { zoom: this.context.map.getZoom() };
+
   componentDidMount() {
     this.context.map.on('zoomend', this.onMapMove);
-  }
-
-  shouldComponentUpdate(nextProps) {
-    return nextProps.id !== this.props.id;
   }
 
   componentWillUnmount() {
     this.context.map.off('zoomend', this.onMapMove);
   }
 
-  onMapMove = () => this.forceUpdate();
+  onMapMove = () => this.setState({ zoom: this.context.map.getZoom() });
 
   getMarker = () => (
     <Marker
       position={{ lat: this.props.position.lat, lng: this.props.position.lon }}
-      icon={this.props.getIcon(this.context.map.getZoom())}
+      icon={this.props.getIcon(this.state.zoom)}
     >
       <Popup
         offset={this.context.config.map.genericMarker.popup.offset}
-        closeButton={false}
         maxWidth={this.context.config.map.genericMarker.popup.maxWidth}
         minWidth={this.context.config.map.genericMarker.popup.minWidth}
         className="popup"

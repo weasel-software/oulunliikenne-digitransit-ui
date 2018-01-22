@@ -4,7 +4,6 @@ import moment from 'moment';
 import groupBy from 'lodash/groupBy';
 import padStart from 'lodash/padStart';
 import { FormattedMessage } from 'react-intl';
-import { routerShape, locationShape } from 'react-router';
 import Icon from './Icon';
 import StopPageActionBar from './StopPageActionBar';
 import FilterTimeTableModal from './FilterTimeTableModal';
@@ -43,12 +42,6 @@ class Timetable extends React.Component {
       selectedDate: PropTypes.string,
       onDateChange: PropTypes.function,
     }).isRequired,
-    location: PropTypes.object,
-  };
-
-  static contextTypes = {
-    location: locationShape.isRequired,
-    router: routerShape.isRequired,
   };
 
   constructor(props) {
@@ -170,6 +163,17 @@ class Timetable extends React.Component {
           </div>
           <div className="timetable-for-printing">{this.dateForPrinting()}</div>
           <div className="momentum-scroll" style={{ flex: '1' }}>
+            <div className="timetable-time-headers">
+              <div className="hour">
+                <FormattedMessage id="hour" defaultMessage="Hour" />
+              </div>
+              <div className="minutes-per-route">
+                <FormattedMessage
+                  id="minutes-or-route"
+                  defaultMessage="Min/Route"
+                />
+              </div>
+            </div>
             {Object.keys(timetableMap)
               .sort((a, b) => a - b)
               .map(hour => (

@@ -1,17 +1,18 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import cx from 'classnames';
 import Relay from 'react-relay/classic';
 import some from 'lodash/some';
-
-import Map from './map/Map';
+import { routerShape } from 'react-router';
+import MapContainer from './map/MapContainer';
 import SelectedStopPopup from './map/popups/SelectedStopPopup';
 import SelectedStopPopupContent from './SelectedStopPopupContent';
 import Icon from './Icon';
 
 const getFullscreenTogglePath = (fullscreenMap, params) =>
-  `/${params.stopId ? 'pysakit' : 'terminaalit'}/${params.stopId
-    ? params.stopId
-    : params.terminalId}${fullscreenMap ? '' : '/kartta'}`;
+  `/${params.stopId ? 'pysakit' : 'terminaalit'}/${
+    params.stopId ? params.stopId : params.terminalId
+  }${fullscreenMap ? '' : '/kartta'}`;
 
 const toggleFullscreenMap = (fullscreenMap, params, router) => {
   if (fullscreenMap) {
@@ -21,6 +22,7 @@ const toggleFullscreenMap = (fullscreenMap, params, router) => {
   router.push(getFullscreenTogglePath(fullscreenMap, params));
 };
 
+/* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
 const fullscreenMapOverlay = (fullscreenMap, params, router) =>
   !fullscreenMap && (
     <div
@@ -34,15 +36,22 @@ const fullscreenMapOverlay = (fullscreenMap, params, router) =>
 
 const fullscreenMapToggle = (fullscreenMap, params, router) => (
   <div
-    className="fullscreen-toggle"
+    className={cx('fullscreen-toggle', 'stopPage', {
+      expanded: fullscreenMap,
+    })}
     key="fullscreen-toggle"
     onClick={() => {
       toggleFullscreenMap(fullscreenMap, params, router);
     }}
   >
-    <Icon img="icon-icon_maximize" className="cursor-pointer" />
+    {fullscreenMap ? (
+      <Icon img="icon-icon_minimize" className="cursor-pointer" />
+    ) : (
+      <Icon img="icon-icon_maximize" className="cursor-pointer" />
+    )}
   </div>
 );
+/* eslint-enable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
 
 const StopPageMap = ({ stop, routes, params }, { breakpoint, router }) => {
   if (!stop) {
@@ -67,7 +76,7 @@ const StopPageMap = ({ stop, routes, params }, { breakpoint, router }) => {
   const showScale = fullscreenMap || breakpoint === 'large';
 
   return (
-    <Map
+    <MapContainer
       className="full"
       lat={stop.lat}
       lon={stop.lon}
@@ -78,16 +87,13 @@ const StopPageMap = ({ stop, routes, params }, { breakpoint, router }) => {
       showScaleBar={showScale}
     >
       {children}
-    </Map>
+    </MapContainer>
   );
 };
 
 StopPageMap.contextTypes = {
   breakpoint: PropTypes.string.isRequired,
-  router: PropTypes.shape({
-    replace: PropTypes.func.isRequired,
-    push: PropTypes.func.isRequired,
-  }).isRequired,
+  router: routerShape.isRequired,
 };
 
 StopPageMap.propTypes = {

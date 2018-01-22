@@ -9,42 +9,13 @@ import TripLink from './TripLink';
 import WalkDistance from './WalkDistance';
 import StopCode from './StopCode';
 import { fromStopTime } from './DepartureTime';
+import { PREFIX_STOPS } from '../util/path';
 import ComponentUsageExample from './ComponentUsageExample';
 
-const getRouteStopSvg = (first, last, color) => (
-  <svg className="route-stop-schematized">
-    <line
-      x1="6"
-      x2="6"
-      y1={first ? 13 : 0}
-      y2={last ? 13 : 67}
-      strokeWidth="5"
-      stroke={color || 'currentColor'}
-    />
-    <line
-      x1="6"
-      x2="6"
-      y1={first ? 13 : 0}
-      y2={last ? 13 : 67}
-      strokeWidth="2"
-      stroke="white"
-      opacity="0.2"
-    />
-    <circle
-      strokeWidth="2"
-      stroke={color || 'currentColor'}
-      fill="white"
-      cx="6"
-      cy="13"
-      r="5"
-    />
-  </svg>
-);
-
-class RouteStop extends React.Component {
+class RouteStop extends React.PureComponent {
   static propTypes = {
     color: PropTypes.string,
-    vehicles: PropTypes.array,
+    vehicle: PropTypes.object,
     stop: PropTypes.object,
     mode: PropTypes.string,
     className: PropTypes.string,
@@ -91,75 +62,91 @@ class RouteStop extends React.Component {
 
   render() {
     const {
-      vehicles,
+      vehicle,
       stop,
       mode,
       distance,
-      last,
-      first,
       currentTime,
       className,
       color,
     } = this.props;
 
-    const vehicleTripLinks =
-      vehicles &&
-      vehicles.map(vehicle => (
-        <Relay.RootContainer
-          key={vehicle.id}
-          Component={TripLink}
-          route={
-            new FuzzyTripRoute({
-              route: vehicle.route,
-              direction: vehicle.direction,
-              date: vehicle.operatingDay,
-              time:
-                vehicle.tripStartTime.substring(0, 2) * 60 * 60 +
-                vehicle.tripStartTime.substring(2, 4) * 60,
-            })
-          }
-          renderFetched={data => <TripLink mode={vehicle.mode} {...data} />}
-        />
-      ));
+    const vehicleTripLink = vehicle && (
+      <Relay.RootContainer
+        key={vehicle.id}
+        Component={TripLink}
+        route={
+          new FuzzyTripRoute({
+            route: vehicle.route,
+            direction: vehicle.direction,
+            date: vehicle.operatingDay,
+            time:
+              vehicle.tripStartTime.substring(0, 2) * 60 * 60 +
+              vehicle.tripStartTime.substring(2, 4) * 60,
+          })
+        }
+        renderFetched={data => <TripLink mode={vehicle.mode} {...data} />}
+      />
+    );
 
     return (
       <div
-        className={cx('route-stop row', className)}
+        className={cx('route-stop location-details_container ', className)}
         ref={el => {
           this.element = el;
         }}
       >
-        <div className="columns route-stop-now">{vehicleTripLinks}</div>
-        <Link to={`/pysakit/${stop.gtfsId}`}>
-          <div className={`columns route-stop-name ${mode}`}>
-            {getRouteStopSvg(first, last, color || 'currentColor')}
-            {stop.name}
-            <br />
-            <div style={{ whiteSpace: 'nowrap' }}>
-              {stop.code && <StopCode code={stop.code} />}
-              <span className="route-stop-address">{stop.desc}</span>
-              {'\u2002'}
-              {distance && (
-                <WalkDistance
-                  className="nearest-route-stop"
-                  icon="icon_location-with-user"
-                  walkDistance={distance}
-                />
-              )}
-            </div>
-          </div>
-          {stop.stopTimesForPattern &&
-            stop.stopTimesForPattern.length > 0 &&
-            stop.stopTimesForPattern.map(stopTime => (
-              <div
-                key={stopTime.scheduledDeparture}
-                className="columns route-stop-time"
-              >
-                {fromStopTime(stopTime, currentTime)}
+        <div className="route-stop-now">{vehicleTripLink}</div>
+        <div className={cx('route-stop-now_circleline', mode)}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width={15}
+            height={30}
+            style={{ fill: color, stroke: color }}
+          >
+            <circle
+              strokeWidth="2"
+              stroke={color || 'currentColor'}
+              fill="white"
+              cx="6"
+              cy="13"
+              r="5"
+            />
+          </svg>
+          <div className={cx('route-stop-now_line', mode)} />
+        </div>
+        <div className="route-stop-row_content-container">
+          <Link to={`/${PREFIX_STOPS}/${stop.gtfsId}`}>
+            <div className={` route-details_container ${mode}`}>
+              <span>{stop.name}</span>
+              <div>
+                {stop.code && <StopCode code={stop.code} />}
+                <span className="route-stop-address">{stop.desc}</span>
+                {'\u2002'}
+                {distance && (
+                  <WalkDistance
+                    className="nearest-route-stop"
+                    icon="icon_location-with-user"
+                    walkDistance={distance}
+                  />
+                )}
               </div>
-            ))}
-        </Link>
-        <div className="route-stop-row-divider" />
+            </div>
+            {stop.stopTimesForPattern &&
+              stop.stopTimesForPattern.length > 0 && (
+                <div className="departure-times-container">
+                  {stop.stopTimesForPattern.map(stopTime => (
+                    <div
+                      key={stopTime.scheduledDeparture}
+                      className="route-stop-time"
+                    >
+                      {fromStopTime(stopTime, currentTime)}
+                    </div>
+                  ))}
+                </div>
+              )}
+          </Link>
+        </div>
       </div>
     );
   }

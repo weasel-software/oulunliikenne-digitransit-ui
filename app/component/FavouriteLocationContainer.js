@@ -23,11 +23,9 @@ const FavouriteLocationContainer = ({
     <FavouriteLocation
       favourite={favourite}
       clickFavourite={onClickFavourite}
-      {...{
-        departureTime,
-        currentTime,
-        firstTransitLeg,
-      }}
+      departureTime={departureTime}
+      currentTime={currentTime}
+      firstTransitLeg={firstTransitLeg}
     />
   );
 };
@@ -82,7 +80,7 @@ export default Relay.createContainer(FavouriteLocationContainer, {
     numItineraries: 1,
     walkReluctance: 2.0001,
     walkBoardCost: 600,
-    minTransferTime: 180,
+    minTransferTime: 120,
     walkSpeed: 1.2,
     wheelchair: false,
     maxWalkDistance: 0,

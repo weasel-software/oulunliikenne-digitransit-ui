@@ -1,14 +1,15 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import get from 'lodash/get';
 import some from 'lodash/some';
 import polyline from 'polyline-encoded';
 
 import LocationMarker from './map/LocationMarker';
 import ItineraryLine from './map/ItineraryLine';
-import Map from './map/Map';
-import Icon from './Icon';
+import MapContainer from './map/MapContainer';
 import { otpToLocation } from '../util/otpStrings';
 import { isBrowser } from '../util/browser';
+import { dtLocationShape } from '../util/shapes';
 
 let L;
 
@@ -53,7 +54,7 @@ export default function ItineraryPageMap(
     } else {
       leafletObjs.push(
         <LocationMarker
-          key={'via'}
+          key="via"
           position={otpToLocation(location.query.intermediatePlaces)}
           className="via"
           noText
@@ -65,7 +66,7 @@ export default function ItineraryPageMap(
   if (itinerary) {
     leafletObjs.push(
       <ItineraryLine
-        key={'line'}
+        key="line"
         legs={itinerary.legs}
         showTransferLabels
         showIntermediateStops
@@ -85,6 +86,7 @@ export default function ItineraryPageMap(
   const overlay = fullscreen ? (
     undefined
   ) : (
+    /* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
     <div className="map-click-prevent-overlay" onClick={toggleFullscreenMap} />
   );
 
@@ -99,14 +101,15 @@ export default function ItineraryPageMap(
   // onCenterMap() used to check if the layer has a marker for an itinerary
   // stop, emulate a click on the map to open up the popup
   const onCenterMap = element => {
-    if (!element || !center) {
+    const map = get(element, 'leafletElement', null);
+    if (!map || !center) {
       return;
     }
-    element.map.leafletElement.closePopup();
+    map.closePopup();
     clearTimeout(timeout);
     if (fullscreen || breakpoint === 'large') {
       const latlngPoint = new L.LatLng(center.lat, center.lon);
-      element.map.leafletElement.eachLayer(layer => {
+      map.eachLayer(layer => {
         if (
           layer instanceof L.Marker &&
           layer.getLatLng().equals(latlngPoint)
@@ -115,12 +118,8 @@ export default function ItineraryPageMap(
             () =>
               layer.fireEvent('click', {
                 latlng: latlngPoint,
-                layerPoint: element.map.leafletElement.latLngToLayerPoint(
-                  latlngPoint,
-                ),
-                containerPoint: element.map.leafletElement.latLngToContainerPoint(
-                  latlngPoint,
-                ),
+                layerPoint: map.latLngToLayerPoint(latlngPoint),
+                containerPoint: map.latLngToContainerPoint(latlngPoint),
               }),
             250,
           );
@@ -132,7 +131,7 @@ export default function ItineraryPageMap(
   };
 
   return (
-    <Map
+    <MapContainer
       className="full itinerary"
       leafletObjs={leafletObjs}
       lat={center ? center.lat : from.lat}
@@ -142,16 +141,11 @@ export default function ItineraryPageMap(
       fitBounds={Boolean(bounds)}
       boundsOptions={{ maxZoom: 16 }}
       showScaleBar={showScale}
-      ref={onCenterMap}
+      mapRef={onCenterMap}
       hideOrigin
     >
       {breakpoint !== 'large' && overlay}
-      {breakpoint !== 'large' && (
-        <div className="fullscreen-toggle" onClick={toggleFullscreenMap}>
-          <Icon img="icon-icon_maximize" className="cursor-pointer" />
-        </div>
-      )}
-    </Map>
+    </MapContainer>
   );
 }
 
@@ -161,18 +155,9 @@ ItineraryPageMap.propTypes = {
     from: PropTypes.string.isRequired,
     to: PropTypes.string.isRequired,
   }).isRequired,
-  from: PropTypes.shape({
-    lat: PropTypes.number.isRequired,
-    lon: PropTypes.number.isRequired,
-  }),
-  to: PropTypes.shape({
-    lat: PropTypes.number.isRequired,
-    lon: PropTypes.number.isRequired,
-  }),
-  center: PropTypes.shape({
-    lat: PropTypes.number.isRequired,
-    lon: PropTypes.number.isRequired,
-  }),
+  from: dtLocationShape,
+  to: dtLocationShape,
+  center: dtLocationShape,
   routes: PropTypes.arrayOf(
     PropTypes.shape({
       fullscreenMap: PropTypes.bool,

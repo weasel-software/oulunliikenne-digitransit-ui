@@ -1,23 +1,21 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import cx from 'classnames';
-import { Link, routerShape, locationShape } from 'react-router';
+import { routerShape, locationShape } from 'react-router';
 import { FormattedMessage, intlShape } from 'react-intl';
 import connectToStores from 'fluxible-addons-react/connectToStores';
 import isEmpty from 'lodash/isEmpty';
 import isNumber from 'lodash/isNumber';
-import without from 'lodash/without';
 import Icon from './Icon';
+import BackButton from './BackButton';
 import FavouriteIconTable from './FavouriteIconTable';
 import {
   addFavouriteLocation,
   deleteFavouriteLocation,
 } from '../action/FavouriteActions';
-import FakeSearchBar from './FakeSearchBar';
-import OneTabSearchModal from './OneTabSearchModal';
-import { getAllEndpointLayers } from '../util/searchUtils';
 import { Theme, Button } from 'hsl-shared-components';
 import { ThemeProvider } from 'styled-components';
+import DTEndpointAutosuggest from './DTEndpointAutosuggest';
 
 class AddFavouriteContainer extends React.Component {
   static FavouriteIconIds = [
@@ -41,11 +39,12 @@ class AddFavouriteContainer extends React.Component {
     favourite: PropTypes.object, // if specified edit mode is activated
   };
 
-  componentWillMount = () => {
+  constructor(props, context) {
+    super(props, context);
     if (this.isEdit()) {
-      this.setState({ favourite: this.props.favourite });
+      this.state = { favourite: this.props.favourite };
     } else {
-      this.setState({
+      this.state = {
         favourite: {
           selectedIconId: undefined,
           lat: undefined,
@@ -54,26 +53,17 @@ class AddFavouriteContainer extends React.Component {
           address: undefined,
           version: 1,
         },
-      });
+      };
     }
-  };
+  }
 
-  setCoordinatesAndAddress = (name, location) => {
-    let address = name;
-    if (location.type === 'CurrentLocation') {
-      const position = this.context
-        .getStore('PositionStore')
-        .getLocationState();
-      if (position.address.length > 0) {
-        address = position.address;
-      }
-    }
+  setCoordinatesAndAddress = location => {
     this.setState({
       favourite: {
         ...this.state.favourite,
-        lat: location.geometry.coordinates[1],
-        lon: location.geometry.coordinates[0],
-        address,
+        lat: location.lat,
+        lon: location.lon,
+        address: location.address,
       },
     });
   };
@@ -100,7 +90,7 @@ class AddFavouriteContainer extends React.Component {
   };
 
   quit = () => {
-    this.context.router.replace('/suosikit');
+    this.context.router.goBack();
   };
 
   specifyName = event => {
@@ -116,25 +106,24 @@ class AddFavouriteContainer extends React.Component {
   };
 
   render() {
-    const destinationPlaceholder = this.context.intl.formatMessage({
-      id: 'address',
-      defaultMessage: 'Address',
-    });
-
-    const searchTabLabel = this.context.intl.formatMessage({
-      id: 'favourite-target',
-      defaultMessage: 'Favourite location',
-    });
-
-    const favourite = this.state.favourite;
-    const favouriteLayers = without(getAllEndpointLayers(), 'FavouritePlace');
+    const { favourite } = this.state;
+    const favouriteLayers = [
+      'CurrentPosition',
+      'Geocoding',
+      'OldSearch',
+      'Stops',
+    ];
 
     return (
       <div className="fullscreen">
         <div className="add-favourite-container">
-          <Link to="/suosikit" className="right cursor-pointer">
-            <Icon id="add-favourite-close-icon" img="icon-icon_close" />
-          </Link>
+          <div className="button-container">
+            <BackButton
+              icon="icon-icon_close"
+              color="#666"
+              className="add-favourite-close-button"
+            />
+          </div>
           <row>
             <div className="add-favourite-container__content small-12 small-centered columns">
               <header className="add-favourite-container__header row">
@@ -167,23 +156,15 @@ class AddFavouriteContainer extends React.Component {
                     defaultMessage="Specify location"
                   />
                 </h4>
-                <FakeSearchBar
-                  endpointAddress={
-                    (this.state != null ? favourite.address : undefined) || ''
-                  }
-                  placeholder={destinationPlaceholder}
-                  onClick={e => {
-                    e.preventDefault();
-                    this.context.router.push({
-                      ...this.context.location,
-                      state: {
-                        ...this.context.location.state,
-                        oneTabSearchModalOpen: true,
-                      },
-                    });
-                  }}
-                  id="destination"
-                  className="add-favourite-container__input-placeholder"
+                <DTEndpointAutosuggest
+                  id="origin"
+                  refPoint={{ lat: 0, lon: 0 }}
+                  searchType="endpoint"
+                  placeholder="address"
+                  value={favourite.address || ''}
+                  layers={favouriteLayers}
+                  onLocationSelected={this.setCoordinatesAndAddress}
+                  showSpinner
                 />
               </div>
               <div className="add-favourite-container__give-name">
@@ -251,14 +232,6 @@ class AddFavouriteContainer extends React.Component {
             </div>
           </row>
         </div>
-        <OneTabSearchModal
-          customTabLabel={searchTabLabel}
-          layers={favouriteLayers}
-          customOnSuggestionSelected={(name, item) => {
-            this.setCoordinatesAndAddress(name, item);
-            return this.context.router.goBack();
-          }}
-        />
       </div>
     );
   }

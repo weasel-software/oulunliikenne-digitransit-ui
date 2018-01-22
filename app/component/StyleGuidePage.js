@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import sortBy from 'lodash/sortBy';
 
-import { FakeSearchWithButton } from './FakeSearchWithButtonContainer';
 import Icon from './Icon';
 import IconWithTail from './IconWithTail';
 import SelectedIconWithTail from './SelectedIconWithTail';
@@ -69,8 +68,6 @@ import { component as SummaryRow } from './SummaryRow';
 import PageFooter from './PageFooter';
 import FooterItem from './FooterItem';
 import DateWarning from './DateWarning';
-import ViaPointSelector from './ViaPointSelector';
-import ViaPointBar from './ViaPointBar';
 import WalkLeg from './WalkLeg';
 import WaitLeg from './WaitLeg';
 import BicycleLeg from './BicycleLeg';
@@ -134,7 +131,6 @@ const components = {
   RouteStop,
   DepartureRow,
   BicycleRentalStationRow,
-  FakeSearchWithButton,
   AppBarSmall,
   AppBarLarge,
   FrontPagePanelLarge,
@@ -157,8 +153,6 @@ const components = {
   PageFooter,
   FooterItem,
   DateWarning,
-  ViaPointSelector,
-  ViaPointBar,
   WalkLeg,
   WaitLeg,
   BicycleLeg,
@@ -224,9 +218,7 @@ function getColors() {
         <svg className="color-palette" width="50" height="50">
           <rect width="50" height="50" style={{ fill: '#4DA2D9' }} />
         </svg>
-        <span className="code color-code">
-          $disruption-passive-color
-        </span>#4DA2D9
+        <span className="code color-code">$disruption-passive-color</span>#4DA2D9
       </div>
 
       <p>TODO: dynamically get these colors, now only for HSL</p>
@@ -335,7 +327,7 @@ function getTextStyles() {
   return (
     <section>
       <p>
-        <a>This is a link</a>
+        <a href="#a">This is a link</a>
         <span className="code">{'<a />'}</span>
       </p>
       <p>

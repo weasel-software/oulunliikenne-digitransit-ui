@@ -7,6 +7,7 @@ import DisruptionInfo from './DisruptionInfo';
 import Icon from './Icon';
 import ComponentUsageExample from './ComponentUsageExample';
 import LangSelect from './LangSelect';
+import MessageBar from './MessageBar';
 
 const AppBarLarge = ({ titleClicked }, { router, location, config, intl }) => {
   const openDisruptionInfo = () => {
@@ -19,6 +20,7 @@ const AppBarLarge = ({ titleClicked }, { router, location, config, intl }) => {
     });
   };
 
+  /* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions, jsx-a11y/anchor-is-valid */
   return (
     <div>
       <div className="top-bar bp-large flex-horizontal">
@@ -51,6 +53,7 @@ const AppBarLarge = ({ titleClicked }, { router, location, config, intl }) => {
           <ExternalLink className="external-top-bar" {...config.appBarLink} />
         </div>
       </div>
+      <MessageBar />
       <DisruptionInfo />
     </div>
   );

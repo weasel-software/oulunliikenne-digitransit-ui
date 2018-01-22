@@ -1,9 +1,8 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { intlShape } from 'react-intl';
-
+import { routerShape } from 'react-router';
 import Icon from './Icon';
-import { openFeedbackModal } from '../action/feedbackActions';
 import LazilyLoad, { importLazy } from './LazilyLoad';
 
 class MainMenuContainer extends Component {
@@ -11,9 +10,13 @@ class MainMenuContainer extends Component {
     executeAction: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
     piwik: PropTypes.object,
-    router: PropTypes.object.isRequired,
+    router: routerShape.isRequired,
     intl: intlShape.isRequired,
     config: PropTypes.object.isRequired,
+  };
+
+  static propTypes = {
+    homeUrl: PropTypes.string.isRequired,
   };
 
   onRequestChange = newState => this.internalSetOffcanvas(newState);
@@ -53,11 +56,6 @@ class MainMenuContainer extends Component {
     }
   };
 
-  openFeedback = () => {
-    this.context.executeAction(openFeedbackModal);
-    this.toggleOffcanvas();
-  };
-
   mainMenuModules = {
     Drawer: () => importLazy(import('material-ui/Drawer')),
     MainMenu: () => importLazy(import('./MainMenu')),
@@ -77,10 +75,10 @@ class MainMenuContainer extends Component {
               onRequestChange={this.onRequestChange}
             >
               <MainMenu
-                openFeedback={this.openFeedback}
                 toggleVisibility={this.toggleOffcanvas}
                 showDisruptionInfo={this.getOffcanvasState()}
                 visible={this.getOffcanvasState()}
+                homeUrl={this.props.homeUrl}
               />
             </Drawer>
           )}
@@ -95,7 +93,7 @@ class MainMenuContainer extends Component {
               onClick={this.toggleOffcanvas}
               className="noborder cursor-pointer"
             >
-              <Icon img={'icon-icon_menu'} className="icon" />
+              <Icon img="icon-icon_menu" className="icon" />
             </button>
           </div>
         ) : null}

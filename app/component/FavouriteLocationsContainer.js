@@ -2,18 +2,17 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Relay from 'react-relay/classic';
 import { routerShape, locationShape, Link } from 'react-router';
-import connectToStores from 'fluxible-addons-react/connectToStores';
 import SwipeableViews from 'react-swipeable-views';
 import { bindKeyboard } from 'react-swipeable-views-utils';
 import range from 'lodash/range';
-
+import { navigateTo } from '../util/path';
 import Icon from './Icon';
 import FavouriteLocationContainer from './FavouriteLocationContainer';
 import FavouriteLocation from './FavouriteLocation';
 import EmptyFavouriteLocationSlot from './EmptyFavouriteLocationSlot';
 import ComponentUsageExample from './ComponentUsageExample';
-import { setEndpoint } from '../action/EndpointActions';
 import NoFavouriteLocations from './NoFavouriteLocations';
+import { dtLocationShape } from '../util/shapes';
 import { isMobile } from '../util/browser';
 
 class FavouriteLocationContainerRoute extends Relay.Route {
@@ -43,11 +42,11 @@ class FavouriteLocationContainerRoute extends Relay.Route {
 
 const SwipeableViewsKB = bindKeyboard(SwipeableViews);
 
-class FavouriteLocationsContainer extends React.Component {
+export default class FavouriteLocationsContainer extends React.Component {
   static contextTypes = {
     executeAction: PropTypes.func.isRequired,
     router: routerShape.isRequired,
-    location: locationShape.isRequired,
+    origin: locationShape.isRequired,
     config: PropTypes.object.isRequired,
   };
 
@@ -63,10 +62,7 @@ class FavouriteLocationsContainer extends React.Component {
   static propTypes = {
     favourites: PropTypes.array.isRequired,
     currentTime: PropTypes.object.isRequired,
-    location: PropTypes.shape({
-      lat: PropTypes.number.isRequired,
-      lon: PropTypes.number.isRequired,
-    }),
+    origin: dtLocationShape.isRequired,
   };
 
   static SLOTS_PER_CLICK = 3;
@@ -108,19 +104,14 @@ class FavouriteLocationsContainer extends React.Component {
       lat,
       lon,
       address: locationName,
+      ready: true,
     };
 
-    this.context.executeAction(setEndpoint, {
-      target: 'destination',
-      endpoint: location,
+    navigateTo({
+      origin: this.props.origin,
+      destination: location,
+      context: '/',
       router: this.context.router,
-      location: {
-        ...this.context.location,
-        query: {
-          ...this.context.location.query,
-          time: this.props.currentTime.unix(),
-        },
-      },
     });
   };
 
@@ -140,8 +131,8 @@ class FavouriteLocationsContainer extends React.Component {
       />
     );
 
-    if (this.props.location) {
-      const config = this.context.config;
+    if (this.props.origin.ready) {
+      const { config } = this.context;
 
       return (
         <Relay.RootContainer
@@ -150,8 +141,8 @@ class FavouriteLocationsContainer extends React.Component {
           route={
             new FavouriteLocationContainerRoute({
               from: {
-                lat: this.props.location.lat,
-                lon: this.props.location.lon,
+                lat: this.props.origin.lat,
+                lon: this.props.origin.lon,
               },
 
               to: {
@@ -175,7 +166,7 @@ class FavouriteLocationsContainer extends React.Component {
             <FavouriteLocationContainer
               favourite={favourite}
               onClickFavourite={this.setDestination}
-              currentTime={this.props.currentTime.unix()}
+              currentTime={this.props.currentTime}
               {...data}
             />
           )}
@@ -219,6 +210,7 @@ class FavouriteLocationsContainer extends React.Component {
     displayLeft = !isMobile && displayLeft;
     displayRight = !isMobile && displayRight;
 
+    /* eslint-disable jsx-a11y/anchor-is-valid */
     return (
       <div style={{ position: 'relative' }}>
         <div
@@ -264,27 +256,3 @@ class FavouriteLocationsContainer extends React.Component {
     );
   }
 }
-
-export default connectToStores(
-  FavouriteLocationsContainer,
-  ['TimeStore', 'FavouriteLocationStore', 'EndpointStore'],
-  context => {
-    const position = context.getStore('PositionStore').getLocationState();
-    const origin = context.getStore('EndpointStore').getOrigin();
-
-    return {
-      currentTime: context.getStore('TimeStore').getCurrentTime(),
-      favourites: context.getStore('FavouriteLocationStore').getLocations(),
-
-      location: (() => {
-        if (origin.useCurrentPosition) {
-          if (position.hasLocation) {
-            return position;
-          }
-          return null;
-        }
-        return origin;
-      })(),
-    };
-  },
-);

@@ -15,8 +15,9 @@ const getNextDepartures = (routes, lat, lon) => {
       const closest = getDistanceToNearestStop(lat, lon, pattern.stops);
       closest.stop.stoptimes
         .filter(stoptime => {
-          const seenKey = `${stoptime.pattern.route.gtfsId}:${stoptime.pattern
-            .headsign}`;
+          const seenKey = `${stoptime.pattern.route.gtfsId}:${
+            stoptime.pattern.headsign
+          }`;
           const isSeen = seenDepartures[seenKey];
           const isFavourite =
             stoptime.pattern.route.gtfsId === route.gtfsId &&
@@ -45,20 +46,13 @@ const getNextDepartures = (routes, lat, lon) => {
 const FavouriteRouteListContainer = connectToStores(
   NextDeparturesList,
   ['TimeStore'],
-  (context, { routes }) => {
-    const PositionStore = context.getStore('PositionStore');
-    const position = PositionStore.getLocationState();
-    const origin = context.getStore('EndpointStore').getOrigin();
-    const location = origin.useCurrentPosition ? position : origin;
-
-    return {
-      currentTime: context
-        .getStore('TimeStore')
-        .getCurrentTime()
-        .unix(),
-      departures: getNextDepartures(routes, location.lat, location.lon),
-    };
-  },
+  (context, { routes, origin }) => ({
+    currentTime: context
+      .getStore('TimeStore')
+      .getCurrentTime()
+      .unix(),
+    departures: getNextDepartures(routes, origin.lat, origin.lon),
+  }),
 );
 
 // TODO: Add filtering in stoptimesForPatterns for route gtfsId

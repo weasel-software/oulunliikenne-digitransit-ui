@@ -1,5 +1,6 @@
 .desktop .summary {
-  flex: 1 1 auto;
+  flex: 1 0 0px;
+  flex-basis: 0px;
   display: flex;
   flex-direction: column;
   overflow-x: auto;
@@ -13,7 +14,21 @@
 }
 
 .summary-no-route-found {
-    padding: 1em;
+  padding: 1em;
+  .external-no-route .external-link-container {
+    margin-left: 0.5rem;
+    a.external-link {
+      color: $link-color;
+    }
+  }
+  .no-route-icon {
+    margin-right: 1em;
+    margin-top: 0.5em;
+    color: white;
+    fill: $disruption-color;
+    width: 2em;
+    height: 2em;
+  }
 }
 
 .time-selectors {
@@ -120,6 +135,10 @@
   }
 }
 .time-input-container {
+  form {
+    display: inherit;
+    margin-bottom: 0;
+  }
   display: flex;
   background: $white;
   padding: 0 calc(0.7em + 1.5rem) 0 0.7em;
@@ -188,6 +207,7 @@
 
     > span {
       margin-left: -1.5rem;
+      margin-right: 1rem;
     }
   }
 

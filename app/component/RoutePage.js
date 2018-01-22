@@ -3,6 +3,7 @@ import React from 'react';
 import Relay from 'react-relay/classic';
 import { FormattedMessage, intlShape } from 'react-intl';
 import cx from 'classnames';
+import { routerShape } from 'react-router';
 
 import Icon from './Icon';
 import CallAgencyWarning from './CallAgencyWarning';
@@ -14,14 +15,13 @@ import {
   startRealTimeClient,
   stopRealTimeClient,
 } from '../action/realTimeClientAction';
+import { PREFIX_ROUTES } from '../util/path';
 
 class RoutePage extends React.Component {
   static contextTypes = {
     getStore: PropTypes.func.isRequired,
     executeAction: PropTypes.func.isRequired,
-    router: PropTypes.shape({
-      replace: PropTypes.func.isRequired,
-    }).isRequired,
+    router: routerShape.isRequired,
     intl: intlShape.isRequired,
     breakpoint: PropTypes.string,
   };
@@ -70,12 +70,13 @@ class RoutePage extends React.Component {
     this.context.router.replace(path);
   };
 
+  /* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions, jsx-a11y/anchor-is-valid */
   render() {
     if (this.props.route == null) {
       /* In this case there is little we can do
        * There is no point continuing rendering as it can only
        * confuse user. Therefore redirect to Routes page */
-      this.context.router.replace('/linjat');
+      this.context.router.replace(`/${PREFIX_ROUTES}`);
       return null;
     }
 
@@ -122,8 +123,8 @@ class RoutePage extends React.Component {
               className={cx({ 'is-active': activeTab === 'pysakit' })}
               onClick={() => {
                 this.changeTab(
-                  `/linjat/${this.props.route.gtfsId}/pysakit/${this.props
-                    .params.patternId || ''}`,
+                  `/${PREFIX_ROUTES}/${this.props.route.gtfsId}/pysakit/${this
+                    .props.params.patternId || ''}`,
                 );
               }}
             >
@@ -136,8 +137,8 @@ class RoutePage extends React.Component {
               className={cx({ 'is-active': activeTab === 'aikataulu' })}
               onClick={() => {
                 this.changeTab(
-                  `/linjat/${this.props.route.gtfsId}/aikataulu/${this.props
-                    .params.patternId || ''}`,
+                  `/${PREFIX_ROUTES}/${this.props.route.gtfsId}/aikataulu/${this
+                    .props.params.patternId || ''}`,
                 );
               }}
             >
@@ -153,7 +154,9 @@ class RoutePage extends React.Component {
                 'is-active': activeTab === 'hairiot',
               })}
               onClick={() => {
-                this.changeTab(`/linjat/${this.props.route.gtfsId}/hairiot`);
+                this.changeTab(
+                  `/${PREFIX_ROUTES}/${this.props.route.gtfsId}/hairiot`,
+                );
               }}
             >
               <div>

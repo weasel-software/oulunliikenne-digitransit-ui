@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import cx from 'classnames';
+import { intlShape } from 'react-intl';
 import IconWithBigCaution from './IconWithBigCaution';
 import IconWithIcon from './IconWithIcon';
 import ComponentUsageExample from './ComponentUsageExample';
@@ -8,9 +9,9 @@ import { realtimeDeparture as exampleRealtimeDeparture } from './ExampleData';
 
 const LONG_ROUTE_NUMBER_LENGTH = 6;
 
-function RouteNumber(props) {
+function RouteNumber(props, context) {
   let mode = props.mode.toLowerCase();
-  const color = props.color;
+  const { color } = props;
 
   if (mode === 'bicycle' || mode === 'car') {
     mode += '-withoutBox';
@@ -53,8 +54,19 @@ function RouteNumber(props) {
   // props.vertical is FALSE in Near you view
   // props.vertical is TRUE in itinerary view
   return (
-    <span className={cx('route-number', { vertical: props.vertical })}>
-      <span className={cx('vcenter-children', props.className)}>
+    <span
+      className={cx('route-number', {
+        'overflow-fade': longText && props.fadeLong,
+        vertical: props.vertical,
+      })}
+    >
+      <span
+        className={cx('vcenter-children', props.className)}
+        aria-label={context.intl.formatMessage({
+          id: mode,
+          defaultMessage: 'Vehicle',
+        })}
+      >
         {props.vertical === true ? (
           <div className={`special-icon ${mode}`}>
             {icon(props.isCallAgency, props.hasDisruption)}
@@ -172,13 +184,15 @@ RouteNumber.propTypes = {
 };
 
 RouteNumber.defaultProps = {
-  withBar: false,
   className: '',
   vertical: false,
   hasDisruption: false,
   fadeLong: false,
   text: '',
-  isCallAgency: false,
+};
+
+RouteNumber.contextTypes = {
+  intl: intlShape.isRequired, // eslint-disable-line react/no-typos
 };
 
 RouteNumber.displayName = 'RouteNumber';

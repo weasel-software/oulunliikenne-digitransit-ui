@@ -6,7 +6,6 @@ import { Router, match } from 'react-router';
 import IsomorphicRelay from 'isomorphic-relay';
 import IsomorphicRouter from 'isomorphic-relay-router';
 import provideContext from 'fluxible-addons-react/provideContext';
-import tapEventPlugin from 'react-tap-event-plugin';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import debug from 'debug';
@@ -18,6 +17,7 @@ import {
   batchMiddleware,
 } from 'react-relay-network-layer/lib';
 import OfflinePlugin from 'offline-plugin/runtime';
+import moment from 'moment-timezone';
 
 import Raven from './util/Raven';
 import configureMoment from './util/configure-moment';
@@ -25,12 +25,14 @@ import StoreListeningIntlProvider from './util/StoreListeningIntlProvider';
 import MUITheme from './MuiTheme';
 import appCreator from './app';
 import translations from './translations';
-import { openFeedbackModal } from './action/feedbackActions';
-import { shouldDisplayPopup } from './util/Feedback';
-import { initGeolocation } from './action/PositionActions';
 import historyCreator from './history';
-import { COMMIT_ID, BUILD_TIME } from './buildInfo';
-import Piwik from './util/piwik';
+import { BUILD_TIME } from './buildInfo';
+import createPiwik from './util/piwik';
+import ErrorBoundary from './component/ErrorBoundary';
+
+import { getGeocodingResult } from './util/searchUtils';
+import { locationToOTP } from './util/otpStrings';
+import { kkj2ToWgs84 } from './util/geo-utils';
 
 const plugContext = f => () => ({
   plugComponentContext: f,
@@ -40,20 +42,12 @@ const plugContext = f => () => ({
 
 window.debug = debug; // Allow _debug.enable('*') in browser console
 
-// Material-ui uses touch tap events
-tapEventPlugin();
-
 // TODO: this is an ugly hack, but required due to cyclical processing in app
-const config = window.state.context.plugins['extra-context-plugin'].config;
+const { config } = window.state.context.plugins['extra-context-plugin'];
 const app = appCreator(config);
 
-const piwik = Piwik.getTracker(config.PIWIK_ADDRESS, config.PIWIK_ID);
-
-if (!config.PIWIK_ADDRESS || !config.PIWIK_ID || config.PIWIK_ID === '') {
-  piwik.trackEvent = () => {};
-  piwik.setCustomVariable = () => {};
-  piwik.trackPageView = () => {};
-}
+const raven = Raven(config.SENTRY_DSN);
+const piwik = createPiwik(config, raven);
 
 const addPiwik = c => {
   c.piwik = piwik; // eslint-disable-line no-param-reassign
@@ -63,8 +57,6 @@ const piwikPlugin = {
   name: 'PiwikPlugin',
   plugContext: plugContext(addPiwik),
 };
-
-const raven = Raven(config.SENTRY_DSN, piwik.getVisitorId());
 
 const addRaven = c => {
   c.raven = raven; // eslint-disable-line no-param-reassign
@@ -78,6 +70,73 @@ const ravenPlugin = {
 // Add plugins
 app.plug(ravenPlugin);
 app.plug(piwikPlugin);
+
+const getParams = query => {
+  if (!query) {
+    return {};
+  }
+
+  return query
+    .substring(1)
+    .split('&')
+    .map(v => v.split('='))
+    .reduce((params, [key, value]) => {
+      const newParam = {};
+      newParam[key] = decodeURIComponent(value);
+      return { ...params, ...newParam };
+    }, {});
+};
+
+const placeParser = /^[^*]*\*([^*]*)\*([^*]*)\*([^*]*)/;
+
+function parseGeocodingResults(results) {
+  if (!Array.isArray(results) || results.length < 1) {
+    return ' ';
+  }
+  return locationToOTP({
+    address: results[0].properties.label,
+    lon: results[0].geometry.coordinates[0],
+    lat: results[0].geometry.coordinates[1],
+  });
+}
+
+function parseLocation(location, input, next) {
+  if (location) {
+    const parsedFrom = placeParser.exec(location);
+    if (parsedFrom) {
+      const coords = kkj2ToWgs84([parsedFrom[2], parsedFrom[3]]);
+      return Promise.resolve(
+        locationToOTP({
+          address: parsedFrom[1],
+          lon: coords[0],
+          lat: coords[1],
+        }),
+      );
+    }
+    return getGeocodingResult(
+      location,
+      config.searchParams,
+      null,
+      null,
+      null,
+      config,
+    )
+      .then(parseGeocodingResults)
+      .catch(next);
+  } else if (input) {
+    return getGeocodingResult(
+      input,
+      config.searchParams,
+      null,
+      null,
+      null,
+      config,
+    )
+      .then(parseGeocodingResults)
+      .catch(next);
+  }
+  return ' ';
+}
 
 // Run application
 const callback = () =>
@@ -136,30 +195,61 @@ const callback = () =>
 
     configureMoment(language, config);
 
+    let hasSwUpdate = false;
     const history = historyCreator(config);
 
-    function track() {
-      // track "getting back to home"
-      const newHref = this.props.router.createHref(this.state.location);
+    if (config.redirectReittiopasParams) {
+      const path = window.location.pathname;
+      const query = getParams(window.location.search);
 
-      if (this.href !== undefined && newHref === '/' && this.href !== newHref) {
-        if (
-          config.feedback.enable &&
-          shouldDisplayPopup(
-            context
-              .getComponentContext()
-              .getStore('TimeStore')
-              .getCurrentTime()
-              .valueOf(),
-          )
-        ) {
-          context.executeAction(openFeedbackModal);
+      if (query.from || query.to || query.from_in || query.to_in) {
+        const time = moment.tz(config.timezoneData.split('|')[0]);
+        if (query.year) {
+          time.year(query.year);
         }
-      }
+        if (query.month) {
+          time.month(query.month - 1);
+        }
+        if (query.day) {
+          time.date(query.day);
+        }
+        if (query.hour) {
+          time.hour(query.hour);
+        }
+        if (query.minute) {
+          time.minute(query.minute);
+        }
+        let timeStr = `time=${time.unix()}&`;
 
-      this.href = newHref;
-      piwik.setCustomUrl(this.props.router.createHref(this.state.location));
+        if (config.queryMaxAgeDays) {
+          const now = moment.tz(config.timezoneData.split('|')[0]);
+          if (now.diff(time, 'days') > config.queryMaxAgeDays) {
+            // too old route time, drop it
+            timeStr = '';
+          }
+        }
+        const arriveBy = query.timetype === 'arrival';
+
+        Promise.all([
+          parseLocation(query.from, query.from_in, config),
+          parseLocation(query.to, query.to_in, config),
+        ]).then(([from, to]) => {
+          window.location.replace(
+            `/${from}/${to}?${timeStr}arriveBy=${arriveBy}`,
+          );
+        });
+      } else if (['/fi/', '/en/', '/sv/', '/ru/', '/slangi/'].includes(path)) {
+        window.location.replace('/');
+      }
+    }
+
+    function track() {
+      this.href = this.props.router.createHref(this.state.location);
+      piwik.setCustomUrl(this.href);
       piwik.trackPageView();
+      if (hasSwUpdate && !this.state.location.state) {
+        window.location = this.href;
+      }
     }
 
     const ContextProvider = provideContext(StoreListeningIntlProvider, {
@@ -171,26 +261,26 @@ const callback = () =>
     });
 
     // init geolocation handling
-    context.executeAction(initGeolocation).then(() => {
-      match(
-        { routes: app.getComponent(), history },
-        (error, redirectLocation, renderProps) => {
-          IsomorphicRouter.prepareInitialRender(
-            Relay.Store,
-            renderProps,
-          ).then(props => {
-            ReactDOM.render(
+
+    match(
+      { routes: app.getComponent(), history },
+      (error, redirectLocation, renderProps) => {
+        IsomorphicRouter.prepareInitialRender(Relay.Store, renderProps).then(
+          props => {
+            ReactDOM.hydrate(
               <ContextProvider
                 translations={translations}
                 context={context.getComponentContext()}
               >
-                <MuiThemeProvider
-                  muiTheme={getMuiTheme(MUITheme(config), {
-                    userAgent: navigator.userAgent,
-                  })}
-                >
-                  <Router {...props} onUpdate={track} />
-                </MuiThemeProvider>
+                <ErrorBoundary>
+                  <MuiThemeProvider
+                    muiTheme={getMuiTheme(MUITheme(config), {
+                      userAgent: navigator.userAgent,
+                    })}
+                  >
+                    <Router {...props} onUpdate={track} />
+                  </MuiThemeProvider>
+                </ErrorBoundary>
               </ContextProvider>,
               document.getElementById('app'),
               () => {
@@ -199,14 +289,19 @@ const callback = () =>
                   process.env.NODE_ENV === 'production' &&
                   BUILD_TIME !== 'unset'
                 ) {
-                  OfflinePlugin.install();
+                  OfflinePlugin.install({
+                    onUpdateReady: () => OfflinePlugin.applyUpdate(),
+                    onUpdated: () => {
+                      hasSwUpdate = true;
+                    },
+                  });
                 }
               },
             );
-          });
-        },
-      );
-    });
+          },
+        );
+      },
+    );
 
     // Listen for Web App Install Banner events
     window.addEventListener('beforeinstallprompt', e => {
@@ -219,13 +314,6 @@ const callback = () =>
         );
       }
     });
-
-    piwik.enableLinkTracking();
-
-    // Send perf data after React has compared real and shadow DOMs
-    // and started positioning
-    piwik.setCustomVariable(4, 'commit_id', COMMIT_ID, 'visit');
-    piwik.setCustomVariable(5, 'build_time', BUILD_TIME, 'visit');
   });
 
 // Guard againist Samsung et.al. which are not properly polyfilled by polyfill-service

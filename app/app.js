@@ -1,15 +1,13 @@
 import Fluxible from 'fluxible';
 
 import routes from './routes';
-import EndpointStore from './store/EndpointStore';
 import FavouriteLocationStore from './store/FavouriteLocationStore';
 import FavouriteRoutesStore from './store/FavouriteRoutesStore';
 import FavouriteStopsStore from './store/FavouriteStopsStore';
-import FeedbackStore from './store/FeedbackStore';
 import MessageStore from './store/MessageStore';
-import ModeStore from './store/ModeStore';
 import OldSearchesStore from './store/OldSearchesStore';
 import PositionStore from './store/PositionStore';
+import OriginStore from './store/OriginStore';
 import PreferencesStore from './store/PreferencesStore';
 import RealTimeInformationStore from './store/RealTimeInformationStore';
 import TimeStore from './store/TimeStore';
@@ -20,15 +18,13 @@ export default config => {
     component: routes(config),
   });
 
-  app.registerStore(EndpointStore);
   app.registerStore(FavouriteLocationStore);
   app.registerStore(FavouriteRoutesStore);
   app.registerStore(FavouriteStopsStore);
-  app.registerStore(FeedbackStore);
   app.registerStore(MessageStore);
-  app.registerStore(ModeStore);
   app.registerStore(OldSearchesStore);
   app.registerStore(PositionStore);
+  app.registerStore(OriginStore);
   app.registerStore(PreferencesStore);
   app.registerStore(RealTimeInformationStore);
   app.registerStore(TimeStore);
@@ -63,9 +59,7 @@ export default config => {
           };
         },
         rehydrate(state) {
-          config = state.config; // eslint-disable-line no-param-reassign
-          url = state.url;
-          headers = state.headers;
+          ({ config, url, headers } = state); // eslint-disable-line no-param-reassign
         },
       };
     },

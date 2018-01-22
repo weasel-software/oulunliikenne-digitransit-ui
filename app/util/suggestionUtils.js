@@ -28,21 +28,27 @@ export const getGTFSId = ({ id, gtfsId }) => {
   if (gtfsId) {
     return gtfsId;
   }
-  if (id === undefined || id.indexOf('#') === -1) {
-    return undefined;
+
+  if (id.indexOf('GTFS:') === 0) {
+    if (id.indexOf('#') === -1) {
+      return id.substring(5);
+    }
+    return id.substring(5, id.indexOf('#'));
   }
-  // id from pelias
-  return id.substring(5, id.indexOf('#'));
+
+  return undefined;
 };
 
 export const isStop = ({ layer }) =>
   layer === 'stop' || layer === 'favouriteStop';
 
-export const getLabel = memoize(
+export const isTerminal = ({ layer }) => layer === 'station';
+
+export const getNameLabel = memoize(
   (suggestion, plain = false) => {
     switch (suggestion.layer) {
       case 'currentPosition':
-        return [suggestion.labelId, null];
+        return [suggestion.labelId, suggestion.address];
       case 'favouritePlace':
         return [suggestion.locationName, suggestion.address];
       case 'favouriteRoute':
@@ -52,7 +58,7 @@ export const getLabel = memoize(
       case 'route-SUBWAY':
       case 'route-FERRY':
       case 'route-AIRPLANE':
-        return suggestion.shortName
+        return !plain && suggestion.shortName
           ? [
               <span key={suggestion.gtfsId}>
                 <span className={suggestion.mode.toLowerCase()}>
@@ -65,7 +71,7 @@ export const getLabel = memoize(
               </span>,
               suggestion.longName,
             ]
-          : [suggestion.longName, null];
+          : [suggestion.shortName, suggestion.longName];
       case 'venue':
       case 'address':
         return [
@@ -75,7 +81,6 @@ export const getLabel = memoize(
             '',
           ),
         ];
-
       case 'favouriteStop':
       case 'stop':
         return plain
@@ -105,13 +110,45 @@ export function uniqByLabel(features) {
   return uniqWith(
     features,
     (feat1, feat2) =>
-      isEqual(getLabel(feat1.properties), getLabel(feat2.properties)) &&
+      isEqual(getNameLabel(feat1.properties), getNameLabel(feat2.properties)) &&
       feat1.properties.layer === feat2.properties.layer,
   );
 }
 
+export function getLabel(properties) {
+  const parts = getNameLabel(properties, true);
+
+  switch (properties.layer) {
+    case 'currentPosition':
+      return parts[1] || parts[0];
+    case 'favouritePlace':
+      return parts[0];
+    default:
+      return parts.length > 1 ? parts.join(', ') : parts[1] || parts[0];
+  }
+}
+
+export function suggestionToLocation(item) {
+  const name = getLabel(item.properties);
+  return {
+    address: name,
+    type: item.type,
+    lat:
+      item.lat ||
+      (item.geometry &&
+        item.geometry.coordinates &&
+        item.geometry.coordinates[1]),
+    lon:
+      item.lon ||
+      (item.geometry &&
+        item.geometry.coordinates &&
+        item.geometry.coordinates[0]),
+  };
+}
+
 export function getIcon(layer) {
   const layerIcon = new Map([
+    ['currentPosition', 'icon-icon_locate'],
     ['favouritePlace', 'icon-icon_star'],
     ['favouriteRoute', 'icon-icon_star'],
     ['favouriteStop', 'icon-icon_star'],

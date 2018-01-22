@@ -2,11 +2,16 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Relay from 'react-relay/classic';
 import connectToStores from 'fluxible-addons-react/connectToStores';
+import shouldUpdate from 'recompose/shouldUpdate';
+
 import FavouriteRouteListContainer from './FavouriteRouteListContainer';
 import FavouriteLocationsContainer from './FavouriteLocationsContainer';
 import NextDeparturesListHeader from './NextDeparturesListHeader';
 import NoFavouritesPanel from './NoFavouritesPanel';
 import Loading from './Loading';
+import PanelOrSelectLocation from './PanelOrSelectLocation';
+import { dtLocationShape } from '../util/shapes';
+import { TAB_FAVOURITES } from '../util/path';
 
 class FavouriteRouteListContainerRoute extends Relay.Route {
   static queries = {
@@ -24,7 +29,7 @@ class FavouriteRouteListContainerRoute extends Relay.Route {
   static routeName = 'FavouriteRouteRowRoute';
 }
 
-const FavouriteRoutes = ({ routes }) => {
+const FavouriteRoutes = ({ routes, origin }) => {
   if (routes.length > 0) {
     return (
       <Relay.RootContainer
@@ -33,6 +38,7 @@ const FavouriteRoutes = ({ routes }) => {
         route={
           new FavouriteRouteListContainerRoute({
             ids: routes,
+            origin,
           })
         }
         renderLoading={Loading}
@@ -44,26 +50,72 @@ const FavouriteRoutes = ({ routes }) => {
 
 FavouriteRoutes.propTypes = {
   routes: PropTypes.array.isRequired,
+  origin: dtLocationShape.isRequired,
 };
 
-const FavouritesPanel = ({ routes }) => (
+const FavouritesPanel = (
+  { origin, routes, currentTime, favouriteLocations },
+  context,
+) => (
   <div className="frontpage-panel">
-    <FavouriteLocationsContainer />
-    <NextDeparturesListHeader />
-    <div className="scrollable momentum-scroll favourites">
-      <FavouriteRoutes routes={routes} />
+    <FavouriteLocationsContainer
+      origin={origin}
+      currentTime={currentTime}
+      favourites={favouriteLocations}
+    />
+    <div
+      className={`nearby-table-container ${context.breakpoint !== 'large' &&
+        `mobile`}`}
+    >
+      <table className="nearby-departures-table">
+        <thead>
+          <NextDeparturesListHeader />
+        </thead>
+        <tbody>
+          <FavouriteRoutes routes={routes} origin={origin} />
+        </tbody>
+      </table>
     </div>
   </div>
 );
 
 FavouritesPanel.propTypes = {
   routes: PropTypes.array.isRequired,
+  origin: dtLocationShape.isRequired, // eslint-disable-line react/no-typos
+  currentTime: PropTypes.number.isRequired,
+  favouriteLocations: PropTypes.array,
 };
 
+FavouritesPanel.contextTypes = {
+  breakpoint: PropTypes.string,
+};
+
+const FilteredFavouritesPanel = shouldUpdate(
+  (props, nextProps) =>
+    nextProps.currentTime !== props.currentTime ||
+    nextProps.routes !== props.routes ||
+    nextProps.origin.gps !== props.origin.gps ||
+    (!nextProps.origin.gps &&
+      (nextProps.origin.lat !== props.origin.lat ||
+        nextProps.origin.lon !== props.origin.lon)),
+)(FavouritesPanel);
+
 export default connectToStores(
-  FavouritesPanel,
-  ['FavouriteRoutesStore'],
+  ctx => (
+    <PanelOrSelectLocation
+      panel={FilteredFavouritesPanel}
+      panelctx={{ ...ctx, tab: TAB_FAVOURITES }}
+    />
+  ),
+  ['FavouriteRoutesStore', 'TimeStore', 'FavouriteLocationStore'],
   context => ({
     routes: context.getStore('FavouriteRoutesStore').getRoutes(),
+    currentTime: context
+      .getStore('TimeStore')
+      .getCurrentTime()
+      .unix(),
+    favouriteLocations: context
+      .getStore('FavouriteLocationStore')
+      .getLocations(),
   }),
 );

@@ -28,12 +28,9 @@ class NoRoutePopup extends React.Component {
       newState = !this.state.open;
     }
 
-    this.setState(
-      {
-        open: newState,
-      },
-      () => this.forceUpdate(),
-    );
+    this.setState({
+      open: newState,
+    });
   };
 
   render() {
@@ -59,9 +56,7 @@ class NoRoutePopup extends React.Component {
             />
           </p>
           <p>
-            <a>
-              <FormattedMessage id="close" defaultMessage="Close" />
-            </a>
+            <FormattedMessage id="close" defaultMessage="Close" />
           </p>
         </div>
       </Modal>

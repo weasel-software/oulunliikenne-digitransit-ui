@@ -1,10 +1,9 @@
 import PropTypes from 'prop-types';
 /* eslint-disable react/no-array-index-key */
-
 import React from 'react';
 import Relay from 'react-relay/classic';
-
 import moment from 'moment';
+import get from 'lodash/get';
 import isMatch from 'lodash/isMatch';
 import keys from 'lodash/keys';
 import pick from 'lodash/pick';
@@ -12,13 +11,15 @@ import sortBy from 'lodash/sortBy';
 import some from 'lodash/some';
 import polyline from 'polyline-encoded';
 import { FormattedMessage } from 'react-intl';
-
+import { routerShape } from 'react-router';
+import isEqual from 'lodash/isEqual';
+import { dtLocationShape } from '../util/shapes';
+import storeOrigin from '../action/originActions';
 import DesktopView from '../component/DesktopView';
 import MobileView from '../component/MobileView';
-import Map from '../component/map/Map';
+import MapContainer from '../component/map/MapContainer';
 import ItineraryTab from './ItineraryTab';
 import PrintableItinerary from './PrintableItinerary';
-
 import SummaryPlanContainer from './SummaryPlanContainer';
 import SummaryNavigation from './SummaryNavigation';
 import ItineraryLine from '../component/map/ItineraryLine';
@@ -26,6 +27,7 @@ import LocationMarker from '../component/map/LocationMarker';
 import MobileItineraryWrapper from './MobileItineraryWrapper';
 import { otpToLocation } from '../util/otpStrings';
 import Loading from './Loading';
+import { getHomeUrl } from '../util/path';
 
 function getActiveIndex(state) {
   return (state && state.summaryPageSelected) || 0;
@@ -40,9 +42,11 @@ class SummaryPage extends React.Component {
         error: PropTypes.string,
       }).isRequired,
     }).isRequired,
-    router: PropTypes.object.isRequired,
+    router: routerShape.isRequired,
     location: PropTypes.object.isRequired,
     config: PropTypes.object,
+    executeAction: PropTypes.func.isRequired,
+    headers: PropTypes.object.isRequired,
   };
 
   static propTypes = {
@@ -61,15 +65,9 @@ class SummaryPage extends React.Component {
     content: PropTypes.node,
     map: PropTypes.shape({
       type: PropTypes.func.isRequired,
-    }),
-    from: PropTypes.shape({
-      lat: PropTypes.number.isRequired,
-      lon: PropTypes.number.isRequired,
     }).isRequired,
-    to: PropTypes.shape({
-      lat: PropTypes.number.isRequired,
-      lon: PropTypes.number.isRequired,
-    }).isRequired,
+    from: dtLocationShape.isRequired,
+    to: dtLocationShape.isRequired,
     routes: PropTypes.arrayOf(
       PropTypes.shape({
         fullscreenMap: PropTypes.bool,
@@ -81,21 +79,54 @@ class SummaryPage extends React.Component {
   static hcParameters = {
     walkReluctance: 2,
     walkBoardCost: 600,
-    minTransferTime: 180,
+    minTransferTime: 120,
     walkSpeed: 1.2,
     wheelchair: false,
   };
 
-  state = { center: null };
+  constructor(props, context) {
+    super(props, context);
+    context.executeAction(storeOrigin, props.from);
+  }
 
-  componentWillMount = () =>
+  state = { center: null, loading: false };
+
+  componentWillMount() {
     this.initCustomizableParameters(this.context.config);
+  }
 
-  componentWillReceiveProps(newProps, newContext) {
-    if (newContext.breakpoint === 'large' && this.state.center) {
+  componentDidMount() {
+    const host =
+      this.context.headers &&
+      (this.context.headers['x-forwarded-host'] || this.context.headers.host);
+
+    if (
+      get(this.context, 'config.showHSLTracking', false) &&
+      host &&
+      host.indexOf('127.0.0.1') === -1 &&
+      host.indexOf('localhost') === -1
+    ) {
+      import('../util/feedbackly');
+    }
+  }
+
+  componentWillReceiveProps(nextProps, context) {
+    if (!isEqual(nextProps.from, this.props.from)) {
+      this.context.executeAction(storeOrigin, nextProps.from);
+    }
+
+    if (context.breakpoint === 'large' && this.state.center) {
       this.setState({ center: null });
     }
   }
+
+  setLoading = loading => {
+    this.setState({ loading });
+  };
+
+  updateCenter = (lat, lon) => {
+    this.setState({ center: { lat, lon } });
+  };
 
   initCustomizableParameters = config => {
     this.customizableParameters = {
@@ -115,10 +146,6 @@ class SummaryPage extends React.Component {
     };
   };
 
-  updateCenter = (lat, lon) => {
-    this.setState({ center: { lat, lon } });
-  };
-
   hasDefaultPreferences = () => {
     const a = pick(this.customizableParameters, keys(this.props));
     const b = pick(this.props, keys(this.customizableParameters));
@@ -128,7 +155,7 @@ class SummaryPage extends React.Component {
   renderMap() {
     const { plan: { plan }, location: { state, query }, from, to } = this.props;
     const activeIndex = getActiveIndex(state);
-    const itineraries = plan.itineraries || [];
+    const itineraries = (plan && plan.itineraries) || [];
 
     const leafletObjs = sortBy(
       itineraries.map((itinerary, i) => (
@@ -170,7 +197,7 @@ class SummaryPage extends React.Component {
       } else {
         leafletObjs.push(
           <LocationMarker
-            key={'via'}
+            key="via"
             position={otpToLocation(query.intermediatePlaces)}
             className="via"
             noText
@@ -191,7 +218,7 @@ class SummaryPage extends React.Component {
     );
 
     return (
-      <Map
+      <MapContainer
         className="summary-map"
         leafletObjs={leafletObjs}
         fitBounds
@@ -253,14 +280,14 @@ class SummaryPage extends React.Component {
 
     if (breakpoint === 'large') {
       let content;
-
-      if (done || error !== null) {
+      if (this.state.loading === false && (done || error !== null)) {
         content = (
           <SummaryPlanContainer
             plan={this.props.plan.plan}
             itineraries={this.props.plan.plan.itineraries}
             params={this.props.params}
             error={error}
+            setLoading={this.setLoading}
           >
             {this.props.content &&
               React.cloneElement(this.props.content, {
@@ -287,6 +314,7 @@ class SummaryPage extends React.Component {
               defaultMessage="Itinerary suggestions"
             />
           }
+          homeUrl={getHomeUrl(this.props.from, this.props.to)}
           header={
             <SummaryNavigation
               params={this.props.params}
@@ -304,7 +332,7 @@ class SummaryPage extends React.Component {
 
     let content;
 
-    if (!done && !error) {
+    if ((!done && !error) || this.state.loading !== false) {
       content = (
         <div style={{ position: 'relative', height: 200 }}>
           <Loading />
@@ -332,6 +360,7 @@ class SummaryPage extends React.Component {
           plan={this.props.plan.plan}
           itineraries={this.props.plan.plan.itineraries}
           params={this.props.params}
+          setLoading={this.setLoading}
         />
       );
     }
@@ -350,6 +379,7 @@ class SummaryPage extends React.Component {
             false
           )
         }
+        homeUrl={getHomeUrl(this.props.from, this.props.to)}
         content={content}
         map={map}
       />
