@@ -50,6 +50,8 @@ body {
   letter-spacing: $letter-spacing;
   /* Remove Mobile Safari automatic font size adjustments */
   -webkit-text-size-adjust: 100%;
+  --primary-color: $primary-color;
+  --secondary-color: $secondary-color;
 }
 
 #main {
