@@ -13,8 +13,7 @@ import {
   addFavouriteLocation,
   deleteFavouriteLocation,
 } from '../action/FavouriteActions';
-import { Theme, Button } from 'hsl-shared-components';
-import { ThemeProvider } from 'styled-components';
+import { Button } from 'hsl-shared-components';
 import DTEndpointAutosuggest from './DTEndpointAutosuggest';
 
 class AddFavouriteContainer extends React.Component {
@@ -113,9 +112,6 @@ class AddFavouriteContainer extends React.Component {
       'OldSearch',
       'Stops',
     ];
-    const style = getComputedStyle(document.body);
-    Theme.colors.primary.hslBlue = style.getPropertyValue('--primary-color');
-    Theme.colors.primary.hslBlueDark = style.getPropertyValue('--secondary-color');
 
     const StyledButton = Button.extend`
       width: 100%;
@@ -212,11 +208,9 @@ class AddFavouriteContainer extends React.Component {
                 />
               </div>
               <div className="add-favourite-container__save">
-                <ThemeProvider theme={Theme}>
-                  <StyledButton onClick={this.save} disabled={!this.canSave()} primary>
-                    <FormattedMessage id="save" defaultMessage="Save" />
-                  </StyledButton>
-                </ThemeProvider>
+                <StyledButton onClick={this.save} disabled={!this.canSave()} primary>
+                  <FormattedMessage id="save" defaultMessage="Save" />
+                </StyledButton>
               </div>
               {this.isEdit() && [
                 <div key="delete" className="add-favourite-container__save">

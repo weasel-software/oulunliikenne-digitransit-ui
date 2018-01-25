@@ -8,6 +8,10 @@ import IsomorphicRouter from 'isomorphic-relay-router';
 import provideContext from 'fluxible-addons-react/provideContext';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import { Theme } from 'hsl-shared-components';
+import { ThemeProvider } from 'styled-components';
+import ResponsiveProvider from 'hsl-shared-components/lib/Utils/ResponsiveProvider';
+
 import debug from 'debug';
 import {
   RelayNetworkLayer,
@@ -260,7 +264,9 @@ const callback = () =>
       headers: PropTypes.object,
     });
 
-    // init geolocation handling
+    const style = getComputedStyle(document.body);
+    Theme.colors.primary.hslBlue = style.getPropertyValue('--primary-color');
+    Theme.colors.primary.hslBlueDark = style.getPropertyValue('--secondary-color');
 
     match(
       { routes: app.getComponent(), history },
@@ -268,6 +274,8 @@ const callback = () =>
         IsomorphicRouter.prepareInitialRender(Relay.Store, renderProps).then(
           props => {
             ReactDOM.hydrate(
+              <ResponsiveProvider>
+              <ThemeProvider theme={Theme}>
               <ContextProvider
                 translations={translations}
                 context={context.getComponentContext()}
@@ -281,7 +289,9 @@ const callback = () =>
                     <Router {...props} onUpdate={track} />
                   </MuiThemeProvider>
                 </ErrorBoundary>
-              </ContextProvider>,
+                </ContextProvider>
+                </ThemeProvider>
+                </ResponsiveProvider>,
               document.getElementById('app'),
               () => {
                 // Run only in production mode and when built in a docker container
