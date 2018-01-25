@@ -113,6 +113,13 @@ class AddFavouriteContainer extends React.Component {
       'OldSearch',
       'Stops',
     ];
+    const style = getComputedStyle(document.body);
+    Theme.colors.primary.hslBlue = style.getPropertyValue('--primary-color');
+    Theme.colors.primary.hslBlueDark = style.getPropertyValue('--secondary-color');
+
+    const StyledButton = Button.extend`
+      width: 100%;
+    `;
 
     return (
       <div className="fullscreen">
@@ -206,9 +213,9 @@ class AddFavouriteContainer extends React.Component {
               </div>
               <div className="add-favourite-container__save">
                 <ThemeProvider theme={Theme}>
-                  <Button onClick={this.save} disabled={!this.canSave()} primary>
+                  <StyledButton onClick={this.save} disabled={!this.canSave()} primary>
                     <FormattedMessage id="save" defaultMessage="Save" />
-                  </Button>
+                  </StyledButton>
                 </ThemeProvider>
               </div>
               {this.isEdit() && [
