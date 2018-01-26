@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import cx from 'classnames';
+import { Button } from 'hsl-shared-components';
 import ComponentUsageExample from './ComponentUsageExample';
 import { plan as examplePlan } from './ExampleData';
 import ItineraryFeedback from './itinerary-feedback';
@@ -43,6 +44,11 @@ class TimeNavigationButtons extends React.Component {
 
   render() {
     const { config } = this.context;
+    const small = this.context.breakpoint !== 'large';
+    const StyledButton = Button.extend`
+      width: 25%;
+      margin-right: 5px;
+    `;
 
     if (!this.props.itineraries || !this.props.itineraries[0]) {
       return null;
@@ -65,26 +71,17 @@ class TimeNavigationButtons extends React.Component {
         })}
       >
         {itineraryFeedback}
-        <button
-          className="standalone-btn time-navigation-earlier-btn"
-          onClick={this.props.onEarlier}
-        >
+        <StyledButton onClick={this.props.onEarlier} primary small={small} >
           {leftArrow}
           <FormattedMessage id="earlier" defaultMessage="Earlier" />
-        </button>
-        <button
-          className="standalone-btn time-navigation-now-btn"
-          onClick={this.props.onNow}
-        >
+        </StyledButton>
+        <StyledButton onClick={this.props.onNow} primary small={small} >
           <FormattedMessage id="now" defaultMessage="Now" />
-        </button>
-        <button
-          className="standalone-btn time-navigation-later-btn"
-          onClick={this.props.onLater}
-        >
+        </StyledButton>
+        <StyledButton onClick={this.props.onLater} primary small={small} >
           <FormattedMessage id="later" defaultMessage="Later" />
           {rightArrow}
-        </button>
+        </StyledButton>
       </div>
     );
   }
