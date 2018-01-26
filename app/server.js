@@ -28,6 +28,11 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import LRU from 'lru-cache';
 
+import { Theme } from 'hsl-shared-components';
+import { ThemeProvider } from 'styled-components';
+import ResponsiveProvider from 'hsl-shared-components/lib/Utils/ResponsiveProvider';
+import { shadeColor } from './util/colors';
+
 // Application
 import appCreator from './app';
 import translations from './translations';
@@ -117,22 +122,30 @@ const ContextProvider = provideContext(IntlProvider, {
   headers: PropTypes.object,
 });
 
-function getContent(context, renderProps, locale, userAgent) {
+function getContent(context, renderProps, locale, userAgent, config) {
   // TODO: This should be moved to a place to coexist with similar content from client.js
+  Theme.colors.primary.hslBlue = config.colors.primary;
+  Theme.colors.primary.hslBlueDark =
+    config.colors.secondary || shadeColor(config.colors.primary, -0.2);
+
   return ReactDOM.renderToString(
-    <ContextProvider
-      locale={locale}
-      messages={translations[locale]}
-      context={context.getComponentContext()}
-    >
-      <MuiThemeProvider
-        muiTheme={getMuiTheme(MUITheme(context.getComponentContext().config), {
-          userAgent,
-        })}
-      >
-        {IsomorphicRouter.render(renderProps)}
-      </MuiThemeProvider>
-    </ContextProvider>,
+    <ResponsiveProvider>
+      <ThemeProvider theme={Theme}>
+        <ContextProvider
+          locale={locale}
+          messages={translations[locale]}
+          context={context.getComponentContext()}
+        >
+          <MuiThemeProvider
+            muiTheme={getMuiTheme(MUITheme(context.getComponentContext().config), {
+              userAgent,
+            })}
+          >
+            {IsomorphicRouter.render(renderProps)}
+          </MuiThemeProvider>
+        </ContextProvider>
+      </ThemeProvider>
+    </ResponsiveProvider>,
   );
 }
 
@@ -284,6 +297,7 @@ export default function(req, res, next) {
                 relayData.props,
                 locale,
                 req.headers['user-agent'],
+                config,
               )
             : undefined;
 
