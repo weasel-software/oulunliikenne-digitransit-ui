@@ -60,6 +60,7 @@ export default {
 
   colors: {
     primary: '#007ac9',
+    secondary: '#0062a1',
   },
 
   sprites: 'svg-sprite.hsl.svg',

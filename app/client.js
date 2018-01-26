@@ -11,6 +11,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { Theme } from 'hsl-shared-components';
 import { ThemeProvider } from 'styled-components';
 import ResponsiveProvider from 'hsl-shared-components/lib/Utils/ResponsiveProvider';
+import { shadeColor } from './util/colors';
 
 import debug from 'debug';
 import {
@@ -264,9 +265,9 @@ const callback = () =>
       headers: PropTypes.object,
     });
 
-    const style = getComputedStyle(document.body);
-    Theme.colors.primary.hslBlue = style.getPropertyValue('--primary-color');
-    Theme.colors.primary.hslBlueDark = style.getPropertyValue('--secondary-color');
+    Theme.colors.primary.hslBlue = config.colors.primary;
+    Theme.colors.primary.hslBlueDark =
+      config.colors.secondary || shadeColor(config.colors.primary, -0.2);
 
     match(
       { routes: app.getComponent(), history },
