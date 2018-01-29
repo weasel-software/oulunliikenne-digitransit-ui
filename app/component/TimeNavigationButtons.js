@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import cx from 'classnames';
-import { Button } from 'hsl-shared-components';
+import Button from 'hsl-shared-components/lib/Button';
 import ComponentUsageExample from './ComponentUsageExample';
 import { plan as examplePlan } from './ExampleData';
 import ItineraryFeedback from './itinerary-feedback';

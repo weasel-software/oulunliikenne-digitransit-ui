@@ -8,7 +8,7 @@ import IsomorphicRouter from 'isomorphic-relay-router';
 import provideContext from 'fluxible-addons-react/provideContext';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import { Theme } from 'hsl-shared-components';
+import Theme from 'hsl-shared-components/lib/Theme';
 import { ThemeProvider } from 'styled-components';
 import ResponsiveProvider from 'hsl-shared-components/lib/Utils/ResponsiveProvider';
 import { shadeColor } from './util/colors';

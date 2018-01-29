@@ -13,7 +13,7 @@ import {
   addFavouriteLocation,
   deleteFavouriteLocation,
 } from '../action/FavouriteActions';
-import { Button } from 'hsl-shared-components';
+import Button from 'hsl-shared-components/lib/Button';
 import DTEndpointAutosuggest from './DTEndpointAutosuggest';
 
 class AddFavouriteContainer extends React.Component {
