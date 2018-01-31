@@ -2,6 +2,20 @@
 # yarn lockfile v1
 
 
+"@babel/helper-annotate-as-pure@^7.0.0-beta.37":
+  version "7.0.0-beta.39"
+  resolved "https://registry.yarnpkg.com/@babel/helper-annotate-as-pure/-/helper-annotate-as-pure-7.0.0-beta.39.tgz#cf9506c721c838806ca5eabe15783507ba2edce0"
+  dependencies:
+    "@babel/types" "7.0.0-beta.39"
+
+"@babel/types@7.0.0-beta.39":
+  version "7.0.0-beta.39"
+  resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.0.0-beta.39.tgz#2ea0d97efe4781688751edc68cde640d6559938c"
+  dependencies:
+    esutils "^2.0.2"
+    lodash "^4.2.0"
+    to-fast-properties "^2.0.0"
+
 "@mapbox/point-geometry@~0.1.0":
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/@mapbox/point-geometry/-/point-geometry-0.1.0.tgz#8a83f9335c7860effa2eeeca254332aa0aeed8f2"
@@ -660,6 +674,10 @@ babel-plugin-dynamic-import-node@1.2.0:
   dependencies:
     babel-plugin-syntax-dynamic-import "^6.18.0"
 
+babel-plugin-react-native-web@0.3.3:
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/babel-plugin-react-native-web/-/babel-plugin-react-native-web-0.3.3.tgz#826eb6311e919df0df866547756300611c8a3661"
+
 babel-plugin-relay@1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/babel-plugin-relay/-/babel-plugin-relay-1.4.1.tgz#8ac562bcb1fd2b3565d271aaced32be42c827353"
@@ -667,6 +685,14 @@ babel-plugin-relay@1.4.1:
     babel-runtime "^6.23.0"
     babel-types "^6.24.1"
     graphql "^0.11.3"
+
+babel-plugin-styled-components@1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-styled-components/-/babel-plugin-styled-components-1.5.0.tgz#4549f28a19fb05170aa9ee429b4de0eac2d2401d"
+  dependencies:
+    "@babel/helper-annotate-as-pure" "^7.0.0-beta.37"
+    babel-types "^6.26.0"
+    stylis "^3.0.0"
 
 babel-plugin-syntax-async-functions@^6.8.0:
   version "6.13.0"
@@ -8686,7 +8712,7 @@ react-paginate@^5.0.0:
     prop-types "^15.6.0"
     react-addons-create-fragment "^15.0.0"
 
-"react-primitives-svg@github:ktj/primitives-svg-build":
+react-primitives-svg@ktj/primitives-svg-build:
   version "0.0.2"
   resolved "https://codeload.github.com/ktj/primitives-svg-build/tar.gz/52c80927f050f3a761a4373d09b3a12035343862"
 
@@ -10265,7 +10291,7 @@ stylelint@^7.0.3:
     svg-tags "^1.0.0"
     table "^4.0.1"
 
-stylis@^3.4.0:
+stylis@^3.0.0, stylis@^3.4.0:
   version "3.4.8"
   resolved "https://registry.yarnpkg.com/stylis/-/stylis-3.4.8.tgz#94380babbcd4c75726215794ca985b38ec96d1a3"
 
@@ -10522,6 +10548,10 @@ to-arraybuffer@^1.0.0:
 to-fast-properties@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/to-fast-properties/-/to-fast-properties-1.0.3.tgz#b83571fa4d8c25b82e231b06e3a3055de4ca1a47"
+
+to-fast-properties@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/to-fast-properties/-/to-fast-properties-2.0.0.tgz#dc5e698cbd079265bc73e0377681a4e4e83f616e"
 
 to-ico@^1.1.2:
   version "1.1.5"

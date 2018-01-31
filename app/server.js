@@ -1,4 +1,4 @@
-if (typeof document === 'undefined') {
+if (false && typeof document === 'undefined') {
   global.document = {
     createElement: () => null,
   };

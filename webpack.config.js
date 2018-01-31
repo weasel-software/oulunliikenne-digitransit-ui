@@ -42,6 +42,8 @@ function getRulesConfig(env) {
         options: {
           presets: [['env', { modules: false }], 'react', 'stage-2'],
           plugins: [
+            ['babel-plugin-styled-components', { 'ssr': true } ],
+            'react-native-web',
             'transform-import-commonjs',
             ['relay', { compat: true, schema: 'build/schema.json' }],
             [
@@ -79,7 +81,9 @@ function getRulesConfig(env) {
           'stage-2',
         ],
         plugins: [
+          ['babel-plugin-styled-components', { 'ssr': true } ],
           'transform-react-remove-prop-types',
+          'react-native-web',
           ['relay', { compat: true, schema: 'build/schema.json' }],
           [
             'transform-runtime',
