@@ -1,3 +1,9 @@
+if (typeof document === 'undefined') {
+  global.document = {
+    createElement: () => null,
+  };
+}
+
 import PropTypes from 'prop-types';
 // React
 import React from 'react';
@@ -9,6 +15,7 @@ import Helmet from 'react-helmet';
 import createHistory from 'react-router/lib/createMemoryHistory';
 import Relay from 'react-relay/classic';
 import IsomorphicRouter from 'isomorphic-relay-router';
+import { ServerStyleSheet } from 'styled-components'
 import {
   RelayNetworkLayer,
   urlMiddleware,
@@ -128,7 +135,9 @@ function getContent(context, renderProps, locale, userAgent, config) {
   Theme.colors.primary.hslBlueDark =
     config.colors.secondary || shadeColor(config.colors.primary, -0.2);
 
-  return ReactDOM.renderToString(
+  const sheet = new ServerStyleSheet();
+
+  return ReactDOM.renderToString(sheet.collectStyles(
     <ResponsiveProvider>
       <ThemeProvider theme={Theme}>
         <ContextProvider
@@ -146,7 +155,7 @@ function getContent(context, renderProps, locale, userAgent, config) {
         </ContextProvider>
       </ThemeProvider>
     </ResponsiveProvider>,
-  );
+  ));
 }
 
 const isRobotRequest = agent =>
