@@ -1,9 +1,3 @@
-if (false && typeof document === 'undefined') {
-  global.document = {
-    createElement: () => null,
-  };
-}
-
 import PropTypes from 'prop-types';
 // React
 import React from 'react';
@@ -15,7 +9,6 @@ import Helmet from 'react-helmet';
 import createHistory from 'react-router/lib/createMemoryHistory';
 import Relay from 'react-relay/classic';
 import IsomorphicRouter from 'isomorphic-relay-router';
-import { ServerStyleSheet } from 'styled-components'
 import {
   RelayNetworkLayer,
   urlMiddleware,
@@ -36,7 +29,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import LRU from 'lru-cache';
 
 import Theme from 'hsl-shared-components/lib/Theme';
-import { ThemeProvider } from 'styled-components';
+import { ServerStyleSheet, ThemeProvider } from 'styled-components';
 import { shadeColor } from './util/colors';
 
 // Application
@@ -136,23 +129,28 @@ function getContent(context, renderProps, locale, userAgent, config) {
 
   const sheet = new ServerStyleSheet();
 
-  return ReactDOM.renderToString(sheet.collectStyles(
-    <ThemeProvider theme={Theme}>
-      <ContextProvider
-        locale={locale}
-        messages={translations[locale]}
-        context={context.getComponentContext()}
-      >
-        <MuiThemeProvider
-          muiTheme={getMuiTheme(MUITheme(context.getComponentContext().config), {
-            userAgent,
-          })}
+  return ReactDOM.renderToString(
+    sheet.collectStyles(
+      <ThemeProvider theme={Theme}>
+        <ContextProvider
+          locale={locale}
+          messages={translations[locale]}
+          context={context.getComponentContext()}
         >
-          {IsomorphicRouter.render(renderProps)}
-        </MuiThemeProvider>
-      </ContextProvider>
-    </ThemeProvider>,
-  ));
+          <MuiThemeProvider
+            muiTheme={getMuiTheme(
+              MUITheme(context.getComponentContext().config),
+              {
+                userAgent,
+              },
+            )}
+          >
+            {IsomorphicRouter.render(renderProps)}
+          </MuiThemeProvider>
+        </ContextProvider>
+      </ThemeProvider>,
+    ),
+  );
 }
 
 const isRobotRequest = agent =>
