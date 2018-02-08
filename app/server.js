@@ -37,7 +37,6 @@ import LRU from 'lru-cache';
 
 import Theme from 'hsl-shared-components/lib/Theme';
 import { ThemeProvider } from 'styled-components';
-import ResponsiveProvider from 'hsl-shared-components/lib/Utils/ResponsiveProvider';
 import { shadeColor } from './util/colors';
 
 // Application
@@ -138,23 +137,21 @@ function getContent(context, renderProps, locale, userAgent, config) {
   const sheet = new ServerStyleSheet();
 
   return ReactDOM.renderToString(sheet.collectStyles(
-    <ResponsiveProvider>
-      <ThemeProvider theme={Theme}>
-        <ContextProvider
-          locale={locale}
-          messages={translations[locale]}
-          context={context.getComponentContext()}
+    <ThemeProvider theme={Theme}>
+      <ContextProvider
+        locale={locale}
+        messages={translations[locale]}
+        context={context.getComponentContext()}
+      >
+        <MuiThemeProvider
+          muiTheme={getMuiTheme(MUITheme(context.getComponentContext().config), {
+            userAgent,
+          })}
         >
-          <MuiThemeProvider
-            muiTheme={getMuiTheme(MUITheme(context.getComponentContext().config), {
-              userAgent,
-            })}
-          >
-            {IsomorphicRouter.render(renderProps)}
-          </MuiThemeProvider>
-        </ContextProvider>
-      </ThemeProvider>
-    </ResponsiveProvider>,
+          {IsomorphicRouter.render(renderProps)}
+        </MuiThemeProvider>
+      </ContextProvider>
+    </ThemeProvider>,
   ));
 }
 
