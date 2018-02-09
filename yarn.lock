@@ -306,9 +306,9 @@ arrify@^1.0.0, arrify@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/arrify/-/arrify-1.0.1.tgz#898508da2226f380df904728456849c1501a4b0d"
 
-art@^0.10.1:
+art@^0.10.1, "art@github:sebmarkbage/art":
   version "0.10.1"
-  resolved "https://registry.yarnpkg.com/art/-/art-0.10.1.tgz#38541883e399225c5e193ff246e8f157cf7b2146"
+  resolved "https://codeload.github.com/sebmarkbage/art/tar.gz/658d84d424ee0bf385337fdc56d429a74b533b27"
 
 asap@^2.0.0, asap@~2.0.3:
   version "2.0.6"
@@ -4788,14 +4788,16 @@ hpack.js@^2.1.6:
     readable-stream "^2.0.1"
     wbuf "^1.1.0"
 
-hsl-shared-components@^0.16.10-0:
-  version "0.16.10-0"
-  resolved "https://registry.yarnpkg.com/hsl-shared-components/-/hsl-shared-components-0.16.10-0.tgz#4591e89e5eda2508dd857360a571a596fa34dc8f"
+hsl-shared-components@^0.16.10-4:
+  version "0.16.10-4"
+  resolved "https://registry.yarnpkg.com/hsl-shared-components/-/hsl-shared-components-0.16.10-4.tgz#73ae4eee90f2e059d7a1be2d6b787926773d7250"
   dependencies:
+    art sebmarkbage/art
     lodash "^4.17.4"
     moment "^2.18.1"
     polished "^1.2.1"
     react-brimitives "^0.5.7"
+    react-native-autocomplete-input ktj/react-native-autocomplete-input
     react-paginate "^5.0.0"
     react-primitives-svg ktj/primitives-svg-build
     styled-brimitives "^0.0.11"
@@ -8688,6 +8690,12 @@ react-motion@0.5.2:
     prop-types "^15.5.8"
     raf "^3.1.0"
 
+"react-native-autocomplete-input@github:ktj/react-native-autocomplete-input":
+  version "3.4.0"
+  resolved "https://codeload.github.com/ktj/react-native-autocomplete-input/tar.gz/add403a18002b3069399ca10258b13d75c2fc8ac"
+  dependencies:
+    prop-types "^15.5.10"
+
 react-native-web@0.3.2:
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/react-native-web/-/react-native-web-0.3.2.tgz#869de266ab75145229d1df8dfb95d60c1410b986"
@@ -8712,7 +8720,7 @@ react-paginate@^5.0.0:
     prop-types "^15.6.0"
     react-addons-create-fragment "^15.0.0"
 
-react-primitives-svg@ktj/primitives-svg-build:
+"react-primitives-svg@github:ktj/primitives-svg-build":
   version "0.0.2"
   resolved "https://codeload.github.com/ktj/primitives-svg-build/tar.gz/52c80927f050f3a761a4373d09b3a12035343862"
 
