@@ -10,7 +10,6 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Theme from 'hsl-shared-components/lib/Theme';
 import { ThemeProvider } from 'styled-components';
-import ResponsiveProvider from 'hsl-shared-components/lib/Utils/ResponsiveProvider';
 import { shadeColor } from './util/colors';
 
 import debug from 'debug';
@@ -193,24 +192,22 @@ const callback = () =>
           IsomorphicRouter.prepareInitialRender(Relay.Store, renderProps).then(
             props => {
               ReactDOM.hydrate(
-                <ResponsiveProvider>
-                  <ThemeProvider theme={Theme}>
-                    <ContextProvider
-                      translations={translations}
-                      context={context.getComponentContext()}
-                    >
-                      <ErrorBoundary>
-                        <MuiThemeProvider
-                          muiTheme={getMuiTheme(MUITheme(config), {
-                            userAgent: navigator.userAgent,
-                          })}
-                        >
-                          <Router {...props} onUpdate={track} />
-                        </MuiThemeProvider>
-                      </ErrorBoundary>
-                    </ContextProvider>
-                  </ThemeProvider>
-                </ResponsiveProvider>,
+                <ThemeProvider theme={Theme}>
+                  <ContextProvider
+                    translations={translations}
+                    context={context.getComponentContext()}
+                  >
+                    <ErrorBoundary>
+                      <MuiThemeProvider
+                        muiTheme={getMuiTheme(MUITheme(config), {
+                          userAgent: navigator.userAgent,
+                        })}
+                      >
+                        <Router {...props} onUpdate={track} />
+                      </MuiThemeProvider>
+                    </ErrorBoundary>
+                  </ContextProvider>
+                </ThemeProvider>,
                 document.getElementById('app'),
                 () => {
                   // Run only in production mode and when built in a docker container
