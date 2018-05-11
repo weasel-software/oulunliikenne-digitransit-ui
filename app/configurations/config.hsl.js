@@ -2,6 +2,13 @@ const CONFIG = 'hsl';
 const API_URL = process.env.API_URL || 'https://dev-api.digitransit.fi';
 const MAP_URL =
   process.env.MAP_URL || 'https://digitransit-dev-cdn-origin.azureedge.net';
+const APP_PATH = process.env.APP_CONTEXT || '';
+let ASSET_URL;
+if (process.env.ASSET_URL) {
+  ASSET_URL = `${process.env.ASSET_URL}/ui/v1/hsl`;
+} else {
+  ASSET_URL = process.env.NODE_ENV === 'development' ? '/proxy' : APP_PATH;
+}
 const APP_DESCRIPTION = 'Helsingin seudun liikenteen uusi Reittiopas.';
 const YEAR = 1900 + new Date().getYear();
 
@@ -11,6 +18,7 @@ export default {
   URL: {
     OTP: process.env.OTP_URL || `${API_URL}/routing/v1/routers/hsl/`,
     STOP_MAP: `${MAP_URL}/map/v1/hsl-stop-map/`,
+    ASSET_URL,
     CITYBIKE_MAP: `${MAP_URL}/map/v1/hsl-citybike-map/`,
     PARK_AND_RIDE_MAP: `${MAP_URL}/map/v1/hsl-parkandride-map/`,
     TICKET_SALES_MAP: `${MAP_URL}/map/v1/hsl-ticket-sales-map/`,

@@ -251,8 +251,8 @@ export default function(req, res, next) {
 
     // Write stylesheets and preload hints before doing anything else
     if (process.env.NODE_ENV !== 'development') {
-      const mainHref = `${config.APP_PATH}/${assets['main.css']}`;
-      const themeHref = `${config.APP_PATH}/${
+      const mainHref = `${config.URL.ASSET_URL}/${assets['main.css']}`;
+      const themeHref = `${config.URL.ASSET_URL}/${
         assets[`${config.CONFIG}_theme.css`]
       }`;
 
@@ -264,12 +264,12 @@ export default function(req, res, next) {
       );
 
       res.write(
-        `<link rel="preload" as="script" href="${config.APP_PATH}/${
+        `<link rel="preload" as="script" href="${config.URL.ASSET_URL}/${
           assets['common.js']
         }">\n`,
       );
       res.write(
-        `<link rel="preload" as="script" href="${config.APP_PATH}/${
+        `<link rel="preload" as="script" href="${config.URL.ASSET_URL}/${
           assets['main.js']
         }">\n`,
       );
@@ -333,7 +333,7 @@ export default function(req, res, next) {
 
     if (process.env.NODE_ENV !== 'development') {
       res.write('<script>\n');
-      res.write(`fetch('${config.APP_PATH}/${assets[spriteName]}')
+      res.write(`fetch('${config.URL.ASSET_URL}/${assets[spriteName]}')
         .then(function(response) {return response.text();}).then(function(blob) {
           var div = document.createElement('div');
           div.innerHTML = blob;
@@ -364,12 +364,10 @@ export default function(req, res, next) {
       res.write('<script>');
       res.write(manifest);
       res.write('\n</script>\n');
-      res.write(
-        `<script src="${config.APP_PATH}/${assets['common.js']}"></script>\n`,
-      );
-      res.write(
-        `<script src="${config.APP_PATH}/${assets['main.js']}"></script>\n`,
-      );
+      const commonFileUrl = `${config.URL.ASSET_URL}/${assets['common.js']}`;
+      res.write(`<script src="${commonFileUrl}"></script>\n`);
+      const mainFileUrl = `${config.URL.ASSET_URL}/${assets['main.js']}`;
+      res.write(`<script src="${mainFileUrl}"></script>\n`);
     }
     res.write('</body>\n');
     res.write('</html>\n');

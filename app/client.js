@@ -40,6 +40,8 @@ window.debug = debug; // Allow _debug.enable('*') in browser console
 
 // TODO: this is an ugly hack, but required due to cyclical processing in app
 const { config } = window.state.context.plugins['extra-context-plugin'];
+__webpack_public_path__ = config.URL.ASSET_URL; //TODO fix this
+
 const app = appCreator(config);
 
 const raven = Raven(config.SENTRY_DSN);
