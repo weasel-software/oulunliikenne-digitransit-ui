@@ -4,13 +4,14 @@ const GEOCODING_BASE_URL = `${API_URL}/geocoding/v1`;
 const MAP_URL =
   process.env.MAP_URL || 'https://digitransit-dev-cdn-origin.azureedge.net';
 const APP_PATH = process.env.APP_CONTEXT || '';
+
 let ASSET_URL;
 if (process.env.ASSET_URL) {
-  ASSET_URL = `${process.env.ASSET_URL}/ui/v1/finland`;
+  ASSET_URL = `${process.env.ASSET_URL}`;
 } else {
-  ASSET_URL = process.env.NODE_ENV === 'development' ? '/proxy' : APP_PATH;
+  ASSET_URL = process.env.NODE_ENV === 'development' ? '/proxy/' : APP_PATH;
 }
-ASSET_URL += '/';
+
 const { PIWIK_ADDRESS, PIWIK_ID, SENTRY_DSN } = process.env;
 const PORT = process.env.PORT || 8080;
 const APP_DESCRIPTION = 'Digitransit journey planning UI';

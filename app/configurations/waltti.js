@@ -2,13 +2,14 @@ const API_URL = process.env.API_URL || 'https://dev-api.digitransit.fi';
 const MAP_URL =
   process.env.MAP_URL || 'https://digitransit-dev-cdn-origin.azureedge.net';
 const APP_PATH = process.env.APP_CONTEXT || '';
+
 let ASSET_URL;
 if (process.env.ASSET_URL) {
-  ASSET_URL = `${process.env.ASSET_URL}/ui/v1/waltti`;
+    ASSET_URL = `${process.env.ASSET_URL}`;
 } else {
-  ASSET_URL = process.env.NODE_ENV === 'development' ? '/proxy' : APP_PATH;
+    ASSET_URL = process.env.NODE_ENV === 'development' ? '/proxy/' : APP_PATH;
 }
-ASSET_URL += '/';
+
 const APP_DESCRIPTION = 'Uusi Reittiopas';
 const YEAR = 1900 + new Date().getYear();
 
