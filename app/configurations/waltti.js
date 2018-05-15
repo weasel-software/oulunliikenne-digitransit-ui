@@ -5,7 +5,7 @@ const APP_PATH = process.env.APP_CONTEXT || '';
 
 let ASSET_URL;
 if (process.env.ASSET_URL) {
-    ASSET_URL = `${process.env.ASSET_URL}`;
+    ASSET_URL = process.env.ASSET_URL;
 } else {
     ASSET_URL = process.env.NODE_ENV === 'development' ? '/proxy/' : APP_PATH;
 }
