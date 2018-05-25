@@ -34,19 +34,23 @@ function getActiveIndex(state) {
   return (state && state.summaryPageSelected) || 0;
 }
 
+export const contextTypes = {
+  queryAggregator: PropTypes.shape({
+    readyState: PropTypes.shape({
+      done: PropTypes.bool.isRequired,
+      error: PropTypes.string,
+    }).isRequired,
+  }).isRequired,
+  router: routerShape.isRequired,
+  location: PropTypes.object.isRequired,
+  config: PropTypes.object,
+  executeAction: PropTypes.func.isRequired,
+  headers: PropTypes.object.isRequired,
+};
+
 class SummaryPage extends React.Component {
   static contextTypes = {
-    queryAggregator: PropTypes.shape({
-      readyState: PropTypes.shape({
-        done: PropTypes.bool.isRequired,
-        error: PropTypes.string,
-      }).isRequired,
-    }).isRequired,
-    router: routerShape.isRequired,
-    location: PropTypes.object.isRequired,
-    config: PropTypes.object,
-    executeAction: PropTypes.func.isRequired,
-    headers: PropTypes.object.isRequired,
+    ...contextTypes,
   };
 
   static propTypes = {

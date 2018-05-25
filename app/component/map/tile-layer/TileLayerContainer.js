@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Relay from 'react-relay/classic';
 import { intlShape } from 'react-intl';
-import GridLayer from 'react-leaflet/es/GridLayer';
+import { GridLayer } from 'react-leaflet';
 import SphericalMercator from '@mapbox/sphericalmercator';
 import lodashFilter from 'lodash/filter';
 import L from 'leaflet';

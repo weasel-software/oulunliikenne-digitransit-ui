@@ -3,11 +3,13 @@ import React from 'react';
 
 import throttle from 'lodash/throttle';
 
-import LeafletMap from 'react-leaflet/es/Map';
-import TileLayer from 'react-leaflet/es/TileLayer';
-import AttributionControl from 'react-leaflet/es/AttributionControl';
-import ScaleControl from 'react-leaflet/es/ScaleControl';
-import ZoomControl from 'react-leaflet/es/ZoomControl';
+import {
+  LeafletMap,
+  TileLayer,
+  AttributionControl,
+  ScaleControl,
+  ZoomControl,
+} from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet-active-area';
 // Webpack handles this by bundling it with the other css files

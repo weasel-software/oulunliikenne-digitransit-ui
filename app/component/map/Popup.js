@@ -2,10 +2,10 @@ import { Popup as LeafletPopup } from 'leaflet';
 import PropTypes from 'prop-types';
 import { Children } from 'react';
 import { createPortal } from 'react-dom';
-import MapComponent from 'react-leaflet/es/MapComponent';
-import latlng from 'react-leaflet/es/propTypes/latlng';
-import layer from 'react-leaflet/es/propTypes/layer';
-import map from 'react-leaflet/es/propTypes/map';
+import {
+  MapComponent,
+  PropTypes as ReactLeafletPropTypes,
+} from 'react-leaflet';
 import events from '../../util/events';
 
 /* eslint-disable no-underscore-dangle */
@@ -15,12 +15,12 @@ export default class Popup extends MapComponent {
     children: PropTypes.node,
     onClose: PropTypes.func,
     onOpen: PropTypes.func,
-    position: latlng,
+    position: ReactLeafletPropTypes.latlng,
   };
 
   static contextTypes = {
-    map,
-    popupContainer: layer,
+    map: ReactLeafletPropTypes.map,
+    popupContainer: ReactLeafletPropTypes.layer,
     pane: PropTypes.string,
   };
 
