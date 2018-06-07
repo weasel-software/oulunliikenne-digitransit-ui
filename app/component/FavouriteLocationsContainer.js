@@ -194,6 +194,7 @@ export default class FavouriteLocationsContainer extends React.Component {
         display: 'flex',
         alignItems: 'stretch',
         flexDirection: 'column',
+        overflow: 'hidden',
       },
     };
 
