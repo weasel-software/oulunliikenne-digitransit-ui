@@ -11,6 +11,7 @@ const EmptyFavouriteLocationSlot = ({ index }) => (
     to="/suosikki/uusi"
     className="cursor-pointer no-decoration"
     key={`add-new-favourite-${index}`}
+    style={{ flex: 1, display: 'flex' }}
   >
     <div className="new-favourite-button-content">
       <AddIcon />

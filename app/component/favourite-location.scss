@@ -21,6 +21,9 @@
   bottom: 0;
   top: 0;
   position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   .favourite-edit-icon {
     color: $light-gray;
@@ -42,12 +45,13 @@
   background: $white;
   line-height: 1.5;
   position: relative;
+  height: auto;
 
-
-  padding: 0 $padding-xsmall;
+  padding: $padding-xsmall;
   min-height: 65px;
   color: #fff;
   width: 95%;
+  flex: 1;
 
   .favourite-edit-button {
     background-color: rgb(200,128,128);
@@ -128,6 +132,7 @@
   align-items: center;
   justify-content: center;
   font-size: 1.5em;
+  height: auto;
 
   .add-location-text {
     @include font-bold;

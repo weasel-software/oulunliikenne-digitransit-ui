@@ -191,6 +191,9 @@ export default class FavouriteLocationsContainer extends React.Component {
         padding: '0px',
         margin: '0px',
         width: '100%',
+        display: 'flex',
+        alignItems: 'stretch',
+        flexDirection: 'column',
       },
     };
 
