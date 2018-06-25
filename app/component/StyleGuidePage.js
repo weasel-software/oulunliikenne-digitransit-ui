@@ -87,6 +87,7 @@ import CallAgencyWarning from './CallAgencyWarning';
 import Timetable from './Timetable';
 import Error404 from './404';
 import StopMarkerPopup from './map/popups/StopMarkerPopup';
+import WeeklyTimetable from './WeeklyTimetable';
 
 const components = {
   Icon,
@@ -174,6 +175,7 @@ const components = {
   Timetable,
   Error404,
   StopMarkerPopup,
+  WeeklyTimetable,
 };
 
 function getColors() {

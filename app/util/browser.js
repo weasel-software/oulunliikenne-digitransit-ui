@@ -5,6 +5,8 @@ export const isWindowsPhone =
   isBrowser && navigator.userAgent.match(/Windows Phone/) != null;
 export const isLangMockEn =
   isBrowser && window.location.search.indexOf('enmock') !== -1;
+export const isLangMockFi =
+  isBrowser && window.location.search.indexOf('fimock') !== -1;
 export const isDebugTiles =
   isBrowser && window.location.search.indexOf('debugTiles') !== -1;
 export const isMobile =
