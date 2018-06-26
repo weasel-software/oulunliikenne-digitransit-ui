@@ -41,10 +41,6 @@ html {
       width: calc(#{$i} * 100% / 12);
     }
   }
-
-  .page-break-after {
-    page-break-after: always;
-  }
 }
 
 body {

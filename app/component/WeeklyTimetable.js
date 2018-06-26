@@ -142,7 +142,7 @@ class WeeklyTimetable extends React.Component {
           <div className="timetable-for-printing">
             {this.dateForPrinting(dateBegin, dateEnd)}
           </div>
-          <h2>
+          <h2 className="timetable-period-header">
             {moment()
               .day(1)
               .format('dddd')}&nbsp;-&nbsp;{moment()
@@ -150,15 +150,13 @@ class WeeklyTimetable extends React.Component {
               .format('dddd')}
           </h2>
           {this.renderPeriodRows(weekdays, notes)}
-          <div className="page-break-after" />
-          <h2>
+          <h2 className="timetable-period-header">
             {moment()
               .day(6)
               .format('dddd')}
           </h2>
           {this.renderPeriodRows(saturdays, notes)}
-          <div className="page-break-after" />
-          <h2>
+          <h2 className="timetable-period-header">
             {moment()
               .day(7)
               .format('dddd')}
@@ -200,13 +198,9 @@ WeeklyTimetable.defaultProps = {
 WeeklyTimetable.description = () => (
   <React.Fragment>
     <WeeklyTimetable {...sampleData.default.sample1} />
-    <div className="page-break-after" />
     <WeeklyTimetable {...sampleData.default.sample2} />
-    <div className="page-break-after" />
     <WeeklyTimetable {...sampleData.default.sample3} />
-    <div className="page-break-after" />
     <WeeklyTimetable {...sampleData.default.sample4} />
-    <div className="page-break-after" />
     <WeeklyTimetable {...sampleData.default.sample5} />
   </React.Fragment>
 );
