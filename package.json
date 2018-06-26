@@ -150,7 +150,7 @@
     "gemini": "5.7.2",
     "gemini-browserstack": "1.1.0",
     "graphql": "0.13.2",
-    "html-reporter": "1.2.0",
+    "html-reporter": "2.19.2",
     "iltorb": "2.3.2",
     "jsdom": "11.11.0",
     "mini-css-extract-plugin": "0.4.0",
