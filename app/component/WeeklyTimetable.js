@@ -1,7 +1,6 @@
 import groupBy from 'lodash/groupBy';
 import isEmpty from 'lodash/isEmpty';
 import padStart from 'lodash/padStart';
-import trimStart from 'lodash/trimStart';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -9,6 +8,7 @@ import { FormattedMessage } from 'react-intl';
 
 import CardHeader from './CardHeader';
 import Icon from './Icon';
+import trimRouteId from '../util/domain';
 import * as sampleData from './data/WeeklyTimetable';
 
 class WeeklyTimetable extends React.Component {
@@ -28,9 +28,6 @@ class WeeklyTimetable extends React.Component {
       </div>
     </div>
   );
-
-  cleanRouteId = routeId =>
-    routeId ? trimStart(routeId.substring(1), '0') : '';
 
   hasNote = departure => !isEmpty(departure.note);
 
@@ -69,7 +66,7 @@ class WeeklyTimetable extends React.Component {
                           {padStart(departure.minutes, 2, '0')}
                         </span>
                         <span className="line-name">
-                          /{this.cleanRouteId(departure.routeId)}
+                          /{trimRouteId(departure.routeId)}
                           {this.hasNote(departure) && (
                             <span className="bold">{departure.note}</span>
                           )}
