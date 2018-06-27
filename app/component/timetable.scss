@@ -22,7 +22,7 @@
     margin: 0 auto;
     overflow: visible;
 
-    .timetable-period-header ~ .timetable-period-header {
+    .timetable-for-printing ~ .timetable-for-printing {
       page-break-before: always;
     }
   }

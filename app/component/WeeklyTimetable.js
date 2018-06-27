@@ -1,10 +1,11 @@
 import groupBy from 'lodash/groupBy';
 import isEmpty from 'lodash/isEmpty';
+import isFunction from 'lodash/isFunction';
 import padStart from 'lodash/padStart';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, intlShape } from 'react-intl';
 
 import CardHeader from './CardHeader';
 import Icon from './Icon';
@@ -12,18 +13,24 @@ import trimRouteId from '../util/domain';
 import * as sampleData from './data/WeeklyTimetable';
 
 class WeeklyTimetable extends React.Component {
-  dateForPrinting = (dateBegin, dateEnd) => (
-    <div className="printable-date-container">
-      <div className="printable-date-icon">
-        <Icon className="large-icon" img="icon-icon_schedule" />
-      </div>
-      <div className="printable-date-right">
-        <div className="printable-date-header">
-          <FormattedMessage id="date" defaultMessage="Date" />
+  dateForPrinting = (dateBegin, dateEnd, period) => (
+    <div className="timetable-for-printing">
+      <div className="printable-date-container">
+        <div className="printable-date-icon">
+          <Icon className="large-icon" img="icon-icon_schedule" />
         </div>
-        <div className="printable-date-content">
-          {moment(dateBegin).format('dd DD.MM.YYYY')}&nbsp;-&nbsp;
-          {moment(dateEnd).format('dd DD.MM.YYYY')}
+        <div>
+          <div className="printable-date-header">
+            <FormattedMessage
+              defaultMessage="Validity period"
+              id="timetable-validity-period"
+            />
+          </div>
+          <div className="printable-date-content">
+            {period ? `${period} ` : null}
+            {moment(dateBegin).format('DD.MM.YYYY')}&nbsp;-&nbsp;
+            {moment(dateEnd).format('DD.MM.YYYY')}
+          </div>
         </div>
       </div>
     </div>
@@ -121,6 +128,8 @@ class WeeklyTimetable extends React.Component {
       weekdays,
     } = this.props;
 
+    const { intl } = this.context;
+
     return (
       <React.Fragment>
         <CardHeader
@@ -136,28 +145,32 @@ class WeeklyTimetable extends React.Component {
               <FormattedMessage id="timetable" defaultMessage="Timetable" />
             </h1>
           </div>
-          <div className="timetable-for-printing">
-            {this.dateForPrinting(dateBegin, dateEnd)}
-          </div>
-          <h2 className="timetable-period-header">
-            {moment()
-              .day(1)
-              .format('dddd')}&nbsp;-&nbsp;{moment()
-              .day(5)
-              .format('dddd')}
-          </h2>
+          {this.dateForPrinting(
+            dateBegin,
+            dateEnd,
+            intl.formatMessage({
+              defaultMessage: 'Monday to Friday',
+              id: 'timetable-monday-to-friday',
+            }),
+          )}
           {this.renderPeriodRows(weekdays, notes)}
-          <h2 className="timetable-period-header">
-            {moment()
-              .day(6)
-              .format('dddd')}
-          </h2>
+          {this.dateForPrinting(
+            dateBegin,
+            dateEnd,
+            intl.formatMessage({
+              defaultMessage: 'Saturday',
+              id: 'timetable-on-saturdays',
+            }),
+          )}
           {this.renderPeriodRows(saturdays, notes)}
-          <h2 className="timetable-period-header">
-            {moment()
-              .day(7)
-              .format('dddd')}
-          </h2>
+          {this.dateForPrinting(
+            dateBegin,
+            dateEnd,
+            intl.formatMessage({
+              defaultMessage: 'Sunday',
+              id: 'timetable-on-sundays',
+            }),
+          )}
           {this.renderPeriodRows(sundays, notes)}
         </div>
       </React.Fragment>
@@ -190,6 +203,10 @@ WeeklyTimetable.propTypes = {
 
 WeeklyTimetable.defaultProps = {
   language: 'fi',
+};
+
+WeeklyTimetable.contextTypes = {
+  intl: intlShape.isRequired,
 };
 
 WeeklyTimetable.description = () => (
