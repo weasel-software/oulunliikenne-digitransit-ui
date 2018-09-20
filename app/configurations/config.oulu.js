@@ -16,6 +16,15 @@ export default configMerger(walttiConfig, {
     href: 'http://www.oulunjoukkoliikenne.fi',
   },
 
+  sprites: 'svg-sprite.oulu.svg',
+
+  defaultMapCenter: {
+    lat: 65.0123600,
+    lon: 25.4681600,
+  },
+
+  appBarLink: false,
+
   colors: {
     primary: '#e10069',
   },
@@ -29,6 +38,9 @@ export default configMerger(walttiConfig, {
   },
 
   title: APP_TITLE,
+
+  availableLanguages: ['fi', 'sv', 'en'],
+  defaultLanguage: 'fi',
 
   // Navbar logo
   logo: 'oulu/oulu-logo.png',

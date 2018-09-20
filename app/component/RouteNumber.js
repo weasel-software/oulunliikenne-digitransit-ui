@@ -179,7 +179,7 @@ RouteNumber.propTypes = {
   className: PropTypes.string,
   hasDisruption: PropTypes.bool,
   fadeLong: PropTypes.bool,
-  withBar: PropTypes.bool.isRequired,
+  withBar: PropTypes.bool,
   isCallAgency: PropTypes.bool.isRequired,
 };
 
