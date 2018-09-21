@@ -18,7 +18,7 @@ const CityBikeMarkerWrapper = Relay.createContainer(
   {
     fragments: {
       root: () => Relay.QL`
-      fragment on QueryType {
+      fragment on Query {
         stations: bikeRentalStations {
           ${CityBikeMarker.getFragment('station')}
           stationId

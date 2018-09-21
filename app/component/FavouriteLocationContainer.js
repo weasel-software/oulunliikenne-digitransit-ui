@@ -40,7 +40,7 @@ FavouriteLocationContainer.propTypes = {
 export default Relay.createContainer(FavouriteLocationContainer, {
   fragments: {
     plan: () => Relay.QL`
-      fragment on QueryType {
+      fragment on Query {
         plan(
           from: $from,
           to: $to,

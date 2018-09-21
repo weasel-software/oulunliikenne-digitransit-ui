@@ -4,17 +4,33 @@ const CONFIG = 'oulu';
 const APP_DESCRIPTION = 'Oulun seudun uusi reittiopas';
 const APP_TITLE = 'Reittiopas';
 
+const OTP_URL =
+  process.env.OTP_URL ||
+  'https://tq9dvlsfdk.execute-api.eu-central-1.amazonaws.com/dev';
+const API_URL = process.env.API_URL || 'https://dev-api.digitransit.fi';
+const MAP_URL =
+  process.env.MAP_URL || 'https://digitransit-dev-cdn-origin.azureedge.net';
+
 const walttiConfig = require('./waltti').default;
 
 export default configMerger(walttiConfig, {
   CONFIG,
 
+  URL: {
+    API_URL,
+    MAP_URL,
+    OTP: OTP_URL,
+    STOP_MAP: `${MAP_URL}/map/v1/waltti-stop-map/`,
+    CITYBIKE_MAP: `${MAP_URL}/map/v1/waltti-citybike-map/`,
+  },
+
   feedIds: ['OULU'],
 
-  appBarLink: {
+  /* appBarLink: {
     name: 'Oulun joukkoliikenne',
     href: 'http://www.oulunjoukkoliikenne.fi',
-  },
+  }, */
+  appBarLink: false,
 
   sprites: 'svg-sprite.oulu.svg',
 
@@ -22,8 +38,6 @@ export default configMerger(walttiConfig, {
     lat: 65.0123600,
     lon: 25.4681600,
   },
-
-  appBarLink: false,
 
   colors: {
     primary: '#e10069',

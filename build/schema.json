@@ -1,14 +1,14 @@
 {
     "__schema": {
         "queryType": {
-            "name": "QueryType"
+            "name": "Query"
         },
         "mutationType": null,
         "subscriptionType": null,
         "types": [
             {
                 "kind": "OBJECT",
-                "name": "QueryType",
+                "name": "Query",
                 "description": null,
                 "fields": [
                     {
@@ -1007,7 +1007,7 @@
                         "args": [],
                         "type": {
                             "kind": "OBJECT",
-                            "name": "QueryType",
+                            "name": "Query",
                             "ofType": null
                         },
                         "isDeprecated": false,

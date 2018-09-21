@@ -105,7 +105,7 @@ PlaceAtDistanceList.propTypes = {
 export default Relay.createContainer(PlaceAtDistanceList, {
   fragments: {
     nearest: variables => Relay.QL`
-      fragment on QueryType {
+      fragment on Query {
         places: nearest(
           lat: $lat,
           lon: $lon,

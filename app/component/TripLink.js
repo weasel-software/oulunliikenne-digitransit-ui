@@ -40,7 +40,7 @@ TripLink.propTypes = {
 export default Relay.createContainer(TripLink, {
   fragments: {
     trip: () => Relay.QL`
-      fragment on QueryType {
+      fragment on Query {
         trip: fuzzyTrip(route: $route, direction: $direction, time: $time, date: $date) {
           gtfsId
           pattern {

@@ -109,10 +109,10 @@ const callback = () =>
     Relay.injectNetworkLayer(
       new RelayNetworkLayer([
         urlMiddleware({
-          url: `${config.URL.OTP}index/graphql`,
+          url: `${config.URL.OTP}/graphql`,
         }),
         batchMiddleware({
-          batchUrl: `${config.URL.OTP}index/graphql/batch`,
+          batchUrl: `${config.URL.OTP}/graphql/batch`,
         }),
         gqErrorsMiddleware(),
         retryMiddleware({

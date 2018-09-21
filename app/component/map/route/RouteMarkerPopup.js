@@ -81,7 +81,7 @@ const RouteMarkerPopupWithFavourite = connectToStores(
 export default Relay.createContainer(RouteMarkerPopupWithFavourite, {
   fragments: {
     trip: () => Relay.QL`
-      fragment on QueryType {
+      fragment on Query {
         fuzzyTrip(route: $route, direction: $direction, time: $time, date: $date) {
           gtfsId
           pattern {
