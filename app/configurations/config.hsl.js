@@ -28,6 +28,9 @@ export default {
   availableLanguages: ['fi', 'sv', 'en'],
   defaultLanguage: 'fi',
 
+  availableModes: [],
+  defaultMode: '',
+
   favicon: './app/configurations/images/hsl/icon_favicon-reittiopas.svg',
 
   // Navbar logo

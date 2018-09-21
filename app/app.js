@@ -9,6 +9,7 @@ import OldSearchesStore from './store/OldSearchesStore';
 import PositionStore from './store/PositionStore';
 import OriginStore from './store/OriginStore';
 import PreferencesStore from './store/PreferencesStore';
+import ModeStore from './store/ModeStore';
 import RealTimeInformationStore from './store/RealTimeInformationStore';
 import TimeStore from './store/TimeStore';
 import FavouriteCityBikeStationStore from './store/FavouriteCityBikeStationStore';
@@ -26,6 +27,7 @@ export default config => {
   app.registerStore(PositionStore);
   app.registerStore(OriginStore);
   app.registerStore(PreferencesStore);
+  app.registerStore(ModeStore);
   app.registerStore(RealTimeInformationStore);
   app.registerStore(TimeStore);
   app.registerStore(FavouriteCityBikeStationStore);

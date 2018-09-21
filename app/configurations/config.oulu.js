@@ -26,18 +26,42 @@ export default configMerger(walttiConfig, {
 
   feedIds: ['OULU'],
 
-  /* appBarLink: {
-    name: 'Oulun joukkoliikenne',
-    href: 'http://www.oulunjoukkoliikenne.fi',
-  }, */
-  appBarLink: false,
-
   sprites: 'svg-sprite.oulu.svg',
 
   defaultMapCenter: {
     lat: 65.0123600,
     lon: 25.4681600,
   },
+
+  appBarSettings: true,
+
+  appBarLinks: {
+    fi: {
+      text: 'Suomeksi lorem ipsum dolor sit amet, tristique mollis nec vitae lorem aenean, in maecenas lobortis volutpat ac vel cursus.',
+      links: [
+        { name: 'Oulun joukkoliikenne', href: 'https://www.oulunjoukkoliikenne.fi/' },
+        { name: 'Lentoliikenne (Finavia)', href: 'https://www.finavia.fi/fi' },
+      ],
+    },
+    sv: {
+      text: 'På svenska lorem ipsum dolor sit amet, tristique mollis nec vitae lorem aenean, in maecenas lobortis volutpat ac vel cursus.',
+      links: [
+        { name: 'Uleåborgs kollektivtrafik', href: 'https://www.oulunjoukkoliikenne.fi/english' },
+        { name: 'Flygtrafik (Finavia)', href: 'https://www.finavia.fi/sv' },
+      ],
+    },
+    en: {
+      text: 'In English lorem ipsum dolor sit amet, tristique mollis nec vitae lorem aenean, in maecenas lobortis volutpat ac vel cursus.',
+      links: [
+        { name: 'Oulu public transport', href: 'https://www.oulunjoukkoliikenne.fi/english' },
+        { name: 'Air service (Finavia)', href: 'https://www.finavia.fi/en' },
+      ],
+    },
+  },
+
+  appBarDisruptionInfo: false,
+
+  appBarLink: false,
 
   colors: {
     primary: '#e10069',
@@ -55,6 +79,9 @@ export default configMerger(walttiConfig, {
 
   availableLanguages: ['fi', 'sv', 'en'],
   defaultLanguage: 'fi',
+
+  availableModes: ['transport', 'car', 'walk', 'bicycle'],
+  defaultMode: 'transport',
 
   // Navbar logo
   logo: 'oulu/oulu-logo.png',
