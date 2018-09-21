@@ -13,6 +13,8 @@ const MAP_URL =
 
 const walttiConfig = require('./waltti').default;
 
+const MAP_URL_LOCAL = 'http://localhost:4000';
+
 export default configMerger(walttiConfig, {
   CONFIG,
 
@@ -22,14 +24,16 @@ export default configMerger(walttiConfig, {
     OTP: OTP_URL,
     STOP_MAP: `${MAP_URL}/map/v1/waltti-stop-map/`,
     CITYBIKE_MAP: `${MAP_URL}/map/v1/waltti-citybike-map/`,
+    PARKING_STATIONS_MAP: `${MAP_URL_LOCAL}/parkingstations/`,
+  },
+
+  parkingStations: {
+    showParkingStations: true,
+    parkingStationsMinZoom: 14,
   },
 
   feedIds: ['OULU'],
 
-  /* appBarLink: {
-    name: 'Oulun joukkoliikenne',
-    href: 'http://www.oulunjoukkoliikenne.fi',
-  }, */
   appBarLink: false,
 
   sprites: 'svg-sprite.oulu.svg',

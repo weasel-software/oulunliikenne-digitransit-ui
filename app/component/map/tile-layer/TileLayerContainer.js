@@ -11,9 +11,11 @@ import Popup from '../Popup';
 import StopRoute from '../../../route/StopRoute';
 import TerminalRoute from '../../../route/TerminalRoute';
 import CityBikeRoute from '../../../route/CityBikeRoute';
+import ParkingStationRoute from '../../../route/ParkingStationRoute';
 import StopMarkerPopup from '../popups/StopMarkerPopup';
 import MarkerSelectPopup from './MarkerSelectPopup';
 import CityBikePopup from '../popups/CityBikePopup';
+import ParkingStationPopup from '../popups/ParkingStationPopup';
 import ParkAndRideHubPopup from '../popups/ParkAndRideHubPopup';
 import ParkAndRideFacilityPopup from '../popups/ParkAndRideFacilityPopup';
 import ParkAndRideHubRoute from '../../../route/ParkAndRideHubRoute';
@@ -210,6 +212,17 @@ class TileLayerContainer extends GridLayer {
               }
               renderLoading={loadingPopup}
               renderFetched={data => <CityBikePopup {...data} />}
+            />
+          );
+        } else if (this.state.selectableTargets[0].layer === 'parkingStations') {
+          ({ id } = this.state.selectableTargets[0].feature.properties);
+          contents = (
+            <Relay.RootContainer
+              Component={ParkingStationPopup}
+              forceFetch
+              route={new ParkingStationRoute({ id: id })}
+              renderLoading={loadingPopup}
+              renderFetched={data => <ParkingStationPopup {...data} />}
             />
           );
         } else if (
