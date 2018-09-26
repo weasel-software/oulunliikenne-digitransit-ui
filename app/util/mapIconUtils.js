@@ -204,6 +204,14 @@ export function drawRoadworkIcon(tile, geom, imageSize) {
   );
 }
 
+export function drawDisorderIcon(tile, geom, imageSize) {
+  getImageFromSpriteCache('icon-icon_disorder', imageSize, imageSize).then(
+    image => {
+      drawIconImage(image, tile, geom, imageSize, imageSize);
+    },
+  );
+}
+
 export function drawParkAndRideIcon(tile, geom, width, height) {
   getImageFromSpriteCache('icon-icon_park-and-ride', width, height).then(
     image => {

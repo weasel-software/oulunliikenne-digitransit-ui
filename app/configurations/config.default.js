@@ -179,6 +179,11 @@ export default {
     roadworksMinZoom: 14,
   },
 
+  disorders: {
+    showDisorders: false,
+    disordersMinZoom: 14,
+  },
+
   // TODO: Switch off in autumn
   cityBike: {
     showCityBikes: true,

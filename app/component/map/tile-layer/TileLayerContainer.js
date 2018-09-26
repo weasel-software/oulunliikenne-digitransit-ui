@@ -20,6 +20,7 @@ import ParkAndRideHubRoute from '../../../route/ParkAndRideHubRoute';
 import ParkAndRideFacilityRoute from '../../../route/ParkAndRideFacilityRoute';
 import TicketSalesPopup from '../popups/TicketSalesPopup';
 import RoadworkPopup from '../popups/RoadworkPopup';
+import DisorderPopup from '../popups/DisorderPopup';
 import LocationPopup from '../popups/LocationPopup';
 import TileContainer from './TileContainer';
 import Loading from '../../Loading';
@@ -271,6 +272,13 @@ class TileLayerContainer extends GridLayer {
           ({ id } = this.state.selectableTargets[0].feature.properties);
           contents = (
             <RoadworkPopup
+              {...this.state.selectableTargets[0].feature.properties}
+            />
+          );
+        } else if (this.state.selectableTargets[0].layer === 'disorders') {
+          ({ id } = this.state.selectableTargets[0].feature.properties);
+          contents = (
+            <DisorderPopup
               {...this.state.selectableTargets[0].feature.properties}
             />
           );
