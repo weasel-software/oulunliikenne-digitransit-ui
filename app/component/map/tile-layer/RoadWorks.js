@@ -17,7 +17,7 @@ export default class Roadworks {
 
   getPromise() {
     return fetch(
-      `${this.config.URL.ROAD_WORKS_MAP}${this.tile.coords.z +
+      `${this.config.URL.ROADWORKS_MAP}${this.tile.coords.z +
         (this.tile.props.zoomOffset || 0)}` +
         `/${this.tile.coords.x}/${this.tile.coords.y}.pbf`,
     ).then(res => {

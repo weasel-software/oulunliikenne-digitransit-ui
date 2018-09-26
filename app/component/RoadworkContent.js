@@ -13,7 +13,7 @@ const RoadworkContent = ({ comment, start, end, type }) => {
     <div className="roadwork-container">
       <div className="insident-info">
         {type &&
-          <span className="description">Pitkäaikainen tienparannustyö</span>
+          <span className="description">{type}</span>
         }
         <span className="duration">
           <FormattedMessage
