@@ -1,4 +1,4 @@
-.roadwork-info {
+.insident-info {
   border-bottom: solid 1px $light-gray;
   padding: 0 0 10px;
   margin: 5px 0 -5px;
@@ -18,19 +18,20 @@
   }
 }
 
-.roadwork-message {
+.insident-message {
   max-height: 200px;
   overflow-y: scroll;
   font-size: $font-size-small;
   font-weight: $font-weight-medium;
+  white-space: pre-wrap;
 }
 
-.roadwork-modal {
-  .roadwork-info {
+.insident-modal {
+  .insident-info {
     border: none;
   }
 
-  .roadwork-message {
+  .insident-message {
     max-height: none;
     overflow-y: auto;
   }

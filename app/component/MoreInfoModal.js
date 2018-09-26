@@ -36,7 +36,9 @@ function MoreInfoModal(props, { router, location }) {
       title={location.state.moreInfoModalTitle}
       toggleVisibility={toggleVisibility}
     >
-      {location.state.moreInfoModalContent}
+      <div className="insident-modal">
+        {location.state.moreInfoModalContent}
+      </div>
     </Modal>
   );
 }

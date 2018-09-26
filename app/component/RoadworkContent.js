@@ -10,8 +10,8 @@ const RoadworkContent = ({ comment, start, end, type }) => {
   end = end ? moment(end).format('DD.MM.YYYY') : '';
 
   return (
-    <div className="roadwork-container pre">
-      <div className="roadwork-info">
+    <div className="roadwork-container">
+      <div className="insident-info">
         {type &&
           <span className="description">Pitkäaikainen tienparannustyö</span>
         }
@@ -25,7 +25,7 @@ const RoadworkContent = ({ comment, start, end, type }) => {
           </FormattedMessage>
         </span>
       </div>
-      <p className="roadwork-message">{comment}</p>
+      <p className="insident-message">{comment}</p>
     </div>
   );
 };
