@@ -556,6 +556,7 @@ const translations = {
     'disruption-info-route-no-alerts':
       'No known disruptions or diversions to the route.',
     disruptions: 'Disruptions',
+    'disruption-duration': 'Duration {start} - {end}',
     'distance-between': 'Distance {distance1} m — {distance2} m',
     'distance-under': 'Distance less than {distance} m',
     earlier: 'Earlier',
@@ -627,6 +628,7 @@ const translations = {
     'minute-short': 'min',
     minutes: 'min',
     'minutes-or-route': 'Min / Route',
+    more: 'More',
     'more-settings': 'More settings',
     navigate: 'Navigate',
     'near-you': 'Near you',
@@ -1167,6 +1169,7 @@ const translations = {
     'disruption-info-route-no-alerts':
       'Linjalla ei tiedossa olevia häiriöitä tai poikkeuksia.',
     disruptions: 'Häiriöt',
+    'disruption-duration': 'Kesto {start} - {end}',
     'distance-between': 'Etäisyys {distance1} m — {distance2} m',
     'distance-under': 'Etäisyys alle {distance} m',
     earlier: 'Aiemmin',
@@ -1239,6 +1242,7 @@ const translations = {
     'minute-short': 'min',
     minutes: 'min',
     'minutes-or-route': 'Min / Linja',
+    more: 'Lisää',
     'more-settings': 'Lisäasetukset',
     navigate: 'Navigoi',
     'near-you': 'Lähelläsi',
@@ -1989,6 +1993,7 @@ const translations = {
     'disruption-info-route-no-alerts':
       'Linjen har för tillfället inga kända störningar eller avvikelser.',
     disruptions: 'Störningar',
+    'disruption-duration': 'Varaktighet {start} - {end}',
     'distance-between': 'Avstånd {distance1} m — {distance2} m',
     'distance-under': 'Avstånd mindre än {distance} m',
     earlier: 'Tidigare',
@@ -2064,6 +2069,7 @@ const translations = {
     'minute-short': 'min',
     minutes: 'min',
     'minutes-or-route': 'Min / Linje',
+    more: 'Mer',
     'more-settings': 'Fler inställningar',
     navigate: 'Navigera',
     'near-you': 'Nära dig',

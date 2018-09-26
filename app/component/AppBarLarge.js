@@ -4,6 +4,7 @@ import { intlShape } from 'react-intl';
 import { routerShape, locationShape } from 'react-router';
 import ExternalLink from './ExternalLink';
 import DisruptionInfo from './DisruptionInfo';
+import MoreInfoModal from './MoreInfoModal';
 import Icon from './Icon';
 import ComponentUsageExample from './ComponentUsageExample';
 import LangSelect from './LangSelect';
@@ -71,6 +72,7 @@ const AppBarLarge = (
       </div>
       <MessageBar />
       <DisruptionInfo />
+      <MoreInfoModal />
     </div>
   );
 };

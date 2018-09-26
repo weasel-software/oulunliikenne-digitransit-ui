@@ -1,30 +1,51 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import CityBikeAvailability from './CityBikeAvailability';
-import CityBikeUse from './CityBikeUse';
 import ComponentUsageExample from './ComponentUsageExample';
 import { lang as exampleLang } from './ExampleData';
+import moment from 'moment';
 
-const RoadworkContent = ({ message }) => (
-  <div className="roadwork-container pre">
-    <p>{message}</p>
-  </div>
-);
+const RoadworkContent = ({ comment, start, end, type }) => {
+  start = start ? moment(start).format('DD.MM.YYYY') : '';
+  end = end ? moment(end).format('DD.MM.YYYY') : '';
+
+  return (
+    <div className="roadwork-container pre">
+      <div className="roadwork-info">
+        {type &&
+          <span className="description">Pitkäaikainen tienparannustyö</span>
+        }
+        <span className="duration">
+          <FormattedMessage
+            id="disruption-duration"
+            values={{ start: start, end: end }}
+            defaultMessage="Duration {start} - {end}"
+          >
+            {(...content) => content}
+          </FormattedMessage>
+        </span>
+      </div>
+      <p className="roadwork-message">{comment}</p>
+    </div>
+  );
+};
 
 RoadworkContent.displayName = 'RoadworkContent';
 
-RoadworkContent.description = () => (
+RoadworkContent.description = (
   <div>
-    <p>Renders content of a roadwork card</p>
+    <p>Renders content of a roadwork popup or modal</p>
     <ComponentUsageExample description="">
-      <RoadworkContent message={exampleLang} />
+      <RoadworkContent comment={exampleLang} />
     </ComponentUsageExample>
   </div>
 );
 
 RoadworkContent.propTypes = {
-  message: PropTypes.string.isRequired,
+  comment: PropTypes.string.isRequired,
+  start: PropTypes.string.isRequired,
+  end: PropTypes.string.isRequired,
+  type: PropTypes.string,
 };
 
 export default RoadworkContent;

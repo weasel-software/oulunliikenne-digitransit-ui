@@ -1,0 +1,37 @@
+.roadwork-info {
+  border-bottom: solid 1px $light-gray;
+  padding: 0 0 10px;
+  margin: 5px 0 -5px;
+  line-height: 1.75em;
+
+  .description {
+    display: block;
+    font-size: $font-size-small;
+    font-weight: $font-weight-medium;
+    color: $black;
+  }
+
+  .duration {
+    font-size: $font-size-small;
+    font-weight: $font-weight-medium;
+    color: $gray;
+  }
+}
+
+.roadwork-message {
+  max-height: 200px;
+  overflow-y: scroll;
+  font-size: $font-size-small;
+  font-weight: $font-weight-medium;
+}
+
+.roadwork-modal {
+  .roadwork-info {
+    border: none;
+  }
+
+  .roadwork-message {
+    max-height: none;
+    overflow-y: auto;
+  }
+}
