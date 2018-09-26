@@ -267,7 +267,7 @@ class TileLayerContainer extends GridLayer {
               {...this.state.selectableTargets[0].feature.properties}
             />
           );
-        } else if (this.state.selectableTargets[0].layer === 'roadWorks') {
+        } else if (this.state.selectableTargets[0].layer === 'roadworks') {
           ({ id } = this.state.selectableTargets[0].feature.properties);
           contents = (
             <RoadworkPopup

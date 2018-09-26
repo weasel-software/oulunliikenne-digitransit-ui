@@ -4,7 +4,7 @@ import Protobuf from 'pbf';
 import { drawRoadworkIcon } from '../../../util/mapIconUtils';
 import { isBrowser } from '../../../util/browser';
 
-export default class RoadWorks {
+export default class Roadworks {
   constructor(tile, config) {
     this.tile = tile;
     this.config = config;
@@ -13,7 +13,7 @@ export default class RoadWorks {
     this.promise = this.getPromise();
   }
 
-  static getName = () => 'roadWorks';
+  static getName = () => 'roadworks';
 
   getPromise() {
     return fetch(

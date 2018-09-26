@@ -27,9 +27,9 @@ export default configMerger(walttiConfig, {
     ROAD_WORKS_MAP: `${MAP_URL_LOCAL}/roadworks_new/`,
   },
 
-  roadWorks: {
-    showRoadWorks: true,
-    roadWorksMinZoom: 14,
+  roadworks: {
+    showRoadworks: true,
+    roadworksMinZoom: 14,
   },
 
   feedIds: ['OULU'],

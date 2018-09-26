@@ -174,9 +174,9 @@ export default {
     locationAware: true,
   },
 
-  roadWorks: {
-    showRoadWorks: false,
-    roadWorksMinZoom: 14,
+  roadworks: {
+    showRoadworks: false,
+    roadworksMinZoom: 14,
   },
 
   // TODO: Switch off in autumn
