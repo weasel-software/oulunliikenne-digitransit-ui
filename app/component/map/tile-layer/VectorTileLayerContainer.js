@@ -6,6 +6,7 @@ import CityBikes from './CityBikes';
 import Stops from './Stops';
 import ParkAndRide from './ParkAndRide';
 import TicketSales from './TicketSales';
+import CameraStations from './CameraStations';
 
 export default function VectorTileLayerContainer(props, { config }) {
   const layers = [];
@@ -23,6 +24,10 @@ export default function VectorTileLayerContainer(props, { config }) {
 
     if (config.ticketSales && config.ticketSales.showTicketSales) {
       layers.push(TicketSales);
+    }
+
+    if (config.cameraStations && config.cameraStations.showCameraStations) {
+      layers.push(CameraStations);
     }
   }
 

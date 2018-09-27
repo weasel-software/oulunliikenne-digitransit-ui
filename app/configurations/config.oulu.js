@@ -22,6 +22,12 @@ export default configMerger(walttiConfig, {
     OTP: OTP_URL,
     STOP_MAP: `${MAP_URL}/map/v1/waltti-stop-map/`,
     CITYBIKE_MAP: `${MAP_URL}/map/v1/waltti-citybike-map/`,
+    CAMERASTATIONS_MAP: `${MAP_URL_LOCAL}/trafficcamerastations_new/`,
+  },
+
+  cameraStations: {
+    showCameraStations: true,
+    cameraStationsMinZoom: 14,
   },
 
   feedIds: ['OULU'],
