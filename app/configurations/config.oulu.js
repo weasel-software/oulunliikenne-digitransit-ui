@@ -11,6 +11,8 @@ const API_URL = process.env.API_URL || 'https://dev-api.digitransit.fi';
 const MAP_URL =
   process.env.MAP_URL || 'https://digitransit-dev-cdn-origin.azureedge.net';
 
+const MAP_URL_LOCAL = 'http://localhost:4000';
+
 const walttiConfig = require('./waltti').default;
 
 export default configMerger(walttiConfig, {
@@ -32,10 +34,6 @@ export default configMerger(walttiConfig, {
 
   feedIds: ['OULU'],
 
-  /* appBarLink: {
-    name: 'Oulun joukkoliikenne',
-    href: 'http://www.oulunjoukkoliikenne.fi',
-  }, */
   appBarLink: false,
 
   sprites: 'svg-sprite.oulu.svg',

@@ -1,14 +1,16 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import connectToStores from 'fluxible-addons-react/connectToStores';
 import { intlShape } from 'react-intl';
 import Card from '../../Card';
 import CardHeader from '../../CardHeader';
+import ImageSlider from '../../ImageSlider';
 import ComponentUsageExample from '../../ComponentUsageExample';
 
-function CameraStationPopup({ name, names, presets }, { intl }) {
+function CameraStationPopup({ lang, name, names, presets }, { intl }) {
   presets = (typeof presets === 'string') ? JSON.parse(presets) : presets;
   names = (typeof names === 'string') ? JSON.parse(names) : names;
-  const localName = names['fi'];
+  const localName = (names[lang] || name);
 
   return (
     <div className="card">
@@ -22,10 +24,14 @@ function CameraStationPopup({ name, names, presets }, { intl }) {
           icon='icon-icon_camera-station'
           unlinked
         />
-        <div>
-          <img src={presets[0].imageUrl} alt={presets[0].presentationName} />
-          {/*presets.map(item => (<img src={item.imageUrl} alt={item.presentationName} key={item.presetId} />))*/}
-        </div>
+        <ImageSlider>
+          {presets.map((item, index) => (
+            <figure className="slide" key={item.presetId}>
+              <figcaption>{item.presentationName}</figcaption>
+              <img src={item.imageUrl} alt={item.presentationName}/>
+            </figure>
+          ))}
+        </ImageSlider>
       </Card>
     </div>
   );
@@ -43,6 +49,7 @@ CameraStationPopup.description = (
 );
 
 CameraStationPopup.propTypes = {
+  lang: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   //names: PropTypes.string.isRequired,
   //presets: PropTypes.string.isRequired,
@@ -52,4 +59,6 @@ CameraStationPopup.contextTypes = {
   intl: intlShape.isRequired,
 };
 
-export default CameraStationPopup;
+export default connectToStores(CameraStationPopup, ['PreferencesStore'], context => ({
+  lang: context.getStore('PreferencesStore').getLanguage(),
+}));
