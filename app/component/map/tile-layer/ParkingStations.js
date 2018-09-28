@@ -1,7 +1,4 @@
-import Relay from 'react-relay/classic';
 import { VectorTile } from '@mapbox/vector-tile';
-import compact from 'lodash/compact';
-import isEmpty from 'lodash/isEmpty';
 import pick from 'lodash/pick';
 import Protobuf from 'pbf';
 import { drawParkingStationIcon } from '../../../util/mapIconUtils';
@@ -37,36 +34,12 @@ export default class ParkingStations {
           if (vt.layers.parkingstations != null) {
             for (let i = 0, ref = vt.layers.parkingstations.length - 1; i <= ref; i++) {
               const feature = vt.layers.parkingstations.feature(i);
-              const query = Relay.createQuery(
-                Relay.QL`
-                  query ParkAndRide($id: String!){
-                    carPark(id: $id) {
-                      name
-                      maxCapacity
-                      spacesAvailable
-                      realtime
-                    }
-                  }`,
-                { id: feature.properties.id },
-              );
-              Relay.Store.primeCache(
-                {
-                  query,
-                },
-                readyState => {
-                  if (readyState.done) {
-                    const result = compact(Relay.Store.readQuery(query));
-                    if (!isEmpty(result)) {
-                      [[feature.geom]] = feature.loadGeometry();
-                      this.features.push(pick(feature, ['geom', 'properties']));
-                      drawParkingStationIcon(
-                        this.tile,
-                        feature.geom,
-                        this.imageSize,
-                      );
-                    }
-                  }
-                },
+              [[feature.geom]] = feature.loadGeometry();
+              this.features.push(pick(feature, ['geom', 'properties']));
+              drawParkingStationIcon(
+                this.tile,
+                feature.geom,
+                this.imageSize,
               );
             }
           }
