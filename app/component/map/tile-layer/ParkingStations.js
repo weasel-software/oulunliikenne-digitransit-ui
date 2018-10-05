@@ -64,7 +64,7 @@ export default class ParkingStations {
   fetchAndDrawStatus = ({ geom, properties: { id } }) => {
     const query = Relay.createQuery(
       Relay.QL`
-      query Test($id: String!){
+      query ($id: String!){
         carPark(id: $id) {
           spacesAvailable
           maxCapacity
@@ -83,8 +83,9 @@ export default class ParkingStations {
         const result = Relay.Store.readQuery(query)[0];
 
         if (result && result.realtime && this.tile.coords.z >= this.config.parkingStations.smallIconMinZoom) {
-          const value = ['', result.spacesAvailable, 'X'][this.getValueIndex(result.spacesAvailable, result.maxCapacity)];
-          const color = ['green', 'orange', 'red'][this.getValueIndex(result.spacesAvailable, result.maxCapacity)];
+          const availabilityIndex = (result.spacesAvailable > 0 ? (result.spacesAvailable > (result.maxCapacity * (this.config.parkingStations.availabilityThreshold || 0.25)) ? 0 : 1) : 2);
+          const value = ['', result.spacesAvailable, 'X'][availabilityIndex];
+          const color = ['green', 'orange', 'red'][availabilityIndex];
 
           drawAvailabilityValue(
             this.tile,
@@ -106,8 +107,4 @@ export default class ParkingStations {
       Relay.Store.forceFetch({ query }, callback);
     }
   };
-
-  getValueIndex = (spacesAvailable, maxCapacity) => {
-    return (spacesAvailable > 0 ? (spacesAvailable > (maxCapacity * (this.config.parkingStations.availabilityThreshold || 0.25)) ? 0 : 1) : 2);
-  }
 }
