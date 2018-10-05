@@ -177,6 +177,7 @@ export default {
   parkingStations: {
     showParkingStations: false,
     parkingStationsMinZoom: 14,
+    smallIconZoom: 14,
   },
 
   // TODO: Switch off in autumn

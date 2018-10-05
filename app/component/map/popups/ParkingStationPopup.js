@@ -41,11 +41,13 @@ class ParkingStationPopup extends React.Component {
             icon="icon-icon_parking-station"
             unlinked
           />
-          <ParkingStationAvailability
-            realtime={realtime}
-            maxCapacity={maxCapacity}
-            spacesAvailable={spacesAvailable}
-          />
+          {realtime &&
+            <ParkingStationAvailability
+              realtime={realtime}
+              maxCapacity={maxCapacity}
+              spacesAvailable={spacesAvailable}
+            />
+          }
         </Card>
         <MarkerPopupBottom
           location={{

@@ -197,7 +197,7 @@ export function drawTerminalIcon(tile, geom, type, name) {
 }
 
 export function drawParkingStationIcon(tile, geom, imageSize) {
-  getImageFromSpriteCache('icon-icon_parking-station', imageSize, imageSize).then(
+  return getImageFromSpriteCache('icon-icon_parking-station', imageSize, imageSize).then(
     image => {
       drawIconImage(image, tile, geom, imageSize, imageSize);
     },
@@ -275,6 +275,8 @@ export function drawAvailabilityValue(
   imageSize,
   badgeSize,
   scaleratio,
+  color,
+  fontColor,
 ) {
   const radius = badgeSize / 2;
   const x =
@@ -283,13 +285,13 @@ export function drawAvailabilityValue(
     calculateIconBadgePosition(geom.y, tile, imageSize, radius, scaleratio) + 1;
 
   tile.ctx.beginPath();
-  tile.ctx.fillStyle = value > 3 ? '#4EA700' : '#FF6319';
+  tile.ctx.fillStyle = (color || (value > 3 ? '#4EA700' : '#FF6319'));
   tile.ctx.arc(x, y, radius, 0, Math.PI * 2);
   tile.ctx.fill();
 
   tile.ctx.font = `${0.7 * badgeSize}px
     Gotham XNarrow SSm A, Gotham XNarrow SSm B, Arial, sans-serif`;
-  tile.ctx.fillStyle = '#fff';
+  tile.ctx.fillStyle = (fontColor || '#fff');
   tile.ctx.textAlign = 'center';
   tile.ctx.textBaseline = 'middle';
   tile.ctx.fillText(value, x, y);
