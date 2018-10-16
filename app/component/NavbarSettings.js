@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, intlShape } from 'react-intl';
+import connectToStores from 'fluxible-addons-react/connectToStores';
 import ComponentUsageExample from './ComponentUsageExample';
+import { toggleItem } from '../action/NavbarSettingsActions';
 
 import RaisedButton from 'material-ui/RaisedButton';
 import Popover from 'material-ui/Popover';
@@ -15,7 +17,7 @@ class NavbarSettings extends React.Component {
   constructor(props, context) {
     super(props);
 
-    if (!context.config.appBarSettings) {
+    if (!context.config.navbarSettings) {
       return null;
     }
 
@@ -39,8 +41,15 @@ class NavbarSettings extends React.Component {
     });
   };
 
+  handleItemClick = (item) => {
+    const { executeAction } = this.context;
+    executeAction(toggleItem, item);
+  };
+
   render() {
-    const { intl } = this.context;
+    const { intl, config: { navbarSettings: configNavbarSettings } } = this.context;
+    const { navbarSettings: storeNavbarSettings } = this.props;
+
     return (
       <div>
         <button
@@ -69,56 +78,62 @@ class NavbarSettings extends React.Component {
                 defaultMessage: 'Motorist',
               })}
             </h2>
-            <Toggle
+            {configNavbarSettings.hasOwnProperty('disruptions') && <Toggle
               label={intl.formatMessage({
                   id: 'disruptions',
                   defaultMessage: 'Disruptions',
                 })}
-              defaultToggled={true}
+              toggled={(storeNavbarSettings.disruptions || false)}
               className="toggle-item"
-            />
-            <Toggle
+              onClick={() => this.handleItemClick('disruptions')}
+            />}
+            {configNavbarSettings.hasOwnProperty('roadworks') && <Toggle
               label={intl.formatMessage({
                   id: 'roadworks',
                   defaultMessage: 'Roadworks',
                 })}
-              defaultToggled={true}
+              toggled={(storeNavbarSettings.roadworks || false)}
               className="toggle-item"
-            />
-            <Toggle
+              onClick={() => this.handleItemClick('roadworks')}
+            />}
+            {configNavbarSettings.hasOwnProperty('parking') && <Toggle
               label={intl.formatMessage({
                   id: 'parking',
                   defaultMessage: 'Parking',
                 })}
-              defaultToggled={true}
+              toggled={(storeNavbarSettings.parking || false)}
               className="toggle-item"
-            />
-            <Toggle
+              onClick={() => this.handleItemClick('parking')}
+            />}
+            {configNavbarSettings.hasOwnProperty('cameras') && <Toggle
               label={intl.formatMessage({
                   id: 'cameras',
                   defaultMessage: 'Cameras',
                 })}
-              defaultToggled={true}
+              toggled={(storeNavbarSettings.cameras || false)}
               className="toggle-item"
-            />
-            <Toggle
+              onClick={() => this.handleItemClick('cameras')}
+            />}
+            {configNavbarSettings.hasOwnProperty('weather') && <Toggle
               label={intl.formatMessage({
                   id: 'weather-stations',
                   defaultMessage: 'Weather stations',
                 })}
-              defaultToggled={true}
+              toggled={(storeNavbarSettings.weather || false)}
               className="toggle-item"
-            />
-            <Toggle
+              onClick={() => this.handleItemClick('weather')}
+            />}
+            {configNavbarSettings.hasOwnProperty('traffic') && <Toggle
               label={intl.formatMessage({
                   id: 'traffic-monitoring',
                   defaultMessage: 'Traffic monitoring',
                 })}
-              defaultToggled={true}
+              toggled={(storeNavbarSettings.traffic || false)}
               className="toggle-item"
-            />
+              onClick={() => this.handleItemClick('traffic')}
+            />}
           </div>
-          <div className="navbar-settings_subset">
+          {/*<div className="navbar-settings_subset">
             <Toggle
               label={intl.formatMessage({
                   id: 'road-info',
@@ -160,16 +175,21 @@ class NavbarSettings extends React.Component {
               onCheck={() => alert('Change')}
               className="toggle-item-dense"
             />
-          </div>
+          </div>*/}
         </Popover>
       </div>
     );
   }
-}
+};
+
+NavbarSettings.propTypes = {
+  navbarSettings: PropTypes.object.isRequired,
+};
 
 NavbarSettings.contextTypes = {
-  config: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
+  config: PropTypes.object.isRequired,
+  executeAction: PropTypes.func.isRequired,
 };
 
 NavbarSettings.description = () => (
@@ -183,4 +203,6 @@ NavbarSettings.description = () => (
   </div>
 );
 
-export default NavbarSettings;
+export default connectToStores(NavbarSettings, ['NavbarSettingsStore'], context => ({
+  navbarSettings: context.getStore('NavbarSettingsStore').getNavbarSettings(),
+}));

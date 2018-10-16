@@ -33,9 +33,15 @@ export default configMerger(walttiConfig, {
     lon: 25.4681600,
   },
 
-  appBarSettings: true,
+  navbarSettings: {
+    disruptions: false,
+    roadworks: false,
+    parking: false,
+    cameras: false,
+  },
 
-  appBarLinks: {
+  appBarLinks: false,
+  /*appBarLinks: {
     fi: {
       text: 'Suomeksi lorem ipsum dolor sit amet, tristique mollis nec vitae lorem aenean, in maecenas lobortis volutpat ac vel cursus.',
       links: [
@@ -57,11 +63,12 @@ export default configMerger(walttiConfig, {
         { name: 'Air service (Finavia)', href: 'https://www.finavia.fi/en' },
       ],
     },
-  },
+  },*/
 
   appBarDisruptionInfo: false,
 
-  appBarLink: false,
+  //appBarLink: false,
+  appBarLink: { name: 'wp.oulunliikenne.fi', href: 'https://wp.oulunliikenne.fi' },
 
   colors: {
     primary: '#e10069',
@@ -80,7 +87,8 @@ export default configMerger(walttiConfig, {
   availableLanguages: ['fi', 'sv', 'en'],
   defaultLanguage: 'fi',
 
-  availableModes: ['transport', 'car', 'walk', 'bicycle'],
+  availableModes: false,
+  //availableModes: ['transport', 'walk', 'bicycle', 'car'],
   defaultMode: 'transport',
 
   // Navbar logo

@@ -62,11 +62,13 @@ const AppBarLarge = (
         <button className="noborder" onClick={titleClicked}>
           {logoElement}
         </button>
-        <div className="navi-modes padding-left-large navi-margin">
-          <ModeSelect />
-        </div>
+        {config.availableModes && (
+          <div className="navi-modes padding-left-large navi-margin">
+            <ModeSelect />
+          </div>
+        )}
         <div className="empty-space flex-grow" />
-        {config.appBarSettings && (
+        {config.navbarSettings && (
           <div className="navi-buttons right-border navi-margin">
             <NavbarSettings />
           </div>

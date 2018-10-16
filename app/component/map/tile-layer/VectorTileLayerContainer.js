@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import connectToStores from 'fluxible-addons-react/connectToStores';
 
 import TileLayerContainer from './TileLayerContainer';
 import CityBikes from './CityBikes';
@@ -7,43 +8,64 @@ import Stops from './Stops';
 import ParkAndRide from './ParkAndRide';
 import TicketSales from './TicketSales';
 
-export default function VectorTileLayerContainer(props, { config }) {
-  const layers = [];
-
-  if (props.showStops) {
-    layers.push(Stops);
-
-    if (config.cityBike && config.cityBike.showCityBikes) {
-      layers.push(CityBikes);
-    }
-
-    if (config.parkAndRide && config.parkAndRide.showParkAndRide) {
-      layers.push(ParkAndRide);
-    }
-
-    if (config.ticketSales && config.ticketSales.showTicketSales) {
-      layers.push(TicketSales);
-    }
+class VectorTileLayerContainer extends React.Component {
+  constructor(props, context) {
+    super(props, context);
+    this.state = {};
   }
 
-  return (
-    <TileLayerContainer
-      key="tileLayer"
-      layers={layers}
-      hilightedStops={props.hilightedStops}
-      tileSize={config.map.tileSize || 256}
-      zoomOffset={config.map.zoomOffset || 0}
-      disableMapTracking={props.disableMapTracking}
-    />
-  );
+  navbarSettingsEnabled = (item) => {
+    return (!navbarSettings || navbarSettings[item] !== false);
+  }
+
+  render () {
+    const { showStops, hilightedStops, disableMapTracking, navbarSettings } = this.props;
+    const { config } = this.context;
+    const layers = [];
+
+    if (showStops) {
+      layers.push(Stops);
+
+      if (config.cityBike && config.cityBike.showCityBikes && this.navbarSettingsEnabled('cityBikes')) {
+        layers.push(CityBikes);
+      }
+
+      if (config.parkAndRide && config.parkAndRide.showParkAndRide && this.navbarSettingsEnabled('parkAndRide')) {
+        layers.push(ParkAndRide);
+      }
+
+      if (config.ticketSales && config.ticketSales.showTicketSales && this.navbarSettingsEnabled('ticketSales')) {
+        layers.push(TicketSales);
+      }
+    }
+
+    return (
+      <TileLayerContainer
+        key="tileLayer"
+        layers={layers}
+        hilightedStops={hilightedStops}
+        tileSize={config.map.tileSize || 256}
+        zoomOffset={config.map.zoomOffset || 0}
+        disableMapTracking={disableMapTracking}
+      />
+    );
+  }
 }
 
 VectorTileLayerContainer.propTypes = {
   hilightedStops: PropTypes.arrayOf(PropTypes.string.isRequired),
   disableMapTracking: PropTypes.func,
   showStops: PropTypes.bool,
+  navbarSettings: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.bool
+  ]),
 };
 
 VectorTileLayerContainer.contextTypes = {
   config: PropTypes.object.isRequired,
 };
+
+export default connectToStores(VectorTileLayerContainer, ['NavbarSettingsStore'], context => ({
+  navbarSettings: context.getStore('NavbarSettingsStore').getNavbarSettings(),
+}));
