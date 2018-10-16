@@ -87,8 +87,7 @@ export default configMerger(walttiConfig, {
   availableLanguages: ['fi', 'sv', 'en'],
   defaultLanguage: 'fi',
 
-  availableModes: false,
-  //availableModes: ['transport', 'walk', 'bicycle', 'car'],
+  availableModes: ['transport', 'walk', 'bicycle', 'car'],
   defaultMode: 'transport',
 
   // Navbar logo
