@@ -29,11 +29,9 @@ class NavbarSettingsStore extends Store {
   }
 
   toggleItem(item) {
-    if (!this.navbarSettings.hasOwnProperty(item)) {
-      return;
-    }
-
-    this.navbarSettings[item] = !this.navbarSettings[item];
+    this.navbarSettings[item] = !this.navbarSettings.hasOwnProperty(item) ?
+      true :
+      !this.navbarSettings[item];
 
     reactCookie.save('navbarSettings', this.navbarSettings, {
       // Good up to one year
