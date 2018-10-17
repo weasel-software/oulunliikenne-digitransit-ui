@@ -15,11 +15,12 @@ class VectorTileLayerContainer extends React.Component {
   }
 
   navbarSettingsEnabled = (item) => {
+    const { navbarSettings } = this.props;
     return (!navbarSettings || navbarSettings[item] !== false);
   }
 
   render () {
-    const { showStops, hilightedStops, disableMapTracking, navbarSettings } = this.props;
+    const { showStops, hilightedStops, disableMapTracking } = this.props;
     const { config } = this.context;
     const layers = [];
 
