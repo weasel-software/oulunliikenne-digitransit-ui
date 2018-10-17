@@ -1,12 +1,15 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { intlShape } from 'react-intl';
+import { FormattedMessage, intlShape } from 'react-intl';
 import { routerShape, locationShape } from 'react-router';
 import ExternalLink from './ExternalLink';
 import DisruptionInfo from './DisruptionInfo';
+import NavbarLinks from './NavbarLinks';
+import NavbarSettings from './NavbarSettings';
 import Icon from './Icon';
 import ComponentUsageExample from './ComponentUsageExample';
 import LangSelect from './LangSelect';
+import ModeSelect from './ModeSelect';
 import MessageBar from './MessageBar';
 import { isBrowser } from '../util/browser';
 
@@ -20,6 +23,16 @@ const AppBarLarge = (
       state: {
         ...location.state,
         disruptionInfoOpen: true,
+      },
+    });
+  };
+
+  const openNavbarLinks = () => {
+    router.push({
+      ...location,
+      state: {
+        ...location.state,
+        navbarLinksOpen: true,
       },
     });
   };
@@ -49,28 +62,57 @@ const AppBarLarge = (
         <button className="noborder" onClick={titleClicked}>
           {logoElement}
         </button>
+        {config.availableModes && (
+          <div className="navi-modes padding-left-large navi-margin">
+            <ModeSelect />
+          </div>
+        )}
         <div className="empty-space flex-grow" />
+        {config.navbarSettings && (
+          <div className="navi-buttons right-border navi-margin">
+            <NavbarSettings />
+          </div>
+        )}
         <div className="navi-languages right-border navi-margin">
           <LangSelect />
         </div>
-        <div className="navi-icons navi-margin padding-horizontal-large">
-          <a
-            className="noborder"
-            onClick={openDisruptionInfo}
-            aria-label={intl.formatMessage({
-              id: 'disruptions',
-              defaultMessage: 'Disruptions',
-            })}
-          >
-            <Icon img="icon-icon_caution" />
-          </a>
-        </div>
-        <div className="padding-horizontal-large navi-margin">
-          <ExternalLink className="external-top-bar" {...config.appBarLink} />
-        </div>
+        {config.appBarLinks && (
+          <div className="navi-buttons navi-margin">
+            <button
+              className="navi-button"
+              onClick={openNavbarLinks}
+              aria-label={intl.formatMessage({
+                id: 'links',
+                defaultMessage: 'Links',
+              })}
+            >
+              <FormattedMessage id="links" defaultMessage="Links" />
+            </button>
+          </div>
+        )}
+        {config.appBarDisruptionInfo && (
+          <div className="navi-icons navi-margin padding-horizontal-large">
+            <a
+              className="noborder"
+              onClick={openDisruptionInfo}
+              aria-label={intl.formatMessage({
+                id: 'disruptions',
+                defaultMessage: 'Disruptions',
+              })}
+            >
+              <Icon img="icon-icon_caution" />
+            </a>
+          </div>
+        )}
+        {config.appBarLink && (
+          <div className="padding-left-large navi-margin">
+            <ExternalLink className="external-top-bar" {...config.appBarLink} />
+          </div>
+        )}
       </div>
       <MessageBar />
       <DisruptionInfo />
+      <NavbarLinks />
     </div>
   );
 };

@@ -111,6 +111,62 @@ $border-radius-rounded: 30px;
     padding: 0;
     @include font-narrow-medium;
   }
+  .navbar-links-list {
+    list-style: none;
+    padding: 0;
+    li {
+      margin: 1em 0;
+    }
+    a {
+      text-decoration: none;
+    }
+  }
+}
+
+.navbar-settings {
+  min-width: 250px;
+  padding: 0;
+  border-radius: 0 !important;
+  top: 50px !important;
+
+  > div {
+    overflow: visible !important;
+  }
+
+  h2 {
+    font-size: 0.8em;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin: 0 0 1.5em;
+    letter-spacing: 1px;
+  }
+
+  .toggle-item {
+    margin-bottom: 1em;
+  }
+
+  .toggle-item-dense {
+    margin-bottom: 0.5em;
+  }
+
+  .toggle-item:last-child,
+  .toggle-item-dense:last-child {
+    margin-bottom: 0;
+  }
+
+  label {
+    color: #666 !important;
+  }
+
+  .navbar-settings_inner,
+  .navbar-settings_subset {
+    padding: 20px 25px;
+  }
+
+  .navbar-settings_subset {
+    background: #eee;
+    border-top: solid 1px #bbb;
+  }
 }
 
 /* ICONS */
