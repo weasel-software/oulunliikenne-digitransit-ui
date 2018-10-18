@@ -1,0 +1,56 @@
+.image-slider {
+  position: relative;
+
+  .slide {
+    display: none;
+    margin: 0;
+  }
+
+  .slide.active {
+    display: block;
+  }
+
+  .slide figcaption {
+    font-size: $font-size-small;
+    margin: 2px 0 8px;
+  }
+
+  .nav {
+    width: 100%;
+    text-align: center;
+    position: absolute;
+    bottom: 5px;
+    z-index: 2;
+
+    span {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      margin: 0 2px;
+      background: white;
+      cursor: pointer;
+    }
+
+    span.active {
+      background: #999;
+    }
+  }
+
+  .prev, .next {
+    display: block;
+    width: 30%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    z-index: 1;
+    cursor: pointer;
+  }
+
+  .prev {
+    left: 0;
+  }
+
+  .next {
+    right: 0;
+  }
+}

@@ -180,6 +180,11 @@ export default {
     smallIconZoom: 14,
   },
 
+  cameraStations: {
+    showCameraStations: false,
+    cameraStationsMinZoom: 14,
+  },
+
   // TODO: Switch off in autumn
   cityBike: {
     showCityBikes: true,

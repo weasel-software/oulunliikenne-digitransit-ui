@@ -12,6 +12,7 @@ import StopRoute from '../../../route/StopRoute';
 import TerminalRoute from '../../../route/TerminalRoute';
 import CityBikeRoute from '../../../route/CityBikeRoute';
 import ParkingStationRoute from '../../../route/ParkingStationRoute';
+import CameraStationRoute from '../../../route/CameraStationRoute';
 import StopMarkerPopup from '../popups/StopMarkerPopup';
 import MarkerSelectPopup from './MarkerSelectPopup';
 import CityBikePopup from '../popups/CityBikePopup';
@@ -21,6 +22,7 @@ import ParkAndRideFacilityPopup from '../popups/ParkAndRideFacilityPopup';
 import ParkAndRideHubRoute from '../../../route/ParkAndRideHubRoute';
 import ParkAndRideFacilityRoute from '../../../route/ParkAndRideFacilityRoute';
 import TicketSalesPopup from '../popups/TicketSalesPopup';
+import CameraStationPopup from '../popups/CameraStationPopup';
 import LocationPopup from '../popups/LocationPopup';
 import TileContainer from './TileContainer';
 import Loading from '../../Loading';
@@ -287,6 +289,17 @@ class TileLayerContainer extends GridLayer {
           contents = (
             <TicketSalesPopup
               {...this.state.selectableTargets[0].feature.properties}
+            />
+          );
+        } else if (this.state.selectableTargets[0].layer === 'cameraStations') {
+          ({ id } = this.state.selectableTargets[0].feature.properties);
+          contents = (
+            <Relay.RootContainer
+              Component={CameraStationPopup}
+              forceFetch
+              route={new CameraStationRoute({ id })}
+              renderLoading={loadingPopup}
+              renderFetched={data => <CameraStationPopup {...data} />}
             />
           );
         }
