@@ -20,32 +20,36 @@ export default class CameraStations {
       `${this.config.URL.CAMERASTATIONS_MAP}${this.tile.coords.z +
         (this.tile.props.zoomOffset || 0)}` +
         `/${this.tile.coords.x}/${this.tile.coords.y}.pbf`,
-    ).then(res => {
-      if (res.status !== 200) {
-        return undefined;
-      }
-
-      return res.arrayBuffer().then(
-        buf => {
-          const vt = new VectorTile(new Protobuf(buf));
-
-          this.features = [];
-
-          if (vt.layers['camera-stations'] != null) {
-            for (let i = 0, ref = vt.layers['camera-stations'].length - 1; i <= ref; i++) {
-              const feature = vt.layers['camera-stations'].feature(i);
-              [[feature.geom]] = feature.loadGeometry();
-              this.features.push(pick(feature, ['geom', 'properties']));
-              drawCameraStationIcon(
-                this.tile,
-                feature.geom,
-                this.imageSize,
-              );
-            }
+    )
+      .then(
+        res => {
+          if (res.status !== 200) {
+            return undefined;
           }
+
+          if (
+            res.headers.has('x-protobuf-encoding') &&
+            res.headers.get('x-protobuf-encoding') === 'base64'
+          ) {
+            return res.text().then(text => Buffer.from(text, 'base64'));
+          }
+          return res.arrayBuffer();
         },
         err => console.log(err),
-      );
-    });
+      )
+      .then(buf => {
+        const vt = new VectorTile(new Protobuf(buf));
+
+        this.features = [];
+
+        if (vt.layers.cameras != null) {
+          for (let i = 0, ref = vt.layers.cameras.length - 1; i <= ref; i++) {
+            const feature = vt.layers.cameras.feature(i);
+            [[feature.geom]] = feature.loadGeometry();
+            this.features.push(pick(feature, ['geom', 'properties']));
+            drawCameraStationIcon(this.tile, feature.geom, this.imageSize);
+          }
+        }
+      });
   }
 }

@@ -11,6 +11,7 @@ import Popup from '../Popup';
 import StopRoute from '../../../route/StopRoute';
 import TerminalRoute from '../../../route/TerminalRoute';
 import CityBikeRoute from '../../../route/CityBikeRoute';
+import CameraStationRoute from '../../../route/CameraStationRoute';
 import StopMarkerPopup from '../popups/StopMarkerPopup';
 import MarkerSelectPopup from './MarkerSelectPopup';
 import CityBikePopup from '../popups/CityBikePopup';
@@ -270,8 +271,12 @@ class TileLayerContainer extends GridLayer {
         } else if (this.state.selectableTargets[0].layer === 'cameraStations') {
           ({ id } = this.state.selectableTargets[0].feature.properties);
           contents = (
-            <CameraStationPopup
-              {...this.state.selectableTargets[0].feature.properties}
+            <Relay.RootContainer
+              Component={CameraStationPopup}
+              forceFetch
+              route={new CameraStationRoute({ id })}
+              renderLoading={loadingPopup}
+              renderFetched={data => <CameraStationPopup {...data} />}
             />
           );
         }

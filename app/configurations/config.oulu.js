@@ -11,8 +11,6 @@ const API_URL = process.env.API_URL || 'https://dev-api.digitransit.fi';
 const MAP_URL =
   process.env.MAP_URL || 'https://digitransit-dev-cdn-origin.azureedge.net';
 
-const MAP_URL_LOCAL = 'http://localhost:4000';
-
 const walttiConfig = require('./waltti').default;
 
 export default configMerger(walttiConfig, {
@@ -24,7 +22,7 @@ export default configMerger(walttiConfig, {
     OTP: OTP_URL,
     STOP_MAP: `${MAP_URL}/map/v1/waltti-stop-map/`,
     CITYBIKE_MAP: `${MAP_URL}/map/v1/waltti-citybike-map/`,
-    CAMERASTATIONS_MAP: `${MAP_URL_LOCAL}/trafficcamerastations_new/`,
+    CAMERASTATIONS_MAP: 'https://qa0u1dxw69.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
   },
 
   cameraStations: {
