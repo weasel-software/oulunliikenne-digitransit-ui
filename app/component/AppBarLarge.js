@@ -6,6 +6,7 @@ import ExternalLink from './ExternalLink';
 import DisruptionInfo from './DisruptionInfo';
 import NavbarLinks from './NavbarLinks';
 import NavbarSettings from './NavbarSettings';
+import MoreInfoModal from './MoreInfoModal';
 import Icon from './Icon';
 import ComponentUsageExample from './ComponentUsageExample';
 import LangSelect from './LangSelect';
@@ -113,6 +114,7 @@ const AppBarLarge = (
       <MessageBar />
       <DisruptionInfo />
       <NavbarLinks />
+      <MoreInfoModal />
     </div>
   );
 };

@@ -9,6 +9,7 @@ import ParkAndRide from './ParkAndRide';
 import TicketSales from './TicketSales';
 import ParkingStations from './ParkingStations';
 import CameraStations from './CameraStations';
+import Roadworks from './Roadworks';
 
 class VectorTileLayerContainer extends React.Component {
   constructor(props, context) {
@@ -67,6 +68,14 @@ class VectorTileLayerContainer extends React.Component {
         this.navbarSettingsEnabled('ticketSales')
       ) {
         layers.push(TicketSales);
+      }
+
+      if (
+        config.roadworks &&
+        config.roadworks.showRoadworks &&
+        this.navbarSettingsEnabled('roadworks')
+      ) {
+        layers.push(Roadworks);
       }
     }
 

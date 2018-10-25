@@ -13,6 +13,7 @@ import TerminalRoute from '../../../route/TerminalRoute';
 import CityBikeRoute from '../../../route/CityBikeRoute';
 import ParkingStationRoute from '../../../route/ParkingStationRoute';
 import CameraStationRoute from '../../../route/CameraStationRoute';
+import RoadworkRoute from '../../../route/RoadworkRoute';
 import StopMarkerPopup from '../popups/StopMarkerPopup';
 import MarkerSelectPopup from './MarkerSelectPopup';
 import CityBikePopup from '../popups/CityBikePopup';
@@ -23,6 +24,7 @@ import ParkAndRideHubRoute from '../../../route/ParkAndRideHubRoute';
 import ParkAndRideFacilityRoute from '../../../route/ParkAndRideFacilityRoute';
 import TicketSalesPopup from '../popups/TicketSalesPopup';
 import CameraStationPopup from '../popups/CameraStationPopup';
+import RoadworkPopup from '../popups/RoadworkPopup';
 import LocationPopup from '../popups/LocationPopup';
 import TileContainer from './TileContainer';
 import Loading from '../../Loading';
@@ -189,7 +191,12 @@ class TileLayerContainer extends GridLayer {
     );
 
     if (typeof this.state.selectableTargets !== 'undefined') {
-      if (this.state.selectableTargets.length === 1) {
+      if (
+        this.state.selectableTargets.length === 1 ||
+        (this.state.selectableTargets.length > 1 &&
+          this.state.selectableTargets[0].layer ===
+            this.state.selectableTargets[1].layer)
+      ) {
         let id;
         if (this.state.selectableTargets[0].layer === 'stop') {
           id = this.state.selectableTargets[0].feature.properties.gtfsId;
@@ -300,6 +307,17 @@ class TileLayerContainer extends GridLayer {
               route={new CameraStationRoute({ id })}
               renderLoading={loadingPopup}
               renderFetched={data => <CameraStationPopup {...data} />}
+            />
+          );
+        } else if (this.state.selectableTargets[0].layer === 'roadworks') {
+          ({ id } = this.state.selectableTargets[0].feature.properties);
+          contents = (
+            <Relay.RootContainer
+              Component={RoadworkPopup}
+              forceFetch
+              route={new RoadworkRoute({ id })}
+              renderLoading={loadingPopup}
+              renderFetched={data => <RoadworkPopup {...data} />}
             />
           );
         }

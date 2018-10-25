@@ -26,18 +26,25 @@ export default configMerger(walttiConfig, {
       'https://vomrfbho8a.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
     CAMERASTATIONS_MAP:
       'https://qa0u1dxw69.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
+    ROADWORKS_MAP:
+      'https://mpzqxm0xz3.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
   },
 
   parkingStations: {
     showParkingStations: true,
-    parkingStationsMinZoom: 14,
+    parkingStationsMinZoom: 12,
     smallIconMinZoom: 14,
     availabilityThreshold: 0.25,
   },
 
   cameraStations: {
     showCameraStations: true,
-    cameraStationsMinZoom: 14,
+    cameraStationsMinZoom: 12,
+  },
+
+  roadworks: {
+    showRoadworks: true,
+    roadworksMinZoom: 12,
   },
 
   feedIds: ['OULU'],
@@ -51,7 +58,7 @@ export default configMerger(walttiConfig, {
 
   navbarSettings: {
     // disruptions: false,
-    // roadworks: false,
+    roadworks: false,
     parking: false,
     cameras: false,
   },

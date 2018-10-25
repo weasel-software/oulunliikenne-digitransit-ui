@@ -228,6 +228,18 @@ div.leaflet-marker-icon.vehicle-icon.small-map-icon  {
     border-radius: $border-radius;
   }
 
+  .read-more {
+    display: flex;
+    justify-content: flex-end;
+    font-size: $font-size-small;
+    color: $link-color;
+    cursor: pointer;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    float: right;
+  }
+
   .bottom {
     @include font-medium;
     font-size: $font-size-small;
