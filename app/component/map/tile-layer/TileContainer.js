@@ -57,6 +57,11 @@ class TileContainer {
         ) {
           return true;
         } else if (
+          Layer.getName() === 'disorders' &&
+          this.coords.z >= config.disorders.disordersMinZoom
+        ) {
+          return true;
+        } else if (
           Layer.getName() === 'cameraStations' &&
           this.coords.z >= config.cameraStations.cameraStationsMinZoom
         ) {

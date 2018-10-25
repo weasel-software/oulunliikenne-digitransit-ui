@@ -14,6 +14,7 @@ import CityBikeRoute from '../../../route/CityBikeRoute';
 import ParkingStationRoute from '../../../route/ParkingStationRoute';
 import CameraStationRoute from '../../../route/CameraStationRoute';
 import RoadworkRoute from '../../../route/RoadworkRoute';
+import DisorderRoute from '../../../route/DisorderRoute';
 import StopMarkerPopup from '../popups/StopMarkerPopup';
 import MarkerSelectPopup from './MarkerSelectPopup';
 import CityBikePopup from '../popups/CityBikePopup';
@@ -25,6 +26,7 @@ import ParkAndRideFacilityRoute from '../../../route/ParkAndRideFacilityRoute';
 import TicketSalesPopup from '../popups/TicketSalesPopup';
 import CameraStationPopup from '../popups/CameraStationPopup';
 import RoadworkPopup from '../popups/RoadworkPopup';
+import DisorderPopup from '../popups/DisorderPopup';
 import LocationPopup from '../popups/LocationPopup';
 import TileContainer from './TileContainer';
 import Loading from '../../Loading';
@@ -318,6 +320,17 @@ class TileLayerContainer extends GridLayer {
               route={new RoadworkRoute({ id })}
               renderLoading={loadingPopup}
               renderFetched={data => <RoadworkPopup {...data} />}
+            />
+          );
+        } else if (this.state.selectableTargets[0].layer === 'disorders') {
+          ({ id } = this.state.selectableTargets[0].feature.properties);
+          contents = (
+            <Relay.RootContainer
+              Component={DisorderPopup}
+              forceFetch
+              route={new DisorderRoute({ id })}
+              renderLoading={loadingPopup}
+              renderFetched={data => <DisorderPopup {...data} />}
             />
           );
         }

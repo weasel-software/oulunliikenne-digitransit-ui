@@ -28,6 +28,8 @@ export default configMerger(walttiConfig, {
       'https://qa0u1dxw69.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
     ROADWORKS_MAP:
       'https://mpzqxm0xz3.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
+    DISORDERS_MAP:
+      'https://z238lmlhz3.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
   },
 
   parkingStations: {
@@ -47,6 +49,12 @@ export default configMerger(walttiConfig, {
     roadworksMinZoom: 12,
   },
 
+  disorders: {
+    showDisorders: true,
+    disordersMinZoom: 12,
+    showLines: false,
+  },
+
   feedIds: ['OULU'],
 
   sprites: 'svg-sprite.oulu.svg',
@@ -57,7 +65,7 @@ export default configMerger(walttiConfig, {
   },
 
   navbarSettings: {
-    // disruptions: false,
+    disruptions: false,
     roadworks: false,
     parking: false,
     cameras: false,
