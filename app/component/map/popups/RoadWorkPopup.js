@@ -1,17 +1,20 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import Relay from 'react-relay/classic';
 import { intlShape } from 'react-intl';
 import { routerShape, locationShape } from 'react-router';
-import MarkerPopupBottom from '../MarkerPopupBottom';
 import Card from '../../Card';
 import CardHeader from '../../CardHeader';
 import RoadworkContent from '../../RoadworkContent';
 import ComponentUsageExample from '../../ComponentUsageExample';
 
-function RoadworkPopup(
-  { locationName, comment, start, end },
-  { intl, router, location }
-) {
+function RoadworkPopup({ roadwork }, { intl, router, location }) {
+  const { startTime, endTime, comments } = roadwork;
+  const locationName = '';
+  const comment = comments.join('\n\n');
+
+  // console.log(roadwork);
+
   const openMoreInfoModal = () => {
     router.push({
       ...location,
@@ -20,11 +23,7 @@ function RoadworkPopup(
         moreInfoModalOpen: true,
         moreInfoModalTitle: locationName,
         moreInfoModalContent: (
-          <RoadworkContent
-            comment={comment}
-            start={start}
-            end={end}
-          />
+          <RoadworkContent comment={comments} start={startTime} end={endTime} />
         ),
       },
     });
@@ -39,28 +38,25 @@ function RoadworkPopup(
             defaultMessage: 'Roadwork',
           })}
           description={locationName}
-          icon='icon-icon_roadwork'
+          icon="icon-icon_roadwork"
           unlinked
         />
         <RoadworkContent
           locationName={locationName}
           comment={comment}
-          start={start}
-          end={end}
+          start={startTime}
+          end={endTime}
         />
-        <span
-          className="read-more"
-          onClick={openMoreInfoModal}
-        >
-          {intl.formatMessage({
+        <button className="read-more" onClick={openMoreInfoModal}>
+          {`${intl.formatMessage({
             id: 'more',
             defaultMessage: 'More',
-          }) + '>'}
-        </span>
+          })} >`}
+        </button>
       </Card>
     </div>
   );
-};
+}
 
 RoadworkPopup.displayName = 'RoadworkPopup';
 
@@ -74,10 +70,7 @@ RoadworkPopup.description = (
 );
 
 RoadworkPopup.propTypes = {
-  locationName: PropTypes.string.isRequired,
-  comment: PropTypes.string.isRequired,
-  start: PropTypes.string.isRequired,
-  end: PropTypes.string.isRequired,
+  roadwork: PropTypes.object.isRequired,
 };
 
 RoadworkPopup.contextTypes = {
@@ -86,4 +79,31 @@ RoadworkPopup.contextTypes = {
   location: locationShape.isRequired,
 };
 
-export default RoadworkPopup;
+export default Relay.createContainer(RoadworkPopup, {
+  fragments: {
+    roadwork: () => Relay.QL`
+      fragment on Roadwork {
+        roadworkId
+        severity
+        status
+        startTime
+        endTime
+        comments
+        geojson {
+          features {
+            type
+            geometry {
+              type
+            }
+            properties {
+              id
+              roadName
+              firstName
+              secondName
+            }
+          }
+        }
+      }
+    `,
+  },
+});

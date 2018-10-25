@@ -13,8 +13,6 @@ const MAP_URL =
 
 const walttiConfig = require('./waltti').default;
 
-const MAP_URL_LOCAL = 'http://localhost:4000';
-
 export default configMerger(walttiConfig, {
   CONFIG,
 
@@ -24,12 +22,13 @@ export default configMerger(walttiConfig, {
     OTP: OTP_URL,
     STOP_MAP: `${MAP_URL}/map/v1/waltti-stop-map/`,
     CITYBIKE_MAP: `${MAP_URL}/map/v1/waltti-citybike-map/`,
-    ROADWORKS_MAP: `${MAP_URL_LOCAL}/roadworks_new/`,
+    ROADWORKS_MAP: 'https://mpzqxm0xz3.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
   },
 
   roadworks: {
     showRoadworks: true,
-    roadworksMinZoom: 14,
+    roadworksMinZoom: 12,
+    showLines: false,
   },
 
   feedIds: ['OULU'],

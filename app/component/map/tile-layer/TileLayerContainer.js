@@ -11,6 +11,7 @@ import Popup from '../Popup';
 import StopRoute from '../../../route/StopRoute';
 import TerminalRoute from '../../../route/TerminalRoute';
 import CityBikeRoute from '../../../route/CityBikeRoute';
+import RoadworkRoute from '../../../route/RoadworkRoute';
 import StopMarkerPopup from '../popups/StopMarkerPopup';
 import MarkerSelectPopup from './MarkerSelectPopup';
 import CityBikePopup from '../popups/CityBikePopup';
@@ -176,7 +177,12 @@ class TileLayerContainer extends GridLayer {
     );
 
     if (typeof this.state.selectableTargets !== 'undefined') {
-      if (this.state.selectableTargets.length === 1) {
+      if (
+        this.state.selectableTargets.length === 1 ||
+        (this.state.selectableTargets.length > 1 &&
+          this.state.selectableTargets[0].layer ===
+            this.state.selectableTargets[1].layer)
+      ) {
         let id;
         if (this.state.selectableTargets[0].layer === 'stop') {
           id = this.state.selectableTargets[0].feature.properties.gtfsId;
@@ -270,8 +276,12 @@ class TileLayerContainer extends GridLayer {
         } else if (this.state.selectableTargets[0].layer === 'roadworks') {
           ({ id } = this.state.selectableTargets[0].feature.properties);
           contents = (
-            <RoadworkPopup
-              {...this.state.selectableTargets[0].feature.properties}
+            <Relay.RootContainer
+              Component={RoadworkPopup}
+              forceFetch
+              route={new RoadworkRoute({ id })}
+              renderLoading={loadingPopup}
+              renderFetched={data => <RoadworkPopup {...data} />}
             />
           );
         }

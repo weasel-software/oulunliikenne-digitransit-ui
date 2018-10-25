@@ -1,24 +1,22 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
+import moment from 'moment';
 import ComponentUsageExample from './ComponentUsageExample';
 import { lang as exampleLang } from './ExampleData';
-import moment from 'moment';
 
 const RoadworkContent = ({ comment, start, end, type }) => {
-  start = start ? moment(start).format('DD.MM.YYYY') : '';
-  end = end ? moment(end).format('DD.MM.YYYY') : '';
+  const startFormated = start ? moment(start).format('DD.MM.YYYY') : '';
+  const endFormated = end ? moment(end).format('DD.MM.YYYY') : '';
 
   return (
     <div className="roadwork-container">
       <div className="insident-info">
-        {type &&
-          <span className="description">{type}</span>
-        }
+        {type && <span className="description">{type}</span>}
         <span className="duration">
           <FormattedMessage
             id="disruption-duration"
-            values={{ start: start, end: end }}
+            values={{ start: startFormated, end: endFormated }}
             defaultMessage="Duration {start} - {end}"
           >
             {(...content) => content}
@@ -34,7 +32,7 @@ RoadworkContent.displayName = 'RoadworkContent';
 
 RoadworkContent.description = (
   <div>
-    <p>Renders content of a roadwork popup or modal</p>
+    <p>RendTimeers content of a roadwork popup or modal</p>
     <ComponentUsageExample description="">
       <RoadworkContent comment={exampleLang} />
     </ComponentUsageExample>
