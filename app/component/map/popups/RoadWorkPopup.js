@@ -9,11 +9,15 @@ import RoadworkContent from '../../RoadworkContent';
 import ComponentUsageExample from '../../ComponentUsageExample';
 
 function RoadworkPopup({ roadwork }, { intl, router, location }) {
-  const { startTime, endTime, comments } = roadwork;
-  const locationName = '';
+  const { startTime, endTime, comments, geojson } = roadwork;
+  const locations = geojson.features.map(item => item.properties);
+  const firstLocation = locations.length ? locations[0].firstName : '';
+  const lastLocation =
+    locations.length > 1
+      ? ` - ${locations[locations.length - 1].firstName}`
+      : '';
+  const locationName = `${firstLocation}${lastLocation}`;
   const comment = comments.join('\n\n');
-
-  // console.log(roadwork);
 
   const openMoreInfoModal = () => {
     router.push({
