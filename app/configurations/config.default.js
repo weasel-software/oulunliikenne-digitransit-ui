@@ -177,6 +177,7 @@ export default {
   disorders: {
     showDisorders: false,
     disordersMinZoom: 14,
+    showLines: false,
   },
 
   // TODO: Switch off in autumn

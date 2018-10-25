@@ -1,17 +1,24 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import Relay from 'react-relay/classic';
 import { intlShape } from 'react-intl';
 import { routerShape, locationShape } from 'react-router';
-import MarkerPopupBottom from '../MarkerPopupBottom';
 import Card from '../../Card';
 import CardHeader from '../../CardHeader';
 import DisorderContent from '../../DisorderContent';
 import ComponentUsageExample from '../../ComponentUsageExample';
 
-function DisorderPopup(
-  { locationName, comment, start, end },
-  { intl, router, location }
-) {
+function DisorderPopup({ disorder }, { intl, router, location }) {
+  const { startTime, endTime, comments, geojson } = disorder;
+  const locations = geojson.features.map(item => item.properties);
+  const firstLocation = locations.length ? locations[0].firstName : '';
+  const lastLocation =
+    locations.length > 1
+      ? ` - ${locations[locations.length - 1].firstName}`
+      : '';
+  const locationName = `${firstLocation}${lastLocation}`;
+  const comment = comments.join('\n\n');
+
   const openMoreInfoModal = () => {
     router.push({
       ...location,
@@ -20,11 +27,7 @@ function DisorderPopup(
         moreInfoModalOpen: true,
         moreInfoModalTitle: locationName,
         moreInfoModalContent: (
-          <DisorderContent
-            comment={comment}
-            start={start}
-            end={end}
-          />
+          <DisorderContent comment={comment} start={startTime} end={endTime} />
         ),
       },
     });
@@ -39,28 +42,25 @@ function DisorderPopup(
             defaultMessage: 'Traffic restriction',
           })}
           description={locationName}
-          icon='icon-icon_disorder'
+          icon="icon-icon_disorder"
           unlinked
         />
         <DisorderContent
           locationName={locationName}
           comment={comment}
-          start={start}
-          end={end}
+          start={startTime}
+          end={endTime}
         />
-        <span
-          className="read-more"
-          onClick={openMoreInfoModal}
-        >
-          {intl.formatMessage({
+        <button className="read-more" onClick={openMoreInfoModal}>
+          {`${intl.formatMessage({
             id: 'more',
             defaultMessage: 'More',
-          }) + '>'}
-        </span>
+          })}>`}
+        </button>
       </Card>
     </div>
   );
-};
+}
 
 DisorderPopup.displayName = 'DisorderPopup';
 
@@ -74,10 +74,7 @@ DisorderPopup.description = (
 );
 
 DisorderPopup.propTypes = {
-  locationName: PropTypes.string.isRequired,
-  comment: PropTypes.string.isRequired,
-  start: PropTypes.string.isRequired,
-  end: PropTypes.string.isRequired,
+  disorder: PropTypes.object.isRequired,
 };
 
 DisorderPopup.contextTypes = {
@@ -86,4 +83,31 @@ DisorderPopup.contextTypes = {
   location: locationShape.isRequired,
 };
 
-export default DisorderPopup;
+export default Relay.createContainer(DisorderPopup, {
+  fragments: {
+    disorder: () => Relay.QL`
+      fragment on Disorder {
+        disruptionId
+        severity
+        status
+        startTime
+        endTime
+        comments
+        geojson {
+          features {
+            type
+            geometry {
+              type
+            }
+            properties {
+              id
+              roadName
+              firstName
+              secondName
+            }
+          }
+        }
+      }
+    `,
+  },
+});

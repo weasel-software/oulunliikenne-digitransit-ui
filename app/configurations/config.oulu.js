@@ -13,8 +13,6 @@ const MAP_URL =
 
 const walttiConfig = require('./waltti').default;
 
-const MAP_URL_LOCAL = 'http://localhost:4000';
-
 export default configMerger(walttiConfig, {
   CONFIG,
 
@@ -24,12 +22,13 @@ export default configMerger(walttiConfig, {
     OTP: OTP_URL,
     STOP_MAP: `${MAP_URL}/map/v1/waltti-stop-map/`,
     CITYBIKE_MAP: `${MAP_URL}/map/v1/waltti-citybike-map/`,
-    DISORDERS_MAP: `${MAP_URL_LOCAL}/disorders_new/`,
+    DISORDERS_MAP: 'https://z238lmlhz3.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
   },
 
   disorders: {
     showDisorders: true,
-    disordersMinZoom: 14,
+    disordersMinZoom: 12,
+    showLines: false,
   },
 
   feedIds: ['OULU'],

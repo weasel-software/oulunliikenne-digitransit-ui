@@ -204,6 +204,20 @@ export function drawDisorderIcon(tile, geom, imageSize) {
   );
 }
 
+export function drawDisorderPath(tile, points) {
+  tile.ctx.beginPath();
+  for (let i = 0, ref = points.length; i < ref; i++) {
+    if (i === 0) {
+      tile.ctx.moveTo(points[i].x / tile.ratio, points[i].y / tile.ratio);
+    } else {
+      tile.ctx.lineTo(points[i].x / tile.ratio, points[i].y / tile.ratio);
+    }
+  }
+  tile.ctx.strokeStyle = '#0073BF';
+  tile.ctx.lineWidth = 4;
+  tile.ctx.stroke();
+}
+
 export function drawParkAndRideIcon(tile, geom, width, height) {
   getImageFromSpriteCache('icon-icon_park-and-ride', width, height).then(
     image => {
