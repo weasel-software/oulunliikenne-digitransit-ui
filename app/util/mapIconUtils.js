@@ -196,14 +196,6 @@ export function drawTerminalIcon(tile, geom, type, name) {
   });
 }
 
-export function drawRoadworkIcon(tile, geom, imageSize) {
-  getImageFromSpriteCache('icon-icon_roadwork', imageSize, imageSize).then(
-    image => {
-      drawIconImage(image, tile, geom, imageSize, imageSize);
-    },
-  );
-}
-
 export function drawDisorderIcon(tile, geom, imageSize) {
   getImageFromSpriteCache('icon-icon_disorder', imageSize, imageSize).then(
     image => {

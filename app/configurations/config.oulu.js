@@ -24,13 +24,7 @@ export default configMerger(walttiConfig, {
     OTP: OTP_URL,
     STOP_MAP: `${MAP_URL}/map/v1/waltti-stop-map/`,
     CITYBIKE_MAP: `${MAP_URL}/map/v1/waltti-citybike-map/`,
-    ROADWORKS_MAP: `${MAP_URL_LOCAL}/roadworks_new/`,
     DISORDERS_MAP: `${MAP_URL_LOCAL}/disorders_new/`,
-  },
-
-  roadworks: {
-    showRoadworks: true,
-    roadworksMinZoom: 14,
   },
 
   disorders: {

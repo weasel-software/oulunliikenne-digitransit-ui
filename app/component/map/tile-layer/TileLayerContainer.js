@@ -19,7 +19,6 @@ import ParkAndRideFacilityPopup from '../popups/ParkAndRideFacilityPopup';
 import ParkAndRideHubRoute from '../../../route/ParkAndRideHubRoute';
 import ParkAndRideFacilityRoute from '../../../route/ParkAndRideFacilityRoute';
 import TicketSalesPopup from '../popups/TicketSalesPopup';
-import RoadworkPopup from '../popups/RoadworkPopup';
 import DisorderPopup from '../popups/DisorderPopup';
 import LocationPopup from '../popups/LocationPopup';
 import TileContainer from './TileContainer';
@@ -265,13 +264,6 @@ class TileLayerContainer extends GridLayer {
           id = this.state.selectableTargets[0].feature.properties.FID;
           contents = (
             <TicketSalesPopup
-              {...this.state.selectableTargets[0].feature.properties}
-            />
-          );
-        } else if (this.state.selectableTargets[0].layer === 'roadworks') {
-          ({ id } = this.state.selectableTargets[0].feature.properties);
-          contents = (
-            <RoadworkPopup
               {...this.state.selectableTargets[0].feature.properties}
             />
           );

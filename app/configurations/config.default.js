@@ -174,11 +174,6 @@ export default {
     locationAware: true,
   },
 
-  roadworks: {
-    showRoadworks: false,
-    roadworksMinZoom: 14,
-  },
-
   disorders: {
     showDisorders: false,
     disordersMinZoom: 14,
