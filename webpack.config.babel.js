@@ -317,6 +317,7 @@ module.exports = {
   performance: { hints: false },
   node: {
     net: 'empty',
+    fs: 'empty',
     tls: 'empty',
   },
   cache: true,

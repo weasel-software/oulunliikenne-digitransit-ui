@@ -16,10 +16,20 @@ const walttiConfig = require('./waltti').default;
 export default configMerger(walttiConfig, {
   CONFIG,
 
+  AWS: {
+    region: 'eu-central-1',
+    iot: {
+      cognito: {
+        identityPoolId: 'TODO',
+      },
+    },
+  },
+
   URL: {
     API_URL,
     MAP_URL,
     OTP: OTP_URL,
+    MQTT: 'TODO.iot.eu-central-1.amazonaws.com',
     STOP_MAP: `${MAP_URL}/map/v1/waltti-stop-map/`,
     CITYBIKE_MAP: `${MAP_URL}/map/v1/waltti-citybike-map/`,
     PARKING_STATIONS_MAP:
