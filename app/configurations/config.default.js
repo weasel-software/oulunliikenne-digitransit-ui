@@ -174,6 +174,11 @@ export default {
     locationAware: true,
   },
 
+  weatherStations: {
+    showWeatherStations: false,
+    weatherStationsMinZoom: 14,
+  },
+
   // TODO: Switch off in autumn
   cityBike: {
     showCityBikes: true,

@@ -372,3 +372,15 @@ select {
   justify-content: center;
   align-items: center;
 }
+
+.component-list {
+  list-style: none;
+  padding: 0;
+  margin: $padding-medium 0;
+  font-size: $font-size-small;
+  color: $gray;
+  td:first-child {
+    color: lighten($gray, 10%);
+    padding-right: 10px;
+  }
+}

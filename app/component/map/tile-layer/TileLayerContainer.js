@@ -11,9 +11,11 @@ import Popup from '../Popup';
 import StopRoute from '../../../route/StopRoute';
 import TerminalRoute from '../../../route/TerminalRoute';
 import CityBikeRoute from '../../../route/CityBikeRoute';
+import WeatherStationRoute from '../../../route/WeatherStationRoute';
 import StopMarkerPopup from '../popups/StopMarkerPopup';
 import MarkerSelectPopup from './MarkerSelectPopup';
 import CityBikePopup from '../popups/CityBikePopup';
+import WeatherStationPopup from '../popups/WeatherStationPopup';
 import ParkAndRideHubPopup from '../popups/ParkAndRideHubPopup';
 import ParkAndRideFacilityPopup from '../popups/ParkAndRideFacilityPopup';
 import ParkAndRideHubRoute from '../../../route/ParkAndRideHubRoute';
@@ -257,6 +259,19 @@ class TileLayerContainer extends GridLayer {
                   {...data}
                 />
               )}
+            />
+          );
+        } else if (
+          this.state.selectableTargets[0].layer === 'weatherStations'
+        ) {
+          ({ id } = this.state.selectableTargets[0].feature.properties);
+          contents = (
+            <Relay.RootContainer
+              Component={WeatherStationPopup}
+              forceFetch
+              route={new WeatherStationRoute({ id })}
+              renderLoading={loadingPopup}
+              renderFetched={data => <WeatherStationPopup {...data} />}
             />
           );
         } else if (this.state.selectableTargets[0].layer === 'ticketSales') {
