@@ -11,8 +11,13 @@
   margin: $padding-medium 0;
   font-size: $font-size-small;
   color: $gray;
-  td:first-child {
-    color: lighten($gray, 10%);
-    padding-right: 10px;
+  td {
+    vertical-align: top;
+
+    &:first-child {
+      color: lighten($gray, 10%);
+      padding-right: 10px;
+      white-space: nowrap;
+    }
   }
 }
