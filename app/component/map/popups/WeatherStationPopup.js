@@ -11,8 +11,6 @@ import ComponentUsageExample from '../../ComponentUsageExample';
 function WeatherStationPopup({ station, lang }, { intl }) {
   const localName = station.names[lang] || station.name;
 
-  console.log(station);
-
   return (
     <div className="card">
       <Card className="padding-small">
