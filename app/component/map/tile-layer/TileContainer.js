@@ -76,6 +76,11 @@ class TileContainer {
           this.coords.z >= config.weatherStations.weatherStationsMinZoom
         ) {
           return true;
+        } else if (
+          Layer.getName() === 'tmsStations' &&
+          this.coords.z >= config.tmsStations.tmsStationsMinZoom
+        ) {
+          return true;
         }
         return false;
       })

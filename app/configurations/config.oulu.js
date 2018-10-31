@@ -32,6 +32,13 @@ export default configMerger(walttiConfig, {
       'https://z238lmlhz3.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
     WEATHER_STATIONS_MAP:
       'https://2cjmn1wkf5.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
+    TMS_STATIONS_MAP:
+      'https://dyzq1gokj3.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
+  },
+
+  tmsStations: {
+    showTmsStations: true,
+    tmsStationsMinZoom: 12,
   },
 
   weatherStations: {
@@ -77,6 +84,7 @@ export default configMerger(walttiConfig, {
     parking: false,
     roadworks: false,
     weatherStations: false,
+    tmsStations: false,
   },
 
   appBarLinks: false,

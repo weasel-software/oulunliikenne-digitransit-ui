@@ -16,10 +16,12 @@ import CameraStationRoute from '../../../route/CameraStationRoute';
 import RoadworkRoute from '../../../route/RoadworkRoute';
 import DisorderRoute from '../../../route/DisorderRoute';
 import WeatherStationRoute from '../../../route/WeatherStationRoute';
+import TmsStationRoute from '../../../route/TmsStationRoute';
 import StopMarkerPopup from '../popups/StopMarkerPopup';
 import MarkerSelectPopup from './MarkerSelectPopup';
 import CityBikePopup from '../popups/CityBikePopup';
 import WeatherStationPopup from '../popups/WeatherStationPopup';
+import TmsStationPopup from '../popups/TmsStationPopup';
 import ParkingStationPopup from '../popups/ParkingStationPopup';
 import ParkAndRideHubPopup from '../popups/ParkAndRideHubPopup';
 import ParkAndRideFacilityPopup from '../popups/ParkAndRideFacilityPopup';
@@ -306,6 +308,17 @@ class TileLayerContainer extends GridLayer {
               route={new WeatherStationRoute({ id })}
               renderLoading={loadingPopup}
               renderFetched={data => <WeatherStationPopup {...data} />}
+            />
+          );
+        } else if (this.state.selectableTargets[0].layer === 'tmsStations') {
+          ({ id } = this.state.selectableTargets[0].feature.properties);
+          contents = (
+            <Relay.RootContainer
+              Component={TmsStationPopup}
+              forceFetch
+              route={new TmsStationRoute({ id })}
+              renderLoading={loadingPopup}
+              renderFetched={data => <TmsStationPopup {...data} />}
             />
           );
         } else if (this.state.selectableTargets[0].layer === 'ticketSales') {
