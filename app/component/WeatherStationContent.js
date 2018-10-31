@@ -12,76 +12,78 @@ const WeatherStationContent = ({ sensors, measuredTime, lang }) => {
   const weatherSensor = sensors.find(item => item.name === 'KELI_1');
   return (
     <table className="component-list">
-      {airTemperatureSensor && (
-        <tr>
-          <td>
-            <FormattedMessage
-              id="air-temperature"
-              defaultMessage="Air temperature"
-            >
-              {(...content) => `${content}:`}
-            </FormattedMessage>
-          </td>
-          <td>
-            {`${airTemperatureSensor.sensorValue}
-            ${airTemperatureSensor.sensorUnit}`}
-          </td>
-        </tr>
-      )}
-      {roadTemperatureSensor && (
-        <tr>
-          <td>
-            <FormattedMessage
-              id="road-temperature"
-              defaultMessage="Road temperature"
-            >
-              {(...content) => `${content}:`}
-            </FormattedMessage>
-          </td>
-          <td>
-            {`${roadTemperatureSensor.sensorValue}
-            ${roadTemperatureSensor.sensorUnit}`}
-          </td>
-        </tr>
-      )}
-      {rainSensor && (
-        <tr>
-          <td>
-            <FormattedMessage id="rain" defaultMessage="Rain">
-              {(...content) => `${content}:`}
-            </FormattedMessage>
-          </td>
-          <td>
-            {lang === 'fi'
-              ? rainSensor.sensorValueDescriptionFi.toLowerCase()
-              : rainSensor.sensorValueDescriptionEn.toLowerCase()}
-          </td>
-        </tr>
-      )}
-      {weatherSensor && (
-        <tr>
-          <td>
-            <FormattedMessage id="condition" defaultMessage="Condition">
-              {(...content) => `${content}:`}
-            </FormattedMessage>
-          </td>
-          <td>
-            {lang === 'fi'
-              ? weatherSensor.sensorValueDescriptionFi.toLowerCase()
-              : weatherSensor.sensorValueDescriptionEn.toLowerCase()}
-          </td>
-        </tr>
-      )}
-      {measuredTime && (
-        <tr>
-          <td>
-            <FormattedMessage id="measure-time" defaultMessage="Measure time">
-              {(...content) => `${content}:`}
-            </FormattedMessage>
-          </td>
-          <td>{moment(measuredTime).format('HH:mm:ss') || ''}</td>
-        </tr>
-      )}
+      <tbody>
+        {airTemperatureSensor && (
+          <tr>
+            <td>
+              <FormattedMessage
+                id="air-temperature"
+                defaultMessage="Air temperature"
+              >
+                {(...content) => `${content}:`}
+              </FormattedMessage>
+            </td>
+            <td>
+              {`${airTemperatureSensor.sensorValue}
+              ${airTemperatureSensor.sensorUnit}`}
+            </td>
+          </tr>
+        )}
+        {roadTemperatureSensor && (
+          <tr>
+            <td>
+              <FormattedMessage
+                id="road-temperature"
+                defaultMessage="Road temperature"
+              >
+                {(...content) => `${content}:`}
+              </FormattedMessage>
+            </td>
+            <td>
+              {`${roadTemperatureSensor.sensorValue}
+              ${roadTemperatureSensor.sensorUnit}`}
+            </td>
+          </tr>
+        )}
+        {rainSensor && (
+          <tr>
+            <td>
+              <FormattedMessage id="rain" defaultMessage="Rain">
+                {(...content) => `${content}:`}
+              </FormattedMessage>
+            </td>
+            <td>
+              {lang === 'fi'
+                ? rainSensor.sensorValueDescriptionFi.toLowerCase()
+                : rainSensor.sensorValueDescriptionEn.toLowerCase()}
+            </td>
+          </tr>
+        )}
+        {weatherSensor && (
+          <tr>
+            <td>
+              <FormattedMessage id="condition" defaultMessage="Condition">
+                {(...content) => `${content}:`}
+              </FormattedMessage>
+            </td>
+            <td>
+              {lang === 'fi'
+                ? weatherSensor.sensorValueDescriptionFi.toLowerCase()
+                : weatherSensor.sensorValueDescriptionEn.toLowerCase()}
+            </td>
+          </tr>
+        )}
+        {measuredTime && (
+          <tr>
+            <td colSpan={2} className="last-updated">
+              <FormattedMessage id="last-updated" defaultMessage="Last updated">
+                {(...content) => `${content} `}
+              </FormattedMessage>
+              {moment(measuredTime).format('HH:mm:ss') || ''}
+            </td>
+          </tr>
+        )}
+      </tbody>
     </table>
   );
 };
