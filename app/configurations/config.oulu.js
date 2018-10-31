@@ -30,6 +30,13 @@ export default configMerger(walttiConfig, {
       'https://mpzqxm0xz3.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
     DISORDERS_MAP:
       'https://z238lmlhz3.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
+    WEATHER_STATIONS_MAP:
+      'https://2cjmn1wkf5.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
+  },
+
+  weatherStations: {
+    showWeatherStations: true,
+    weatherStationsMinZoom: 12,
   },
 
   parkingStations: {
@@ -65,10 +72,11 @@ export default configMerger(walttiConfig, {
   },
 
   navbarSettings: {
-    disruptions: false,
-    roadworks: false,
-    parking: false,
     cameras: false,
+    disruptions: false,
+    parking: false,
+    roadworks: false,
+    weatherStations: false,
   },
 
   appBarLinks: false,

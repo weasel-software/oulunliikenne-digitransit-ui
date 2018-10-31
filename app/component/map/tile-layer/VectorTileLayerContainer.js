@@ -11,6 +11,7 @@ import ParkingStations from './ParkingStations';
 import CameraStations from './CameraStations';
 import Roadworks from './Roadworks';
 import Disorders from './Disorders';
+import WeatherStations from './WeatherStations';
 
 class VectorTileLayerContainer extends React.Component {
   constructor(props, context) {
@@ -84,6 +85,14 @@ class VectorTileLayerContainer extends React.Component {
         this.navbarSettingsEnabled('disruptions')
       ) {
         layers.push(Disorders);
+      }
+
+      if (
+        config.weatherStations &&
+        config.weatherStations.showWeatherStations &&
+        this.navbarSettingsEnabled('weatherStations')
+      ) {
+        layers.push(WeatherStations);
       }
     }
 

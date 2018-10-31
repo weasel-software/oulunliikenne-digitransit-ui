@@ -114,14 +114,14 @@ class NavbarSettings extends React.Component {
               className="toggle-item"
               onClick={() => this.handleItemClick('cameras')}
             />}
-            {configNavbarSettings.hasOwnProperty('weather') && <Toggle
+            {configNavbarSettings.hasOwnProperty('weatherStations') && <Toggle
               label={intl.formatMessage({
                   id: 'weather-stations',
                   defaultMessage: 'Weather stations',
                 })}
-              toggled={(storeNavbarSettings.weather || false)}
+              toggled={(storeNavbarSettings.weatherStations || false)}
               className="toggle-item"
-              onClick={() => this.handleItemClick('weather')}
+              onClick={() => this.handleItemClick('weatherStations')}
             />}
             {configNavbarSettings.hasOwnProperty('traffic') && <Toggle
               label={intl.formatMessage({

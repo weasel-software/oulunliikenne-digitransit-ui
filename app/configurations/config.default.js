@@ -196,6 +196,11 @@ export default {
     showLines: false,
   },
 
+  weatherStations: {
+    showWeatherStations: false,
+    weatherStationsMinZoom: 14,
+  },
+
   // TODO: Switch off in autumn
   cityBike: {
     showCityBikes: true,

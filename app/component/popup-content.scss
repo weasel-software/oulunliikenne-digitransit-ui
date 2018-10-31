@@ -1,0 +1,23 @@
+.last-updated {
+  font-size: $font-size-xsmall;
+  font-style: italic;
+  color: $gray;
+  padding-top: 5px;
+}
+
+.component-list {
+  list-style: none;
+  padding: 0;
+  margin: $padding-medium 0;
+  font-size: $font-size-small;
+  color: $gray;
+  td {
+    vertical-align: top;
+
+    &:first-child {
+      color: lighten($gray, 10%);
+      padding-right: 10px;
+      white-space: nowrap;
+    }
+  }
+}
