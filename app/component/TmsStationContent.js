@@ -83,12 +83,12 @@ const TmsStationContent = ({ sensors, measuredTime }) => {
         )}
         {measuredTime && (
           <tr>
-            <td>
-              <FormattedMessage id="measure-time" defaultMessage="Measure time">
-                {(...content) => `${content}:`}
+            <td colSpan={2} className="last-updated">
+              <FormattedMessage id="last-updated" defaultMessage="Last updated">
+                {(...content) => `${content} `}
               </FormattedMessage>
+              {moment(measuredTime).format('HH:mm:ss') || ''}
             </td>
-            <td>{moment(measuredTime).format('HH:mm:ss') || ''}</td>
           </tr>
         )}
       </tbody>
