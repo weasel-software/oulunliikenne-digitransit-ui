@@ -6,7 +6,7 @@ const APP_TITLE = 'Reittiopas';
 
 const OTP_URL =
   process.env.OTP_URL ||
-  'https://tq9dvlsfdk.execute-api.eu-central-1.amazonaws.com/dev';
+  'https://34i4d4eq8g.execute-api.eu-central-1.amazonaws.com/dev';
 const API_URL = process.env.API_URL || 'https://dev-api.digitransit.fi';
 const MAP_URL =
   process.env.MAP_URL || 'https://digitransit-dev-cdn-origin.azureedge.net';
@@ -23,17 +23,17 @@ export default configMerger(walttiConfig, {
     STOP_MAP: `${MAP_URL}/map/v1/waltti-stop-map/`,
     CITYBIKE_MAP: `${MAP_URL}/map/v1/waltti-citybike-map/`,
     PARKING_STATIONS_MAP:
-      'https://vomrfbho8a.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
+      'https://zokovzbuuk.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
     CAMERASTATIONS_MAP:
-      'https://qa0u1dxw69.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
+      'https://qp3yfqwir6.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
     ROADWORKS_MAP:
-      'https://mpzqxm0xz3.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
+      'https://83q6jsdp5f.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
     DISORDERS_MAP:
-      'https://z238lmlhz3.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
+      'https://7ss2ymr8jf.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
     WEATHER_STATIONS_MAP:
-      'https://2cjmn1wkf5.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
+      'https://p43v3i88yj.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
     TMS_STATIONS_MAP:
-      'https://dyzq1gokj3.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
+      'https://syiky3xel7.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
   },
 
   tmsStations: {
