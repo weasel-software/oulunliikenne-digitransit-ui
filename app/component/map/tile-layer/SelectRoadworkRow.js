@@ -10,7 +10,7 @@ function SelectRoadworkRow(props) {
     <div className="no-margin">
       <div className="cursor-pointer select-row" onClick={props.selectRow}>
         <div className="padding-vertical-normal select-row-icon">
-          <Icon img="icon-icon_car" />
+          <Icon img="icon-icon_roadwork" />
         </div>
         <div className="padding-vertical-normal select-row-text">
           <span className="header-primary no-margin link-color">
