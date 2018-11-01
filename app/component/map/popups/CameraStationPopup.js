@@ -8,8 +8,8 @@ import CardHeader from '../../CardHeader';
 import ImageSlider from '../../ImageSlider';
 import ComponentUsageExample from '../../ComponentUsageExample';
 
-function CameraStationPopup({ weatherCamera, lang }, { intl }) {
-  const camera = weatherCamera;
+function CameraStationPopup({ weatherCamera, trafficCamera, lang }, { intl }) {
+  const camera = weatherCamera || trafficCamera;
   const localName = camera.names[lang] || camera.name;
 
   return (
@@ -65,26 +65,37 @@ export default Relay.createContainer(
   {
     fragments: {
       weatherCamera: () => Relay.QL`
-      fragment on WeatherCamera {
-        cameraId
-        name
-        names {
-          fi
-          sv
-          en
+        fragment on WeatherCamera {
+          cameraId
+          name
+          names {
+            fi
+            sv
+            en
+          }
+          presets {
+      			presetId
+            presentationName
+            imageUrl
+          }
         }
-        presets {
-    			presetId
-          presentationName
-          imageUrl
-        }
-      }
-    `,
+      `,
       trafficCamera: () => Relay.QL`
-      fragment on TrafficCamera {
-        cameraId
-      }
-    `,
+        fragment on TrafficCamera {
+          cameraId
+          name
+          names {
+            fi
+            sv
+            en
+          }
+          presets {
+      			presetId
+            presentationName
+            imageUrl
+          }
+        }
+      `,
     },
   },
 );
