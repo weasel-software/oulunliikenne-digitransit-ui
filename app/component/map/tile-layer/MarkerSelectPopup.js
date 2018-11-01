@@ -7,6 +7,7 @@ import SelectTerminalRow from './SelectTerminalRow';
 import SelectCityBikeRow from './SelectCityBikeRow';
 import SelectParkAndRideRow from './SelectParkAndRideRow';
 import SelectTicketSalesRow from './SelectTicketSalesRow';
+import SelectWeatherStationRow from './SelectWeatherStationRow';
 import ComponentUsageExample from '../../ComponentUsageExample';
 import { options } from '../../ExampleData';
 
@@ -49,6 +50,14 @@ function MarkerSelectPopup(props) {
         <SelectTicketSalesRow
           {...option.feature.properties}
           key={option.feature.properties.FID}
+          selectRow={() => props.selectRow(option)}
+        />
+      );
+    } else if (option.layer === 'weatherStations') {
+      return (
+        <SelectWeatherStationRow
+          {...option.feature.properties}
+          key={option.feature.properties.id}
           selectRow={() => props.selectRow(option)}
         />
       );
