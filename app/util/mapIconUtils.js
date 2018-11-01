@@ -197,11 +197,13 @@ export function drawTerminalIcon(tile, geom, type, name) {
 }
 
 export function drawCameraStationIcon(tile, geom, imageSize) {
-  getImageFromSpriteCache('icon-icon_camera-station', imageSize, imageSize).then(
-    image => {
-      drawIconImage(image, tile, geom, imageSize, imageSize);
-    },
-  );
+  getImageFromSpriteCache(
+    'icon-icon_camera-station',
+    imageSize,
+    imageSize,
+  ).then(image => {
+    drawIconImage(image, tile, geom, imageSize, imageSize);
+  });
 }
 
 export function drawParkAndRideIcon(tile, geom, width, height) {
