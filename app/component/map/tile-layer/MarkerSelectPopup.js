@@ -52,6 +52,14 @@ function MarkerSelectPopup(props) {
           selectRow={() => props.selectRow(option)}
         />
       );
+    } else if (option.layer === 'roadworks') {
+      return (
+        <SelectTicketSalesRow
+          {...option.feature.properties}
+          key={option.feature.properties.id}
+          selectRow={() => props.selectRow(option)}
+        />
+      );
     }
     return null;
   });

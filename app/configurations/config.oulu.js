@@ -6,7 +6,7 @@ const APP_TITLE = 'Reittiopas';
 
 const OTP_URL =
   process.env.OTP_URL ||
-  'https://tq9dvlsfdk.execute-api.eu-central-1.amazonaws.com/dev';
+  'https://34i4d4eq8g.execute-api.eu-central-1.amazonaws.com/dev';
 const API_URL = process.env.API_URL || 'https://dev-api.digitransit.fi';
 const MAP_URL =
   process.env.MAP_URL || 'https://digitransit-dev-cdn-origin.azureedge.net';
@@ -22,7 +22,8 @@ export default configMerger(walttiConfig, {
     OTP: OTP_URL,
     STOP_MAP: `${MAP_URL}/map/v1/waltti-stop-map/`,
     CITYBIKE_MAP: `${MAP_URL}/map/v1/waltti-citybike-map/`,
-    ROADWORKS_MAP: 'https://mpzqxm0xz3.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
+    ROADWORKS_MAP:
+      'https://83q6jsdp5f.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
   },
 
   roadworks: {
