@@ -11,6 +11,7 @@ import SelectCameraStationRow from './SelectCameraStationRow';
 import SelectDisorderRow from './SelectDisorderRow';
 import SelectParkingStationRow from './SelectParkingStationRow';
 import SelectRoadworkRow from './SelectRoadworkRow';
+import SelectTmsStationRow from './SelectTmsStationRow';
 import ComponentUsageExample from '../../ComponentUsageExample';
 import { options } from '../../ExampleData';
 
@@ -83,6 +84,14 @@ function MarkerSelectPopup(props) {
     } else if (option.layer === 'roadworks') {
       return (
         <SelectRoadworkRow
+          {...option.feature.properties}
+          key={option.feature.properties.id}
+          selectRow={() => props.selectRow(option)}
+        />
+      );
+    } else if (option.layer === 'tmsStations') {
+      return (
+        <SelectTmsStationRow
           {...option.feature.properties}
           key={option.feature.properties.id}
           selectRow={() => props.selectRow(option)}
