@@ -7,10 +7,10 @@ import Availability from '../../Availability';
 import ComponentUsageExample from '../../ComponentUsageExample';
 
 const ParkingStationAvailability = mapProps(
-  ({ realtime, maxCapacity, spacesAvailable }) => ({
+  ({ realtime, maxCapacity, spacesAvailable, fewAvailableCount }) => ({
     available: realtime ? spacesAvailable : 0,
     total: maxCapacity,
-    fewAvailableCount: maxCapacity * 0.2,
+    fewAvailableCount,
     text: (
       <p className="sub-header-h4 availability-header">
         <FormattedMessage
@@ -29,7 +29,7 @@ ParkingStationAvailability.displayName = 'ParkingStationAvailability';
 
 ParkingStationAvailability.description = (
   <div>
-    <p>Renders information about park and ride availability</p>
+    <p>Renders information about parking station availability</p>
     <ComponentUsageExample description="non-realtime">
       <ParkingStationAvailability spacesAvailable={1} maxCapacity={3} />
     </ComponentUsageExample>
@@ -43,6 +43,7 @@ ParkingStationAvailability.propTypes = {
   realtime: PropTypes.bool,
   maxCapacity: PropTypes.number.isRequired,
   spacesAvailable: PropTypes.number.isRequired,
+  fewAvailableCount: PropTypes.number.isRequired,
 };
 
 export default ParkingStationAvailability;
