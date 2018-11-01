@@ -44,6 +44,7 @@ export default class Roadworks {
         if (vt.layers.roadworks != null) {
           for (let i = 0, ref = vt.layers.roadworks.length - 1; i <= ref; i++) {
             const feature = vt.layers.roadworks.feature(i);
+            console.log(feature.properties);
             const geometryList = feature.loadGeometry();
 
             for (
