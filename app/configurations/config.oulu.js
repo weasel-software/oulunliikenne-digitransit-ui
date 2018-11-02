@@ -29,8 +29,8 @@ export default configMerger(walttiConfig, {
   sprites: 'svg-sprite.oulu.svg',
 
   defaultMapCenter: {
-    lat: 65.0123600,
-    lon: 25.4681600,
+    lat: 65.01236,
+    lon: 25.46816,
   },
 
   navbarSettings: {
@@ -41,7 +41,7 @@ export default configMerger(walttiConfig, {
   },
 
   appBarLinks: false,
-  /*appBarLinks: {
+  /* appBarLinks: {
     fi: {
       text: 'Suomeksi lorem ipsum dolor sit amet, tristique mollis nec vitae lorem aenean, in maecenas lobortis volutpat ac vel cursus.',
       links: [
@@ -63,12 +63,15 @@ export default configMerger(walttiConfig, {
         { name: 'Air service (Finavia)', href: 'https://www.finavia.fi/en' },
       ],
     },
-  },*/
+  }, */
 
   appBarDisruptionInfo: false,
 
-  //appBarLink: false,
-  appBarLink: { name: 'wp.oulunliikenne.fi', href: 'https://wp.oulunliikenne.fi' },
+  // appBarLink: false,
+  appBarLink: {
+    name: 'wp.oulunliikenne.fi',
+    href: 'https://wp.oulunliikenne.fi',
+  },
 
   colors: {
     primary: '#e10069',
@@ -111,6 +114,8 @@ export default configMerger(walttiConfig, {
   defaultSettings: {
     walkBoardCost: 900,
   },
+
+  showMapTrackingButtons: false,
 
   defaultOrigins: [
     {

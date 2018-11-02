@@ -154,6 +154,7 @@ export default {
     'Europe/Helsinki|EET EEST|-20 -30|01010101010101010101010|1BWp0 1qM0 WM0 1qM0 ' +
     'WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|35e5',
 
+  showMapTrackingButtons: true,
   mainMenu: {
     // Whether to show the left menu toggle button at all
     show: true,
