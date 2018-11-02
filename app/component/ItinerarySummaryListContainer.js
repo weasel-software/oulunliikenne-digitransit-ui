@@ -3,35 +3,52 @@ import React from 'react';
 import Relay from 'react-relay/classic';
 import { FormattedMessage } from 'react-intl';
 import inside from 'point-in-polygon';
+import startsWith from 'lodash/startsWith';
 import ExternalLink from './ExternalLink';
 import SummaryRow from './SummaryRow';
 import Icon from './Icon';
+import { isBrowser } from '../util/browser';
 
-function ItinerarySummaryListContainer(props, context) {
-  if (!props.error && props.itineraries && props.itineraries.length > 0) {
-    const open = props.open && Number(props.open);
-    const summaries = props.itineraries.map((itinerary, i) => (
+function ItinerarySummaryListContainer(
+  {
+    activeIndex,
+    children,
+    currentTime,
+    error,
+    from,
+    intermediatePlaces,
+    itineraries,
+    onSelect,
+    onSelectImmediately,
+    open,
+    searchTime,
+    to,
+  },
+  { config },
+) {
+  if (!error && itineraries && itineraries.length > 0) {
+    const openedIndex = open && Number(open);
+    const summaries = itineraries.map((itinerary, i) => (
       <SummaryRow
-        refTime={props.searchTime}
+        refTime={searchTime}
         key={i} // eslint-disable-line react/no-array-index-key
         hash={i}
         data={itinerary}
-        passive={i !== props.activeIndex}
-        currentTime={props.currentTime}
-        onSelect={props.onSelect}
-        onSelectImmediately={props.onSelectImmediately}
-        intermediatePlaces={props.relay.route.params.intermediatePlaces}
+        passive={i !== activeIndex}
+        currentTime={currentTime}
+        onSelect={onSelect}
+        onSelectImmediately={onSelectImmediately}
+        intermediatePlaces={intermediatePlaces}
       >
-        {i === open && props.children}
+        {i === openedIndex && children}
       </SummaryRow>
     ));
 
     return (
-      <div className="summary-list-container momentum-scroll">{summaries}</div>
+      <div className="summary-list-container">{isBrowser && summaries}</div>
     );
   }
-  const { from, to } = props.relay.route.params;
-  if (!props.error && (!from.lat || !from.lon || !to.lat || !to.lon)) {
+  if (!error && (!from.lat || !from.lon || !to.lat || !to.lon)) {
     return (
       <div className="summary-list-container summary-no-route-found">
         <FormattedMessage
@@ -42,21 +59,24 @@ function ItinerarySummaryListContainer(props, context) {
     );
   }
 
-  let msg;
+  let msgId;
   let outside;
-  if (props.error) {
-    msg = props.error;
-  } else if (!inside([from.lon, from.lat], context.config.areaPolygon)) {
-    msg = 'origin-outside-service';
+  // If error starts with "Error" it's not a message id, it's an error message
+  // from OTP
+  if (error && !startsWith(error, 'Error')) {
+    msgId = error;
+  } else if (!inside([from.lon, from.lat], config.areaPolygon)) {
+    msgId = 'origin-outside-service';
     outside = true;
-  } else if (!inside([to.lon, to.lat], context.config.areaPolygon)) {
-    msg = 'destination-outside-service';
+  } else if (!inside([to.lon, to.lat], config.areaPolygon)) {
+    msgId = 'destination-outside-service';
     outside = true;
   } else {
-    msg = 'no-route-msg';
+    msgId = 'no-route-msg';
   }
+
   let linkPart = null;
-  if (outside && context.config.nationalServiceLink) {
+  if (outside && config.nationalServiceLink) {
     linkPart = (
       <div>
         <FormattedMessage
@@ -65,7 +85,7 @@ function ItinerarySummaryListContainer(props, context) {
         />
         <ExternalLink
           className="external-no-route"
-          {...context.config.nationalServiceLink}
+          {...config.nationalServiceLink}
         />
       </div>
     );
@@ -77,7 +97,7 @@ function ItinerarySummaryListContainer(props, context) {
         <Icon className="no-route-icon" img="icon-icon_caution" />
         <div>
           <FormattedMessage
-            id={msg}
+            id={msgId}
             defaultMessage={
               'Unfortunately no routes were found for your journey. ' +
               'Please change your origin or destination address.'
@@ -90,33 +110,34 @@ function ItinerarySummaryListContainer(props, context) {
   );
 }
 
+const locationShape = PropTypes.shape({
+  lat: PropTypes.number,
+  lon: PropTypes.number,
+  address: PropTypes.string,
+});
+
 ItinerarySummaryListContainer.propTypes = {
-  searchTime: PropTypes.number.isRequired,
-  itineraries: PropTypes.array,
   activeIndex: PropTypes.number.isRequired,
   currentTime: PropTypes.number.isRequired,
+  children: PropTypes.node,
+  error: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.shape({ message: PropTypes.string }),
+  ]),
+  from: locationShape.isRequired,
+  intermediatePlaces: PropTypes.arrayOf(locationShape),
+  itineraries: PropTypes.array,
   onSelect: PropTypes.func.isRequired,
   onSelectImmediately: PropTypes.func.isRequired,
   open: PropTypes.number,
-  error: PropTypes.string,
-  children: PropTypes.node,
-  relay: PropTypes.shape({
-    route: PropTypes.shape({
-      params: PropTypes.shape({
-        to: PropTypes.shape({
-          lat: PropTypes.number,
-          lon: PropTypes.number,
-          address: PropTypes.string.isRequired,
-        }).isRequired,
-        from: PropTypes.shape({
-          lat: PropTypes.number,
-          lon: PropTypes.number,
-          address: PropTypes.string.isRequired,
-        }).isRequired,
-        intermediatePlaces: PropTypes.array,
-      }).isRequired,
-    }).isRequired,
-  }).isRequired,
+  searchTime: PropTypes.number.isRequired,
+  to: locationShape.isRequired,
+};
+
+ItinerarySummaryListContainer.defaultProps = {
+  error: undefined,
+  intermediatePlaces: [],
+  itineraries: [],
 };
 
 ItinerarySummaryListContainer.contextTypes = {
@@ -166,6 +187,9 @@ export default Relay.createContainer(ItinerarySummaryListContainer, {
             lon
             stop {
               gtfsId
+            }
+            bikeRentalStation {
+              bikesAvailable
             }
           }
           to {

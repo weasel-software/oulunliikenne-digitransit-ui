@@ -14,6 +14,7 @@ import NavbarSettingsStore from './store/NavbarSettingsStore';
 import RealTimeInformationStore from './store/RealTimeInformationStore';
 import TimeStore from './store/TimeStore';
 import FavouriteCityBikeStationStore from './store/FavouriteCityBikeStationStore';
+import MapLayerStore from './store/MapLayerStore';
 
 export default config => {
   const app = new Fluxible({
@@ -33,6 +34,7 @@ export default config => {
   app.registerStore(RealTimeInformationStore);
   app.registerStore(TimeStore);
   app.registerStore(FavouriteCityBikeStationStore);
+  app.registerStore(MapLayerStore);
 
   app.plug({
     name: 'extra-context-plugin',
