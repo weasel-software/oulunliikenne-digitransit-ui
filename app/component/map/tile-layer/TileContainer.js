@@ -3,6 +3,7 @@ import omit from 'lodash/omit';
 import L from 'leaflet';
 
 import { isBrowser } from '../../../util/browser';
+import { isLayerEnabled } from '../../../util/mapLayerUtils';
 
 class TileContainer {
   constructor(coords, done, props, config) {
@@ -30,22 +31,29 @@ class TileContainer {
 
     this.layers = this.props.layers
       .filter(Layer => {
+        const layerName = Layer.getName();
+        const isEnabled = isLayerEnabled(layerName, this.props.mapLayers);
         if (
-          Layer.getName() === 'stop' &&
+          layerName === 'stop' &&
           (this.coords.z >= config.stopsMinZoom ||
             this.coords.z >= config.terminalStopsMinZoom)
         ) {
-          return true;
+          return isEnabled;
         } else if (
-          Layer.getName() === 'citybike' &&
+          layerName === 'citybike' &&
           this.coords.z >= config.cityBike.cityBikeMinZoom
         ) {
-          return true;
+          return isEnabled;
         } else if (
-          Layer.getName() === 'parkAndRide' &&
+          layerName === 'parkAndRide' &&
           this.coords.z >= config.parkAndRide.parkAndRideMinZoom
         ) {
-          return true;
+          return isEnabled;
+        } else if (
+          layerName === 'ticketSales' &&
+          this.coords.z >= config.ticketSales.ticketSalesMinZoom
+        ) {
+          return isEnabled;
         } else if (
           Layer.getName() === 'parkingStations' &&
           this.coords.z >= config.parkingStations.parkingStationsMinZoom
@@ -67,11 +75,6 @@ class TileContainer {
         ) {
           return true;
         } else if (
-          Layer.getName() === 'ticketSales' &&
-          this.coords.z >= config.ticketSales.ticketSalesMinZoom
-        ) {
-          return true;
-        } else if (
           Layer.getName() === 'weatherStations' &&
           this.coords.z >= config.weatherStations.weatherStationsMinZoom
         ) {
@@ -84,7 +87,7 @@ class TileContainer {
         }
         return false;
       })
-      .map(Layer => new Layer(this, config));
+      .map(Layer => new Layer(this, config, this.props.mapLayers));
 
     this.el.layers = this.layers.map(layer => omit(layer, 'tile'));
 
