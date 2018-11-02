@@ -162,6 +162,8 @@ export default configMerger(walttiConfig, {
     walkBoardCost: 900,
   },
 
+  showMapTrackingButtons: false,
+
   defaultOrigins: [
     {
       icon: 'icon-icon_bus',

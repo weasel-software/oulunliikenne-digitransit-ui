@@ -173,22 +173,24 @@ class MapWithTrackingStateHandler extends React.Component {
         leafletObjs={leafletObjs}
       >
         {children}
-        <div className="map-with-tracking-buttons">
-          {renderCustomButtons && renderCustomButtons()}
-          {this.props.position.hasLocation && (
-            <ToggleMapTracking
-              key="toggleMapTracking"
-              handleClick={
-                this.state.mapTracking
-                  ? this.disableMapTracking
-                  : this.enableMapTracking
-              }
-              className={`icon-mapMarker-toggle-positioning-${
-                this.state.mapTracking ? 'online' : 'offline'
-              }`}
-            />
-          )}
-        </div>
+        {config.showMapTrackingButtons && (
+          <div className="map-with-tracking-buttons">
+            {renderCustomButtons && renderCustomButtons()}
+            {this.props.position.hasLocation && (
+              <ToggleMapTracking
+                key="toggleMapTracking"
+                handleClick={
+                  this.state.mapTracking
+                    ? this.disableMapTracking
+                    : this.enableMapTracking
+                }
+                className={`icon-mapMarker-toggle-positioning-${
+                  this.state.mapTracking ? 'online' : 'offline'
+                }`}
+              />
+            )}
+          </div>
+        )}
       </Component>
     );
   }

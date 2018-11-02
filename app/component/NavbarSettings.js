@@ -2,16 +2,16 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, intlShape } from 'react-intl';
 import connectToStores from 'fluxible-addons-react/connectToStores';
-import ComponentUsageExample from './ComponentUsageExample';
-import { toggleItem } from '../action/NavbarSettingsActions';
 
-import RaisedButton from 'material-ui/RaisedButton';
 import Popover from 'material-ui/Popover';
 import Toggle from 'material-ui/Toggle';
 import Checkbox from 'material-ui/Checkbox';
 import Icon from './Icon';
 import Checked from 'material-ui/svg-icons/toggle/radio-button-checked';
 import Unchecked from 'material-ui/svg-icons/toggle/radio-button-unchecked';
+
+import ComponentUsageExample from './ComponentUsageExample';
+import { toggleItem } from '../action/NavbarSettingsActions';
 
 class NavbarSettings extends React.Component {
   constructor(props, context) {
@@ -26,7 +26,7 @@ class NavbarSettings extends React.Component {
     };
   }
 
-  handleClick = (event) => {
+  handleClick = event => {
     event.preventDefault();
 
     this.setState({
@@ -41,13 +41,16 @@ class NavbarSettings extends React.Component {
     });
   };
 
-  handleItemClick = (item) => {
+  handleItemClick = item => {
     const { executeAction } = this.context;
     executeAction(toggleItem, item);
   };
 
   render() {
-    const { intl, config: { navbarSettings: configNavbarSettings } } = this.context;
+    const {
+      intl,
+      config: { navbarSettings: configNavbarSettings },
+    } = this.context;
     const { navbarSettings: storeNavbarSettings } = this.props;
 
     return (
@@ -67,8 +70,8 @@ class NavbarSettings extends React.Component {
           className="navbar-settings"
           open={this.state.open}
           anchorEl={this.state.anchorEl}
-          anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
-          targetOrigin={{horizontal: 'left', vertical: 'top'}}
+          anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+          targetOrigin={{ horizontal: 'left', vertical: 'top' }}
           onRequestClose={this.handleRequestClose}
         >
           <div className="navbar-settings_inner">
@@ -78,62 +81,77 @@ class NavbarSettings extends React.Component {
                 defaultMessage: 'Motorist',
               })}
             </h2>
-            {configNavbarSettings.hasOwnProperty('disruptions') && <Toggle
-              label={intl.formatMessage({
+            {{}.hasOwnProperty.call(configNavbarSettings, 'disruptions') && (
+              <Toggle
+                label={intl.formatMessage({
                   id: 'disruptions',
                   defaultMessage: 'Disruptions',
                 })}
-              toggled={(storeNavbarSettings.disruptions || false)}
-              className="toggle-item"
-              onClick={() => this.handleItemClick('disruptions')}
-            />}
-            {configNavbarSettings.hasOwnProperty('roadworks') && <Toggle
-              label={intl.formatMessage({
+                toggled={storeNavbarSettings.disruptions || false}
+                className="toggle-item"
+                onClick={() => this.handleItemClick('disruptions')}
+              />
+            )}
+            {{}.hasOwnProperty.call(configNavbarSettings, 'roadworks') && (
+              <Toggle
+                label={intl.formatMessage({
                   id: 'roadworks',
                   defaultMessage: 'Roadworks',
                 })}
-              toggled={(storeNavbarSettings.roadworks || false)}
-              className="toggle-item"
-              onClick={() => this.handleItemClick('roadworks')}
-            />}
-            {configNavbarSettings.hasOwnProperty('parking') && <Toggle
-              label={intl.formatMessage({
+                toggled={storeNavbarSettings.roadworks || false}
+                className="toggle-item"
+                onClick={() => this.handleItemClick('roadworks')}
+              />
+            )}
+            {{}.hasOwnProperty.call(configNavbarSettings, 'parking') && (
+              <Toggle
+                label={intl.formatMessage({
                   id: 'parking',
                   defaultMessage: 'Parking',
                 })}
-              toggled={(storeNavbarSettings.parking || false)}
-              className="toggle-item"
-              onClick={() => this.handleItemClick('parking')}
-            />}
-            {configNavbarSettings.hasOwnProperty('cameras') && <Toggle
-              label={intl.formatMessage({
+                toggled={storeNavbarSettings.parking || false}
+                className="toggle-item"
+                onClick={() => this.handleItemClick('parking')}
+              />
+            )}
+            {{}.hasOwnProperty.call(configNavbarSettings, 'cameras') && (
+              <Toggle
+                label={intl.formatMessage({
                   id: 'cameras',
                   defaultMessage: 'Cameras',
                 })}
-              toggled={(storeNavbarSettings.cameras || false)}
-              className="toggle-item"
-              onClick={() => this.handleItemClick('cameras')}
-            />}
-            {configNavbarSettings.hasOwnProperty('weatherStations') && <Toggle
-              label={intl.formatMessage({
+                toggled={storeNavbarSettings.cameras || false}
+                className="toggle-item"
+                onClick={() => this.handleItemClick('cameras')}
+              />
+            )}
+            {{}.hasOwnProperty.call(
+              configNavbarSettings,
+              'weatherStations',
+            ) && (
+              <Toggle
+                label={intl.formatMessage({
                   id: 'weather-stations',
                   defaultMessage: 'Weather stations',
                 })}
-              toggled={(storeNavbarSettings.weatherStations || false)}
-              className="toggle-item"
-              onClick={() => this.handleItemClick('weatherStations')}
-            />}
-            {configNavbarSettings.hasOwnProperty('tmsStations') && <Toggle
-              label={intl.formatMessage({
+                toggled={storeNavbarSettings.weatherStations || false}
+                className="toggle-item"
+                onClick={() => this.handleItemClick('weatherStations')}
+              />
+            )}
+            {{}.hasOwnProperty.call(configNavbarSettings, 'tmsStations') && (
+              <Toggle
+                label={intl.formatMessage({
                   id: 'traffic-monitoring',
                   defaultMessage: 'Traffic monitoring',
                 })}
-              toggled={(storeNavbarSettings.tmsStations || false)}
-              className="toggle-item"
-              onClick={() => this.handleItemClick('tmsStations')}
-            />}
+                toggled={storeNavbarSettings.tmsStations || false}
+                className="toggle-item"
+                onClick={() => this.handleItemClick('tmsStations')}
+              />
+            )}
           </div>
-          {/*<div className="navbar-settings_subset">
+          {/* <div className="navbar-settings_subset">
             <Toggle
               label={intl.formatMessage({
                   id: 'road-info',
@@ -175,12 +193,12 @@ class NavbarSettings extends React.Component {
               onCheck={() => alert('Change')}
               className="toggle-item-dense"
             />
-          </div>*/}
+          </div> */}
         </Popover>
       </div>
     );
   }
-};
+}
 
 NavbarSettings.propTypes = {
   navbarSettings: PropTypes.object.isRequired,
@@ -194,15 +212,17 @@ NavbarSettings.contextTypes = {
 
 NavbarSettings.description = () => (
   <div>
-    <p>
-      Popover that shows available settings.
-    </p>
+    <p>Popover that shows available settings.</p>
     <ComponentUsageExample>
       <NavbarSettings />
     </ComponentUsageExample>
   </div>
 );
 
-export default connectToStores(NavbarSettings, ['NavbarSettingsStore'], context => ({
-  navbarSettings: context.getStore('NavbarSettingsStore').getNavbarSettings(),
-}));
+export default connectToStores(
+  NavbarSettings,
+  ['NavbarSettingsStore'],
+  context => ({
+    navbarSettings: context.getStore('NavbarSettingsStore').getNavbarSettings(),
+  }),
+);
