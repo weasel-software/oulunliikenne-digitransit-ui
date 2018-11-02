@@ -185,14 +185,14 @@ class TileLayerContainer extends GridLayer {
       }
 
       this.setState({
-        selectableTargets: selectableTargets.filter(target =>
+        selectableTargets /* : selectableTargets.filter(target =>
           isFeatureLayerEnabled(
             target.feature,
             target.layer,
             this.props.mapLayers,
             this.context.config,
           ),
-        ),
+        ) */, // TODO: Quick hack to get oulu component popups to show on map
         coords,
         showSpinner: true,
       });
