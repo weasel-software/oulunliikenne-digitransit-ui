@@ -38,34 +38,34 @@ export default configMerger(walttiConfig, {
 
   tmsStations: {
     showTmsStations: true,
-    tmsStationsMinZoom: 12,
+    tmsStationsMinZoom: 13,
   },
 
   weatherStations: {
     showWeatherStations: true,
-    weatherStationsMinZoom: 12,
+    weatherStationsMinZoom: 13,
   },
 
   parkingStations: {
     showParkingStations: true,
-    parkingStationsMinZoom: 12,
+    parkingStationsMinZoom: 13,
     smallIconMinZoom: 14,
     availabilityThreshold: 0.25,
   },
 
   cameraStations: {
     showCameraStations: true,
-    cameraStationsMinZoom: 12,
+    cameraStationsMinZoom: 13,
   },
 
   roadworks: {
     showRoadworks: true,
-    roadworksMinZoom: 12,
+    roadworksMinZoom: 13,
   },
 
   disorders: {
     showDisorders: true,
-    disordersMinZoom: 12,
+    disordersMinZoom: 13,
     showLines: false,
   },
 
