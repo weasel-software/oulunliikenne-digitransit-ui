@@ -33,13 +33,6 @@ export default configMerger(walttiConfig, {
     lon: 25.46816,
   },
 
-  navbarSettings: {
-    disruptions: false,
-    roadworks: false,
-    parking: false,
-    cameras: false,
-  },
-
   appBarLinks: false,
   /* appBarLinks: {
     fi: {
@@ -115,7 +108,15 @@ export default configMerger(walttiConfig, {
     walkBoardCost: 900,
   },
 
-  showMapTrackingButtons: false,
+  mapTrackingButtons: {
+    altPosition: true,
+    layers: {
+      containerClassName: 'bubble-dialog-component-container-alt',
+      headerId: 'motorist',
+      icon: 'settings',
+      buttonText: 'settings',
+    },
+  },
 
   defaultOrigins: [
     {

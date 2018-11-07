@@ -162,8 +162,14 @@ class BubbleDialog extends React.Component {
 
   renderContainer(isFullscreen) {
     const isOpen = this.state.isOpen || this.props.isOpen;
+    const { intl } = this.context;
     return (
-      <div className="bubble-dialog-component-container">
+      <div
+        className={cx(
+          'bubble-dialog-component-container',
+          this.props.containerClassName,
+        )}
+      >
         {isFullscreen ? (
           <LazilyLoad modules={this.modules}>
             {({ Drawer }) => (
@@ -195,6 +201,11 @@ class BubbleDialog extends React.Component {
           role="button"
           tabIndex="0"
         >
+          {this.props.buttonText &&
+            intl.formatMessage({
+              id: this.props.buttonText,
+              defaultMessage: 'Bubble Dialog Button',
+            })}
           <Icon img={`icon-icon_${this.props.icon}`} viewBox="0 0 25 25" />
         </div>
       </div>
@@ -214,10 +225,12 @@ class BubbleDialog extends React.Component {
 BubbleDialog.propTypes = {
   breakpoint: PropTypes.oneOf(['small', 'medium', 'large']),
   children: PropTypes.node,
+  containerClassName: PropTypes.string,
   contentClassName: PropTypes.string,
   header: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
   icon: PropTypes.string.isRequired,
+  buttonText: PropTypes.string,
   isFullscreenOnMobile: PropTypes.bool,
   isOpen: PropTypes.bool,
   onDialogOpen: PropTypes.func,
@@ -226,7 +239,9 @@ BubbleDialog.propTypes = {
 BubbleDialog.defaultProps = {
   breakpoint: 'small',
   children: null,
+  containerClassName: undefined,
   contentClassName: undefined,
+  buttonText: undefined,
   isFullscreenOnMobile: false,
   isOpen: false,
   onDialogOpen: undefined,

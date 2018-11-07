@@ -5,7 +5,7 @@ import { routerShape, locationShape } from 'react-router';
 import ExternalLink from './ExternalLink';
 import DisruptionInfo from './DisruptionInfo';
 import NavbarLinks from './NavbarLinks';
-import NavbarSettings from './NavbarSettings';
+import SelectMapLayersDialog from './SelectMapLayersDialog';
 import Icon from './Icon';
 import ComponentUsageExample from './ComponentUsageExample';
 import LangSelect from './LangSelect';
@@ -68,11 +68,12 @@ const AppBarLarge = (
           </div>
         )}
         <div className="empty-space flex-grow" />
-        {config.navbarSettings && (
-          <div className="navi-buttons right-border navi-margin">
-            <NavbarSettings />
-          </div>
-        )}
+        {config.mapTrackingButtons &&
+          config.mapTrackingButtons.altPosition && (
+            <div className="navi-buttons right-border navi-margin">
+              <SelectMapLayersDialog />
+            </div>
+          )}
         <div className="navi-languages right-border navi-margin">
           <LangSelect />
         </div>

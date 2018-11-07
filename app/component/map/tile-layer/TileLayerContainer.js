@@ -59,12 +59,6 @@ class TileLayerContainer extends GridLayer {
       .unix(),
   };
 
-  componentWillReceiveProps(nextProps) {
-    if (this.props.layers.length !== nextProps.layers.length) {
-      this.dirty = true;
-    }
-  }
-
   componentWillMount() {
     super.componentWillMount();
     this.context.getStore('TimeStore').addChangeListener(this.onTimeChange);
@@ -73,10 +67,6 @@ class TileLayerContainer extends GridLayer {
   componentDidUpdate(prevProps) {
     if (this.context.popupContainer != null) {
       this.context.popupContainer.openPopup();
-    }
-    if (this.dirty) {
-      this.dirty = false;
-      this.leafletElement.redraw();
     }
     if (!isEqual(prevProps.mapLayers, this.props.mapLayers)) {
       this.context.map.removeEventParent(this.leafletElement);

@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import connectToStores from 'fluxible-addons-react/connectToStores';
 
 import TileLayerContainer from './TileLayerContainer';
 import CityBikes from './CityBikes';
@@ -14,12 +13,7 @@ class VectorTileLayerContainer extends React.Component {
     this.state = {};
   }
 
-  navbarSettingsEnabled = (item) => {
-    const { navbarSettings } = this.props;
-    return (!navbarSettings || navbarSettings[item] !== false);
-  }
-
-  render () {
+  render() {
     const { showStops, hilightedStops, disableMapTracking } = this.props;
     const { config } = this.context;
     const layers = [];
@@ -27,15 +21,15 @@ class VectorTileLayerContainer extends React.Component {
     if (showStops) {
       layers.push(Stops);
 
-      if (config.cityBike && config.cityBike.showCityBikes && this.navbarSettingsEnabled('cityBikes')) {
+      if (config.cityBike && config.cityBike.showCityBikes) {
         layers.push(CityBikes);
       }
 
-      if (config.parkAndRide && config.parkAndRide.showParkAndRide && this.navbarSettingsEnabled('parkAndRide')) {
+      if (config.parkAndRide && config.parkAndRide.showParkAndRide) {
         layers.push(ParkAndRide);
       }
 
-      if (config.ticketSales && config.ticketSales.showTicketSales && this.navbarSettingsEnabled('ticketSales')) {
+      if (config.ticketSales && config.ticketSales.showTicketSales) {
         layers.push(TicketSales);
       }
     }
@@ -57,16 +51,10 @@ VectorTileLayerContainer.propTypes = {
   hilightedStops: PropTypes.arrayOf(PropTypes.string.isRequired),
   disableMapTracking: PropTypes.func,
   showStops: PropTypes.bool,
-  navbarSettings: PropTypes.oneOfType([
-    PropTypes.object,
-    PropTypes.bool
-  ]),
 };
 
 VectorTileLayerContainer.contextTypes = {
   config: PropTypes.object.isRequired,
 };
 
-export default connectToStores(VectorTileLayerContainer, ['NavbarSettingsStore'], context => ({
-  navbarSettings: context.getStore('NavbarSettingsStore').getNavbarSettings(),
-}));
+export default VectorTileLayerContainer;

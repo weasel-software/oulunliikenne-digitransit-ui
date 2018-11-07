@@ -22,6 +22,12 @@ class MapLayerStore extends Store {
       servicePoint: true,
       ticketMachine: true,
     },
+    parkingStations: true,
+    disorders: true,
+    roadworks: true,
+    cameraStations: true,
+    weatherStations: true,
+    tmsStations: true,
   };
 
   static handlers = {
@@ -67,17 +73,23 @@ export const mapLayerShape = PropTypes.shape({
     rail: PropTypes.bool,
     subway: PropTypes.bool,
     tram: PropTypes.bool,
-  }).isRequired,
+  }),
   terminal: PropTypes.shape({
     bus: PropTypes.bool,
     rail: PropTypes.bool,
     subway: PropTypes.bool,
-  }).isRequired,
+  }),
   ticketSales: PropTypes.shape({
     salesPoint: PropTypes.bool,
     servicePoint: PropTypes.bool,
     ticketMachine: PropTypes.bool,
-  }).isRequired,
+  }),
+  parkingStations: PropTypes.bool,
+  disorders: PropTypes.bool,
+  roadworks: PropTypes.bool,
+  cameraStations: PropTypes.bool,
+  weatherStations: PropTypes.bool,
+  tmsStations: PropTypes.bool,
 });
 
 export default MapLayerStore;
