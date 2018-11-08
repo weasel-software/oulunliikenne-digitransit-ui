@@ -6,7 +6,7 @@ const APP_TITLE = 'Reittiopas';
 
 const OTP_URL =
   process.env.OTP_URL ||
-  'https://tq9dvlsfdk.execute-api.eu-central-1.amazonaws.com/dev';
+  'https://34i4d4eq8g.execute-api.eu-central-1.amazonaws.com/dev';
 const API_URL = process.env.API_URL || 'https://dev-api.digitransit.fi';
 const MAP_URL =
   process.env.MAP_URL || 'https://digitransit-dev-cdn-origin.azureedge.net';
