@@ -5,13 +5,18 @@ import { routerShape, locationShape } from 'react-router';
 import ExternalLink from './ExternalLink';
 import DisruptionInfo from './DisruptionInfo';
 import NavbarLinks from './NavbarLinks';
-import SelectMapLayersDialog from './SelectMapLayersDialog';
 import Icon from './Icon';
 import ComponentUsageExample from './ComponentUsageExample';
 import LangSelect from './LangSelect';
 import ModeSelect from './ModeSelect';
+import SelectMapLayersDialog from './SelectMapLayersDialog';
 import MessageBar from './MessageBar';
 import { isBrowser } from '../util/browser';
+import {
+  getStreetMode,
+  setStreetMode,
+  getAvailableStreetModeConfigs,
+} from '../util/modeUtils';
 
 const AppBarLarge = (
   { titleClicked, logo },
@@ -64,7 +69,13 @@ const AppBarLarge = (
         </button>
         {config.availableModes && (
           <div className="navi-modes padding-left-large navi-margin">
-            <ModeSelect />
+            <ModeSelect
+              selectedStreetMode={getStreetMode(router.location, config)}
+              selectStreetMode={(streetMode, isExclusive) =>
+                setStreetMode(streetMode, config, router, isExclusive)
+              }
+              streetModeConfigs={getAvailableStreetModeConfigs(config)}
+            />
           </div>
         )}
         <div className="empty-space flex-grow" />
