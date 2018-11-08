@@ -61,6 +61,7 @@ export default configMerger(walttiConfig, {
   roadworks: {
     showRoadworks: true,
     roadworksMinZoom: 13,
+    showLines: false,
   },
 
   disorders: {

@@ -78,6 +78,7 @@ const OriginSelector = (
             .filter(isGeocodingResult)
             .filter(notInFavouriteLocations)
             .filter(notInFavouriteStops)
+            .filter(s => s.properties.label || s.properties.name)
             .map(s => (
               <OriginSelectorRow
                 key={`o-${s.properties.label || s.properties.name}`}
