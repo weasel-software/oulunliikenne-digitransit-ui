@@ -1,0 +1,82 @@
+.bubble-dialog-component-container-alt {
+  .bubble-dialog-container {
+    bottom: none;
+    top: 2.3em;
+    right: 0;
+
+    .bubble-dialog {
+      border-radius: 0;
+
+      &.bubble-dialog--large {
+        padding: 0.5em 1.5em;
+      }
+
+      .bubble-dialog-header-container {
+        align-items: stretch;
+
+        .bubble-dialog-header {
+          font-size: 0.8rem;
+          font-weight: 900;
+          letter-spacing: 1px;
+        }
+
+        .bubble-dialog-close {
+          align-self: auto;
+          width: 1em;
+          margin: 0;
+          background-color: transparent;
+          border: none;
+
+          .icon {
+            font-size: 0.8em;
+            color: $medium-gray;
+            margin: 0;
+            vertical-align: middle;
+          }
+
+        }
+      }
+
+      .bubble-dialog-content {
+        color: $gray;
+
+        .toggle-item {
+          margin: 0 0 0.8em;
+          label {
+          color: $gray !important;
+          text-align: left;
+        }
+
+        &>div>div {
+          margin-left: 30px !important;
+        }
+      }
+
+      }
+    }
+
+    .bubble-dialog-tip-container {
+      display: none;
+    }
+  }
+
+  .bubble-dialog-toggle {
+    width: auto;
+    height: auto;
+    padding: 0 6px;
+    font-size: $font-size-xxsmall;
+    line-height: 1.7em;
+    color: $white;
+    background-color: transparent;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+
+    .icon {
+      width: 1em;
+      height: 1em;
+      display: inline-block;
+      color: $white;
+      margin-left: 8px;
+      vertical-align: -2px;
+    }
+  }
+}

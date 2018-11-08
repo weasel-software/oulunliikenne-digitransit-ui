@@ -58,32 +58,32 @@ class TileContainer {
           Layer.getName() === 'parkingStations' &&
           this.coords.z >= config.parkingStations.parkingStationsMinZoom
         ) {
-          return true;
+          return isEnabled;
         } else if (
           Layer.getName() === 'roadworks' &&
           this.coords.z >= config.roadworks.roadworksMinZoom
         ) {
-          return true;
+          return isEnabled;
         } else if (
           Layer.getName() === 'disorders' &&
           this.coords.z >= config.disorders.disordersMinZoom
         ) {
-          return true;
+          return isEnabled;
         } else if (
           Layer.getName() === 'cameraStations' &&
           this.coords.z >= config.cameraStations.cameraStationsMinZoom
         ) {
-          return true;
+          return isEnabled;
         } else if (
           Layer.getName() === 'weatherStations' &&
           this.coords.z >= config.weatherStations.weatherStationsMinZoom
         ) {
-          return true;
+          return isEnabled;
         } else if (
           Layer.getName() === 'tmsStations' &&
           this.coords.z >= config.tmsStations.tmsStationsMinZoom
         ) {
-          return true;
+          return isEnabled;
         }
         return false;
       })

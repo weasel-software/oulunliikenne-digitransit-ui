@@ -173,7 +173,8 @@ class MapWithTrackingStateHandler extends React.Component {
         leafletObjs={leafletObjs}
       >
         {children}
-        {config.showMapTrackingButtons && (
+        {(!config.mapTrackingButtons ||
+          !config.mapTrackingButtons.altPosition) && (
           <div className="map-with-tracking-buttons">
             {renderCustomButtons && renderCustomButtons()}
             {this.props.position.hasLocation && (

@@ -134,12 +134,21 @@ $content-background-color: $background-color;
     display: inline-block;
     text-transform: uppercase;
     cursor: pointer;
-    padding: 2px 8px;
-    margin: 0px 2px;
+    padding: 0 3px;
+    margin: 0 5px;
     vertical-align: bottom;
+    background-color: transparent;
     &.selected {
       border-radius: 3px;
       background-color: rgba($white, 0.15);
+    }
+    .icon-holder {
+      padding: 0.5em 0.4em 0.3em;
+    }
+    .icon {
+      color: inherit;
+      vertical-align: inherit;
+      font-size: 1.4em;
     }
   }
 }
