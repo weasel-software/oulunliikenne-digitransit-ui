@@ -3,6 +3,7 @@ import React from 'react';
 import ComponentUsageExample from './ComponentUsageExample';
 import ToggleButton from './ToggleButton';
 import { isKeyboardSelectionEvent } from '../util/browser';
+import { isBrowser } from '../util/browser';
 
 class ModeSelect extends React.Component {
   constructor(props) {
@@ -66,7 +67,10 @@ class ModeSelect extends React.Component {
   }
 
   render() {
-    return <div id="mode-select">{this.getButtons()}</div>;
+    if (isBrowser) {
+      return <div id="mode-select">{this.getButtons()}</div>;
+    }
+    return null;
   }
 }
 

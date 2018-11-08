@@ -65,7 +65,7 @@ function RouteNumber(props, context) {
       <span
         className={cx('vcenter-children', props.className)}
         aria-label={context.intl.formatMessage({
-          id: mode,
+          id: props.mode.toLowerCase(),
           defaultMessage: 'Vehicle',
         })}
       >
