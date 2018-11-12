@@ -71,6 +71,7 @@ class DTAutosuggestPanel extends React.Component {
     updateViaPoints: PropTypes.func,
     breakpoint: PropTypes.string.isRequired,
     swapOrder: PropTypes.func,
+    toggleSearch: PropTypes.func,
   };
 
   static defaultProps = {
@@ -81,6 +82,7 @@ class DTAutosuggestPanel extends React.Component {
     searchType: 'endpoint',
     swapOrder: undefined,
     updateViaPoints: () => {},
+    toggleSearch: () => {},
   };
 
   constructor(props) {
@@ -123,6 +125,7 @@ class DTAutosuggestPanel extends React.Component {
     location && location.gps === true ? 'position' : 'location';
 
   isFocused = val => {
+    this.props.toggleSearch(val);
     this.setState({ showDarkOverlay: val });
   };
 

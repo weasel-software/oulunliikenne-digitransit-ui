@@ -132,6 +132,8 @@ export default configMerger(walttiConfig, {
   availableModes: ['transport', 'walk', 'bicycle', 'car'],
   defaultMode: 'transport',
 
+  toggleableSearch: true,
+
   // Navbar logo
   logo: 'oulu/oulu-logo.png',
 

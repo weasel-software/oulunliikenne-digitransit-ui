@@ -67,6 +67,7 @@ class IndexPage extends React.Component {
     super(props);
     this.state = {
       mapExpanded: false, // Show right-now as default
+      searchFocused: false,
     };
     context.executeAction(storeOrigin, props.origin);
   }
@@ -152,6 +153,10 @@ class IndexPage extends React.Component {
     this.setState(prevState => ({ mapExpanded: !prevState.mapExpanded }));
   };
 
+  toggleSearch = val => {
+    this.setState({ searchFocused: val });
+  };
+
   renderTab = () => {
     let Tab;
     switch (this.props.tab) {
@@ -185,7 +190,7 @@ class IndexPage extends React.Component {
   render() {
     const { config, router } = this.context;
     const { breakpoint, destination, origin, routes, tab } = this.props;
-    const { mapExpanded } = this.state;
+    const { mapExpanded, searchFocused } = this.state;
 
     const footerOptions = Object.assign(
       {},
@@ -201,7 +206,13 @@ class IndexPage extends React.Component {
           origin.gpsError === false &&
           `blurred`} fullscreen bp-${breakpoint}`}
       >
-        <div className="search-container">
+        <div
+          className={cx('search-container', {
+            minimized:
+              config.toggleableSearch &&
+              !(origin.set || destination.set || searchFocused),
+          })}
+        >
           <DTAutosuggestPanel
             origin={origin}
             destination={destination}
@@ -209,6 +220,7 @@ class IndexPage extends React.Component {
             searchType="all"
             originPlaceHolder="search-origin"
             destinationPlaceHolder="search-destination"
+            toggleSearch={this.toggleSearch}
           />
         </div>
         <div key="foo" className="fpccontainer">

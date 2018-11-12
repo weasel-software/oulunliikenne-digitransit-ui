@@ -28,11 +28,25 @@ $item-border-color: #eee;
   position: absolute;
   width: 52.5%;
   z-index: index($zindex, search-panel);
+  transition: width 0.5s;
 
   & .autosuggest-input-container,
   & .street-mode-selector-popup-options,
   & .street-mode-selector-popup-toggle {
     pointer-events: auto;
+  }
+
+  &.minimized {
+    width: 50px;
+
+    input.react-autosuggest__input {
+      padding-right: 0;
+    }
+
+    button.clear-input {
+      padding-left: 8px;
+      padding-right: 15px;
+    }
   }
 }
 
