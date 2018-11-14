@@ -133,6 +133,7 @@ export default configMerger(walttiConfig, {
   defaultMode: 'transport',
 
   toggleableSearch: true,
+  toggleableFavourites: true,
 
   // Navbar logo
   logo: 'oulu/oulu-logo.png',

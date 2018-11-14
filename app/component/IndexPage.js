@@ -36,6 +36,7 @@ import SelectStreetModeDialog from './SelectStreetModeDialog';
 import events from '../util/events';
 import * as ModeUtils from '../util/modeUtils';
 import withBreakpoint from '../util/withBreakpoint';
+import ContentToggle from './ContentToggle'
 
 const debug = d('IndexPage.js');
 
@@ -67,7 +68,6 @@ class IndexPage extends React.Component {
     super(props);
     this.state = {
       mapExpanded: false, // Show right-now as default
-      searchFocused: false,
     };
     context.executeAction(storeOrigin, props.origin);
   }
@@ -153,10 +153,6 @@ class IndexPage extends React.Component {
     this.setState(prevState => ({ mapExpanded: !prevState.mapExpanded }));
   };
 
-  toggleSearch = val => {
-    this.setState({ searchFocused: val });
-  };
-
   renderTab = () => {
     let Tab;
     switch (this.props.tab) {
@@ -190,7 +186,7 @@ class IndexPage extends React.Component {
   render() {
     const { config, router } = this.context;
     const { breakpoint, destination, origin, routes, tab } = this.props;
-    const { mapExpanded, searchFocused } = this.state;
+    const { mapExpanded } = this.state;
 
     const footerOptions = Object.assign(
       {},
@@ -206,32 +202,38 @@ class IndexPage extends React.Component {
           origin.gpsError === false &&
           `blurred`} fullscreen bp-${breakpoint}`}
       >
-        <div
-          className={cx('search-container', {
-            minimized:
-              config.toggleableSearch &&
-              !(origin.set || destination.set || searchFocused),
-          })}
+        <ContentToggle
+          icon="icon_search"
+          iconClass="search-toggle"
+          toggleDisabled={!config.toggleableSearch}
+          active={origin.set || destination.set}
         >
-          <DTAutosuggestPanel
-            origin={origin}
-            destination={destination}
-            tab={tab}
-            searchType="all"
-            originPlaceHolder="search-origin"
-            destinationPlaceHolder="search-destination"
-            toggleSearch={this.toggleSearch}
-          />
-        </div>
-        <div key="foo" className="fpccontainer">
-          <FrontPagePanelLarge
-            selectedPanel={selectedMainTab}
-            nearbyClicked={this.clickNearby}
-            favouritesClicked={this.clickFavourites}
-          >
-            {this.renderTab()}
-          </FrontPagePanelLarge>
-        </div>
+          <div className="search-container">
+            <DTAutosuggestPanel
+              origin={origin}
+              destination={destination}
+              tab={tab}
+              searchType="all"
+              originPlaceHolder="search-origin"
+              destinationPlaceHolder="search-destination"
+            />
+          </div>
+        </ContentToggle>
+        <ContentToggle
+          icon="icon_star"
+          iconClass="favourites-toggle"
+          toggleDisabled={!config.toggleableFavourites}
+        >
+          <div key="foo" className="fpccontainer">
+            <FrontPagePanelLarge
+              selectedPanel={selectedMainTab}
+              nearbyClicked={this.clickNearby}
+              favouritesClicked={this.clickFavourites}
+            >
+              {this.renderTab()}
+            </FrontPagePanelLarge>
+          </div>
+        </ContentToggle>
         <MapWithTracking
           breakpoint={breakpoint}
           showStops
