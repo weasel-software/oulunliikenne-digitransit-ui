@@ -1,61 +1,78 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import connectToStores from 'fluxible-addons-react/connectToStores';
 import ComponentUsageExample from './ComponentUsageExample';
-import { setMode } from '../action/ModeActions';
+import ToggleButton from './ToggleButton';
+import { isKeyboardSelectionEvent } from '../util/browser';
 import { isBrowser } from '../util/browser';
 
-import Transport from 'material-ui/svg-icons/maps/directions-bus';
-import Car from 'material-ui/svg-icons/maps/directions-car';
-import Walk from 'material-ui/svg-icons/maps/directions-walk';
-import Bicycle from 'material-ui/svg-icons/maps/directions-bike';
+class ModeSelect extends React.Component {
+  constructor(props) {
+    super(props);
 
-const selectMode = (executeAction, mode) => () =>
-  executeAction(setMode, mode);
-
-const renderIcon = (mode) => {
-  switch(mode) {
-    case 'transport':
-      return <Transport />;
-    case 'car':
-      return <Car />;
-    case 'walk':
-      return <Walk />;
-    case 'bicycle':
-      return <Bicycle />;
-    default:
-      return null;
+    this.state = {
+      selectedStreetMode:
+        this.props.selectedStreetMode ||
+        this.props.streetModeConfigs.find(c => c.defaultValue).name,
+    };
   }
-}
 
-const mode = (mode, currentMode, highlight, executeAction) => (
-  <button
-    id={`mode-${mode}`}
-    key={mode}
-    className={`${(highlight && 'selected') || ''} noborder mode`}
-    onClick={selectMode(executeAction, mode)}
-  >
-    {renderIcon(mode)}
-  </button>
-);
+  getButtons() {
+    const { streetModeConfigs } = this.props;
+    const { selectedStreetMode } = this.state;
 
-const ModeSelect = ({ currentMode }, { executeAction, config }) => {
-  if (isBrowser) {
-    return (
-      <div key="mode-select" id="mode-select">
-        {config.availableModes.map(availableMode =>
-          mode(
-            availableMode,
-            currentMode,
-            availableMode === currentMode,
-            executeAction,
-          ),
-        )}
-      </div>
+    if (!streetModeConfigs.length) {
+      return null;
+    }
+
+    return streetModeConfigs.map(streetMode => {
+      const { exclusive, icon, name } = streetMode;
+      const isSelected = name === selectedStreetMode;
+      const labelId = `street-mode-${name.toLowerCase()}`;
+      return (
+        <ToggleButton
+          buttonRef={ref => {
+            if (ref && isSelected) {
+              this.selectedStreetModeButton = ref;
+            }
+          }}
+          className="mode"
+          checkedClass="selected"
+          icon={icon}
+          key={name}
+          label={labelId}
+          onBtnClick={() => this.selectMode(name, exclusive)}
+          onKeyDown={e =>
+            isKeyboardSelectionEvent(e) &&
+            this.selectMode(name, exclusive, true)
+          }
+          showButtonTitle={false}
+          state={isSelected}
+        />
+      );
+    });
+  }
+
+  selectMode(streetMode, isExclusive, applyFocus = false) {
+    this.setState(
+      {
+        selectedStreetMode: streetMode,
+      },
+      () => {
+        this.props.selectStreetMode(streetMode.toUpperCase(), isExclusive);
+        if (applyFocus && this.dialogRef) {
+          this.dialogRef.closeDialog(applyFocus);
+        }
+      },
     );
   }
-  return null;
-};
+
+  render() {
+    if (isBrowser) {
+      return <div id="mode-select">{this.getButtons()}</div>;
+    }
+    return null;
+  }
+}
 
 ModeSelect.displayName = 'ModeSelect';
 
@@ -64,21 +81,51 @@ ModeSelect.description = () => (
     <p>Mode selection component, mode selection comes from config.</p>
     <ComponentUsageExample description="">
       <div style={{ width: '200px', background: 'rgb(51, 51, 51)' }}>
-        <ModeSelect />
+        <ModeSelect
+          selectStreetMode={() => {}}
+          streetModeConfigs={[
+            {
+              defaultValue: true,
+              icon: 'public_transport',
+              name: 'PUBLIC_TRANSPORT',
+            },
+            {
+              defaultValue: false,
+              icon: 'walk',
+              name: 'WALK',
+            },
+            {
+              defaultValue: false,
+              icon: 'biking',
+              name: 'BICYCLE',
+            },
+            {
+              defaultValue: false,
+              icon: 'car-withoutBox',
+              name: 'CAR_PARK',
+            },
+          ]}
+        />
       </div>
     </ComponentUsageExample>
   </div>
 );
 
 ModeSelect.propTypes = {
-  currentMode: PropTypes.string.isRequired,
+  selectStreetMode: PropTypes.func.isRequired,
+  selectedStreetMode: PropTypes.string,
+  streetModeConfigs: PropTypes.arrayOf(
+    PropTypes.shape({
+      defaultValue: PropTypes.bool.isRequired,
+      icon: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+    }),
+  ),
 };
 
-ModeSelect.contextTypes = {
-  executeAction: PropTypes.func.isRequired,
-  config: PropTypes.object.isRequired,
+ModeSelect.defaultProps = {
+  selectedStreetMode: undefined,
+  streetModeConfigs: [],
 };
 
-export default connectToStores(ModeSelect, ['ModeStore'], context => ({
-  currentMode: context.getStore('ModeStore').getMode(),
-}));
+export default ModeSelect;

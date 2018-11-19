@@ -10,6 +10,8 @@ const OTP_URL =
 const API_URL = process.env.API_URL || 'https://dev-api.digitransit.fi';
 const MAP_URL =
   process.env.MAP_URL || 'https://digitransit-dev-cdn-origin.azureedge.net';
+const AWS_MAP_URL =
+  process.env.AWS_MAP_URL || 'https://d2lk9qao4tzpwi.cloudfront.net';
 
 const walttiConfig = require('./waltti').default;
 
@@ -32,36 +34,45 @@ export default configMerger(walttiConfig, {
     MQTT: 'TODO.iot.eu-central-1.amazonaws.com',
     STOP_MAP: `${MAP_URL}/map/v1/waltti-stop-map/`,
     CITYBIKE_MAP: `${MAP_URL}/map/v1/waltti-citybike-map/`,
-    PARKING_STATIONS_MAP:
-      'https://zokovzbuuk.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
-    CAMERASTATIONS_MAP:
-      'https://qp3yfqwir6.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
-    ROADWORKS_MAP:
-      'https://83q6jsdp5f.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
-    DISORDERS_MAP:
-      'https://7ss2ymr8jf.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
+    PARKING_STATIONS_MAP: `${AWS_MAP_URL}/map/carparks/`,
+    CAMERASTATIONS_MAP: `${AWS_MAP_URL}/map/cameras/`,
+    ROADWORKS_MAP: `${AWS_MAP_URL}/map/roadworks/`,
+    DISORDERS_MAP: `${AWS_MAP_URL}/map/disruptions/`,
+    WEATHER_STATIONS_MAP: `${AWS_MAP_URL}/map/weatherstations/`,
+    TMS_STATIONS_MAP: `${AWS_MAP_URL}/map/tmsstations/`,
+  },
+
+  tmsStations: {
+    showTmsStations: true,
+    tmsStationsMinZoom: 13,
+  },
+
+  weatherStations: {
+    showWeatherStations: true,
+    weatherStationsMinZoom: 13,
   },
 
   parkingStations: {
-    showParkingStations: false,
-    parkingStationsMinZoom: 12,
+    showParkingStations: true,
+    parkingStationsMinZoom: 13,
     smallIconMinZoom: 14,
     availabilityThreshold: 0.25,
   },
 
   cameraStations: {
-    showCameraStations: false,
-    cameraStationsMinZoom: 12,
+    showCameraStations: true,
+    cameraStationsMinZoom: 13,
   },
 
   roadworks: {
-    showRoadworks: false,
-    roadworksMinZoom: 12,
+    showRoadworks: true,
+    roadworksMinZoom: 13,
+    showLines: false,
   },
 
   disorders: {
-    showDisorders: false,
-    disordersMinZoom: 12,
+    showDisorders: true,
+    disordersMinZoom: 13,
     showLines: false,
   },
 
@@ -72,13 +83,6 @@ export default configMerger(walttiConfig, {
   defaultMapCenter: {
     lat: 65.01236,
     lon: 25.46816,
-  },
-
-  navbarSettings: {
-    disruptions: false,
-    roadworks: false,
-    parking: false,
-    cameras: false,
   },
 
   appBarLinks: false,
@@ -134,6 +138,9 @@ export default configMerger(walttiConfig, {
   availableModes: ['transport', 'walk', 'bicycle', 'car'],
   defaultMode: 'transport',
 
+  toggleableSearch: true,
+  toggleableFavourites: true,
+
   // Navbar logo
   logo: 'oulu/oulu-logo.png',
 
@@ -154,6 +161,16 @@ export default configMerger(walttiConfig, {
 
   defaultSettings: {
     walkBoardCost: 900,
+  },
+
+  mapTrackingButtons: {
+    altPosition: true,
+    layers: {
+      containerClassName: 'bubble-dialog-component-container-alt',
+      headerId: 'motorist',
+      icon: 'settings',
+      buttonText: 'settings',
+    },
   },
 
   defaultOrigins: [

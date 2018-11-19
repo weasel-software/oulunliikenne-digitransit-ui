@@ -1,3 +1,4 @@
+import ceil from 'lodash/ceil';
 import moment from 'moment';
 
 const AWS = require('aws-sdk');
@@ -19,7 +20,7 @@ function getTopic(options) {
   return `/hfp/v1/journey/ongoing/+/+/${routeId}`;
 }
 
-function parseMessage(topic, message, actionContext) {
+export function parseMessage(topic, message, actionContext) {
   let parsedMessage;
   const [
     ,
@@ -53,17 +54,16 @@ function parseMessage(topic, message, actionContext) {
     operatingDay:
       parsedMessage.oday && parsedMessage.oday !== 'XXX'
         ? parsedMessage.oday
-        : moment().format('YYYYMMDD'),
+        : moment().format('YYYY-MM-DD'),
     mode: modeTranslate[transportMode]
       ? modeTranslate[transportMode]
       : transportMode,
-    delay: parsedMessage.dl, // we don't have this data
     next_stop: parsedMessage.nxt,
     stop_index: parsedMessage.stop_index,
     timestamp: parsedMessage.tsi,
-    lat: parsedMessage.lat && parsedMessage.lat.toFixed(5),
-    long: parsedMessage.long && parsedMessage.long.toFixed(5),
-    heading: parsedMessage.hdg, // we don't have this data
+    lat: parsedMessage.lat && ceil(parsedMessage.lat, 5),
+    long: parsedMessage.long && ceil(parsedMessage.long, 5),
+    heading: parsedMessage.hdg,
   };
 
   actionContext.dispatch('RealTimeClientMessage', {

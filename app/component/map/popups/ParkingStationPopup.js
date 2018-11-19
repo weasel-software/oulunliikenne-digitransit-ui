@@ -9,7 +9,10 @@ import CardHeader from '../../CardHeader';
 import ComponentUsageExample from '../../ComponentUsageExample';
 
 class ParkingStationPopup extends React.Component {
-  static contextTypes = { intl: intlShape.isRequired };
+  static contextTypes = {
+    intl: intlShape.isRequired,
+    config: PropTypes.object.isRequired,
+  };
 
   static description = (
     <div>
@@ -27,7 +30,9 @@ class ParkingStationPopup extends React.Component {
   };
 
   render() {
-    const {station: {name, spacesAvailable, maxCapacity, realtime, lon, lat}} = this.props;
+    const {
+      station: { name, spacesAvailable, maxCapacity, realtime, lon, lat },
+    } = this.props;
 
     return (
       <div className="card">
@@ -41,19 +46,24 @@ class ParkingStationPopup extends React.Component {
             icon="icon-icon_parking-station"
             unlinked
           />
-          {realtime &&
+          {realtime && (
             <ParkingStationAvailability
               realtime={realtime}
               maxCapacity={maxCapacity}
               spacesAvailable={spacesAvailable}
+              fewAvailableCount={
+                maxCapacity *
+                (this.context.config.parkingStations.availabilityThreshold ||
+                  0.25)
+              }
             />
-          }
+          )}
         </Card>
         <MarkerPopupBottom
           location={{
             address: name,
-            lat: lat,
-            lon: lon,
+            lat,
+            lon,
           }}
         />
       </div>

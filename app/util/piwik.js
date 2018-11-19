@@ -8,7 +8,7 @@ function loadPiwik(config) {
   g.type = 'text/javascript';
   g.async = true;
   g.defer = true;
-  g.src = config.PIWIK_ADDRESS.replace('.php', '.js');
+  g.src = `//cdn.matomo.cloud/${config.PIWIK_ADDRESS}/piwik.js`;
   document.getElementsByTagName('body')[0].appendChild(g);
 }
 
@@ -16,11 +16,13 @@ export default function createPiwik(config, raven) {
   let visitorId;
 
   window._paq.push(['enableLinkTracking']);
-  window._paq.push(['setTrackerUrl', config.PIWIK_ADDRESS]);
+  window._paq.push([
+    'setTrackerUrl',
+    `https://${config.PIWIK_ADDRESS}/piwik.php`,
+  ]);
   window._paq.push(['setSiteId', config.PIWIK_ID]);
   window._paq.push(['setCustomVariable', 4, 'commit_id', COMMIT_ID, 'visit']);
   window._paq.push(['setCustomVariable', 5, 'build_time', BUILD_TIME, 'visit']);
-  window._paq.push(['trackPageView']);
   window._paq.push([
     function configureVisitorId() {
       visitorId = this.getVisitorId();
@@ -31,11 +33,14 @@ export default function createPiwik(config, raven) {
   ]);
 
   const piwik = {};
-  ['setCustomUrl', 'setCustomVariable', 'trackEvent', 'trackPageView'].forEach(
-    i => {
-      piwik[i] = (...args) => window._paq.push([i, ...args]);
-    },
-  );
+  // ['setCustomUrl', 'setCustomVariable', 'trackEvent', 'trackPageView'].forEach(
+  ['setCustomUrl', 'setCustomVariable', 'trackPageView'].forEach(i => {
+    piwik[i] = (...args) => window._paq.push([i, ...args]);
+  });
+
+  // Disabled event tracking temporarely
+  piwik.trackEvent = () => null;
+
   /* eslint-enable no-underscore-dangle */
 
   piwik.getVisitorId = () => visitorId;

@@ -5,14 +5,19 @@ import { routerShape, locationShape } from 'react-router';
 import ExternalLink from './ExternalLink';
 import DisruptionInfo from './DisruptionInfo';
 import NavbarLinks from './NavbarLinks';
-import NavbarSettings from './NavbarSettings';
 import MoreInfoModal from './MoreInfoModal';
 import Icon from './Icon';
 import ComponentUsageExample from './ComponentUsageExample';
 import LangSelect from './LangSelect';
 import ModeSelect from './ModeSelect';
+import SelectMapLayersDialog from './SelectMapLayersDialog';
 import MessageBar from './MessageBar';
 import { isBrowser } from '../util/browser';
+import {
+  getStreetMode,
+  setStreetMode,
+  getAvailableStreetModeConfigs,
+} from '../util/modeUtils';
 
 const AppBarLarge = (
   { titleClicked, logo },
@@ -65,15 +70,22 @@ const AppBarLarge = (
         </button>
         {config.availableModes && (
           <div className="navi-modes padding-left-large navi-margin">
-            <ModeSelect />
+            <ModeSelect
+              selectedStreetMode={getStreetMode(router.location, config)}
+              selectStreetMode={(streetMode, isExclusive) =>
+                setStreetMode(streetMode, config, router, isExclusive)
+              }
+              streetModeConfigs={getAvailableStreetModeConfigs(config)}
+            />
           </div>
         )}
         <div className="empty-space flex-grow" />
-        {config.navbarSettings && (
-          <div className="navi-buttons right-border navi-margin">
-            <NavbarSettings />
-          </div>
-        )}
+        {config.mapTrackingButtons &&
+          config.mapTrackingButtons.altPosition && (
+            <div className="navi-buttons right-border navi-margin">
+              <SelectMapLayersDialog />
+            </div>
+          )}
         <div className="navi-languages right-border navi-margin">
           <LangSelect />
         </div>
@@ -101,7 +113,7 @@ const AppBarLarge = (
                 defaultMessage: 'Disruptions',
               })}
             >
-              <Icon img="icon-icon_caution" />
+              <Icon img="icon-icon_caution" pointerEvents />
             </a>
           </div>
         )}

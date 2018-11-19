@@ -284,6 +284,24 @@ export function drawParkAndRideIcon(tile, geom, width, height) {
   );
 }
 
+export function drawWeatherStationIcon(tile, geom, imageSize) {
+  getImageFromSpriteCache(
+    'icon-icon_weather-station',
+    imageSize,
+    imageSize,
+  ).then(image => {
+    drawIconImage(image, tile, geom, imageSize, imageSize);
+  });
+}
+
+export function drawTmsStationIcon(tile, geom, imageSize) {
+  getImageFromSpriteCache('icon-icon_tms-station', imageSize, imageSize).then(
+    image => {
+      drawIconImage(image, tile, geom, imageSize, imageSize);
+    },
+  );
+}
+
 export function drawCitybikeIcon(tile, geom, imageSize) {
   return getImageFromSpriteCache(
     'icon-icon_citybike',
