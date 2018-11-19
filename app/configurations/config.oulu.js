@@ -10,6 +10,8 @@ const OTP_URL =
 const API_URL = process.env.API_URL || 'https://dev-api.digitransit.fi';
 const MAP_URL =
   process.env.MAP_URL || 'https://digitransit-dev-cdn-origin.azureedge.net';
+const AWS_MAP_URL =
+  process.env.AWS_MAP_URL || 'https://d2lk9qao4tzpwi.cloudfront.net';
 
 const walttiConfig = require('./waltti').default;
 
@@ -22,18 +24,12 @@ export default configMerger(walttiConfig, {
     OTP: OTP_URL,
     STOP_MAP: `${MAP_URL}/map/v1/waltti-stop-map/`,
     CITYBIKE_MAP: `${MAP_URL}/map/v1/waltti-citybike-map/`,
-    PARKING_STATIONS_MAP:
-      'https://zokovzbuuk.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
-    CAMERASTATIONS_MAP:
-      'https://qp3yfqwir6.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
-    ROADWORKS_MAP:
-      'https://83q6jsdp5f.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
-    DISORDERS_MAP:
-      'https://7ss2ymr8jf.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
-    WEATHER_STATIONS_MAP:
-      'https://p43v3i88yj.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
-    TMS_STATIONS_MAP:
-      'https://syiky3xel7.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
+    PARKING_STATIONS_MAP: `${AWS_MAP_URL}/map/carparks/`,
+    CAMERASTATIONS_MAP: `${AWS_MAP_URL}/map/cameras/`,
+    ROADWORKS_MAP: `${AWS_MAP_URL}/map/roadworks/`,
+    DISORDERS_MAP: `${AWS_MAP_URL}/map/disruptions/`,
+    WEATHER_STATIONS_MAP: `${AWS_MAP_URL}/map/weatherstations/`,
+    TMS_STATIONS_MAP: `${AWS_MAP_URL}/map/tmsstations/`,
   },
 
   tmsStations: {
