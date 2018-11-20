@@ -30,7 +30,7 @@ export default configMerger(walttiConfig, {
     DISORDERS_MAP: `${AWS_MAP_URL}/map/disruptions/`,
     WEATHER_STATIONS_MAP: `${AWS_MAP_URL}/map/weatherstations/`,
     TMS_STATIONS_MAP: `${AWS_MAP_URL}/map/tmsstations/`,
-    ROAD_CONDITIONS_MAP: `${AWS_MAP_URL}/map/road-conditions/`,
+    ROAD_CONDITIONS_MAP: `${AWS_MAP_URL}/map/roadconditions/`,
   },
 
   tmsStations: {
