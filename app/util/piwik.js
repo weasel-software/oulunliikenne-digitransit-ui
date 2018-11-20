@@ -8,7 +8,7 @@ function loadPiwik(config) {
   g.type = 'text/javascript';
   g.async = true;
   g.defer = true;
-  g.src = config.PIWIK_ADDRESS.replace('.php', '.js');
+  g.src = `//cdn.matomo.cloud/${config.PIWIK_ADDRESS}/piwik.js`;
   document.getElementsByTagName('body')[0].appendChild(g);
 }
 
@@ -16,7 +16,10 @@ export default function createPiwik(config, raven) {
   let visitorId;
 
   window._paq.push(['enableLinkTracking']);
-  window._paq.push(['setTrackerUrl', config.PIWIK_ADDRESS]);
+  window._paq.push([
+    'setTrackerUrl',
+    `https://${config.PIWIK_ADDRESS}/piwik.php`,
+  ]);
   window._paq.push(['setSiteId', config.PIWIK_ID]);
   window._paq.push(['setCustomVariable', 4, 'commit_id', COMMIT_ID, 'visit']);
   window._paq.push(['setCustomVariable', 5, 'build_time', BUILD_TIME, 'visit']);

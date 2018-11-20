@@ -14,6 +14,8 @@ ENV \
   PORT=8080 \
   API_URL='' \
   MAP_URL='' \
+  AWS_MAP_URL='' \
+  MQTT_URL='' \
   OTP_URL='' \
   ALERTS_URL='' \
   VEHICLE_URL='' \
