@@ -33,6 +33,7 @@ import TicketSalesPopup from '../popups/TicketSalesPopup';
 import CameraStationPopup from '../popups/CameraStationPopup';
 import RoadworkPopup from '../popups/RoadworkPopup';
 import DisorderPopup from '../popups/DisorderPopup';
+import RoadConditionPopup from '../popups/RoadConditionPopup';
 import LocationPopup from '../popups/LocationPopup';
 import TileContainer from './TileContainer';
 import Loading from '../../Loading';
@@ -247,13 +248,15 @@ class TileLayerContainer extends GridLayer {
               renderFetched={data => <CityBikePopup {...data} />}
             />
           );
-        } else if (this.state.selectableTargets[0].layer === 'parkingStations') {
+        } else if (
+          this.state.selectableTargets[0].layer === 'parkingStations'
+        ) {
           ({ id } = this.state.selectableTargets[0].feature.properties);
           contents = (
             <Relay.RootContainer
               Component={ParkingStationPopup}
               forceFetch
-              route={new ParkingStationRoute({ id: id })}
+              route={new ParkingStationRoute({ id })}
               renderLoading={loadingPopup}
               renderFetched={data => <ParkingStationPopup {...data} />}
             />
@@ -367,6 +370,13 @@ class TileLayerContainer extends GridLayer {
               route={new DisorderRoute({ id })}
               renderLoading={loadingPopup}
               renderFetched={data => <DisorderPopup {...data} />}
+            />
+          );
+        } else if (this.state.selectableTargets[0].layer === 'roadConditions') {
+          id = this.state.selectableTargets[0].feature.properties.FID;
+          contents = (
+            <RoadConditionPopup
+              {...this.state.selectableTargets[0].feature.properties}
             />
           );
         }

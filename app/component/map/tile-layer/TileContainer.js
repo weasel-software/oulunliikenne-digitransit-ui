@@ -84,6 +84,11 @@ class TileContainer {
           this.coords.z >= config.tmsStations.tmsStationsMinZoom
         ) {
           return isEnabled;
+        } else if (
+          Layer.getName() === 'roadConditions' &&
+          this.coords.z >= config.roadConditions.roadConditionsMinZoom
+        ) {
+          return isEnabled;
         }
         return false;
       })

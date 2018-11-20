@@ -12,6 +12,7 @@ import Roadworks from './Roadworks';
 import Disorders from './Disorders';
 import WeatherStations from './WeatherStations';
 import TmsStations from './TmsStations';
+import RoadConditions from './RoadConditions';
 
 class VectorTileLayerContainer extends React.Component {
   constructor(props, context) {
@@ -46,23 +47,14 @@ class VectorTileLayerContainer extends React.Component {
         layers.push(ParkingStations);
       }
 
-      if (
-        config.cameraStations &&
-        config.cameraStations.showCameraStations
-      ) {
+      if (config.cameraStations && config.cameraStations.showCameraStations) {
         layers.push(CameraStations);
       }
 
-      if (
-        config.roadworks &&
-        config.roadworks.showRoadworks
-      ) {
+      if (config.roadworks && config.roadworks.showRoadworks) {
         layers.push(Roadworks);
       }
-      if (
-        config.disorders &&
-        config.disorders.showDisorders
-      ) {
+      if (config.disorders && config.disorders.showDisorders) {
         layers.push(Disorders);
       }
 
@@ -73,11 +65,12 @@ class VectorTileLayerContainer extends React.Component {
         layers.push(WeatherStations);
       }
 
-      if (
-        config.tmsStations &&
-        config.tmsStations.showTmsStations
-      ) {
+      if (config.tmsStations && config.tmsStations.showTmsStations) {
         layers.push(TmsStations);
+      }
+
+      if (config.roadConditions && config.roadConditions.showRoadConditions) {
+        layers.push(RoadConditions);
       }
     }
 

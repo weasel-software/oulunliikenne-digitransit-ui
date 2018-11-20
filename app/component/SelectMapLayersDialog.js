@@ -107,6 +107,7 @@ class SelectMapLayersDialog extends React.Component {
       cameraStations,
       weatherStations,
       tmsStations,
+      roadConditions,
     },
     config,
   ) => {
@@ -262,6 +263,17 @@ class SelectMapLayersDialog extends React.Component {
                 }
               />
             )}
+          {config.roadConditions &&
+            config.roadConditions.showRoadConditions && (
+              <InputField
+                checked={roadConditions}
+                labelId="traffic-monitoring"
+                defaultMessage="Traffic monitoring"
+                onChange={e =>
+                  this.updateSetting({ roadConditions: e.target.checked })
+                }
+              />
+            )}
         </div>
         {config.ticketSales &&
           config.ticketSales.showTicketSales && (
@@ -352,6 +364,9 @@ const mapLayersConfigShape = PropTypes.shape({
   }),
   disorders: PropTypes.shape({
     showDisorders: PropTypes.bool,
+  }),
+  roadConditions: PropTypes.shape({
+    showRoadConditions: PropTypes.bool,
   }),
   ticketSales: PropTypes.shape({
     showTicketSales: PropTypes.bool,

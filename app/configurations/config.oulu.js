@@ -34,6 +34,8 @@ export default configMerger(walttiConfig, {
       'https://p43v3i88yj.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
     TMS_STATIONS_MAP:
       'https://syiky3xel7.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
+    ROAD_CONDITIONS_MAP:
+      'https://p43v3i88yj.execute-api.eu-central-1.amazonaws.com/dev/road-conditions/vtpbf/'
   },
 
   tmsStations: {
@@ -68,6 +70,12 @@ export default configMerger(walttiConfig, {
     showDisorders: true,
     disordersMinZoom: 13,
     showLines: false,
+  },
+
+  roadConditions: {
+    showRoadConditions: true,
+    roadConditionsMinZoom: 13,
+    showLines: true,
   },
 
   feedIds: ['OULU'],
