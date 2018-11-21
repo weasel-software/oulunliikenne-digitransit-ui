@@ -89,38 +89,56 @@ export default configMerger(walttiConfig, {
     lon: 25.46816,
   },
 
-  appBarLinks: false,
-  /* appBarLinks: {
+  // appBarLinks: false,
+  appBarLinks: {
     fi: {
-      text: 'Suomeksi lorem ipsum dolor sit amet, tristique mollis nec vitae lorem aenean, in maecenas lobortis volutpat ac vel cursus.',
+      text:
+        'Suomeksi lorem ipsum dolor sit amet, tristique mollis nec vitae lorem aenean, in maecenas lobortis volutpat ac vel cursus.',
       links: [
-        { name: 'Oulun joukkoliikenne', href: 'https://www.oulunjoukkoliikenne.fi/' },
-        { name: 'Lentoliikenne (Finavia)', href: 'https://www.finavia.fi/fi' },
+        {
+          name: 'Oulun joukkoliikenne',
+          href: 'https://www.oulunjoukkoliikenne.fi/',
+        },
+        {
+          name: 'Oulun kaupungin dataportaali',
+          href: 'https://data.ouka.fi/fi/',
+        },
       ],
     },
     sv: {
-      text: 'På svenska lorem ipsum dolor sit amet, tristique mollis nec vitae lorem aenean, in maecenas lobortis volutpat ac vel cursus.',
+      text:
+        'På svenska lorem ipsum dolor sit amet, tristique mollis nec vitae lorem aenean, in maecenas lobortis volutpat ac vel cursus.',
       links: [
-        { name: 'Uleåborgs kollektivtrafik', href: 'https://www.oulunjoukkoliikenne.fi/english' },
-        { name: 'Flygtrafik (Finavia)', href: 'https://www.finavia.fi/sv' },
+        {
+          name: 'Uleåborgs kollektivtrafik',
+          href: 'https://www.oulunjoukkoliikenne.fi/english',
+        },
+        {
+          name: 'City of Oulun dataportal',
+          href: 'https://data.ouka.fi/en_gb/',
+        },
       ],
     },
     en: {
-      text: 'In English lorem ipsum dolor sit amet, tristique mollis nec vitae lorem aenean, in maecenas lobortis volutpat ac vel cursus.',
+      text:
+        'In English lorem ipsum dolor sit amet, tristique mollis nec vitae lorem aenean, in maecenas lobortis volutpat ac vel cursus.',
       links: [
-        { name: 'Oulu public transport', href: 'https://www.oulunjoukkoliikenne.fi/english' },
-        { name: 'Air service (Finavia)', href: 'https://www.finavia.fi/en' },
+        {
+          name: 'Oulu public transport',
+          href: 'https://www.oulunjoukkoliikenne.fi/english',
+        },
+        { name: 'Uleoborgs stads dataportal', href: 'https://data.ouka.fi' },
       ],
     },
-  }, */
+  },
 
   appBarDisruptionInfo: false,
 
-  // appBarLink: false,
-  appBarLink: {
-    name: 'wp.oulunliikenne.fi',
-    href: 'https://wp.oulunliikenne.fi',
-  },
+  appBarLink: false,
+  // appBarLink: {
+  //   name: 'wp.oulunliikenne.fi',
+  //   href: 'https://wp.oulunliikenne.fi',
+  // },
 
   colors: {
     primary: '#e10069',
