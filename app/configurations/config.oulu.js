@@ -4,6 +4,8 @@ const CONFIG = 'oulu';
 const APP_DESCRIPTION = 'Oulun seudun uusi reittiopas';
 const APP_TITLE = 'Reittiopas';
 
+const AWS_REGION = process.env.AWS_REGION || 'eu-central-1';
+
 const OTP_URL =
   process.env.OTP_URL ||
   'https://34i4d4eq8g.execute-api.eu-central-1.amazonaws.com/dev';
@@ -12,6 +14,11 @@ const MAP_URL =
   process.env.MAP_URL || 'https://digitransit-dev-cdn-origin.azureedge.net';
 const AWS_MAP_URL =
   process.env.AWS_MAP_URL || 'https://d2lk9qao4tzpwi.cloudfront.net';
+const MQTT_URL =
+  process.env.MQTT_URL || 'angqxp7s7wkrp-ats.iot.eu-central-1.amazonaws.com';
+const AWS_IDENTITY_POOL_ID =
+  process.env.AWS_IDENTITY_POOL_ID ||
+  'eu-central-1:8f58773b-4d45-46bc-9534-5a9a0d19c76d';
 
 const walttiConfig = require('./waltti').default;
 
@@ -19,11 +26,9 @@ export default configMerger(walttiConfig, {
   CONFIG,
 
   AWS: {
-    region: 'eu-central-1',
+    region: AWS_REGION,
     iot: {
-      cognito: {
-        identityPoolId: 'TODO',
-      },
+      identityPoolId: AWS_IDENTITY_POOL_ID,
     },
   },
 
@@ -31,7 +36,7 @@ export default configMerger(walttiConfig, {
     API_URL,
     MAP_URL,
     OTP: OTP_URL,
-    MQTT: 'TODO.iot.eu-central-1.amazonaws.com',
+    MQTT: MQTT_URL,
     STOP_MAP: `${MAP_URL}/map/v1/waltti-stop-map/`,
     CITYBIKE_MAP: `${MAP_URL}/map/v1/waltti-citybike-map/`,
     PARKING_STATIONS_MAP: `${AWS_MAP_URL}/map/carparks/`,

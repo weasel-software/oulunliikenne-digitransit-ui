@@ -14,7 +14,6 @@ ENV \
   PORT=8080 \
   API_URL='' \
   MAP_URL='' \
-  AWS_MAP_URL='' \
   MQTT_URL='' \
   OTP_URL='' \
   ALERTS_URL='' \
@@ -27,7 +26,10 @@ ENV \
   NODE_ENV='' \
   NODE_OPTS='' \
   RELAY_FETCH_TIMEOUT='' \
-  ASSET_URL=''
+  ASSET_URL='' \
+  AWS_REGION='' \
+  AWS_MAP_URL='' \
+  AWS_IDENTITY_POOL_ID=''
 
 WORKDIR ${WORK}
 ADD . ${WORK}

@@ -49,6 +49,7 @@ export function parseMessage(topic, message, actionContext) {
   const messageContents = {
     id: vehicleNumber,
     route: `OULU:${routeId}`,
+    trip: parsedMessage.line,
     direction: 0, // we don't have this data
     tripStartTime: '', // we don't have this data
     operatingDay:
@@ -83,7 +84,7 @@ export function startRealTimeClient(actionContext, originalOptions, done) {
   // The unauthenticated user role is given access to `connect` to the MQTT broker and `subscribe` to topics.
   AWS.config.region = actionContext.config.AWS.region;
   AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-    IdentityPoolId: actionContext.config.AWS.iot.cognito.identityPoolId,
+    IdentityPoolId: actionContext.config.AWS.iot.identityPoolId,
   });
   AWS.config.credentials.clearCachedId();
   AWS.config.credentials.refresh(err => {
