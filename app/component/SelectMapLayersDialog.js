@@ -267,8 +267,8 @@ class SelectMapLayersDialog extends React.Component {
             config.roadConditions.showRoadConditions && (
               <InputField
                 checked={roadConditions}
-                labelId="traffic-monitoring"
-                defaultMessage="Traffic monitoring"
+                labelId="road-condition"
+                defaultMessage="Road condition"
                 onChange={e =>
                   this.updateSetting({ roadConditions: e.target.checked })
                 }

@@ -277,22 +277,24 @@ export function drawDisorderPath(tile, points) {
 }
 
 export function drawRoadConditionIcon(tile, geom, imageSize) {
-  getImageFromSpriteCache('icon-icon_disorder', imageSize, imageSize).then(
-    image => {
-      const minPos = imageSize * tile.scaleratio;
-      const maxPos = tile.tileSize * tile.ratio - minPos;
+  getImageFromSpriteCache(
+    'icon-icon_road_condition',
+    imageSize,
+    imageSize,
+  ).then(image => {
+    const minPos = imageSize * tile.scaleratio;
+    const maxPos = tile.tileSize * tile.ratio - minPos;
 
-      geom.x = geom.x < minPos ? minPos : geom.x;
-      geom.y = geom.y < minPos ? minPos : geom.y;
-      geom.x = geom.x > maxPos ? maxPos : geom.x;
-      geom.y = geom.y > maxPos ? maxPos : geom.y;
+    geom.x = geom.x < minPos ? minPos : geom.x;
+    geom.y = geom.y < minPos ? minPos : geom.y;
+    geom.x = geom.x > maxPos ? maxPos : geom.x;
+    geom.y = geom.y > maxPos ? maxPos : geom.y;
 
-      drawIconImage(image, tile, geom, imageSize, imageSize);
-    },
-  );
+    drawIconImage(image, tile, geom, imageSize, imageSize);
+  });
 }
 
-export function drawRoadConditionPath(tile, points) {
+export function drawRoadConditionPath(tile, points, color = '#999999') {
   tile.ctx.beginPath();
   for (let i = 0, ref = points.length; i < ref; i++) {
     if (i === 0) {
@@ -301,8 +303,9 @@ export function drawRoadConditionPath(tile, points) {
       tile.ctx.lineTo(points[i].x / tile.ratio, points[i].y / tile.ratio);
     }
   }
-  tile.ctx.strokeStyle = '#0073BF';
-  tile.ctx.lineWidth = 4;
+
+  tile.ctx.strokeStyle = color;
+  tile.ctx.lineWidth = 8;
   tile.ctx.stroke();
 }
 

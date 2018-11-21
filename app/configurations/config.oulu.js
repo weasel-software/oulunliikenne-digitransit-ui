@@ -70,7 +70,14 @@ export default configMerger(walttiConfig, {
   roadConditions: {
     showRoadConditions: true,
     roadConditionsMinZoom: 13,
+    showIcons: true,
     showLines: true,
+    colors: {
+      NORMAL_CONDITION: '#28A745',
+      POOR_CONDITION: '#FFC107',
+      EXTREMELY_POOR_CONDITION: '#DC3545',
+      DEFAULT: '#999999',
+    },
   },
 
   feedIds: ['OULU'],

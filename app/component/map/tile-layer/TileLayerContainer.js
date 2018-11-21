@@ -19,6 +19,7 @@ import RoadworkRoute from '../../../route/RoadworkRoute';
 import DisorderRoute from '../../../route/DisorderRoute';
 import WeatherStationRoute from '../../../route/WeatherStationRoute';
 import TmsStationRoute from '../../../route/TmsStationRoute';
+import RoadConditionRoute from '../../../route/RoadConditionRoute';
 import StopMarkerPopup from '../popups/StopMarkerPopup';
 import MarkerSelectPopup from './MarkerSelectPopup';
 import CityBikePopup from '../popups/CityBikePopup';
@@ -176,14 +177,14 @@ class TileLayerContainer extends GridLayer {
       }
 
       this.setState({
-        selectableTargets /* : selectableTargets.filter(target =>
+        selectableTargets: selectableTargets.filter(target =>
           isFeatureLayerEnabled(
             target.feature,
             target.layer,
             this.props.mapLayers,
             this.context.config,
           ),
-        ) */, // TODO: Quick hack to get oulu component popups to show on map
+        ),
         coords,
         showSpinner: true,
       });
@@ -373,10 +374,14 @@ class TileLayerContainer extends GridLayer {
             />
           );
         } else if (this.state.selectableTargets[0].layer === 'roadConditions') {
-          id = this.state.selectableTargets[0].feature.properties.FID;
+          ({ id } = this.state.selectableTargets[0].feature.properties);
           contents = (
-            <RoadConditionPopup
-              {...this.state.selectableTargets[0].feature.properties}
+            <Relay.RootContainer
+              Component={RoadConditionPopup}
+              forceFetch
+              route={new RoadConditionRoute({ id })}
+              renderLoading={loadingPopup}
+              renderFetched={data => <RoadConditionPopup {...data} />}
             />
           );
         }

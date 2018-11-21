@@ -1,5 +1,6 @@
 import { VectorTile } from '@mapbox/vector-tile';
 import Protobuf from 'pbf';
+import get from 'lodash/get';
 import {
   drawRoadConditionIcon,
   drawRoadConditionPath,
@@ -59,6 +60,7 @@ export default class RoadConditions {
               j++
             ) {
               const geometry = geometryList[j];
+              const icons = [];
               const points = [];
               for (let k = 0, geomRef = geometry.length; k < geomRef; k++) {
                 const geom = geometry[k];
@@ -69,13 +71,45 @@ export default class RoadConditions {
                   geom.y < feature.extent
                 ) {
                   this.features.push({ geom, properties: feature.properties });
-                  drawRoadConditionIcon(this.tile, geom, this.imageSize);
+                  if (
+                    this.config.roadConditions &&
+                    this.config.roadConditions.showIcons
+                  ) {
+                    if (k === 0 || k === geomRef - 1) {
+                      drawRoadConditionIcon(this.tile, geom, this.imageSize);
+                    }
+                    icons.push(geom);
+                  }
                 }
                 points.push(geom);
               }
 
-              if (this.config.roadConditions.showLines && points.length) {
-                drawRoadConditionPath(this.tile, points);
+              if (
+                this.config.roadConditions &&
+                this.config.roadConditions.showLines &&
+                points.length
+              ) {
+                let color = '#999999';
+                const overallRoadCondition = get(
+                  feature,
+                  'properties.overallRoadCondition',
+                );
+
+                if (
+                  this.config.roadConditions.colors &&
+                  this.config.roadConditions.colors[overallRoadCondition]
+                ) {
+                  color = this.config.roadConditions.colors[
+                    overallRoadCondition
+                  ];
+                } else if (
+                  this.config.roadConditions.colors &&
+                  this.config.roadConditions.colors.DEFAULT
+                ) {
+                  color = this.config.roadConditions.colors.DEFAULT;
+                }
+
+                drawRoadConditionPath(this.tile, points, color);
               }
             }
           }

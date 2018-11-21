@@ -2172,6 +2172,64 @@
                         "deprecationReason": null
                     },
                     {
+                        "name": "roadConditions",
+                        "description": "Get all road conditions",
+                        "args": [
+                            {
+                                "name": "ids",
+                                "description": "Return road conditions with these ids.  \n **Note:** if an id is invalid (or the service is unavailable) the returned list will contain 'null' values.",
+                                "type": {
+                                    "kind": "LIST",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "SCALAR",
+                                        "name": "String",
+                                        "ofType": null
+                                    }
+                                },
+                                "defaultValue": null
+                            }
+                        ],
+                        "type": {
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "OBJECT",
+                                "name": "RoadCondition",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "roadCondition",
+                        "description": "Get a road condition based on its ID, i.e. value of field 'roadConditionId'",
+                        "args": [
+                            {
+                                "name": "id",
+                                "description": "",
+                                "type": {
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "SCALAR",
+                                        "name": "String",
+                                        "ofType": null
+                                    }
+                                },
+                                "defaultValue": null
+                            }
+                        ],
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "RoadCondition",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
                         "name": "contentMenus",
                         "description": "Get the content menus from the CMS",
                         "args": [
@@ -2374,6 +2432,26 @@
                     {
                         "kind": "OBJECT",
                         "name": "WeatherStation",
+                        "ofType": null
+                    },
+                    {
+                        "kind": "OBJECT",
+                        "name": "RoadCondition",
+                        "ofType": null
+                    },
+                    {
+                        "kind": "OBJECT",
+                        "name": "Road",
+                        "ofType": null
+                    },
+                    {
+                        "kind": "OBJECT",
+                        "name": "RoadSection",
+                        "ofType": null
+                    },
+                    {
+                        "kind": "OBJECT",
+                        "name": "RoadDistrict",
                         "ofType": null
                     },
                     {
@@ -7877,7 +7955,7 @@
                         "args": [],
                         "type": {
                             "kind": "OBJECT",
-                            "name": "GeoJSON",
+                            "name": "RoadworkGeoJSON",
                             "ofType": null
                         },
                         "isDeprecated": false,
@@ -7897,8 +7975,8 @@
             },
             {
                 "kind": "OBJECT",
-                "name": "GeoJSON",
-                "description": "GeoJSON type for the complete disruption location",
+                "name": "RoadworkGeoJSON",
+                "description": "GeoJSON type for the complete roadwork location",
                 "fields": [
                     {
                         "name": "type",
@@ -7925,7 +8003,7 @@
                             "name": null,
                             "ofType": {
                                 "kind": "OBJECT",
-                                "name": "GeoJSONFeature",
+                                "name": "RoadworkGeoJSONFeature",
                                 "ofType": null
                             }
                         },
@@ -7940,8 +8018,8 @@
             },
             {
                 "kind": "OBJECT",
-                "name": "GeoJSONFeature",
-                "description": "GeoJSON feature type for a disruption location",
+                "name": "RoadworkGeoJSONFeature",
+                "description": "GeoJSON feature type for a roadwork location",
                 "fields": [
                     {
                         "name": "type",
@@ -7961,14 +8039,14 @@
                     },
                     {
                         "name": "geometry",
-                        "description": "Geometry point",
+                        "description": "Geometry object",
                         "args": [],
                         "type": {
                             "kind": "NON_NULL",
                             "name": null,
                             "ofType": {
                                 "kind": "OBJECT",
-                                "name": "Point",
+                                "name": "RoadworkGeoJSONGeometry",
                                 "ofType": null
                             }
                         },
@@ -7977,11 +8055,11 @@
                     },
                     {
                         "name": "properties",
-                        "description": "Feature proeprties object",
+                        "description": "Feature properties object",
                         "args": [],
                         "type": {
                             "kind": "OBJECT",
-                            "name": "GeoJSONFeaturePoperties",
+                            "name": "RoadworkGeoJSONFeaturePoperties",
                             "ofType": null
                         },
                         "isDeprecated": false,
@@ -7995,8 +8073,8 @@
             },
             {
                 "kind": "OBJECT",
-                "name": "Point",
-                "description": "GeoJSON point type for a disruption location",
+                "name": "RoadworkGeoJSONGeometry",
+                "description": "GeoJSON point type for a roadwork location",
                 "fields": [
                     {
                         "name": "type",
@@ -8006,8 +8084,8 @@
                             "kind": "NON_NULL",
                             "name": null,
                             "ofType": {
-                                "kind": "SCALAR",
-                                "name": "String",
+                                "kind": "ENUM",
+                                "name": "GeoJSONFeatureGeometryType",
                                 "ofType": null
                             }
                         },
@@ -8016,7 +8094,7 @@
                     },
                     {
                         "name": "coordinates",
-                        "description": "Point coordinates (WGS 84)",
+                        "description": "Geometry coordinates (WGS 84)",
                         "args": [],
                         "type": {
                             "kind": "NON_NULL",
@@ -8041,9 +8119,56 @@
                 "possibleTypes": null
             },
             {
+                "kind": "ENUM",
+                "name": "GeoJSONFeatureGeometryType",
+                "description": "",
+                "fields": null,
+                "inputFields": null,
+                "interfaces": null,
+                "enumValues": [
+                    {
+                        "name": "Point",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "LineString",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "Polygon",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "MultiPoint",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "MultiLineString",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "MultiPolygon",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "possibleTypes": null
+            },
+            {
                 "kind": "OBJECT",
-                "name": "GeoJSONFeaturePoperties",
-                "description": "GeoJSON feature properties type for a disruption location",
+                "name": "RoadworkGeoJSONFeaturePoperties",
+                "description": "GeoJSON feature properties type for a roadwork location",
                 "fields": [
                     {
                         "name": "id",
@@ -9214,6 +9339,358 @@
             },
             {
                 "kind": "OBJECT",
+                "name": "GeoJSON",
+                "description": "GeoJSON type for the complete disruption location",
+                "fields": [
+                    {
+                        "name": "type",
+                        "description": "Type, i.e. 'FeatureCollection'",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "String",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "features",
+                        "description": "The location features",
+                        "args": [],
+                        "type": {
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "OBJECT",
+                                "name": "GeoJSONFeature",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "GeoJSONFeature",
+                "description": "GeoJSON feature type for a disruption location",
+                "fields": [
+                    {
+                        "name": "type",
+                        "description": "Type, i.e. 'Feature'",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "String",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "geometry",
+                        "description": "Geometry point",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "OBJECT",
+                                "name": "Point",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "properties",
+                        "description": "Feature proeprties object",
+                        "args": [],
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "GeoJSONFeaturePoperties",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "Point",
+                "description": "GeoJSON point type for a disruption location",
+                "fields": [
+                    {
+                        "name": "type",
+                        "description": "Type, i.e. 'Point'",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "String",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "coordinates",
+                        "description": "Point coordinates (WGS 84)",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "LIST",
+                                "name": null,
+                                "ofType": {
+                                    "kind": "SCALAR",
+                                    "name": "Float",
+                                    "ofType": null
+                                }
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "GeoJSONFeaturePoperties",
+                "description": "GeoJSON feature properties type for a disruption location",
+                "fields": [
+                    {
+                        "name": "id",
+                        "description": "",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "subtypeCode",
+                        "description": "",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "roadJunction",
+                        "description": "",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "roadName",
+                        "description": "",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "firstName",
+                        "description": "",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "secondName",
+                        "description": "",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "areaRef",
+                        "description": "",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Int",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "linearRef",
+                        "description": "",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Int",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "negOffset",
+                        "description": "",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Int",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "posOffset",
+                        "description": "",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Int",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "urban",
+                        "description": "",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Boolean",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "coordinatesETRS89",
+                        "description": "",
+                        "args": [],
+                        "type": {
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "Float",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "negDirection",
+                        "description": "",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Int",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "posDirection",
+                        "description": "",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Int",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "geocode",
+                        "description": "",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "orderOfPoint",
+                        "description": "",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
                 "name": "Announcement",
                 "description": "",
                 "fields": [
@@ -9750,7 +10227,7 @@
             {
                 "kind": "OBJECT",
                 "name": "WeatherStation",
-                "description": "",
+                "description": "Weather station type",
                 "fields": [
                     {
                         "name": "id",
@@ -10206,6 +10683,804 @@
             },
             {
                 "kind": "OBJECT",
+                "name": "RoadCondition",
+                "description": "Road condition type",
+                "fields": [
+                    {
+                        "name": "id",
+                        "description": "Global object ID provided by Relay. This value can be used to refetch this object using **node** query.",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "ID",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "roadConditionId",
+                        "description": "Road condition ID",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "measuredTime",
+                        "description": "Time when forecasts have been updated, as an ISO 8601 datetime",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "roadConditionForecasts",
+                        "description": "The road condition forecasts",
+                        "args": [],
+                        "type": {
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "OBJECT",
+                                "name": "RoadConditionForecast",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "geojson",
+                        "description": "GeoJSON object of the location",
+                        "args": [],
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "RoadConditionGeoJSON",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [
+                    {
+                        "kind": "INTERFACE",
+                        "name": "Node",
+                        "ofType": null
+                    }
+                ],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "RoadConditionForecast",
+                "description": "Road condition forecast type",
+                "fields": [
+                    {
+                        "name": "time",
+                        "description": "Road condition measured time as an ISO 8601 datetime",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "type",
+                        "description": "Road condition type, e.g. FORECAST or OBSERVATION",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "forecastName",
+                        "description": "Road condition forecast name, e.g. 2h",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "daylight",
+                        "description": "If there was daylight when forecast was created",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Boolean",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "roadTemperature",
+                        "description": "Road temperature reading in degrees celsius, e.g. +5 or 5",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "temperature",
+                        "description": "Air temperature reading in degrees celsius, e.g. +5 or 5",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "windSpeed",
+                        "description": "Wind speed in meters/second, e.g. 2",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Float",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "windDirection",
+                        "description": "Wind speed direction, e.g. 133",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Int",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "overallRoadCondition",
+                        "description": "Overall road condition, i.e. NORMAL_CONDITION, POOR_CONDITION, EXTREMELY_POOR_CONDITION or CONDITION_COULD_NOT_BE_RESOLVED",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "weatherSymbol",
+                        "description": "Weather symbol code for the road condition, e.g. d400, http://corporate.foreca.com/en/products/foreca-symbols",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "reliability",
+                        "description": "Road condition reliability, i.e. SUCCESSFUL, NO_DATA_FROM_ROADSTATION or FAILED",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "forecastConditionReason",
+                        "description": "Road condition forecast reason",
+                        "args": [],
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "RoadConditionForecastReason",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "RoadConditionForecastReason",
+                "description": "Road condition forecast reason type",
+                "fields": [
+                    {
+                        "name": "freezingRainCondition",
+                        "description": "If there is freezing rain: true/false",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Boolean",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "frictionCondition",
+                        "description": "Friction condition, i.e. SLIPPERY or VERY_SLIPPERY",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "precipitationCondition",
+                        "description": "Precipitation condition, i.e. NO_RAIN_DRY_WEATHER, LIGHT_RAIN, RAIN,\nHEAVY_RAIN, LIGHT_SNOWFALL, SNOWFALL or HEAVY_SNOWFALL",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "roadCondition",
+                        "description": "Road condition, i.e. DRY, MOIST, WET, SLUSH, FROST, PARTLY_ICY, ICE, SNOW",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "visibilityCondition",
+                        "description": "Visibility condition, i.e. FAIRLY_POOR or POOR",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "windCondition",
+                        "description": "Wind condition, i.e. WEAK, MEDIUM, STRONG",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "winterSlipperiness",
+                        "description": "If it is slippery: true/false",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Boolean",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "RoadConditionGeoJSON",
+                "description": "GeoJSON type",
+                "fields": [
+                    {
+                        "name": "type",
+                        "description": "Type, i.e. 'FeatureCollection'",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "String",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "features",
+                        "description": "The location features",
+                        "args": [],
+                        "type": {
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "OBJECT",
+                                "name": "RoadConditionGeoJSONFeature",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "RoadConditionGeoJSONFeature",
+                "description": "GeoJSON feature type",
+                "fields": [
+                    {
+                        "name": "type",
+                        "description": "Type, i.e. 'Feature'",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "String",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "geometry",
+                        "description": "Geometry",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "OBJECT",
+                                "name": "RoadConditionGeoJSONFeatureGeometry",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "properties",
+                        "description": "Properties",
+                        "args": [],
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "RoadConditionGeoJSONFeatureProperties",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "RoadConditionGeoJSONFeatureGeometry",
+                "description": "GeoJSON feature geometry type",
+                "fields": [
+                    {
+                        "name": "type",
+                        "description": "Type, i.e. 'LineString'",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "ENUM",
+                                "name": "GeoJSONFeatureGeometryType",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "coordinates",
+                        "description": "Geometry coordinates (WGS 84)",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "LIST",
+                                "name": null,
+                                "ofType": {
+                                    "kind": "LIST",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "SCALAR",
+                                        "name": "Float",
+                                        "ofType": null
+                                    }
+                                }
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "RoadConditionGeoJSONFeatureProperties",
+                "description": "GeoJSON feature properties type",
+                "fields": [
+                    {
+                        "name": "id",
+                        "description": "Road condition ID",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "description",
+                        "description": "Road condition description",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "roadSectionNumber",
+                        "description": "Road section number",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Int",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "roadNumber",
+                        "description": "Road number",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Int",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "roadSectionVersionNumber",
+                        "description": "Road section version number",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Int",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "startDistance",
+                        "description": "Road condition start distance",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Int",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "endDistance",
+                        "description": "Road condition end distance",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Int",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "length",
+                        "description": "Road condition road length",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Int",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "road",
+                        "description": "Road condition road",
+                        "args": [],
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "Road",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "startRoadSection",
+                        "description": "Road condition road start section",
+                        "args": [],
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "RoadSection",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "endRoadSection",
+                        "description": "Road condition road end section",
+                        "args": [],
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "RoadSection",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "Road",
+                "description": "Road type",
+                "fields": [
+                    {
+                        "name": "id",
+                        "description": "Road ID ",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "ID",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "name",
+                        "description": "Road name ",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [
+                    {
+                        "kind": "INTERFACE",
+                        "name": "Node",
+                        "ofType": null
+                    }
+                ],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "RoadSection",
+                "description": "Road section type",
+                "fields": [
+                    {
+                        "name": "id",
+                        "description": "Road section ID ",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "ID",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "endDistance",
+                        "description": "Road section end distance",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Int",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "road",
+                        "description": "Section road object",
+                        "args": [],
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "Road",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "roadDistrict",
+                        "description": "Section road district",
+                        "args": [],
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "RoadDistrict",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [
+                    {
+                        "kind": "INTERFACE",
+                        "name": "Node",
+                        "ofType": null
+                    }
+                ],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "RoadDistrict",
+                "description": "Road district type",
+                "fields": [
+                    {
+                        "name": "id",
+                        "description": "Road district ID ",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "ID",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "name",
+                        "description": "Road district name ",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "speedLimitSeason",
+                        "description": "Road district speed limit for season, e.g. WINTER",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [
+                    {
+                        "kind": "INTERFACE",
+                        "name": "Node",
+                        "ofType": null
+                    }
+                ],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
                 "name": "ContentMenu",
                 "description": "Content menu type containing items",
                 "fields": [
@@ -10242,8 +11517,8 @@
                         "description": "",
                         "args": [],
                         "type": {
-                            "kind": "SCALAR",
-                            "name": "String",
+                            "kind": "OBJECT",
+                            "name": "LocalizedString",
                             "ofType": null
                         },
                         "isDeprecated": false,
@@ -10274,6 +11549,53 @@
                         "ofType": null
                     }
                 ],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "LocalizedString",
+                "description": "A localized string value",
+                "fields": [
+                    {
+                        "name": "fi",
+                        "description": "",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "sv",
+                        "description": "",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "en",
+                        "description": "",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [],
                 "enumValues": null,
                 "possibleTypes": null
             },
@@ -10315,8 +11637,8 @@
                         "description": "",
                         "args": [],
                         "type": {
-                            "kind": "SCALAR",
-                            "name": "String",
+                            "kind": "OBJECT",
+                            "name": "LocalizedString",
                             "ofType": null
                         },
                         "isDeprecated": false,
@@ -10327,8 +11649,8 @@
                         "description": "",
                         "args": [],
                         "type": {
-                            "kind": "SCALAR",
-                            "name": "String",
+                            "kind": "OBJECT",
+                            "name": "LocalizedString",
                             "ofType": null
                         },
                         "isDeprecated": false,

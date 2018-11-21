@@ -21,3 +21,52 @@
     }
   }
 }
+
+.road-condition-content {
+  width: 100%;
+  list-style: none;
+  padding: 0;
+  margin: $padding-medium 0;
+  font-size: $font-size-xsmall;
+  color: $gray;
+
+  thead {
+    td {
+      padding-bottom: 5px;
+      vertical-align: top;
+    }
+  }
+
+  td {
+    text-align: center;
+    padding-left: 2px;
+
+    &:first-child {
+      padding-left: 0;
+    }
+  }
+
+  tbody tr:last-child td {
+    text-align: left;
+  }
+
+  .road-condition-symbol {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: $condition-grey;
+
+    &.normal {
+      background: $condition-green;
+    }
+
+    &.poor {
+      background: $condition-yellow;
+    }
+
+    &.extremely-poor {
+      background: $condition-red;
+    }
+  }
+}
