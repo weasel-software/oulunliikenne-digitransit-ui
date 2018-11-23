@@ -144,23 +144,51 @@ class TileContainer {
         ),
       );
 
-      nearest = features.filter(feature => {
-        if (!feature) {
-          return false;
-        }
+      nearest = features
+        .map(feature => {
+          if (!feature) {
+            return null;
+          }
 
-        const g = feature.feature.geom;
+          // LineString check
+          if (feature.feature.lineString) {
+            const currentFeature = { ...feature };
+            const { lineString } = currentFeature.feature;
 
-        const dist = Math.sqrt(
-          (localPoint[0] - g.x / this.ratio) ** 2 +
-            (localPoint[1] - g.y / this.ratio) ** 2,
-        );
+            const pointWithinDist = lineString.reduce((res, current) => {
+              if (res) {
+                return res;
+              }
+              const distance = Math.sqrt(
+                (localPoint[0] - current.x / this.ratio) ** 2 +
+                  (localPoint[1] - current.y / this.ratio) ** 2,
+              );
+              if (distance < 22 * this.scaleratio) {
+                return current;
+              }
+              return res;
+            }, undefined);
 
-        if (dist < 22 * this.scaleratio) {
-          return true;
-        }
-        return false;
-      });
+            if (pointWithinDist) {
+              currentFeature.feature.geom = pointWithinDist;
+              return currentFeature;
+            }
+
+            return null;
+          }
+
+          const g = feature.feature.geom;
+          const dist = Math.sqrt(
+            (localPoint[0] - g.x / this.ratio) ** 2 +
+              (localPoint[1] - g.y / this.ratio) ** 2,
+          );
+
+          if (dist < 22 * this.scaleratio) {
+            return feature;
+          }
+          return null;
+        })
+        .filter(item => item !== null);
 
       if (nearest.length === 0 && e.type === 'click') {
         // Must filter double clicks used for map navigation

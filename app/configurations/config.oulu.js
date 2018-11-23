@@ -69,8 +69,8 @@ export default configMerger(walttiConfig, {
 
   roadConditions: {
     showRoadConditions: true,
-    roadConditionsMinZoom: 13,
-    showIcons: true,
+    roadConditionsMinZoom: 12,
+    showIcons: false,
     showLines: true,
     colors: {
       NORMAL_CONDITION: '#28A745',
