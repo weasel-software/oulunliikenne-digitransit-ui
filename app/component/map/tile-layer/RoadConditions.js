@@ -4,6 +4,7 @@ import get from 'lodash/get';
 import {
   drawRoadConditionIcon,
   drawRoadConditionPath,
+  // drawPathWithCircles,
 } from '../../../util/mapIconUtils';
 import { isBrowser } from '../../../util/browser';
 
@@ -60,34 +61,36 @@ export default class RoadConditions {
               j++
             ) {
               const geometry = geometryList[j];
-              const icons = [];
-              const points = [];
-              for (let k = 0, geomRef = geometry.length; k < geomRef; k++) {
-                const geom = geometry[k];
-                if (
-                  geom.x > 0 &&
-                  geom.y > 0 &&
-                  geom.x < feature.extent &&
-                  geom.y < feature.extent
-                ) {
-                  this.features.push({ geom, properties: feature.properties });
+
+              if (
+                this.config.roadConditions &&
+                this.config.roadConditions.showIcons
+              ) {
+                for (let k = 0, geomRef = geometry.length; k < geomRef; k++) {
+                  const geom = geometry[k];
                   if (
-                    this.config.roadConditions &&
-                    this.config.roadConditions.showIcons
+                    geom.x > 0 &&
+                    geom.y > 0 &&
+                    geom.x < feature.extent &&
+                    geom.y < feature.extent
                   ) {
                     if (k === 0 || k === geomRef - 1) {
+                      if (!this.config.roadConditions.showLines) {
+                        this.features.push({
+                          geom,
+                          properties: feature.properties,
+                        });
+                      }
                       drawRoadConditionIcon(this.tile, geom, this.imageSize);
                     }
-                    icons.push(geom);
                   }
                 }
-                points.push(geom);
               }
 
               if (
                 this.config.roadConditions &&
                 this.config.roadConditions.showLines &&
-                points.length
+                geometry.length
               ) {
                 let color = '#999999';
                 const overallRoadCondition = get(
@@ -109,7 +112,53 @@ export default class RoadConditions {
                   color = this.config.roadConditions.colors.DEFAULT;
                 }
 
-                drawRoadConditionPath(this.tile, points, color);
+                drawRoadConditionPath(this.tile, geometry, color);
+
+                const treshold = 200;
+                const fillPoints = geometry
+                  .map((point, index, array) => {
+                    let currentPoint = point;
+                    const nextPoint = array[index + 1];
+                    const pointList = [{ ...point }];
+
+                    if (!nextPoint) {
+                      return pointList;
+                    }
+
+                    while (currentPoint) {
+                      const deltaX = nextPoint.x - currentPoint.x;
+                      const deltaY = nextPoint.y - currentPoint.y;
+                      const goalDist = Math.sqrt(
+                        deltaX * deltaX + deltaY * deltaY,
+                      );
+
+                      if (goalDist > treshold) {
+                        const ratio = treshold / goalDist;
+                        const Xmove = ratio * deltaX;
+                        const Ymove = ratio * deltaY;
+                        const newPoint = {
+                          x: Xmove + currentPoint.x,
+                          y: Ymove + currentPoint.y,
+                        };
+                        pointList.push(newPoint);
+                        currentPoint = newPoint;
+                      } else {
+                        currentPoint = false;
+                      }
+                    }
+
+                    return pointList;
+                  })
+                  .flat();
+
+                // To visualise the fill point on the path
+                // drawPathWithCircles(this.tile, fillPoints);
+
+                this.features.push({
+                  lineString: fillPoints,
+                  geom: null,
+                  properties: feature.properties,
+                });
               }
             }
           }
