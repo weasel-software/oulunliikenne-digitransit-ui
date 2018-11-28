@@ -1,77 +1,38 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
-import { routerShape, locationShape } from 'react-router';
-import Modal from './Modal';
+import Relay from 'react-relay/classic';
+
 import ComponentUsageExample from './ComponentUsageExample';
 import { isBrowser } from '../util/browser';
-import connectToStores from 'fluxible-addons-react/connectToStores';
+import NavbarLinksContent from './NavbarLinksContent';
 
-function NavbarLinks(props, context) {
+function NavbarLinks(props) {
   if (!((props && props.isBrowser) || isBrowser)) {
     return null;
   }
 
-  if (!context.config.appBarLinks || !context.config.appBarLinks[props.currentLanguage]) {
-    return null;
-  }
-
-  const isOpen = () =>
-    context.location.state ? context.location.state.navbarLinksOpen : false;
-  if (!isOpen()) {
-    return null;
-  }
-
-  const toggleVisibility = () => {
-    if (isOpen()) {
-      context.router.goBack();
-    } else {
-      context.router.push({
-        ...context.location,
-        state: {
-          ...context.location.state,
-          navbarLinksOpen: true,
-        },
-      });
-    }
-  };
-
-  const text = context.config.appBarLinks[props.currentLanguage].text;
-  const links = context.config.appBarLinks[props.currentLanguage].links;
-
   return (
-    <Modal
-      open
-      title={
-        <FormattedMessage
-          id="links"
-          defaultMessage="Links"
-        />
-      }
-      toggleVisibility={toggleVisibility}
-    >
-      {text && (
-        <p>{text}</p>
-      )}
-
-      {links && (
-        <ul className="navbar-links-list">
-          {links.map((link, key) => <li key={key}><a href={link.href}>{link.name}</a></li>)}
-        </ul>
-      )}
-    </Modal>
+    <Relay.RootContainer
+      Component={NavbarLinksContent}
+      route={{
+        name: 'NavbarLinksRoute',
+        queries: {
+          root: Component => Relay.QL`
+              query {
+                viewer {
+                  ${Component.getFragment('root')}
+                }
+              }
+           `,
+        },
+        params: {},
+      }}
+    />
   );
 }
 
-NavbarLinks.contextTypes = {
-  router: routerShape.isRequired, // eslint-disable-line react/no-typos
-  location: locationShape.isRequired, // eslint-disable-line react/no-typos
-  config: PropTypes.object.isRequired,
-};
-
 NavbarLinks.propTypes = {
   isBrowser: PropTypes.bool,
-  currentLanguage: PropTypes.string,
 };
 
 NavbarLinks.defaultProps = {
@@ -80,15 +41,11 @@ NavbarLinks.defaultProps = {
 
 NavbarLinks.description = () => (
   <div>
-    <p>
-      Modal that shows links defined in config.
-    </p>
+    <p>Modal that shows links.</p>
     <ComponentUsageExample>
       <NavbarLinks />
     </ComponentUsageExample>
   </div>
 );
 
-export default connectToStores(NavbarLinks, ['PreferencesStore'], context => ({
-  currentLanguage: context.getStore('PreferencesStore').getLanguage(),
-}));
+export default NavbarLinks;

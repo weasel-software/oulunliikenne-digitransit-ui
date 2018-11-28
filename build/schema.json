@@ -2230,58 +2230,24 @@
                         "deprecationReason": null
                     },
                     {
-                        "name": "contentMenus",
-                        "description": "Get the content menus from the CMS",
-                        "args": [
-                            {
-                                "name": "ids",
-                                "description": "",
-                                "type": {
-                                    "kind": "LIST",
-                                    "name": null,
-                                    "ofType": {
-                                        "kind": "SCALAR",
-                                        "name": "String",
-                                        "ofType": null
-                                    }
-                                },
-                                "defaultValue": null
-                            }
-                        ],
+                        "name": "transportMenu",
+                        "description": "Get the transport menu from the CMS",
+                        "args": [],
                         "type": {
-                            "kind": "LIST",
-                            "name": null,
-                            "ofType": {
-                                "kind": "OBJECT",
-                                "name": "ContentMenu",
-                                "ofType": null
-                            }
+                            "kind": "OBJECT",
+                            "name": "CmsTransportMenu",
+                            "ofType": null
                         },
                         "isDeprecated": false,
                         "deprecationReason": null
                     },
                     {
-                        "name": "contentMenu",
-                        "description": "Get a content menu by its ID from the CMS, i.e. value of field 'menuId'",
-                        "args": [
-                            {
-                                "name": "id",
-                                "description": "",
-                                "type": {
-                                    "kind": "NON_NULL",
-                                    "name": null,
-                                    "ofType": {
-                                        "kind": "SCALAR",
-                                        "name": "String",
-                                        "ofType": null
-                                    }
-                                },
-                                "defaultValue": null
-                            }
-                        ],
+                        "name": "linkMenu",
+                        "description": "Get the link menu from the CMS",
+                        "args": [],
                         "type": {
                             "kind": "OBJECT",
-                            "name": "ContentMenu",
+                            "name": "CmsLinkMenu",
                             "ofType": null
                         },
                         "isDeprecated": false,
@@ -2456,7 +2422,12 @@
                     },
                     {
                         "kind": "OBJECT",
-                        "name": "ContentMenu",
+                        "name": "CmsTransportMenu",
+                        "ofType": null
+                    },
+                    {
+                        "kind": "OBJECT",
+                        "name": "CmsLinkMenu",
                         "ofType": null
                     }
                 ]
@@ -11481,12 +11452,12 @@
             },
             {
                 "kind": "OBJECT",
-                "name": "ContentMenu",
-                "description": "Content menu type containing items",
+                "name": "CmsTransportMenu",
+                "description": "Transport menu type containing items",
                 "fields": [
                     {
                         "name": "id",
-                        "description": "",
+                        "description": "The ID of an object",
                         "args": [],
                         "type": {
                             "kind": "NON_NULL",
@@ -11502,7 +11473,7 @@
                     },
                     {
                         "name": "menuId",
-                        "description": "",
+                        "description": "CMS menu ID",
                         "args": [],
                         "type": {
                             "kind": "SCALAR",
@@ -11514,7 +11485,7 @@
                     },
                     {
                         "name": "title",
-                        "description": "",
+                        "description": "CMS menu title",
                         "args": [],
                         "type": {
                             "kind": "OBJECT",
@@ -11526,14 +11497,14 @@
                     },
                     {
                         "name": "items",
-                        "description": "",
+                        "description": "CMS menu items",
                         "args": [],
                         "type": {
                             "kind": "LIST",
                             "name": null,
                             "ofType": {
                                 "kind": "OBJECT",
-                                "name": "ContentMenuItem",
+                                "name": "CmsMenuItem",
                                 "ofType": null
                             }
                         },
@@ -11547,10 +11518,93 @@
                         "kind": "INTERFACE",
                         "name": "Node",
                         "ofType": null
+                    },
+                    {
+                        "kind": "INTERFACE",
+                        "name": "CmsMenuInterface",
+                        "ofType": null
                     }
                 ],
                 "enumValues": null,
                 "possibleTypes": null
+            },
+            {
+                "kind": "INTERFACE",
+                "name": "CmsMenuInterface",
+                "description": "Interface for CMS menus",
+                "fields": [
+                    {
+                        "name": "id",
+                        "description": "The ID of an object",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "ID",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "menuId",
+                        "description": "CMS menu ID",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "title",
+                        "description": "CMS menu title",
+                        "args": [],
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "LocalizedString",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "items",
+                        "description": "CMS menu items",
+                        "args": [],
+                        "type": {
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "OBJECT",
+                                "name": "CmsMenuItem",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": null,
+                "enumValues": null,
+                "possibleTypes": [
+                    {
+                        "kind": "OBJECT",
+                        "name": "CmsTransportMenu",
+                        "ofType": null
+                    },
+                    {
+                        "kind": "OBJECT",
+                        "name": "CmsLinkMenu",
+                        "ofType": null
+                    }
+                ]
             },
             {
                 "kind": "OBJECT",
@@ -11601,8 +11655,8 @@
             },
             {
                 "kind": "OBJECT",
-                "name": "ContentMenuItem",
-                "description": "Content menu item type",
+                "name": "CmsMenuItem",
+                "description": "CMS menu item type",
                 "fields": [
                     {
                         "name": "id",
@@ -11671,6 +11725,96 @@
                 ],
                 "inputFields": null,
                 "interfaces": [],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "CmsLinkMenu",
+                "description": "Link menu type containing items",
+                "fields": [
+                    {
+                        "name": "id",
+                        "description": "The ID of an object",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "ID",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "menuId",
+                        "description": "CMS menu ID",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "title",
+                        "description": "CMS menu title",
+                        "args": [],
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "LocalizedString",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "body",
+                        "description": "CMS menu body text",
+                        "args": [],
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "LocalizedString",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "items",
+                        "description": "CMS menu items",
+                        "args": [],
+                        "type": {
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "OBJECT",
+                                "name": "CmsMenuItem",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [
+                    {
+                        "kind": "INTERFACE",
+                        "name": "Node",
+                        "ofType": null
+                    },
+                    {
+                        "kind": "INTERFACE",
+                        "name": "CmsMenuInterface",
+                        "ofType": null
+                    }
+                ],
                 "enumValues": null,
                 "possibleTypes": null
             },

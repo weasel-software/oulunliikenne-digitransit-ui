@@ -10,6 +10,7 @@ import Icon from './Icon';
 import ComponentUsageExample from './ComponentUsageExample';
 import LangSelect from './LangSelect';
 import ModeSelect from './ModeSelect';
+import ExternalModes from './ExternalModes';
 import SelectMapLayersDialog from './SelectMapLayersDialog';
 import MessageBar from './MessageBar';
 import { isBrowser } from '../util/browser';
@@ -79,6 +80,13 @@ const AppBarLarge = (
             />
           </div>
         )}
+
+        {config.appBarExternalModes && (
+          <div className="navi-buttons-more navi-margin">
+            <ExternalModes />
+          </div>
+        )}
+
         <div className="empty-space flex-grow" />
         {config.mapTrackingButtons &&
           config.mapTrackingButtons.altPosition && (
