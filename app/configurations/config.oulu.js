@@ -33,38 +33,17 @@ export default configMerger(walttiConfig, {
     lon: 25.46816,
   },
 
-  appBarLinks: false,
-  /* appBarLinks: {
-    fi: {
-      text: 'Suomeksi lorem ipsum dolor sit amet, tristique mollis nec vitae lorem aenean, in maecenas lobortis volutpat ac vel cursus.',
-      links: [
-        { name: 'Oulun joukkoliikenne', href: 'https://www.oulunjoukkoliikenne.fi/' },
-        { name: 'Lentoliikenne (Finavia)', href: 'https://www.finavia.fi/fi' },
-      ],
-    },
-    sv: {
-      text: 'På svenska lorem ipsum dolor sit amet, tristique mollis nec vitae lorem aenean, in maecenas lobortis volutpat ac vel cursus.',
-      links: [
-        { name: 'Uleåborgs kollektivtrafik', href: 'https://www.oulunjoukkoliikenne.fi/english' },
-        { name: 'Flygtrafik (Finavia)', href: 'https://www.finavia.fi/sv' },
-      ],
-    },
-    en: {
-      text: 'In English lorem ipsum dolor sit amet, tristique mollis nec vitae lorem aenean, in maecenas lobortis volutpat ac vel cursus.',
-      links: [
-        { name: 'Oulu public transport', href: 'https://www.oulunjoukkoliikenne.fi/english' },
-        { name: 'Air service (Finavia)', href: 'https://www.finavia.fi/en' },
-      ],
-    },
-  }, */
+  appBarExternalModes: true,
+
+  appBarLinks: true,
 
   appBarDisruptionInfo: false,
 
-  // appBarLink: false,
-  appBarLink: {
+  appBarLink: false,
+  /* appBarLink: {
     name: 'wp.oulunliikenne.fi',
     href: 'https://wp.oulunliikenne.fi',
-  },
+  }, */
 
   colors: {
     primary: '#e10069',
