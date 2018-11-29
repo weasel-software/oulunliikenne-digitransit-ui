@@ -121,4 +121,10 @@ export default class ParkingStations {
       Relay.Store.forceFetch({ query }, callback);
     }
   };
+
+  onTimeChange = () => {
+    if (this.tile.coords.z > this.config.parkingStations.smallIconMinZoom) {
+      this.fetchWithAction(this.fetchAndDrawStatus);
+    }
+  };
 }
