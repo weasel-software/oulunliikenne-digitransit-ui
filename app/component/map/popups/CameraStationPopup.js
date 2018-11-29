@@ -3,6 +3,8 @@ import React from 'react';
 import Relay from 'react-relay/classic';
 import connectToStores from 'fluxible-addons-react/connectToStores';
 import { intlShape } from 'react-intl';
+import moment from 'moment';
+
 import Card from '../../Card';
 import CardHeader from '../../CardHeader';
 import ImageSlider from '../../ImageSlider';
@@ -25,12 +27,18 @@ function CameraStationPopup({ weatherCamera, trafficCamera, lang }, { intl }) {
           unlinked
         />
         <ImageSlider>
-          {camera.presets.map(item => (
-            <figure className="slide" key={item.presetId}>
-              <figcaption>{item.presentationName}</figcaption>
-              <img src={item.imageUrl} alt={item.presentationName} />
-            </figure>
-          ))}
+          {camera.presets.map(item => {
+            return (
+              <figure className="slide" key={item.presetId}>
+                <figcaption>
+                  {item.presentationName}
+                  {item.measuredTime &&
+                    ` (${moment(item.measuredTime).format('HH:mm:ss')})`}
+                </figcaption>
+                <img src={item.imageUrl} alt={item.presentationName} />
+              </figure>
+            );
+          })}
         </ImageSlider>
       </Card>
     </div>
@@ -77,6 +85,8 @@ export default Relay.createContainer(
       			presetId
             presentationName
             imageUrl
+            direction
+            measuredTime
           }
         }
       `,
@@ -93,6 +103,8 @@ export default Relay.createContainer(
       			presetId
             presentationName
             imageUrl
+            direction
+            measuredTime
           }
         }
       `,
