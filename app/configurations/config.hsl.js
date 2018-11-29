@@ -35,7 +35,6 @@ export default {
 
   feedIds: ['HSL'],
 
-  preferredAgency: 'HSL',
   showHSLTracking: true,
 
   defaultMapCenter: {
@@ -110,6 +109,12 @@ export default {
   },
 
   streetModes: {
+    bicycle: {
+      availableForSelection: true,
+      defaultValue: false,
+      icon: 'biking',
+    },
+
     car_park: {
       availableForSelection: true,
       defaultValue: false,
@@ -122,6 +127,16 @@ export default {
       icon: 'car_park-withoutBox',
     },
   },
+
+  search: {
+    /* identify searches for route numbers/labels: bus | train | metro */
+    lineRegexp: new RegExp(
+      '(^[0-9]+[a-z]?$|^[yuleapinkrtdz]$|(^m[12]?b?$))',
+      'i',
+    ),
+  },
+
+  modesWithNoBike: ['BUS', 'TRAM'],
 
   useSearchPolygon: true,
 
@@ -173,6 +188,23 @@ export default {
     [25.3652, 60.3756],
     [25.5345, 60.2592],
   ],
+
+  // If certain mode(s) only exist in limited number of areas, that are unwanted or unlikely places for transfers,
+  // listing the areas as a list of polygons for selected mode key will remove the mode(s) from queries if no coordinates
+  // in the query are within the polygon(s). This reduces complexity in finding routes for the query.
+  modePolygons: {
+    FERRY: [
+      [
+        [24.9793, 60.1513],
+        [24.9695, 60.1485],
+        [24.9871, 60.1365],
+        [24.9913, 60.1379],
+        [24.9952, 60.1457],
+        [24.9916, 60.1488],
+        [24.9793, 60.1513],
+      ],
+    ],
+  },
 
   footer: {
     content: [
@@ -280,43 +312,60 @@ export default {
     ],
   },
 
-  fareMapping: {
-    'HSL:hki': 'HSL:hki',
-    'HSL:hki2': 'HSL:hki',
-    'HSL:esp': 'HSL:esp',
-    'HSL:esp2': 'HSL:esp',
-    'HSL:van': 'HSL:van',
-    'HSL:van2': 'HSL:van',
-    'HSL:ker': 'HSL:ker',
-    'HSL:kir': 'HSL:kir',
-    'HSL:seu': 'HSL:seu',
-    'HSL:seu2': 'HSL:seu',
-    'HSL:seu3': 'HSL:seu',
-    'HSL:seu4': 'HSL:seu',
-    'HSL:seu5': 'HSL:seu',
-    'HSL:lse': 'HSL:lse',
-    'HSL:lse2': 'HSL:lse',
-    'HSL:lse3': 'HSL:lse',
-    'HSL:lse4': 'HSL:lse',
-    'HSL:lse5': 'HSL:lse',
-    'HSL:lse6': 'HSL:lse',
-    'HSL:kse': 'HSL:kse',
-    'HSL:kse1': 'HSL:kse',
-    'HSL:kse2': 'HSL:kse',
-    'HSL:kse3': 'HSL:kse',
-    'HSL:kse4': 'HSL:kse',
-    'HSL:kse5': 'HSL:kse',
-    'HSL:kse6': 'HSL:kse',
-    'HSL:kse7': 'HSL:kse',
-    'HSL:kse8': 'HSL:kse',
-    'HSL:kse9': 'HSL:kse',
-    'HSL:kse10': 'HSL:kse',
-    'HSL:kse11': 'HSL:kse',
-    'HSL:kse12': 'HSL:kse',
-    'HSL:kse13': 'HSL:kse',
-    'HSL:kse14': 'HSL:kse',
-    'HSL:kse15': 'HSL:kse',
-    'HSL:kse16': 'HSL:kse',
+  fares: [
+    'HSL:hki',
+    'HSL:esp',
+    'HSL:van',
+    'HSL:ker',
+    'HSL:kir',
+    'HSL:seu',
+    'HSL:lse',
+    'HSL:kse',
+  ],
+
+  // mapping (string, lang) from OTP fare identifiers to human readable form
+  fareMapping: function mapHslFareId(fareId, lang) {
+    const names = {
+      fi: {
+        esp: 'Espoo ja Kauniainen',
+        hki: 'Helsinki',
+        ker: 'Kerava-Sipoo-Tuusula',
+        kir: 'Kirkkonummi-Siuntio',
+        kse: 'Lähiseutu 3',
+        lse: 'Lähiseutu 2',
+        seu: 'Seutulippu',
+        van: 'Vantaa',
+      },
+      en: {
+        esp: 'Espoo and Kauniainen',
+        hki: 'Helsinki',
+        ker: 'Kerava-Sipoo-Tuusula',
+        kir: 'Kirkkonummi-Siuntio',
+        kse: 'Region three zone',
+        lse: 'Region two zone',
+        seu: 'Regional ticket',
+        van: 'Vantaa',
+      },
+      sv: {
+        esp: 'Esbo och Grankulla',
+        hki: 'Helsingfors',
+        ker: 'Kervo-Sibbo-Tusby',
+        kir: 'Kyrkslätt-Sjundeå',
+        kse: 'Närregion 3',
+        lse: 'Närregion 2',
+        seu: 'Regionbiljett',
+        van: 'Vanda',
+      },
+    };
+    const mappedLang = names[lang] ? lang : 'fi';
+    if (fareId && fareId.substring) {
+      const zone = fareId.substring(
+        fareId.indexOf(':') + 1,
+        fareId.indexOf(':') + 4,
+      );
+      return names[mappedLang][zone];
+    }
+    return '';
   },
 
   staticMessages: [
@@ -378,4 +427,15 @@ export default {
     },
   ],
   staticMessagesUrl: 'https://yleisviesti.hsldev.com/',
+  mapLayers: {
+    featureMapping: {
+      ticketSales: {
+        Palvelupiste: 'servicePoint',
+        'HSL Automaatti MNL': 'ticketMachine',
+        'HSL Automaatti KL': 'ticketMachine',
+        Myyntipiste: 'salesPoint',
+        'R-kioski': 'salesPoint',
+      },
+    },
+  },
 };

@@ -42,6 +42,7 @@ export default {
   APP_PATH: `${APP_PATH}`,
   title: 'Reittihaku',
 
+  textLogo: false,
   // Navbar logo
   logo: 'default/digitransit-logo.png',
 
@@ -73,7 +74,7 @@ export default {
     peliasMapping: {},
     peliasLayer: null,
     peliasLocalization: null,
-    minimalRegexp: new RegExp('.{3,}'),
+    minimalRegexp: new RegExp('.{2,}'),
   },
 
   nearbyRoutes: {
@@ -81,7 +82,67 @@ export default {
     bucketSize: 1000,
   },
 
-  defaultSettings: {},
+  defaultSettings: {
+    accessibilityOption: 0,
+    bikeSpeed: 5,
+    minTransferTime: 120,
+    optimize: 'QUICK',
+    preferredRoutes: [],
+    ticketTypes: null,
+    transferPenalty: 0,
+    unpreferredRoutes: [],
+    walkBoardCost: 600,
+    walkReluctance: 2,
+    walkSpeed: 1.2,
+  },
+
+  /**
+   * These are used for dropdown selection of values to override the default
+   * settings. This means that values ought to be relative to the current default.
+   * If not, the selection may not make any sense.
+   */
+  defaultOptions: {
+    walkBoardCost: {
+      least: 3600,
+      less: 1200,
+      more: 360,
+      most: 120,
+    },
+    walkReluctance: {
+      least: 5,
+      less: 3,
+      more: 1,
+      most: 0.2,
+    },
+  },
+
+  quickOptions: {
+    public_transport: {
+      availableOptionSets: [
+        'least-transfers',
+        'least-walking',
+        'public-transport-with-bicycle',
+        'saved-settings',
+      ],
+    },
+    walk: {
+      availableOptionSets: ['prefer-walking-routes', 'saved-settings'],
+    },
+    bicycle: {
+      availableOptionSets: [
+        'least-elevation-changes',
+        'prefer-greenways',
+        'saved-settings',
+      ],
+    },
+    car_park: {
+      availableOptionSets: [
+        'least-transfers',
+        'least-walking',
+        'saved-settings',
+      ],
+    },
+  },
 
   maxWalkDistance: 10000,
   maxBikingDistance: 100000,
@@ -179,8 +240,9 @@ export default {
     cameraStationsMinZoom: 14,
   },
 
-  // TODO: Switch off in autumn
   cityBike: {
+    // Config for map features. NOTE: availability for routing is controlled by
+    // transportModes.citybike.availableForSelection
     showCityBikes: true,
     showStationId: true,
 
@@ -246,6 +308,7 @@ export default {
     description: APP_DESCRIPTION,
     keywords: 'digitransit',
   },
+
   // Ticket information feature toggle
   showTicketInformation: false,
   showRouteInformation: false,
@@ -262,7 +325,9 @@ export default {
     bicycle: 'BICYCLE',
     car: 'CAR',
     car_park: 'CAR_PARK',
+    public_transport: 'WALK',
   },
+
   // Control what transport modes that should be possible to select in the UI
   // and whether the transport mode is used in trip planning by default.
   transportModes: {
@@ -286,11 +351,6 @@ export default {
       defaultValue: true,
     },
 
-    citybike: {
-      availableForSelection: true, // TODO: Turn off in autumn
-      defaultValue: false, // always false
-    },
-
     airplane: {
       availableForSelection: true,
       defaultValue: true,
@@ -300,40 +360,49 @@ export default {
       availableForSelection: true,
       defaultValue: true,
     },
+
+    citybike: {
+      availableForSelection: false, // TODO: Turn off in autumn
+      defaultValue: false, // always false
+    },
   },
 
   streetModes: {
-    walk: {
+    public_transport: {
       availableForSelection: true,
       defaultValue: true,
+      exclusive: false,
+      icon: 'bus-withoutBox',
+    },
+
+    walk: {
+      availableForSelection: true,
+      defaultValue: false,
+      exclusive: true,
       icon: 'walk',
     },
 
     bicycle: {
       availableForSelection: true,
       defaultValue: false,
+      exclusive: true,
       icon: 'bicycle-withoutBox',
     },
 
     car: {
       availableForSelection: true,
       defaultValue: false,
+      exclusive: true,
       icon: 'car-withoutBox',
     },
 
     car_park: {
       availableForSelection: false,
       defaultValue: false,
+      exclusive: false,
       icon: 'car_park-withoutBox',
     },
   },
-
-  ticketOptions: [
-    {
-      displayName: 'Ei lippuvyöhykerajoitusta',
-      value: '0',
-    },
-  ],
 
   accessibilityOptions: [
     {
@@ -434,6 +503,11 @@ export default {
     [18.7454, 60.1305],
     [18.776, 60.3316],
   ],
+
+  // If certain mode(s) only exist in limited number of areas, listing the areas as a list of polygons for
+  // selected mode key will remove the mode(s) from queries if no coordinates in the query are within the polygon(s).
+  // This reduces complexity in finding routes for the query.
+  modePolygons: {},
 
   footer: {
     content: [
@@ -600,4 +674,10 @@ export default {
 
   imperialEnabled: false,
   // this flag when true enables imperial measurements  'feet/miles system'
+
+  mapLayers: {
+    featureMapping: {
+      ticketSales: {},
+    },
+  },
 };
