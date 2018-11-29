@@ -55,37 +55,37 @@ class TileContainer {
         ) {
           return isEnabled;
         } else if (
-          Layer.getName() === 'parkingStations' &&
+          layerName === 'parkingStations' &&
           this.coords.z >= config.parkingStations.parkingStationsMinZoom
         ) {
           return isEnabled;
         } else if (
-          Layer.getName() === 'roadworks' &&
+          layerName === 'roadworks' &&
           this.coords.z >= config.roadworks.roadworksMinZoom
         ) {
           return isEnabled;
         } else if (
-          Layer.getName() === 'disorders' &&
+          layerName === 'disorders' &&
           this.coords.z >= config.disorders.disordersMinZoom
         ) {
           return isEnabled;
         } else if (
-          Layer.getName() === 'cameraStations' &&
+          layerName === 'cameraStations' &&
           this.coords.z >= config.cameraStations.cameraStationsMinZoom
         ) {
           return isEnabled;
         } else if (
-          Layer.getName() === 'weatherStations' &&
+          layerName === 'weatherStations' &&
           this.coords.z >= config.weatherStations.weatherStationsMinZoom
         ) {
           return isEnabled;
         } else if (
-          Layer.getName() === 'tmsStations' &&
+          layerName === 'tmsStations' &&
           this.coords.z >= config.tmsStations.tmsStationsMinZoom
         ) {
           return isEnabled;
         } else if (
-          Layer.getName() === 'roadConditions' &&
+          layerName === 'roadConditions' &&
           this.coords.z >= config.roadConditions.roadConditionsMinZoom
         ) {
           return isEnabled;
