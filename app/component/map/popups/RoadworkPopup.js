@@ -9,7 +9,7 @@ import RoadworkContent from '../../RoadworkContent';
 import ComponentUsageExample from '../../ComponentUsageExample';
 
 function RoadworkPopup({ roadwork }, { intl, router, location }) {
-  const { startTime, endTime, comments, geojson } = roadwork;
+  const { startTime, endTime, description, geojson } = roadwork;
   const locations = geojson.features.map(item => item.properties);
   const firstLocation = locations.length ? locations[0].firstName : '';
   const lastLocation =
@@ -17,7 +17,7 @@ function RoadworkPopup({ roadwork }, { intl, router, location }) {
       ? ` - ${locations[locations.length - 1].firstName}`
       : '';
   const locationName = `${firstLocation}${lastLocation}`;
-  const comment = comments.join('\n\n');
+  const comment = description.fi
 
   const openMoreInfoModal = () => {
     router.push({
@@ -27,7 +27,7 @@ function RoadworkPopup({ roadwork }, { intl, router, location }) {
         moreInfoModalOpen: true,
         moreInfoModalTitle: locationName,
         moreInfoModalContent: (
-          <RoadworkContent comment={comments} start={startTime} end={endTime} />
+          <RoadworkContent comment={comment} start={startTime} end={endTime} />
         ),
       },
     });
@@ -92,21 +92,12 @@ export default Relay.createContainer(RoadworkPopup, {
         status
         startTime
         endTime
-        comments
-        geojson {
-          features {
-            type
-            geometry {
-              type
-            }
-            properties {
-              id
-              roadName
-              firstName
-              secondName
-            }
-          }
+        description {
+          fi
+          sv
+          en
         }
+        geojson
       }
     `,
   },

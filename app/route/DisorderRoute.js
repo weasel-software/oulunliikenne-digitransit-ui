@@ -4,7 +4,7 @@ export default class DisordersRoute extends Relay.Route {
   static queries = {
     disorder: () => Relay.QL`
       query ($id: String!) {
-        disorder(id: $id)
+        trafficDisorder(id: $id)
       }
     `,
   };

@@ -68,13 +68,7 @@ export default Relay.createContainer(RoadConditionPopup, {
           overallRoadCondition
           reliability
         }
-        geojson {
-          features {
-            properties {
-              description
-            }
-          }
-        }
+        geojson
       }
     `,
   },

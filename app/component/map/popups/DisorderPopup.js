@@ -9,7 +9,7 @@ import DisorderContent from '../../DisorderContent';
 import ComponentUsageExample from '../../ComponentUsageExample';
 
 function DisorderPopup({ disorder }, { intl, router, location }) {
-  const { startTime, endTime, comments, geojson } = disorder;
+  const { startTime, endTime, description, geojson } = disorder;
   const locations = geojson.features.map(item => item.properties);
   const firstLocation = locations.length ? locations[0].firstName : '';
   const lastLocation =
@@ -17,7 +17,7 @@ function DisorderPopup({ disorder }, { intl, router, location }) {
       ? ` - ${locations[locations.length - 1].firstName}`
       : '';
   const locationName = `${firstLocation}${lastLocation}`;
-  const comment = comments.join('\n\n');
+  const comment = description.fi
 
   const openMoreInfoModal = () => {
     router.push({
@@ -86,27 +86,18 @@ DisorderPopup.contextTypes = {
 export default Relay.createContainer(DisorderPopup, {
   fragments: {
     disorder: () => Relay.QL`
-      fragment on Disorder {
-        disruptionId
+      fragment on TrafficDisorder {
+        disorderId
         severity
         status
         startTime
         endTime
-        comments
-        geojson {
-          features {
-            type
-            geometry {
-              type
-            }
-            properties {
-              id
-              roadName
-              firstName
-              secondName
-            }
-          }
+        description {
+          fi
+          sv
+          en
         }
+        geojson
       }
     `,
   },
