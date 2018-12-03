@@ -3,12 +3,16 @@ import React from 'react';
 import Relay from 'react-relay/classic';
 import { intlShape } from 'react-intl';
 import { routerShape, locationShape } from 'react-router';
+import connectToStores from 'fluxible-addons-react/connectToStores';
 import Card from '../../Card';
 import CardHeader from '../../CardHeader';
 import RoadworkContent from '../../RoadworkContent';
 import ComponentUsageExample from '../../ComponentUsageExample';
 
-function RoadworkPopup({ roadwork }, { intl, router, location }) {
+function RoadworkPopup(
+  { roadwork, lang },
+  { intl, router, location, config: { defaultLanguage } },
+) {
   const { startTime, endTime, description, geojson } = roadwork;
   const locations = geojson.features.map(item => item.properties);
   const firstLocation = locations.length ? locations[0].firstName : '';
@@ -17,7 +21,7 @@ function RoadworkPopup({ roadwork }, { intl, router, location }) {
       ? ` - ${locations[locations.length - 1].firstName}`
       : '';
   const locationName = `${firstLocation}${lastLocation}`;
-  const comment = description.fi
+  const comment = description[lang] || description[defaultLanguage] || '';
 
   const openMoreInfoModal = () => {
     router.push({
@@ -75,30 +79,39 @@ RoadworkPopup.description = (
 
 RoadworkPopup.propTypes = {
   roadwork: PropTypes.object.isRequired,
+  lang: PropTypes.string.isRequired,
 };
 
 RoadworkPopup.contextTypes = {
   intl: intlShape.isRequired,
   router: routerShape.isRequired,
   location: locationShape.isRequired,
+  config: PropTypes.shape({
+    defaultLanguage: PropTypes.string,
+  }).isRequired,
 };
 
-export default Relay.createContainer(RoadworkPopup, {
-  fragments: {
-    roadwork: () => Relay.QL`
-      fragment on Roadwork {
-        roadworkId
-        severity
-        status
-        startTime
-        endTime
-        description {
-          fi
-          sv
-          en
+export default Relay.createContainer(
+  connectToStores(RoadworkPopup, ['PreferencesStore'], context => ({
+    lang: context.getStore('PreferencesStore').getLanguage(),
+  })),
+  {
+    fragments: {
+      roadwork: () => Relay.QL`
+        fragment on Roadwork {
+          roadworkId
+          severity
+          status
+          startTime
+          endTime
+          description {
+            fi
+            sv
+            en
+          }
+          geojson
         }
-        geojson
-      }
-    `,
+      `,
+    },
   },
-});
+);
