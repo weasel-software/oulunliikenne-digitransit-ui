@@ -43,7 +43,11 @@ export const isFeatureLayerEnabled = (
     return false;
   }
   const featureType = (feature.properties.type || '').toLocaleLowerCase();
-  if (featureType && layerName !== 'disorders') {
+  if (
+    featureType &&
+    layerName !== 'disorders' &&
+    layerName !== 'cameraStations'
+  ) {
     if (layerName === 'stop' && feature.properties.stops) {
       return isFeatureLayerEnabled(feature, 'terminal', mapLayers, config);
     }
