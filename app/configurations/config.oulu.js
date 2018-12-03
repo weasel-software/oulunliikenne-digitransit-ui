@@ -10,6 +10,8 @@ const OTP_URL =
 const API_URL = process.env.API_URL || 'https://dev-api.digitransit.fi';
 const MAP_URL =
   process.env.MAP_URL || 'https://digitransit-dev-cdn-origin.azureedge.net';
+const AWS_MAP_URL =
+  process.env.AWS_MAP_URL || 'https://d2lk9qao4tzpwi.cloudfront.net';
 
 const walttiConfig = require('./waltti').default;
 
@@ -22,13 +24,12 @@ export default configMerger(walttiConfig, {
     OTP: OTP_URL,
     STOP_MAP: `${MAP_URL}/map/v1/waltti-stop-map/`,
     CITYBIKE_MAP: `${MAP_URL}/map/v1/waltti-citybike-map/`,
-    DISORDERS_MAP:
-      'https://7ss2ymr8jf.execute-api.eu-central-1.amazonaws.com/dev/vtpbf/',
+    DISORDERS_MAP: `${AWS_MAP_URL}/map/disruptions/`,
   },
 
   disorders: {
     showDisorders: true,
-    disordersMinZoom: 14,
+    disordersMinZoom: 12,
     showLines: false,
   },
 
@@ -39,8 +40,8 @@ export default configMerger(walttiConfig, {
   sprites: 'svg-sprite.oulu.svg',
 
   defaultMapCenter: {
-    lat: 65.0123600,
-    lon: 25.4681600,
+    lat: 65.01236,
+    lon: 25.46816,
   },
 
   colors: {

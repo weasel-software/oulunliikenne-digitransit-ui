@@ -216,6 +216,9 @@ const mapLayersConfigShape = PropTypes.shape({
   ticketSales: PropTypes.shape({
     showTicketSales: PropTypes.bool,
   }),
+  disorders: PropTypes.shape({
+    showDisorders: PropTypes.bool,
+  }),
   transportModes: PropTypes.shape({
     bus: transportModeConfigShape,
     citybike: transportModeConfigShape,
@@ -248,6 +251,9 @@ SelectMapLayersDialog.description = (
           },
           ticketSales: {
             showTicketSales: true,
+          },
+          disorders: {
+            showDisorders: true,
           },
           transportModes: {
             bus: {

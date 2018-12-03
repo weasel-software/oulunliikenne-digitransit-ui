@@ -50,29 +50,31 @@ export default class Disorders {
             const feature = vt.layers.disruptions.feature(i);
             const geometryList = feature.loadGeometry();
 
-            for (
-              let j = 0, geomListRef = geometryList.length;
-              j < geomListRef;
-              j++
-            ) {
-              const geometry = geometryList[j];
-              const points = [];
-              for (let k = 0, geomRef = geometry.length; k < geomRef; k++) {
-                const geom = geometry[k];
-                if (
-                  geom.x > 0 &&
-                  geom.y > 0 &&
-                  geom.x < feature.extent &&
-                  geom.y < feature.extent
-                ) {
-                  this.features.push({ geom, properties: feature.properties });
-                  drawDisorderIcon(this.tile, geom, this.imageSize);
+            if (feature.properties.type === 'TrafficDisorder') {
+              for (
+                let j = 0, geomListRef = geometryList.length;
+                j < geomListRef;
+                j++
+              ) {
+                const geometry = geometryList[j];
+                const points = [];
+                for (let k = 0, geomRef = geometry.length; k < geomRef; k++) {
+                  const geom = geometry[k];
+                  if (
+                    geom.x > 0 &&
+                    geom.y > 0 &&
+                    geom.x < feature.extent &&
+                    geom.y < feature.extent
+                  ) {
+                    this.features.push({ geom, properties: feature.properties });
+                    drawDisorderIcon(this.tile, geom, this.imageSize);
+                  }
+                  points.push(geom);
                 }
-                points.push(geom);
-              }
 
-              if (this.config.disorders.showLines && points.length) {
-                drawDisorderPath(this.tile, points);
+                if (this.config.disorders.showLines && points.length) {
+                  drawDisorderPath(this.tile, points);
+                }
               }
             }
           }
