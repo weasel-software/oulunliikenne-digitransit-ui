@@ -55,7 +55,7 @@ class SelectMapLayersDialog extends React.Component {
   };
 
   renderContents = (
-    { citybike, parkAndRide, stop, terminal, ticketSales },
+    { citybike, parkAndRide, stop, terminal, ticketSales, roadworks },
     config,
   ) => {
     const isTransportModeEnabled = transportMode =>
@@ -144,6 +144,17 @@ class SelectMapLayersDialog extends React.Component {
                 }
               />
             )}
+          {config.roadworks &&
+            config.roadworks.showRoadworks && (
+              <Checkbox
+                checked={roadworks}
+                defaultMessage="Roadworks"
+                labelId="roadworks"
+                onChange={e =>
+                  this.updateSetting({ roadworks: e.target.checked })
+                }
+              />
+            )}
         </div>
         {config.ticketSales &&
           config.ticketSales.showTicketSales && (
@@ -204,6 +215,9 @@ const mapLayersConfigShape = PropTypes.shape({
   }),
   ticketSales: PropTypes.shape({
     showTicketSales: PropTypes.bool,
+  }),
+  roadworks: PropTypes.shape({
+    showRoadworks: PropTypes.bool,
   }),
   transportModes: PropTypes.shape({
     bus: transportModeConfigShape,

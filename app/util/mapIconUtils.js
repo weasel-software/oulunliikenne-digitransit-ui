@@ -212,7 +212,7 @@ export function drawRoadworkIcon(tile, geom, imageSize) {
   );
 }
 
-export function drawRoadworkPath(tile, points) {
+export function drawRoadworkPath(tile, points, color = '#0073BF') {
   tile.ctx.beginPath();
   for (let i = 0, ref = points.length; i < ref; i++) {
     if (i === 0) {
@@ -221,7 +221,8 @@ export function drawRoadworkPath(tile, points) {
       tile.ctx.lineTo(points[i].x / tile.ratio, points[i].y / tile.ratio);
     }
   }
-  tile.ctx.strokeStyle = '#0073BF';
+
+  tile.ctx.strokeStyle = color;
   tile.ctx.lineWidth = 4;
   tile.ctx.stroke();
 }

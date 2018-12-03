@@ -29,8 +29,9 @@ export default configMerger(walttiConfig, {
 
   roadworks: {
     showRoadworks: true,
-    roadworksMinZoom: 12,
-    showLines: false,
+    roadworksMinZoom: 11,
+    showIcons: true,
+    showLines: true,
   },
 
   feedIds: ['OULU'],

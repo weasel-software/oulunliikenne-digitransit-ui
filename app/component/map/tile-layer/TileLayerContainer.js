@@ -7,6 +7,8 @@ import GridLayer from 'react-leaflet/es/GridLayer';
 import SphericalMercator from '@mapbox/sphericalmercator';
 import lodashFilter from 'lodash/filter';
 import isEqual from 'lodash/isEqual';
+import uniqBy from 'lodash/uniqBy';
+import get from 'lodash/get';
 import L from 'leaflet';
 
 import Popup from '../Popup';
@@ -165,13 +167,16 @@ class TileLayerContainer extends GridLayer {
       }
 
       this.setState({
-        selectableTargets: selectableTargets.filter(target =>
-          isFeatureLayerEnabled(
-            target.feature,
-            target.layer,
-            this.props.mapLayers,
-            this.context.config,
+        selectableTargets: uniqBy(
+          selectableTargets.filter(target =>
+            isFeatureLayerEnabled(
+              target.feature,
+              target.layer,
+              this.props.mapLayers,
+              this.context.config,
+            ),
           ),
+          item => get(item, 'feature.properties.id'),
         ),
         coords,
         showSpinner: true,
@@ -195,12 +200,7 @@ class TileLayerContainer extends GridLayer {
     );
 
     if (typeof this.state.selectableTargets !== 'undefined') {
-      if (
-        this.state.selectableTargets.length === 1 ||
-        (this.state.selectableTargets.length > 1 &&
-          this.state.selectableTargets[0].layer ===
-            this.state.selectableTargets[1].layer)
-      ) {
+      if (this.state.selectableTargets.length === 1) {
         let id;
         if (this.state.selectableTargets[0].layer === 'stop') {
           id = this.state.selectableTargets[0].feature.properties.gtfsId;
