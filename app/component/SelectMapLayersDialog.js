@@ -252,6 +252,9 @@ SelectMapLayersDialog.description = (
           ticketSales: {
             showTicketSales: true,
           },
+          roadworks: {
+            showRoadworks: true,
+          },
           transportModes: {
             bus: {
               availableForSelection: true,
