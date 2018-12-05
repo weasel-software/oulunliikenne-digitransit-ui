@@ -45,6 +45,7 @@ export default configMerger(walttiConfig, {
     DISORDERS_MAP: `${AWS_MAP_URL}/map/disruptions/`,
     WEATHER_STATIONS_MAP: `${AWS_MAP_URL}/map/weatherstations/`,
     TMS_STATIONS_MAP: `${AWS_MAP_URL}/map/tmsstations/`,
+    ROAD_CONDITIONS_MAP: `${AWS_MAP_URL}/map/roadconditions/`,
   },
 
   tmsStations: {
@@ -71,14 +72,28 @@ export default configMerger(walttiConfig, {
 
   roadworks: {
     showRoadworks: true,
-    roadworksMinZoom: 13,
-    showLines: false,
+    roadworksMinZoom: 11,
+    showIcons: true,
+    showLines: true,
   },
 
   disorders: {
     showDisorders: true,
     disordersMinZoom: 13,
     showLines: false,
+  },
+
+  roadConditions: {
+    showRoadConditions: true,
+    roadConditionsMinZoom: 12,
+    showIcons: false,
+    showLines: true,
+    colors: {
+      NORMAL_CONDITION: '#28A745',
+      POOR_CONDITION: '#FFC107',
+      EXTREMELY_POOR_CONDITION: '#DC3545',
+      DEFAULT: '#999999',
+    },
   },
 
   feedIds: ['OULU'],
@@ -90,38 +105,17 @@ export default configMerger(walttiConfig, {
     lon: 25.46816,
   },
 
-  appBarLinks: false,
-  /* appBarLinks: {
-    fi: {
-      text: 'Suomeksi lorem ipsum dolor sit amet, tristique mollis nec vitae lorem aenean, in maecenas lobortis volutpat ac vel cursus.',
-      links: [
-        { name: 'Oulun joukkoliikenne', href: 'https://www.oulunjoukkoliikenne.fi/' },
-        { name: 'Lentoliikenne (Finavia)', href: 'https://www.finavia.fi/fi' },
-      ],
-    },
-    sv: {
-      text: 'På svenska lorem ipsum dolor sit amet, tristique mollis nec vitae lorem aenean, in maecenas lobortis volutpat ac vel cursus.',
-      links: [
-        { name: 'Uleåborgs kollektivtrafik', href: 'https://www.oulunjoukkoliikenne.fi/english' },
-        { name: 'Flygtrafik (Finavia)', href: 'https://www.finavia.fi/sv' },
-      ],
-    },
-    en: {
-      text: 'In English lorem ipsum dolor sit amet, tristique mollis nec vitae lorem aenean, in maecenas lobortis volutpat ac vel cursus.',
-      links: [
-        { name: 'Oulu public transport', href: 'https://www.oulunjoukkoliikenne.fi/english' },
-        { name: 'Air service (Finavia)', href: 'https://www.finavia.fi/en' },
-      ],
-    },
-  }, */
+  appBarExternalModes: true,
+
+  appBarLinks: true,
 
   appBarDisruptionInfo: false,
 
-  // appBarLink: false,
-  appBarLink: {
+  appBarLink: false,
+  /* appBarLink: {
     name: 'wp.oulunliikenne.fi',
     href: 'https://wp.oulunliikenne.fi',
-  },
+  }, */
 
   colors: {
     primary: '#e10069',

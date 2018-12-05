@@ -13,6 +13,7 @@ import SelectParkingStationRow from './SelectParkingStationRow';
 import SelectRoadworkRow from './SelectRoadworkRow';
 import SelectTmsStationRow from './SelectTmsStationRow';
 import SelectWeatherStationRow from './SelectWeatherStationRow';
+import SelectRoadConditionRow from './SelectRoadConditionRow';
 import ComponentUsageExample from '../../ComponentUsageExample';
 import { options } from '../../ExampleData';
 
@@ -101,6 +102,14 @@ function MarkerSelectPopup(props) {
     } else if (option.layer === 'weatherStations') {
       return (
         <SelectWeatherStationRow
+          {...option.feature.properties}
+          key={option.feature.properties.id}
+          selectRow={() => props.selectRow(option)}
+        />
+      );
+    } else if (option.layer === 'roadConditions') {
+      return (
+        <SelectRoadConditionRow
           {...option.feature.properties}
           key={option.feature.properties.id}
           selectRow={() => props.selectRow(option)}

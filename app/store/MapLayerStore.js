@@ -28,6 +28,7 @@ class MapLayerStore extends Store {
     cameraStations: true,
     weatherStations: true,
     tmsStations: true,
+    roadConditions: true,
   };
 
   static handlers = {
@@ -90,6 +91,7 @@ export const mapLayerShape = PropTypes.shape({
   cameraStations: PropTypes.bool,
   weatherStations: PropTypes.bool,
   tmsStations: PropTypes.bool,
+  roadConditions: PropTypes.bool,
 });
 
 export default MapLayerStore;

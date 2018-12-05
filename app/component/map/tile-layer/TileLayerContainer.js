@@ -7,6 +7,8 @@ import GridLayer from 'react-leaflet/es/GridLayer';
 import SphericalMercator from '@mapbox/sphericalmercator';
 import lodashFilter from 'lodash/filter';
 import isEqual from 'lodash/isEqual';
+import uniqBy from 'lodash/uniqBy';
+import get from 'lodash/get';
 import L from 'leaflet';
 
 import Popup from '../Popup';
@@ -19,6 +21,7 @@ import RoadworkRoute from '../../../route/RoadworkRoute';
 import DisorderRoute from '../../../route/DisorderRoute';
 import WeatherStationRoute from '../../../route/WeatherStationRoute';
 import TmsStationRoute from '../../../route/TmsStationRoute';
+import RoadConditionRoute from '../../../route/RoadConditionRoute';
 import StopMarkerPopup from '../popups/StopMarkerPopup';
 import MarkerSelectPopup from './MarkerSelectPopup';
 import CityBikePopup from '../popups/CityBikePopup';
@@ -33,6 +36,7 @@ import TicketSalesPopup from '../popups/TicketSalesPopup';
 import CameraStationPopup from '../popups/CameraStationPopup';
 import RoadworkPopup from '../popups/RoadworkPopup';
 import DisorderPopup from '../popups/DisorderPopup';
+import RoadConditionPopup from '../popups/RoadConditionPopup';
 import LocationPopup from '../popups/LocationPopup';
 import TileContainer from './TileContainer';
 import Loading from '../../Loading';
@@ -175,14 +179,17 @@ class TileLayerContainer extends GridLayer {
       }
 
       this.setState({
-        selectableTargets /* : selectableTargets.filter(target =>
-          isFeatureLayerEnabled(
-            target.feature,
-            target.layer,
-            this.props.mapLayers,
-            this.context.config,
+        selectableTargets: uniqBy(
+          selectableTargets.filter(target =>
+            isFeatureLayerEnabled(
+              target.feature,
+              target.layer,
+              this.props.mapLayers,
+              this.context.config,
+            ),
           ),
-        ) */, // TODO: Quick hack to get oulu component popups to show on map
+          item => get(item, 'feature.properties.id'),
+        ),
         coords,
         showSpinner: true,
       });
@@ -205,12 +212,7 @@ class TileLayerContainer extends GridLayer {
     );
 
     if (typeof this.state.selectableTargets !== 'undefined') {
-      if (
-        this.state.selectableTargets.length === 1 ||
-        (this.state.selectableTargets.length > 1 &&
-          this.state.selectableTargets[0].layer ===
-            this.state.selectableTargets[1].layer)
-      ) {
+      if (this.state.selectableTargets.length === 1) {
         let id;
         if (this.state.selectableTargets[0].layer === 'stop') {
           id = this.state.selectableTargets[0].feature.properties.gtfsId;
@@ -247,13 +249,15 @@ class TileLayerContainer extends GridLayer {
               renderFetched={data => <CityBikePopup {...data} />}
             />
           );
-        } else if (this.state.selectableTargets[0].layer === 'parkingStations') {
+        } else if (
+          this.state.selectableTargets[0].layer === 'parkingStations'
+        ) {
           ({ id } = this.state.selectableTargets[0].feature.properties);
           contents = (
             <Relay.RootContainer
               Component={ParkingStationPopup}
               forceFetch
-              route={new ParkingStationRoute({ id: id })}
+              route={new ParkingStationRoute({ id })}
               renderLoading={loadingPopup}
               renderFetched={data => <ParkingStationPopup {...data} />}
             />
@@ -367,6 +371,17 @@ class TileLayerContainer extends GridLayer {
               route={new DisorderRoute({ id })}
               renderLoading={loadingPopup}
               renderFetched={data => <DisorderPopup {...data} />}
+            />
+          );
+        } else if (this.state.selectableTargets[0].layer === 'roadConditions') {
+          ({ id } = this.state.selectableTargets[0].feature.properties);
+          contents = (
+            <Relay.RootContainer
+              Component={RoadConditionPopup}
+              forceFetch
+              route={new RoadConditionRoute({ id })}
+              renderLoading={loadingPopup}
+              renderFetched={data => <RoadConditionPopup {...data} />}
             />
           );
         }
