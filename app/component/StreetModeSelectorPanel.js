@@ -1,8 +1,10 @@
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, intlShape } from 'react-intl';
 
+import Icon from './Icon';
+import RouteHere from './RouteHere';
 import ToggleButton from './ToggleButton';
 import { isKeyboardSelectionEvent } from '../util/browser';
 
@@ -45,6 +47,7 @@ class StreetModeSelectorPanel extends React.Component {
   }
 
   render() {
+    const { intl } = this.context;
     return (
       <div className={cx('street-mode-selector-panel', this.props.className)}>
         <div className="street-mode-selector-panel-header">
@@ -52,6 +55,18 @@ class StreetModeSelectorPanel extends React.Component {
         </div>
         <div className="street-mode-selector-panel-buttons">
           {this.getStreetModeSelectButtons()}
+        </div>
+        <div className="route-here-container">
+          <RouteHere>
+            <div
+              aria-label={intl.formatMessage({
+                id: 'route-here-button',
+                defaultMessage: 'Copy route here',
+              })}
+            >
+              <Icon img="icon-icon_search-plus" />
+            </div>
+          </RouteHere>
         </div>
       </div>
     );
@@ -77,6 +92,10 @@ StreetModeSelectorPanel.defaultProps = {
   selectedStreetMode: undefined,
   showButtonTitles: false,
   streetModeConfigs: [],
+};
+
+StreetModeSelectorPanel.contextTypes = {
+  intl: intlShape.isRequired,
 };
 
 export default StreetModeSelectorPanel;

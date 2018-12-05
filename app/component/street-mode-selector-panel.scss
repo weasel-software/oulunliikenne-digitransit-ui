@@ -11,4 +11,20 @@
   .street-mode-selector-panel-buttons {
     @extend %buttons;
   }
+
+  .route-here-container {
+    margin-left: auto;
+    margin-right: 0.5em;
+    color: $primary-color;
+    font-size: $font-size-large;
+
+    span {
+      cursor: pointer;
+      vertical-align: text-top;
+
+      &:hover {
+        color: darken($primary-color, 10%);
+      }
+    }
+  }
 }

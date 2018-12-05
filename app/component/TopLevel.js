@@ -3,6 +3,7 @@ import React, { Fragment } from 'react';
 import some from 'lodash/some';
 import get from 'lodash/get';
 import connectToStores from 'fluxible-addons-react/connectToStores';
+import { ToastContainer } from 'react-toastify';
 import { getHomeUrl, parseLocation } from '../util/path';
 import { dtLocationShape } from '../util/shapes';
 import AppBarContainer from './AppBarContainer';
@@ -138,6 +139,9 @@ class TopLevel extends React.Component {
           <noscript>This page requires JavaScript to run.</noscript>
           <ErrorBoundary>{content}</ErrorBoundary>
         </section>
+        <ToastContainer
+          autoClose={get(this, 'context.config.tosterMessage.autoClose', 5000)}
+        />
         {this.trackingPixel}
       </Fragment>
     );

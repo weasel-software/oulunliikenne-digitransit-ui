@@ -10,6 +10,7 @@ $body-font-weight: $font-weight-medium;
 @import 'base/form';
 @import 'base/helper-classes';
 @import 'base/elements';
+@import 'base/toaster';
 
 @import '~zurb-foundation-5/scss/foundation/components/grid';
 @import 'base/helper-classes-after-foundations';
@@ -54,6 +55,7 @@ $body-font-weight: $font-weight-medium;
 @import '../app/component/insident';
 @import '../app/component/popup-content';
 @import '~zurb-foundation-5/scss/foundation/components/forms';
+@import '~react-toastify/scss/main';
 
 /* Modal */
 @import '~foundation-apps/scss/helpers/breakpoints';

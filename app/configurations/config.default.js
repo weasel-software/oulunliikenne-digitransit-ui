@@ -707,4 +707,8 @@ export default {
       ticketSales: {},
     },
   },
+
+  tosterMessage: {
+    autoClose: 5000,
+  },
 };
