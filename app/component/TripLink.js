@@ -4,13 +4,16 @@ import Relay from 'react-relay/classic';
 import { Link } from 'react-router';
 import cx from 'classnames';
 import IconWithTail from './IconWithTail';
+import SelectedIconWithTail from './SelectedIconWithTail';
 import { PREFIX_ROUTES } from '../util/path';
 
 function TripLink(props) {
-  const icon = (
+  const imgName = `icon-icon_${props.mode}-live`;
+  const icon = (props.selected && <SelectedIconWithTail img={imgName} />) || (
     <IconWithTail
+      desaturate={props.selected === false}
       className={cx(props.mode, 'tail-icon')}
-      img={`icon-icon_${props.mode}-live`}
+      img={imgName}
       rotate={180}
     />
   );
@@ -35,13 +38,18 @@ function TripLink(props) {
 TripLink.propTypes = {
   trip: PropTypes.object.isRequired,
   mode: PropTypes.string.isRequired,
+  selected: PropTypes.bool,
+};
+
+TripLink.defaultProps = {
+  selected: undefined,
 };
 
 export default Relay.createContainer(TripLink, {
   fragments: {
     trip: () => Relay.QL`
       fragment on Query {
-        trip: fuzzyTrip(route: $route, direction: $direction, time: $time, date: $date) {
+        trip: trip(id: $tripId) {
           gtfsId
           pattern {
             code
@@ -54,9 +62,6 @@ export default Relay.createContainer(TripLink, {
     `,
   },
   initialVariables: {
-    route: null,
-    direction: null,
-    date: null,
-    time: null,
+    tripId: null,
   },
 });

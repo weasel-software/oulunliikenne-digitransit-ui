@@ -2,7 +2,7 @@ import configMerger from '../util/configMerger';
 
 const CONFIG = 'oulu';
 const APP_DESCRIPTION = 'Oulun seudun uusi reittiopas';
-const APP_TITLE = 'Reittiopas';
+const APP_TITLE = 'Oulun liikenteen reittiopas';
 
 const AWS_REGION = process.env.AWS_REGION || 'eu-central-1';
 
@@ -47,6 +47,9 @@ export default configMerger(walttiConfig, {
     TMS_STATIONS_MAP: `${AWS_MAP_URL}/map/tmsstations/`,
     ROAD_CONDITIONS_MAP: `${AWS_MAP_URL}/map/roadconditions/`,
   },
+
+  useAltRelatimeClient: true,
+  routePrefix: 'OULU',
 
   tmsStations: {
     showTmsStations: true,

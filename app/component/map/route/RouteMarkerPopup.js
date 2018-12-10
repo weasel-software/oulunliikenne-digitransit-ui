@@ -14,16 +14,16 @@ function RouteMarkerPopup(props) {
   let patternPath = `/${PREFIX_ROUTES}/${props.trip.route.gtfsId}/pysakit`;
   let tripPath = patternPath;
 
-  if (props.trip.fuzzyTrip) {
-    patternPath += `/${props.trip.fuzzyTrip.pattern.code}`;
-    tripPath = `${patternPath}/${props.trip.fuzzyTrip.gtfsId}`;
+  if (props.trip.trip) {
+    patternPath += `/${props.trip.trip.pattern.code}`;
+    tripPath = `${patternPath}/${props.trip.trip.gtfsId}`;
   }
 
   return (
     <div className="card">
       <RouteHeader
         route={props.trip.route}
-        pattern={props.trip.fuzzyTrip && props.trip.fuzzyTrip.pattern}
+        pattern={props.trip.trip && props.trip.trip.pattern}
         trip={props.message.tripStartTime}
         favourite={props.favourite}
         addFavouriteRoute={props.addAsFavouriteRoute}
@@ -50,6 +50,12 @@ RouteMarkerPopup.propTypes = {
       gtfsId: PropTypes.string.isRequired,
     }).isRequired,
     fuzzyTrip: PropTypes.shape({
+      gtfsId: PropTypes.string,
+      pattern: PropTypes.shape({
+        code: PropTypes.string.isRequired,
+      }),
+    }),
+    trip: PropTypes.shape({
       gtfsId: PropTypes.string,
       pattern: PropTypes.shape({
         code: PropTypes.string.isRequired,
@@ -92,6 +98,16 @@ export default Relay.createContainer(RouteMarkerPopupWithFavourite, {
             }
           }
         }
+        trip(id: $tripId) {
+          gtfsId
+          pattern {
+            code
+            headsign
+            stops {
+              name
+            }
+          }
+        }
         route(id: $route) {
           gtfsId
           mode
@@ -101,8 +117,8 @@ export default Relay.createContainer(RouteMarkerPopupWithFavourite, {
       }
     `,
   },
-
   initialVariables: {
+    tripId: null,
     route: null,
     direction: null,
     date: null,

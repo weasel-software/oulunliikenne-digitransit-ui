@@ -6,6 +6,7 @@ import isEmpty from 'lodash/isEmpty';
 import connectToStores from 'fluxible-addons-react/connectToStores';
 import groupBy from 'lodash/groupBy';
 import values from 'lodash/values';
+import get from 'lodash/get';
 
 import TripRouteStop from './TripRouteStop';
 import { getDistanceToNearestStop } from '../util/geo-utils';
@@ -71,36 +72,32 @@ class TripStopListContainer extends React.PureComponent {
 
     const mode = this.props.trip.route.mode.toLowerCase();
 
-    const vehicles = groupBy(
-      values(this.props.vehicles)
-        .filter(
-          vehicle =>
-            this.props.currentTime - vehicle.timestamp * 1000 < 5 * 60 * 1000,
-        )
-        .filter(
-          vehicle =>
-            vehicle.tripStartTime && vehicle.tripStartTime !== 'undefined',
-        ),
-      vehicle => vehicle.direction,
+    const vehicles = values(this.props.vehicles).filter(
+      vehicle =>
+        this.props.currentTime - vehicle.timestamp * 1000 < 5 * 60 * 1000,
     );
 
     const vehicleStops = groupBy(
-      vehicles[this.props.trip.pattern.directionId],
-      vehicle => `HSL:${vehicle.next_stop}`,
+      vehicles,
+      vehicle => `${this.context.config.routePrefix}:${vehicle.next_stop}`,
     );
+
+    const tripId = get(this, 'props.relay.route.params.tripId');
 
     const vehiclesWithCorrectStartTime = Object.keys(this.props.vehicles)
       .map(key => this.props.vehicles[key])
       .filter(
-        vehicle => vehicle.direction === this.props.trip.pattern.directionId,
-      )
-      .filter(vehicle => vehicle.tripStartTime === this.props.tripStart);
+        vehicle =>
+          vehicle.tripStartTime === this.props.tripStart ||
+          vehicle.tripId === tripId,
+      );
 
     // selected vehicle
     const vehicle =
       vehiclesWithCorrectStartTime.length > 0 &&
       vehiclesWithCorrectStartTime[0];
-    const nextStop = vehicle && `HSL:${vehicle.next_stop}`;
+    const nextStop =
+      vehicle && `${this.context.config.routePrefix}:${vehicle.next_stop}`;
 
     let stopPassed = true;
 

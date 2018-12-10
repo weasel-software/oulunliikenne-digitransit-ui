@@ -4,7 +4,7 @@ import Relay from 'react-relay/classic';
 import { Link } from 'react-router';
 import cx from 'classnames';
 
-import FuzzyTripRoute from './FuzzyTripRoute';
+import FuzzyTripRoute from '../route/FuzzyTripRoute';
 import TripLink from './TripLink';
 import WalkDistance from './WalkDistance';
 import StopCode from './StopCode';
@@ -77,6 +77,7 @@ class RouteStop extends React.PureComponent {
         Component={TripLink}
         route={
           new FuzzyTripRoute({
+            tripId: vehicle.tripId,
             route: vehicle.route,
             direction: vehicle.direction,
             date: vehicle.operatingDay,

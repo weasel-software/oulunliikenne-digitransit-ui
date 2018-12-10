@@ -235,6 +235,9 @@ export default {
     locationAware: true,
   },
 
+  useAltRelatimeClient: false,
+  routePrefix: 'HSL',
+
   parkingStations: {
     showParkingStations: false,
     parkingStationsMinZoom: 14,

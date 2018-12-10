@@ -15,6 +15,11 @@ import {
   startRealTimeClient,
   stopRealTimeClient,
 } from '../action/realTimeClientAction';
+import {
+  startRealTimeClient as altStartRealTimeClient,
+  stopRealTimeClient as altStopRealTimeClient,
+} from '../action/altRealTimeClientAction';
+
 import { PREFIX_ROUTES } from '../util/path';
 import withBreakpoint from '../util/withBreakpoint';
 
@@ -44,16 +49,26 @@ class RoutePage extends React.Component {
     }
     const route = this.props.route.gtfsId.split(':');
 
-    this.context.executeAction(startRealTimeClient, {
-      route: route[1],
-    });
+    this.context.executeAction(
+      this.context.config.useAltRelatimeClient
+        ? altStartRealTimeClient
+        : startRealTimeClient,
+      {
+        route: route[1],
+      },
+    );
   }
 
   componentWillUnmount() {
     const { client } = this.context.getStore('RealTimeInformationStore');
 
     if (client) {
-      this.context.executeAction(stopRealTimeClient, client);
+      this.context.executeAction(
+        this.context.config.useAltRelatimeClient
+          ? stopRealTimeClient
+          : altStopRealTimeClient,
+        client,
+      );
     }
   }
 

@@ -54,22 +54,14 @@ class RouteStopListContainer extends React.PureComponent {
         : null;
     const mode = this.props.pattern.route.mode.toLowerCase();
 
-    const vehicles = groupBy(
-      values(this.props.vehicles)
-        .filter(
-          vehicle =>
-            this.props.currentTime - vehicle.timestamp * 1000 < 5 * 60 * 1000,
-        )
-        .filter(
-          vehicle =>
-            vehicle.tripStartTime && vehicle.tripStartTime !== 'undefined',
-        ),
-      vehicle => vehicle.direction,
+    const vehicles = values(this.props.vehicles).filter(
+      vehicle =>
+        this.props.currentTime - vehicle.timestamp * 1000 < 5 * 60 * 1000,
     );
 
     const vehicleStops = groupBy(
-      vehicles[this.props.pattern.directionId],
-      vehicle => `HSL:${vehicle.next_stop}`, // TODO: Add to config so `OULU:${vehicle.next_stop}` can be used
+      vehicles,
+      vehicle => `${this.context.config.routePrefix}:${vehicle.next_stop}`,
     );
 
     const rowClassName = `bp-${this.props.breakpoint}`;

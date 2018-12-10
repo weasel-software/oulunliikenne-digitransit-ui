@@ -6,6 +6,7 @@ export default class FuzzyTripRoute extends Relay.Route {
       query {
         viewer {
           ${Component.getFragment('trip', {
+            tripId: variables.tripId,
             route: variables.route,
             direction: variables.direction,
             date: variables.date,
@@ -16,6 +17,7 @@ export default class FuzzyTripRoute extends Relay.Route {
     `,
   };
   static paramDefinitions = {
+    tripId: { required: true },
     route: { required: true },
     direction: { required: true },
     time: { required: true },

@@ -1,12 +1,14 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import Relay from 'react-relay/classic';
 import { Link } from 'react-router';
 import cx from 'classnames';
 
 import ComponentUsageExample from './ComponentUsageExample';
+import FuzzyTripRoute from '../route/FuzzyTripRoute';
 import WalkDistance from './WalkDistance';
 import StopCode from './StopCode';
-import PatternLink from './PatternLink';
+import TripLink from './TripLink';
 import { fromStopTime } from './DepartureTime';
 import { PREFIX_STOPS } from '../util/path';
 import {
@@ -20,14 +22,29 @@ const TripRouteStop = props => {
   const vehicles =
     props.vehicles &&
     props.vehicles.map(vehicle => (
-      <PatternLink
+      <Relay.RootContainer
         key={vehicle.id}
-        mode={vehicle.mode}
-        pattern={props.pattern}
-        route={props.route}
-        selected={
-          props.selectedVehicle && props.selectedVehicle.id === vehicle.id
+        Component={TripLink}
+        route={
+          new FuzzyTripRoute({
+            tripId: vehicle.tripId,
+            route: vehicle.route,
+            direction: vehicle.direction,
+            date: vehicle.operatingDay,
+            time:
+              vehicle.tripStartTime.substring(0, 2) * 60 * 60 +
+              vehicle.tripStartTime.substring(2, 4) * 60,
+          })
         }
+        renderFetched={data => (
+          <TripLink
+            mode={vehicle.mode}
+            selected={
+              props.selectedVehicle && props.selectedVehicle.id === vehicle.id
+            }
+            {...data}
+          />
+        )}
       />
     ));
 

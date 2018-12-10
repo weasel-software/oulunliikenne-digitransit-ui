@@ -45,25 +45,26 @@ if (isBrowser) {
 
 // if tripStartTime has been specified,
 // use only the updates for vehicles with matching startTime
-function shouldShowVehicle(message, direction, tripStart, pattern) {
+function shouldShowVehicle(message, pattern, tripStart, config) {
+  const { direction, code, stops } = pattern;
+
   return (
     message.lat &&
     message.long &&
-    pattern.substr(0, message.route.length) === message.route &&
+    code.substr(0, message.route.length) === message.route &&
     (direction === undefined || message.direction === direction) &&
-    (tripStart === undefined || message.tripStartTime === tripStart)
+    (tripStart === undefined || message.tripStartTime === tripStart) &&
+    (stops === undefined ||
+      stops
+        .map(stop => stop.gtfsId)
+        .includes(`${config.routePrefix}:${message.next_stop}`))
   );
 }
 
-function VehicleMarkerContainer(props) {
+function VehicleMarkerContainer(props, { config }) {
   return Object.entries(props.vehicles)
     .filter(([, message]) =>
-      shouldShowVehicle(
-        message,
-        props.direction,
-        props.tripStart,
-        props.pattern,
-      ),
+      shouldShowVehicle(message, props.pattern, props.tripStart, config),
     )
     .map(([id, message]) => (
       <IconMarker
@@ -84,6 +85,7 @@ function VehicleMarkerContainer(props) {
             Component={RouteMarkerPopup}
             route={
               new FuzzyTripRoute({
+                tripId: message.tripId,
                 route: message.route,
                 direction: message.direction,
                 date: message.operatingDay,
@@ -106,12 +108,16 @@ function VehicleMarkerContainer(props) {
     ));
 }
 
+VehicleMarkerContainer.contextTypes = {
+  config: PropTypes.object.isRequired,
+};
+
 VehicleMarkerContainer.propTypes = {
   tripStart: PropTypes.string,
-  direction: PropTypes.number,
+  pattern: PropTypes.object,
   vehicles: PropTypes.objectOf(
     PropTypes.shape({
-      direction: PropTypes.number.isRequired,
+      direction: PropTypes.number,
       tripStartTime: PropTypes.string.isRequired,
       mode: PropTypes.string.isRequired,
       heading: PropTypes.number,
@@ -123,7 +129,7 @@ VehicleMarkerContainer.propTypes = {
 
 VehicleMarkerContainer.defaultProps = {
   tripStart: undefined,
-  direction: undefined,
+  pattern: undefined,
 };
 
 export default connectToStores(

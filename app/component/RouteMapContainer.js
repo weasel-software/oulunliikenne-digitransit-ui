@@ -51,6 +51,16 @@ class RouteMapContainer extends React.PureComponent {
     }
   }
 
+  componentDidUpdate() {
+    if (!this.state.hasCentered && this.props.lat && this.props.lon) {
+      this.resetBounds();
+    }
+  }
+
+  resetBounds = () => {
+    this.setState({ hasCentered: true, shouldFitBounds: false });
+  };
+
   render() {
     const { router, location } = this.context;
     const { pattern, lat, lon, routes, tripId, breakpoint } = this.props;
@@ -63,10 +73,6 @@ class RouteMapContainer extends React.PureComponent {
         ? [lat, lon]
         : [undefined, undefined];
 
-    if (!hasCentered && lat && lon) {
-      this.setState({ hasCentered: true, shouldFitBounds: false });
-    }
-    // ,
     if (!pattern) {
       return false;
     }
@@ -85,8 +91,7 @@ class RouteMapContainer extends React.PureComponent {
       <RouteLine key="line" pattern={pattern} />,
       <VehicleMarkerContainer
         key="vehicles"
-        direction={pattern.directionId}
-        pattern={pattern.code}
+        pattern={pattern}
         tripStart={tripStart}
       />,
     ];
@@ -169,7 +174,7 @@ export const RouteMapFragments = {
 const RouteMapContainerWithVehicles = connectToStores(
   withBreakpoint(RouteMapContainer),
   ['RealTimeInformationStore'],
-  ({ getStore }, { trip }) => {
+  ({ getStore }, { trip, tripId }) => {
     if (trip) {
       const { vehicles } = getStore('RealTimeInformationStore');
       const tripStart = getStartTime(
@@ -177,7 +182,10 @@ const RouteMapContainerWithVehicles = connectToStores(
       );
       const vehiclesWithCorrectStartTime = Object.keys(vehicles)
         .map(key => vehicles[key])
-        .filter(vehicle => vehicle.tripStartTime === tripStart);
+        .filter(
+          vehicle =>
+            vehicle.tripStartTime === tripStart || vehicle.tripId === tripId,
+        );
 
       const selectedVehicle =
         vehiclesWithCorrectStartTime &&

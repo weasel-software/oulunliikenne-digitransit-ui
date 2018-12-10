@@ -37,25 +37,36 @@ class RoutePatternSelect extends Component {
   }
 
   componentWillMount = () => {
-    const options = this.getOptions();
+    const options = this.getOptions(this.props);
     if (options === null) {
       this.setState({ loading: true });
     }
   };
 
-  getOptions = () => {
+  shouldComponentUpdate = nextProps => {
+    const options = this.getOptions(nextProps);
+    if (options !== null) {
+      if (this.state.loading === true) {
+        this.setState({ loading: false });
+      }
+      return true;
+    }
+    return false;
+  };
+
+  getOptions = props => {
     const options =
-      this.props.route.patterns.find(
+      props.route.patterns.find(
         o => o.tripsForDate && o.tripsForDate.length > 0,
       ) !== undefined ||
-      (this.props.route.patterns.find(
+      (props.route.patterns.find(
         o => o.tripsForDate && o.tripsForDate.length > 0,
       ) === undefined &&
-        this.props.activeTab === 'aikataulu')
-        ? sortBy(this.props.route.patterns, 'code')
+        props.activeTab === 'aikataulu')
+        ? sortBy(props.route.patterns, 'code')
             .filter(
               o =>
-                this.props.activeTab !== 'aikataulu'
+                props.activeTab !== 'aikataulu'
                   ? o.tripsForDate && o.tripsForDate.length > 0
                   : o,
             )
@@ -66,19 +77,17 @@ class RoutePatternSelect extends Component {
             ))
         : null;
     const patternDepartures =
-      options && options.filter(o => o.key === this.props.params.patternId);
+      options && options.filter(o => o.key === props.params.patternId);
     if (patternDepartures && patternDepartures.length === 0) {
       this.context.router.replace(
-        `/${PREFIX_ROUTES}/${this.props.gtfsId}/pysakit/${options[0].key}`,
+        `/${PREFIX_ROUTES}/${props.gtfsId}/pysakit/${options[0].key}`,
       );
-    } else if (options !== null && this.state.loading === true) {
-      this.setState({ loading: false });
     }
     return options;
   };
 
   render() {
-    const options = this.getOptions();
+    const options = this.getOptions(this.props);
     return this.state.loading === true ? (
       <div className={cx('route-pattern-select', this.props.className)} />
     ) : (
