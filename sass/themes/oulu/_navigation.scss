@@ -12,3 +12,39 @@
 .external-top-bar {
   vertical-align: text-top;
 }
+
+#lang-select {
+  padding: 0;
+  margin: 0;
+
+  .lang {
+    margin: 0px 2px 0 0;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+.navi-buttons {
+  padding: 0;
+}
+
+.navi-icons {
+  width: auto;
+  padding: 0;
+  margin: 0;
+}
+
+.navi-margin {
+  margin: 0 20px;
+
+  &.right-border {
+    margin-right: 0;
+    padding-right: 20px;
+  }
+
+  &:last-child {
+    margin-left: 0;
+  }
+}

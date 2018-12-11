@@ -70,7 +70,7 @@ const AppBarLarge = (
           {logoElement}
         </button>
         {config.availableModes && (
-          <div className="navi-modes padding-left-large navi-margin">
+          <div className="navi-modes padding-left-large">
             <ModeSelect
               selectedStreetMode={getStreetMode(router.location, config)}
               selectStreetMode={(streetMode, isExclusive) =>
@@ -82,12 +82,13 @@ const AppBarLarge = (
         )}
 
         {config.appBarExternalModes && (
-          <div className="navi-buttons-more navi-margin">
+          <div className="navi-buttons-more">
             <ExternalModes />
           </div>
         )}
 
         <div className="empty-space flex-grow" />
+
         {config.mapTrackingButtons &&
           config.mapTrackingButtons.altPosition && (
             <div className="navi-buttons right-border navi-margin">
@@ -97,6 +98,20 @@ const AppBarLarge = (
         <div className="navi-languages right-border navi-margin">
           <LangSelect />
         </div>
+        {config.appBarDisruptionInfo && (
+          <div className="navi-icons navi-margin">
+            <a
+              className="noborder"
+              onClick={openDisruptionInfo}
+              aria-label={intl.formatMessage({
+                id: 'disruptions',
+                defaultMessage: 'Disruptions',
+              })}
+            >
+              <Icon img="icon-icon_caution" pointerEvents />
+            </a>
+          </div>
+        )}
         {config.appBarLinks && (
           <div className="navi-buttons navi-margin">
             <button
@@ -109,20 +124,6 @@ const AppBarLarge = (
             >
               <FormattedMessage id="links" defaultMessage="Links" />
             </button>
-          </div>
-        )}
-        {config.appBarDisruptionInfo && (
-          <div className="navi-icons navi-margin padding-horizontal-large">
-            <a
-              className="noborder"
-              onClick={openDisruptionInfo}
-              aria-label={intl.formatMessage({
-                id: 'disruptions',
-                defaultMessage: 'Disruptions',
-              })}
-            >
-              <Icon img="icon-icon_caution" pointerEvents />
-            </a>
           </div>
         )}
         {config.appBarLink && (

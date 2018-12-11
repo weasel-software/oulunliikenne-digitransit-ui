@@ -112,7 +112,7 @@ export default configMerger(walttiConfig, {
 
   appBarLinks: true,
 
-  appBarDisruptionInfo: false,
+  appBarDisruptionInfo: true,
 
   appBarLink: false,
   /* appBarLink: {

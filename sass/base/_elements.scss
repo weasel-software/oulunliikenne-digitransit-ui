@@ -86,7 +86,7 @@ $border-radius-rounded: 30px;
     .line {
       margin: 0 5px 0 10px;
     }
-    .time {
+    .time:not(:first-child) {
       &:before {
         content: ' – ';
       }

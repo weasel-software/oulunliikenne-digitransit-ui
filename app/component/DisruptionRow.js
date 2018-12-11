@@ -10,7 +10,12 @@ function DisruptionRow({ routes, startTime, endTime, description, cause }) {
     <div className="row">
       <section className="grid-content">
         <div className="disruption-header disruption">
-          <RouteList className="left" routes={routes.filter(route => route)} />
+          {routes.length > 0 && (
+            <RouteList
+              className="left"
+              routes={routes.filter(route => route)}
+            />
+          )}
           <span className="time bold">
             {startTime.format('HH:mm')} - {endTime.format('HH:mm')}
           </span>
@@ -18,25 +23,33 @@ function DisruptionRow({ routes, startTime, endTime, description, cause }) {
         <div className="disruption-content">
           <p>{description}</p>
         </div>
-        <div className="disruption-details hide">
-          <span>
-            <b className="uppercase">
-              <FormattedMessage id="cause" defaultMessage="cause" />:
-            </b>
-            {cause}
-          </span>
-        </div>
+        {cause && (
+          <div className="disruption-details hide">
+            <span>
+              <b className="uppercase">
+                <FormattedMessage id="cause" defaultMessage="cause" />:
+              </b>
+              {cause}
+            </span>
+          </div>
+        )}
       </section>
     </div>
   );
 }
 
 DisruptionRow.propTypes = {
-  routes: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
   startTime: PropTypes.instanceOf(moment).isRequired,
   endTime: PropTypes.instanceOf(moment).isRequired,
+  routes: PropTypes.arrayOf(PropTypes.object),
   description: PropTypes.node,
   cause: PropTypes.node,
+};
+
+DisruptionRow.defaultProps = {
+  routes: [],
+  description: null,
+  cause: null,
 };
 
 export default DisruptionRow;

@@ -20,8 +20,7 @@ function DisruptionListContainer({ root }, { intl }) {
     const { id } = alert;
     const startTime = moment(alert.effectiveStartDate * 1000);
     const endTime = moment(alert.effectiveEndDate * 1000);
-    const cause = 'because';
-    const routes = [alert.route];
+    const routes = alert.route ? [alert.route] : undefined;
     const translation = find(alert.alertDescriptionTextTranslations, [
       'language',
       intl.locale,
@@ -37,7 +36,6 @@ function DisruptionListContainer({ root }, { intl }) {
         description={description}
         startTime={startTime}
         endTime={endTime}
-        cause={cause}
         routes={routes}
       />
     );
