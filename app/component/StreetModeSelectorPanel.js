@@ -59,12 +59,16 @@ class StreetModeSelectorPanel extends React.Component {
         <div className="route-here-container">
           <RouteHere>
             <div
+              title={intl.formatMessage({
+                id: 'route-here-button',
+                defaultMessage: 'Copy route here',
+              })}
               aria-label={intl.formatMessage({
                 id: 'route-here-button',
                 defaultMessage: 'Copy route here',
               })}
             >
-              <Icon img="icon-icon_search-plus" />
+              <Icon img="icon-icon_clipboard" />
             </div>
           </RouteHere>
         </div>
