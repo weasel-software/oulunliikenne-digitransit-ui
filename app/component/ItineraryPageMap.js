@@ -11,6 +11,7 @@ import MapContainer from './map/MapContainer';
 import { otpToLocation } from '../util/otpStrings';
 import { isBrowser } from '../util/browser';
 import { dtLocationShape } from '../util/shapes';
+import withBreakpoint from '../util/withBreakpoint';
 
 let L;
 
@@ -172,4 +173,4 @@ ItineraryPageMap.contextTypes = {
   router: routerShape.isRequired,
 };
 
-export default ItineraryPageMap;
+export default withBreakpoint(ItineraryPageMap);
