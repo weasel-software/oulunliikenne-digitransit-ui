@@ -25,6 +25,17 @@
     color: #222;
     background: #fff;
   }
+
+  &.is-mobile {
+    width: 3em;
+    height: 3em;
+    top: 1em;
+    left: 1em;
+
+    .icon {
+      font-size: 1.1rem;
+    }
+  }
 }
 
 .search-container {

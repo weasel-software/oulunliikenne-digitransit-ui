@@ -43,18 +43,22 @@
         .toggle-item {
           margin: 0 0 0.8em;
           label {
-          color: $gray !important;
-          text-align: left;
-        }
+            color: $gray !important;
+            text-align: left;
+          }
 
-        &>div>div {
-          margin-left: 30px !important;
+          &>div>div {
+            margin-left: 30px !important;
+          }
         }
-      }
 
       }
     }
+  }
+}
 
+.top-bar {
+  .bubble-dialog-container {
     .bubble-dialog-tip-container {
       display: none;
     }

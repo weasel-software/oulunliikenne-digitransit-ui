@@ -29,6 +29,11 @@ $item-border-color: #eee;
   width: 52.5%;
   z-index: index($zindex, search-panel);
 
+  &.is-mobile {
+    margin-left: 0;
+    width: 100%;
+  }
+
   & .autosuggest-input-container,
   & .street-mode-selector-popup-options,
   & .street-mode-selector-popup-toggle {

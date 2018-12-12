@@ -9,6 +9,7 @@ import BubbleDialog from './BubbleDialog';
 import Checkbox from './Checkbox';
 import { updateMapLayers } from '../action/MapLayerActions';
 import MapLayerStore, { mapLayerShape } from '../store/MapLayerStore';
+import withBreakpoint from '../util/withBreakpoint';
 
 import ComponentUsageExample from './ComponentUsageExample';
 
@@ -306,7 +307,7 @@ class SelectMapLayersDialog extends React.Component {
   };
 
   render() {
-    const { config } = this.props;
+    const { config, breakpoint } = this.props;
     return (
       <BubbleDialog
         containerClassName={get(
@@ -322,11 +323,11 @@ class SelectMapLayersDialog extends React.Component {
         )}
         id="mapLayerSelector"
         icon={get(config, 'mapTrackingButtons.layers.icon', 'map-layers')}
-        buttonText={get(
-          config,
-          'mapTrackingButtons.layers.buttonText',
-          undefined,
-        )}
+        buttonText={
+          breakpoint !== 'large'
+            ? null
+            : get(config, 'mapTrackingButtons.layers.buttonText', undefined)
+        }
         isOpen={this.props.isOpen}
         isFullscreenOnMobile
       >
@@ -386,6 +387,7 @@ SelectMapLayersDialog.propTypes = {
   isOpen: PropTypes.bool,
   mapLayers: mapLayerShape.isRequired,
   updateMapLayers: PropTypes.func.isRequired,
+  breakpoint: PropTypes.string.isRequired,
 };
 
 SelectMapLayersDialog.defaultProps = {
@@ -434,8 +436,12 @@ SelectMapLayersDialog.description = (
   </ComponentUsageExample>
 );
 
-const connectedComponent = connectToStores(
+const SelectMapLayersDialogWithBreakpoint = withBreakpoint(
   SelectMapLayersDialog,
+);
+
+const connectedComponent = connectToStores(
+  SelectMapLayersDialogWithBreakpoint,
   [MapLayerStore],
   context => ({
     config: context.config,

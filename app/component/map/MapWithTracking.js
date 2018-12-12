@@ -8,6 +8,7 @@ import ComponentUsageExample from '../ComponentUsageExample';
 import MapContainer from './MapContainer';
 import ToggleMapTracking from '../ToggleMapTracking';
 import { dtLocationShape } from '../../util/shapes';
+import withBreakpoint from '../../util/withBreakpoint';
 
 const DEFAULT_ZOOM = 12;
 const FOCUS_ZOOM = 16;
@@ -45,6 +46,7 @@ class MapWithTrackingStateHandler extends React.Component {
     }).isRequired,
     children: PropTypes.array,
     renderCustomButtons: PropTypes.func,
+    breakpoint: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -129,6 +131,7 @@ class MapWithTrackingStateHandler extends React.Component {
       config,
       children,
       renderCustomButtons,
+      breakpoint,
       ...rest
     } = this.props;
     let location;
@@ -174,6 +177,8 @@ class MapWithTrackingStateHandler extends React.Component {
       >
         {children}
         {(!config.mapTrackingButtons ||
+          (breakpoint !== 'large' &&
+            !config.mapTrackingButtons.altPositionMobile) ||
           !config.mapTrackingButtons.altPosition) && (
           <div className="map-with-tracking-buttons">
             {renderCustomButtons && renderCustomButtons()}
@@ -221,4 +226,4 @@ MapWithTracking.description = (
   </div>
 );
 
-export default MapWithTracking;
+export default withBreakpoint(MapWithTracking);

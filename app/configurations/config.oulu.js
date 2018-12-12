@@ -48,6 +48,10 @@ export default configMerger(walttiConfig, {
     ROAD_CONDITIONS_MAP: `${AWS_MAP_URL}/map/roadconditions/`,
   },
 
+  map: {
+    mobileDefaultExpanded: true,
+  },
+
   useAltRelatimeClient: true,
   routePrefix: 'OULU',
 
@@ -167,6 +171,7 @@ export default configMerger(walttiConfig, {
 
   mapTrackingButtons: {
     altPosition: true,
+    altPositionMobile: false,
     layers: {
       containerClassName: 'bubble-dialog-component-container-alt',
       headerId: 'motorist',

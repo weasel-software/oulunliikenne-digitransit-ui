@@ -180,6 +180,7 @@ export default {
   },
 
   map: {
+    mobileDefaultExpanded: false,
     useRetinaTiles: true,
     tileSize: 512,
     zoomOffset: -1,

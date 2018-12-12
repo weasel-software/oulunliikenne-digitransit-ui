@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 import Icon from './Icon';
+import withBreakpoint from '../util/withBreakpoint';
 
 class ContentToggle extends React.Component {
   constructor(props) {
@@ -52,7 +53,14 @@ class ContentToggle extends React.Component {
 
   render() {
     const { show, loaded } = this.state;
-    const { icon, iconClass, toggleDisabled, active, children } = this.props;
+    const {
+      icon,
+      iconClass,
+      toggleDisabled,
+      active,
+      children,
+      breakpoint,
+    } = this.props;
 
     if (toggleDisabled) {
       return <React.Fragment>{children}</React.Fragment>;
@@ -63,6 +71,7 @@ class ContentToggle extends React.Component {
         {React.Children.map(children, child => {
           const className = cx(child.props.className, {
             hidden: !show && !active,
+            'is-mobile': breakpoint !== 'large',
             loaded,
           });
           const props = {
@@ -78,7 +87,9 @@ class ContentToggle extends React.Component {
           <button
             key="toggleItem2"
             onClick={this.toggle}
-            className={cx(iconClass)}
+            className={cx(iconClass, {
+              'is-mobile': breakpoint !== 'large',
+            })}
           >
             {icon && <Icon img={`icon-${icon}`} />}
           </button>
@@ -88,6 +99,7 @@ class ContentToggle extends React.Component {
 }
 
 ContentToggle.propTypes = {
+  breakpoint: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
   icon: PropTypes.string,
   iconClass: PropTypes.string,
@@ -104,4 +116,4 @@ ContentToggle.defaultProps = {
   onToggle: undefined,
 };
 
-export default ContentToggle;
+export default withBreakpoint(ContentToggle);

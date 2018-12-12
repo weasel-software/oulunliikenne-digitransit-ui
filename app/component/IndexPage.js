@@ -67,7 +67,7 @@ class IndexPage extends React.Component {
   constructor(props, context) {
     super(props);
     this.state = {
-      mapExpanded: false, // Show right-now as default
+      mapExpanded: context.config.map.mobileDefaultExpanded, // Show right-now as default
     };
     context.executeAction(storeOrigin, props.origin);
   }
@@ -280,13 +280,23 @@ class IndexPage extends React.Component {
             )}
           >
             {(this.props.showSpinner && <OverlayWithSpinner />) || null}
-            <DTAutosuggestPanel
-              origin={origin}
-              destination={this.props.destination}
-              searchType="all"
-              originPlaceHolder="search-origin"
-              tab={this.props.tab}
-            />
+            <ContentToggle
+              icon="icon_search"
+              iconClass="search-toggle"
+              toggleDisabled={!config.toggleableSearch}
+              active={origin.set || destination.set}
+            >
+              <div className="search-container">
+                <DTAutosuggestPanel
+                  origin={origin}
+                  destination={destination}
+                  tab={tab}
+                  searchType="all"
+                  originPlaceHolder="search-origin"
+                  destinationPlaceHolder="search-destination"
+                />
+              </div>
+            </ContentToggle>
           </MapWithTracking>
         </div>
         <div style={{ position: 'relative' }}>
