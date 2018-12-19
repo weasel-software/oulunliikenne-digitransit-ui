@@ -4,14 +4,9 @@ import Relay from 'react-relay/classic';
 
 export default class CameraStationRoute extends Relay.Route {
   static queries = {
-    weatherCamera: () => Relay.QL`
+    camera: () => Relay.QL`
       query ($id: String!) {
-        weatherCamera (id: $id)
-      }
-    `,
-    trafficCamera: () => Relay.QL`
-      query ($id: String!) {
-        trafficCamera (id: $id)
+        camera (id: $id)
       }
     `,
   };
