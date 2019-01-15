@@ -79,7 +79,7 @@ export default configMerger(walttiConfig, {
     showRoadworks: true,
     roadworksMinZoom: 11,
     showIcons: true,
-    showLines: true,
+    showLines: false,
   },
 
   disorders: {
@@ -90,7 +90,7 @@ export default configMerger(walttiConfig, {
 
   roadConditions: {
     showRoadConditions: true,
-    roadConditionsMinZoom: 12,
+    roadConditionsMinZoom: 7,
     showIcons: false,
     showLines: true,
     colors: {

@@ -387,12 +387,13 @@ SelectMapLayersDialog.propTypes = {
   isOpen: PropTypes.bool,
   mapLayers: mapLayerShape.isRequired,
   updateMapLayers: PropTypes.func.isRequired,
-  breakpoint: PropTypes.string.isRequired,
+  breakpoint: PropTypes.string,
 };
 
 SelectMapLayersDialog.defaultProps = {
   config: {},
   isOpen: false,
+  breakpoint: 'large',
 };
 
 SelectMapLayersDialog.description = (

@@ -11,6 +11,15 @@ class TileContainer {
       config.cityBike.cityBikeMinZoom,
       config.stopsMinZoom,
       config.terminalStopsMinZoom,
+      config.parkAndRide.parkAndRideMinZoom,
+      config.ticketSales.ticketSalesMinZoom,
+      config.parkingStations.parkingStationsMinZoom,
+      config.roadworks.roadworksMinZoom,
+      config.disorders.disordersMinZoom,
+      config.cameraStations.cameraStationsMinZoom,
+      config.weatherStations.weatherStationsMinZoom,
+      config.tmsStations.tmsStationsMinZoom,
+      config.roadConditions.roadConditionsMinZoom,
     );
 
     this.coords = coords;

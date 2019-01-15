@@ -239,6 +239,16 @@ export default {
   useAltRelatimeClient: false,
   routePrefix: 'HSL',
 
+  parkAndRide: {
+    showParkAndRide: false,
+    parkAndRideMinZoom: 14,
+  },
+
+  ticketSales: {
+    showTicketSales: false,
+    ticketSalesMinZoom: 16,
+  },
+
   parkingStations: {
     showParkingStations: false,
     parkingStationsMinZoom: 14,
