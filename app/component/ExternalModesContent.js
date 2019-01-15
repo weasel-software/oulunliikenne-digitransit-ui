@@ -13,6 +13,8 @@ function ExternalModesContent(
         <li key={item.menuItemId}>
           <a
             href={item.url[currentLanguage] || item.url[defaultLanguage] || ''}
+            target="_blank"
+            rel="noopener noreferrer"
           >
             {item.icon && (
               <span
