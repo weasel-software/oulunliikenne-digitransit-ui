@@ -66,7 +66,7 @@ export default class Roadworks {
                     geom.x < feature.extent &&
                     geom.y < feature.extent
                   ) {
-                    if (!this.config.roadworks.showIcons) {
+                    if (!this.config.roadworks.showLines) {
                       this.features.push({
                         geom,
                         properties: feature.properties,
