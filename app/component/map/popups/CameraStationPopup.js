@@ -10,8 +10,7 @@ import CardHeader from '../../CardHeader';
 import ImageSlider from '../../ImageSlider';
 import ComponentUsageExample from '../../ComponentUsageExample';
 
-function CameraStationPopup({ weatherCamera, trafficCamera, lang }, { intl }) {
-  const camera = weatherCamera || trafficCamera;
+function CameraStationPopup({ camera, lang }, { intl }) {
   const localName = camera.names[lang] || camera.name;
 
   return (
@@ -58,8 +57,7 @@ CameraStationPopup.description = (
 
 CameraStationPopup.propTypes = {
   lang: PropTypes.string.isRequired,
-  weatherCamera: PropTypes.object,
-  trafficCamera: PropTypes.object,
+  camera: PropTypes.object,
 };
 
 CameraStationPopup.contextTypes = {
@@ -72,26 +70,8 @@ export default Relay.createContainer(
   })),
   {
     fragments: {
-      weatherCamera: () => Relay.QL`
-        fragment on WeatherCamera {
-          cameraId
-          name
-          names {
-            fi
-            sv
-            en
-          }
-          presets {
-      			presetId
-            presentationName
-            imageUrl
-            direction
-            measuredTime
-          }
-        }
-      `,
-      trafficCamera: () => Relay.QL`
-        fragment on TrafficCamera {
+      camera: () => Relay.QL`
+        fragment on CameraInterface {
           cameraId
           name
           names {
