@@ -94,10 +94,9 @@ class TopLevel extends React.Component {
 
     let content;
 
-    const homeUrl = getHomeUrl(
-      this.props.origin,
-      parseLocation(this.props.params.to),
-    );
+    const homeUrl =
+      get(this.context, 'config.homeUrl') ||
+      getHomeUrl(this.props.origin, parseLocation(this.props.params.to));
 
     if (this.props.children || !(this.props.map || this.props.header)) {
       content = this.props.children || this.props.content;

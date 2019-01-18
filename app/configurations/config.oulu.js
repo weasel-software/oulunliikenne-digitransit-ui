@@ -119,6 +119,8 @@ export default configMerger(walttiConfig, {
 
   sprites: 'svg-sprite.oulu.svg',
 
+  homeUrl: '/',
+
   defaultMapCenter: {
     lat: 65.01236,
     lon: 25.46816,

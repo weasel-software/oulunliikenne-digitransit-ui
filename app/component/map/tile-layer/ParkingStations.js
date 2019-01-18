@@ -16,7 +16,7 @@ export default class ParkingStations {
     this.config = config;
     this.scaleratio = (isBrowser && window.devicePixelRatio) || 1;
     this.imageSize = 20 * this.scaleratio;
-    this.availabilityImageSize = 13 * this.scaleratio;
+    this.availabilityImageSize = 14 * this.scaleratio;
 
     this.promise = this.fetchWithAction(this.fetchAndDrawStatus);
   }
