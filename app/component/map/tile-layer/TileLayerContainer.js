@@ -33,6 +33,7 @@ import ParkAndRideFacilityPopup from '../popups/ParkAndRideFacilityPopup';
 import ParkAndRideHubRoute from '../../../route/ParkAndRideHubRoute';
 import ParkAndRideFacilityRoute from '../../../route/ParkAndRideFacilityRoute';
 import TicketSalesPopup from '../popups/TicketSalesPopup';
+import FluencyPopup from '../popups/FluencyPopup';
 import CameraStationPopup from '../popups/CameraStationPopup';
 import RoadworkPopup from '../popups/RoadworkPopup';
 import DisorderPopup from '../popups/DisorderPopup';
@@ -382,6 +383,13 @@ class TileLayerContainer extends GridLayer {
               route={new RoadConditionRoute({ id })}
               renderLoading={loadingPopup}
               renderFetched={data => <RoadConditionPopup {...data} />}
+            />
+          );
+        } else if (this.state.selectableTargets[0].layer === 'fluencies') {
+          ({ id } = this.state.selectableTargets[0].feature.properties);
+          contents = (
+            <FluencyPopup
+              {...this.state.selectableTargets[0].feature.properties}
             />
           );
         }

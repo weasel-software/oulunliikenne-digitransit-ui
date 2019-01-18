@@ -1,9 +1,11 @@
 .image-slider {
   position: relative;
+  outline: none;
 
   .slide {
     display: none;
     margin: 0;
+    cursor: pointer;
   }
 
   .slide.active {
@@ -27,7 +29,7 @@
       width: 10px;
       height: 10px;
       margin: 0 2px;
-      background: white;
+      background: $white;
       cursor: pointer;
     }
 
@@ -38,12 +40,31 @@
 
   .prev, .next {
     display: block;
-    width: 30%;
-    height: 100%;
+    width: 20%;
+    height: 85%;
     position: absolute;
-    top: 0;
+    bottom: 0;
     z-index: 1;
     cursor: pointer;
+    outline: none;
+
+    .icon-container {
+      display: none;
+      position: absolute;
+      top: 45%;
+      left: 35%;
+      font-size: 1.5em;
+    }
+
+    &:hover {
+      background: $black;
+      color: $white;
+      opacity: 0.5;
+
+      .icon-container {
+        display: block;
+      }
+    }
   }
 
   .prev {

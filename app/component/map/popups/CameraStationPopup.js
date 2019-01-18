@@ -10,6 +10,7 @@ import CardHeader from '../../CardHeader';
 import ImageSlider from '../../ImageSlider';
 import ComponentUsageExample from '../../ComponentUsageExample';
 
+/* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions */
 function CameraStationPopup({ camera, lang }, { intl }) {
   const localName = camera.names[lang] || camera.name;
 
@@ -26,18 +27,22 @@ function CameraStationPopup({ camera, lang }, { intl }) {
           unlinked
         />
         <ImageSlider>
-          {camera.presets.map(item => {
-            return (
-              <figure className="slide" key={item.presetId}>
-                <figcaption>
-                  {item.presentationName}
-                  {item.measuredTime &&
-                    ` (${moment(item.measuredTime).format('HH:mm:ss')})`}
-                </figcaption>
-                <img src={item.imageUrl} alt={item.presentationName} />
-              </figure>
-            );
-          })}
+          {camera.presets.map(item => (
+            <figure className="slide" key={item.presetId}>
+              <figcaption>
+                {item.presentationName}
+                {item.measuredTime &&
+                  ` (${moment(item.measuredTime).format('HH:mm:ss')})`}
+              </figcaption>
+              <img
+                src={item.imageUrl}
+                alt={item.presentationName}
+                onClick={() => {
+                  window.open(item.imageUrl, '_blank');
+                }}
+              />
+            </figure>
+          ))}
         </ImageSlider>
       </Card>
     </div>
@@ -86,6 +91,7 @@ export default Relay.createContainer(
             direction
             measuredTime
           }
+          __typename
         }
       `,
     },

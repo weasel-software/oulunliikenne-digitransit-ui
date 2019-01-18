@@ -44,6 +44,7 @@ export default configMerger(walttiConfig, {
     WEATHER_STATIONS_MAP: `${AWS_MAP_URL}/map/weatherstations/`,
     TMS_STATIONS_MAP: `${AWS_MAP_URL}/map/tmsstations/`,
     ROAD_CONDITIONS_MAP: `${AWS_MAP_URL}/map/roadconditions/`,
+    FLUENCY_MAP: `${AWS_MAP_URL}/map/fluency/`,
   },
 
   map: {
@@ -101,9 +102,24 @@ export default configMerger(walttiConfig, {
     },
   },
 
+  fluencies: {
+    showFluencies: true,
+    fluenciesMinZoom: 7,
+    showIcons: false,
+    showLines: true,
+    colors: {
+      TRAFFIC_FLOW_NORMAL: '#28A745',
+      TRAFFIC_HEAVIER_THAN_NORMAL: '#FFC107',
+      TRAFFIC_MUCH_HEAVIER_THAN_NORMAL: '#DC3545',
+      TRAFFIC_FLOW_UNKNOWN: '#999999',
+    },
+  },
+
   feedIds: ['OULU'],
 
   sprites: 'svg-sprite.oulu.svg',
+
+  homeUrl: '/',
 
   defaultMapCenter: {
     lat: 65.01236,
