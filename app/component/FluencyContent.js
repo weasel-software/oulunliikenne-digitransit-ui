@@ -27,12 +27,7 @@ const getFlowTranslation = trafficFlow => {
   }
 };
 
-const FluencyContent = ({
-  trafficFlow,
-  averageSpeed,
-  speedLimit,
-  trafficDirection,
-}) => (
+const FluencyContent = ({ trafficFlow, averageSpeed, speedLimit }) => (
   <table className="component-list">
     <tbody>
       {trafficFlow && (
@@ -65,20 +60,6 @@ const FluencyContent = ({
           <td>{`${speedLimit} km/h`}</td>
         </tr>
       )}
-      {false &&
-        trafficDirection && (
-          <tr>
-            <td>
-              <FormattedMessage
-                id="traffic-direction"
-                defaultMessage="Traffic direction"
-              >
-                {(...content) => `${content}:`}
-              </FormattedMessage>
-            </td>
-            <td>{trafficDirection}</td>
-          </tr>
-        )}
     </tbody>
   </table>
 );
@@ -98,14 +79,12 @@ FluencyContent.propTypes = {
   trafficFlow: PropTypes.string,
   averageSpeed: PropTypes.number,
   speedLimit: PropTypes.number,
-  trafficDirection: PropTypes.number,
 };
 
 FluencyContent.defaultProps = {
   trafficFlow: null,
   averageSpeed: null,
   speedLimit: null,
-  trafficDirection: null,
 };
 
 export default FluencyContent;

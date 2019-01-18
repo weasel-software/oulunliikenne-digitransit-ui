@@ -8,7 +8,7 @@ import ComponentUsageExample from '../../ComponentUsageExample';
 import FluencyContent from '../../FluencyContent';
 
 function FluencyPopup(
-  { name, averageSpeed, speedLimit, trafficDirection, trafficFlow },
+  { name, averageSpeed, speedLimit, trafficFlow },
   { intl },
 ) {
   return (
@@ -26,7 +26,6 @@ function FluencyPopup(
         <FluencyContent
           averageSpeed={averageSpeed}
           speedLimit={speedLimit}
-          trafficDirection={trafficDirection}
           trafficFlow={trafficFlow}
         />
       </Card>
@@ -48,14 +47,12 @@ FluencyPopup.propTypes = {
   trafficFlow: PropTypes.string,
   averageSpeed: PropTypes.number,
   speedLimit: PropTypes.number,
-  trafficDirection: PropTypes.number,
 };
 
 FluencyPopup.defaultProps = {
   trafficFlow: null,
   averageSpeed: null,
   speedLimit: null,
-  trafficDirection: null,
 };
 
 FluencyPopup.contextTypes = {
