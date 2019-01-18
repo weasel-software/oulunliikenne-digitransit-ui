@@ -310,6 +310,37 @@ export function drawRoadConditionPath(tile, points, color = '#999999') {
   tile.ctx.stroke();
 }
 
+export function drawFluencyIcon(tile, geom, imageSize) {
+  getImageFromSpriteCache('icon-icon_fluency', imageSize, imageSize).then(
+    image => {
+      const minPos = imageSize * tile.scaleratio;
+      const maxPos = tile.tileSize * tile.ratio - minPos;
+
+      geom.x = geom.x < minPos ? minPos : geom.x;
+      geom.y = geom.y < minPos ? minPos : geom.y;
+      geom.x = geom.x > maxPos ? maxPos : geom.x;
+      geom.y = geom.y > maxPos ? maxPos : geom.y;
+
+      drawIconImage(image, tile, geom, imageSize, imageSize);
+    },
+  );
+}
+
+export function drawFluencyPath(tile, points, color = '#999999') {
+  tile.ctx.beginPath();
+  for (let i = 0, ref = points.length; i < ref; i++) {
+    if (i === 0) {
+      tile.ctx.moveTo(points[i].x / tile.ratio, points[i].y / tile.ratio);
+    } else {
+      tile.ctx.lineTo(points[i].x / tile.ratio, points[i].y / tile.ratio);
+    }
+  }
+
+  tile.ctx.strokeStyle = color;
+  tile.ctx.lineWidth = 8;
+  tile.ctx.stroke();
+}
+
 export function drawPathWithCircles(tile, points, color = '#000000') {
   const scale = 1;
   const caseRadius = getCaseRadius(tile.coords.z) * scale;

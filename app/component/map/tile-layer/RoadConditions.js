@@ -1,7 +1,6 @@
 import { VectorTile } from '@mapbox/vector-tile';
 import Protobuf from 'pbf';
 import Relay from 'react-relay/classic';
-import get from 'lodash/get';
 import {
   drawRoadConditionIcon,
   drawRoadConditionPath,

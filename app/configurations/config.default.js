@@ -252,7 +252,6 @@ export default {
   parkingStations: {
     showParkingStations: false,
     parkingStationsMinZoom: 14,
-    smallIconZoom: 14,
   },
 
   cameraStations: {
@@ -268,7 +267,16 @@ export default {
   disorders: {
     showDisorders: false,
     disordersMinZoom: 14,
-    showLines: false,
+  },
+
+  roadConditions: {
+    showRoadConditions: false,
+    roadConditionsMinZoom: 7,
+  },
+
+  fluencies: {
+    showFluencies: false,
+    fluenciesMinZoom: 7,
   },
 
   weatherStations: {
