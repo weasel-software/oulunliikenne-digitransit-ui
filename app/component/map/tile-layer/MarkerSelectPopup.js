@@ -96,7 +96,7 @@ function MarkerSelectPopup(props) {
       return (
         <SelectTmsStationRow
           {...option.feature.properties}
-          key={option.feature.properties.id}
+          key={`${option.feature.properties.id}_${option.layer}`}
           selectRow={() => props.selectRow(option)}
         />
       );

@@ -78,7 +78,7 @@ export default configMerger(walttiConfig, {
 
   roadworks: {
     showRoadworks: true,
-    roadworksMinZoom: 11,
+    roadworksMinZoom: 13,
     showIcons: true,
     showLines: false,
   },
@@ -107,6 +107,7 @@ export default configMerger(walttiConfig, {
     fluenciesMinZoom: 7,
     showIcons: false,
     showLines: true,
+    showEmpty: false,
     colors: {
       TRAFFIC_FLOW_NORMAL: '#28A745',
       TRAFFIC_HEAVIER_THAN_NORMAL: '#FFC107',
@@ -121,6 +122,7 @@ export default configMerger(walttiConfig, {
 
   homeUrl: '/',
 
+  defaultMapZoom: 13,
   defaultMapCenter: {
     lat: 65.01236,
     lon: 25.46816,

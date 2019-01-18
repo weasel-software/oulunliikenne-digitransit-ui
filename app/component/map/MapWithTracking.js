@@ -41,6 +41,7 @@ class MapWithTrackingStateHandler extends React.Component {
       lon: PropTypes.number.isRequired,
     }).isRequired,
     config: PropTypes.shape({
+      defaultMapZoom: PropTypes.number,
       defaultMapCenter: dtLocationShape,
       defaultEndpoint: dtLocationShape.isRequired,
     }).isRequired,
@@ -58,7 +59,10 @@ class MapWithTrackingStateHandler extends React.Component {
     const hasOriginorPosition =
       props.origin.ready || props.position.hasLocation;
     this.state = {
-      initialZoom: hasOriginorPosition ? FOCUS_ZOOM : DEFAULT_ZOOM,
+      defaultZoom: props.config.defaultMapZoom || DEFAULT_ZOOM,
+      initialZoom: hasOriginorPosition
+        ? FOCUS_ZOOM
+        : props.config.defaultMapZoom || DEFAULT_ZOOM,
       mapTracking: props.origin.gps && props.position.hasLocation,
       focusOnOrigin: props.origin.ready,
       origin: props.origin,
@@ -94,7 +98,9 @@ class MapWithTrackingStateHandler extends React.Component {
       mapTracking: true,
       focusOnOrigin: false,
       initialZoom:
-        this.state.initialZoom === DEFAULT_ZOOM ? FOCUS_ZOOM : undefined,
+        this.state.initialZoom === this.state.defaultZoom
+          ? FOCUS_ZOOM
+          : undefined,
       shouldShowDefaultLocation: false,
     });
   }
@@ -105,7 +111,9 @@ class MapWithTrackingStateHandler extends React.Component {
       mapTracking: false,
       focusOnOrigin: true,
       initialZoom:
-        this.state.initialZoom === DEFAULT_ZOOM ? FOCUS_ZOOM : undefined,
+        this.state.initialZoom === this.state.defaultZoom
+          ? FOCUS_ZOOM
+          : undefined,
       shouldShowDefaultLocation: false,
     });
   }
