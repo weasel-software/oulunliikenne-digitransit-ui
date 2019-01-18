@@ -64,8 +64,12 @@ export default class Fluencies {
     const { trafficFlow } = feature.properties;
 
     if (!get(feature, 'properties.name')) {
-      // eslint-disable-next-line no-param-reassign
-      feature.properties = { ...feature.properties, name: '' };
+      if (get(this.config, 'fluencies.showEmpty')) {
+        // eslint-disable-next-line no-param-reassign
+        feature.properties = { ...feature.properties, name: '' };
+      } else {
+        return;
+      }
     }
 
     for (let j = 0, geomListRef = geometryList.length; j < geomListRef; j++) {

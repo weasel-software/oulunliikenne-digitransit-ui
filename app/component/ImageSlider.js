@@ -67,39 +67,43 @@ class ImageSlider extends React.Component {
             return React.cloneElement(item, props);
           })}
         </div>
-        <div className="nav">
-          {React.Children.map(children, (item, i) => (
-            <span
-              onClick={() => this.changeActive(i)}
-              onKeyDown={evt => {
-                if (evt.which === 32) {
-                  this.changeActive(i);
-                }
-              }}
-              className={i === active ? 'active' : ''}
-              role="button"
-              tabIndex={i + 1}
-            />
-          ))}
-        </div>
-        <div
-          className="prev"
-          onClick={this.prev}
-          onKeyDown={() => {}}
-          role="button"
-          tabIndex={-1}
-        >
-          <Icon img="icon-icon_arrow-collapse--left" />
-        </div>
-        <div
-          className="next"
-          onClick={this.next}
-          onKeyDown={() => {}}
-          role="button"
-          tabIndex={-1}
-        >
-          <Icon img="icon-icon_arrow-collapse--right" />
-        </div>
+        {children.length > 1 && [
+          <div className="nav" key="nav">
+            {React.Children.map(children, (item, i) => (
+              <span
+                onClick={() => this.changeActive(i)}
+                onKeyDown={evt => {
+                  if (evt.which === 32) {
+                    this.changeActive(i);
+                  }
+                }}
+                className={i === active ? 'active' : ''}
+                role="button"
+                tabIndex={i + 1}
+              />
+            ))}
+          </div>,
+          <div
+            className="prev"
+            onClick={this.prev}
+            onKeyDown={() => {}}
+            role="button"
+            tabIndex={-1}
+            key="prev"
+          >
+            <Icon img="icon-icon_arrow-collapse--left" />
+          </div>,
+          <div
+            className="next"
+            onClick={this.next}
+            onKeyDown={() => {}}
+            role="button"
+            tabIndex={-1}
+            key="next"
+          >
+            <Icon img="icon-icon_arrow-collapse--right" />
+          </div>,
+        ]}
       </div>
     );
   }
