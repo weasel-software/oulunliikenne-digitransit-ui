@@ -109,6 +109,7 @@ class SelectMapLayersDialog extends React.Component {
       weatherStations,
       tmsStations,
       roadConditions,
+      fluencies,
     },
     config,
   ) => {
@@ -275,6 +276,17 @@ class SelectMapLayersDialog extends React.Component {
                 }
               />
             )}
+          {config.fluencies &&
+            config.fluencies.showFluencies && (
+              <InputField
+                checked={fluencies}
+                labelId="fluency"
+                defaultMessage="Fluency"
+                onChange={e =>
+                  this.updateSetting({ fluencies: e.target.checked })
+                }
+              />
+            )}
         </div>
         {config.ticketSales &&
           config.ticketSales.showTicketSales && (
@@ -368,6 +380,9 @@ const mapLayersConfigShape = PropTypes.shape({
   }),
   roadConditions: PropTypes.shape({
     showRoadConditions: PropTypes.bool,
+  }),
+  fluencies: PropTypes.shape({
+    showFluencies: PropTypes.bool,
   }),
   ticketSales: PropTypes.shape({
     showTicketSales: PropTypes.bool,

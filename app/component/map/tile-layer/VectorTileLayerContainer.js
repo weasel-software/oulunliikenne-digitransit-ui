@@ -13,6 +13,7 @@ import Disorders from './Disorders';
 import WeatherStations from './WeatherStations';
 import TmsStations from './TmsStations';
 import RoadConditions from './RoadConditions';
+import Fluencies from './Fluencies';
 
 class VectorTileLayerContainer extends React.Component {
   constructor(props, context) {
@@ -28,6 +29,10 @@ class VectorTileLayerContainer extends React.Component {
     if (showStops) {
       if (config.roadConditions && config.roadConditions.showRoadConditions) {
         layers.push(RoadConditions);
+      }
+
+      if (config.fluencies && config.fluencies.showFluencies) {
+        layers.push(Fluencies);
       }
 
       if (config.roadworks && config.roadworks.showRoadworks) {
