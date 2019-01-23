@@ -1,6 +1,11 @@
 import { VectorTile } from '@mapbox/vector-tile';
 import Protobuf from 'pbf';
-import { drawDisorderIcon, drawDisorderPath } from '../../../util/mapIconUtils';
+import get from 'lodash/get';
+import {
+  drawDisorderIcon,
+  drawDisorderPath,
+  drawDisorderPolygon,
+} from '../../../util/mapIconUtils';
 import { isBrowser } from '../../../util/browser';
 
 export default class Disorders {
@@ -66,7 +71,10 @@ export default class Disorders {
                     geom.x < feature.extent &&
                     geom.y < feature.extent
                   ) {
-                    this.features.push({ geom, properties: feature.properties });
+                    this.features.push({
+                      geom,
+                      properties: feature.properties,
+                    });
                     drawDisorderIcon(this.tile, geom, this.imageSize);
                   }
                   points.push(geom);
@@ -76,6 +84,37 @@ export default class Disorders {
                   drawDisorderPath(this.tile, points);
                 }
               }
+            } else if (feature.properties.type === 'TrafficAnnouncement') {
+              const geojson = feature.toGeoJSON(
+                this.tile.coords.x,
+                this.tile.coords.y,
+                this.tile.coords.z,
+              );
+              const type = get(geojson, 'geometry.type');
+
+              geometryList.forEach(geom => {
+                if (type === 'LineString') {
+                  drawDisorderPath(this.tile, geom);
+                  this.features.push({
+                    lineString: geom,
+                    geom: null,
+                    properties: feature.properties,
+                  });
+                } else if (type === 'Polygon') {
+                  drawDisorderPolygon(this.tile, geom);
+                  this.features.push({
+                    polygon: geom,
+                    geom: null,
+                    properties: feature.properties,
+                  });
+                } else if (type === 'Point') {
+                  drawDisorderIcon(this.tile, geom[0], this.imageSize);
+                  this.features.push({
+                    geom: geom[0],
+                    properties: feature.properties,
+                  });
+                }
+              });
             }
           }
         }

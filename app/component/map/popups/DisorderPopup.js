@@ -10,16 +10,14 @@ import DisorderContent from '../../DisorderContent';
 import ComponentUsageExample from '../../ComponentUsageExample';
 
 function DisorderPopup(
-  { trafficDisorder, trafficAnnouncement, lang },
+  { trafficDisorder, lang },
   { intl, router, location, config: { defaultLanguage } },
 ) {
-  const disorderItem = trafficDisorder; // || trafficAnnouncement;
-
-  if (!disorderItem) {
+  if (!trafficDisorder) {
     return null;
   }
 
-  const { startTime, endTime, description, geojson } = disorderItem;
+  const { startTime, endTime, description, geojson } = trafficDisorder;
   const locations = geojson.features.map(item => item.properties);
   const firstLocation = locations.length ? locations[0].firstName : '';
   const lastLocation =
@@ -76,7 +74,7 @@ DisorderPopup.displayName = 'DisorderPopup';
 
 DisorderPopup.description = (
   <div>
-    <p>Renders a road work popup.</p>
+    <p>Renders a traffic disorder popup.</p>
     <ComponentUsageExample description="">
       <DisorderPopup context="context object here" />
     </ComponentUsageExample>
@@ -85,13 +83,11 @@ DisorderPopup.description = (
 
 DisorderPopup.propTypes = {
   trafficDisorder: PropTypes.object,
-  // trafficAnnouncement: PropTypes.object,
   lang: PropTypes.string.isRequired,
 };
 
 DisorderPopup.defaultProps = {
   trafficDisorder: null,
-  // trafficAnnouncement: null,
 };
 
 DisorderPopup.contextTypes = {
@@ -124,21 +120,6 @@ export default Relay.createContainer(
           geojson
         }
       `,
-      /* trafficAnnouncement: () => Relay.QL`
-        fragment on TrafficAnnouncement {
-          announcementId
-          severity
-          status
-          startTime
-          endTime
-          description {
-            fi
-            sv
-            en
-          }
-          geojson
-        }
-      `, */
     },
   },
 );

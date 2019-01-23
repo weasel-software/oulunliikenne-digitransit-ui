@@ -19,6 +19,7 @@ import ParkingStationRoute from '../../../route/ParkingStationRoute';
 import CameraStationRoute from '../../../route/CameraStationRoute';
 import RoadworkRoute from '../../../route/RoadworkRoute';
 import DisorderRoute from '../../../route/DisorderRoute';
+import TrafficAnnouncementRoute from '../../../route/TrafficAnnouncementRoute';
 import WeatherStationRoute from '../../../route/WeatherStationRoute';
 import TmsStationRoute from '../../../route/TmsStationRoute';
 import RoadConditionRoute from '../../../route/RoadConditionRoute';
@@ -37,6 +38,7 @@ import FluencyPopup from '../popups/FluencyPopup';
 import CameraStationPopup from '../popups/CameraStationPopup';
 import RoadworkPopup from '../popups/RoadworkPopup';
 import DisorderPopup from '../popups/DisorderPopup';
+import TrafficAnnouncementPopup from '../popups/TrafficAnnouncementPopup';
 import RoadConditionPopup from '../popups/RoadConditionPopup';
 import LocationPopup from '../popups/LocationPopup';
 import TileContainer from './TileContainer';
@@ -365,15 +367,25 @@ class TileLayerContainer extends GridLayer {
           );
         } else if (this.state.selectableTargets[0].layer === 'disorders') {
           ({ id } = this.state.selectableTargets[0].feature.properties);
-          contents = (
-            <Relay.RootContainer
-              Component={DisorderPopup}
-              forceFetch
-              route={new DisorderRoute({ id })}
-              renderLoading={loadingPopup}
-              renderFetched={data => <DisorderPopup {...data} />}
-            />
-          );
+          contents =
+            get(this.state.selectableTargets[0], 'feature.properties.type') ===
+            'TrafficAnnouncement' ? (
+              <Relay.RootContainer
+                Component={TrafficAnnouncementPopup}
+                forceFetch
+                route={new TrafficAnnouncementRoute({ id })}
+                renderLoading={loadingPopup}
+                renderFetched={data => <TrafficAnnouncementPopup {...data} />}
+              />
+            ) : (
+              <Relay.RootContainer
+                Component={DisorderPopup}
+                forceFetch
+                route={new DisorderRoute({ id })}
+                renderLoading={loadingPopup}
+                renderFetched={data => <DisorderPopup {...data} />}
+              />
+            );
         } else if (this.state.selectableTargets[0].layer === 'roadConditions') {
           ({ id } = this.state.selectableTargets[0].feature.properties);
           contents = (

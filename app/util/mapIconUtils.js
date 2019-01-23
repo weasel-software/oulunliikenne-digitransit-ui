@@ -243,7 +243,7 @@ export function drawRoadworkPath(tile, points, color = '#0073BF') {
   }
 
   tile.ctx.strokeStyle = color;
-  tile.ctx.lineWidth = 4;
+  tile.ctx.lineWidth = 5;
   tile.ctx.stroke();
 }
 
@@ -273,8 +273,30 @@ export function drawDisorderPath(tile, points) {
     }
   }
   tile.ctx.strokeStyle = '#0073BF';
-  tile.ctx.lineWidth = 4;
+  tile.ctx.lineWidth = 5;
   tile.ctx.stroke();
+}
+
+export function drawDisorderPolygon(tile, points) {
+  tile.ctx.beginPath();
+  for (let i = 0, ref = points.length; i < ref; i++) {
+    if (i === 0) {
+      tile.ctx.moveTo(points[i].x / tile.ratio, points[i].y / tile.ratio);
+    } else {
+      tile.ctx.lineTo(points[i].x / tile.ratio, points[i].y / tile.ratio);
+    }
+  }
+  tile.ctx.strokeStyle = '#0073BF';
+  tile.ctx.lineWidth = 5;
+  // tile.ctx.lineWidth = 5 * tile.scaleratio;
+  tile.ctx.stroke();
+
+  const { globalAlpha } = tile.ctx;
+  tile.ctx.globalAlpha = 0.2;
+  tile.ctx.fillStyle = '#0073BF';
+  tile.ctx.fill();
+
+  tile.ctx.globalAlpha = globalAlpha;
 }
 
 export function drawRoadConditionIcon(tile, geom, imageSize) {
