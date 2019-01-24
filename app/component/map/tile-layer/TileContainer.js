@@ -3,9 +3,7 @@ import omit from 'lodash/omit';
 import L from 'leaflet';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import pointToLineDistance from '@turf/point-to-line-distance';
-import turfPoint from 'turf-point';
 import turfPolygon from 'turf-polygon';
-import turfLinestring from 'turf-linestring';
 
 import { isBrowser } from '../../../util/browser';
 import { isLayerEnabled } from '../../../util/mapLayerUtils';
@@ -181,7 +179,7 @@ class TileContainer {
             ]);
 
             const pointWithinDist = booleanPointInPolygon(
-              turfPoint(localPoint),
+              localPoint,
               turfPolygon([formatedPolygon]),
             );
 
@@ -207,12 +205,15 @@ class TileContainer {
             ]);
 
             const pointToLineDist = pointToLineDistance(
-              turfPoint(localPoint),
-              turfLinestring(formatedLineString),
-              { units: 'degrees' },
+              localPoint,
+              formatedLineString,
+              {
+                units: 'kilometers',
+                method: 'planar',
+              },
             );
 
-            if (pointToLineDist < 22 * this.scaleratio) {
+            if (pointToLineDist / 100 < 10 * this.scaleratio) {
               currentFeature.feature.geom = {
                 x: localPoint[0] * this.ratio,
                 y: localPoint[1] * this.ratio,
@@ -222,33 +223,6 @@ class TileContainer {
 
             return null;
           }
-
-          // LineString check
-          // if (feature.feature.lineString) {
-          //   const currentFeature = { ...feature };
-          //   const { lineString } = currentFeature.feature;
-          //
-          //   const pointWithinDist = lineString.reduce((res, current) => {
-          //     if (res) {
-          //       return res;
-          //     }
-          //     const distance = Math.sqrt(
-          //       (localPoint[0] - current.x / this.ratio) ** 2 +
-          //         (localPoint[1] - current.y / this.ratio) ** 2,
-          //     );
-          //     if (distance < 22 * this.scaleratio) {
-          //       return current;
-          //     }
-          //     return res;
-          //   }, undefined);
-          //
-          //   if (pointWithinDist) {
-          //     currentFeature.feature.geom = pointWithinDist;
-          //     return currentFeature;
-          //   }
-          //
-          //   return null;
-          // }
 
           const g = feature.feature.geom;
           const dist = Math.sqrt(

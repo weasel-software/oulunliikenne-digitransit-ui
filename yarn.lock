@@ -901,12 +901,40 @@
     "@turf/helpers" "6.x"
     "@turf/invariant" "6.x"
 
+"@turf/center-of-mass@6.0.1":
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/@turf/center-of-mass/-/center-of-mass-6.0.1.tgz#be8904edfd6523683706429ea2f4adf5badd5b26"
+  integrity sha512-cY+RndzVzDBMlEShRmvLko0CSG1+iC+WdeMAtauCGL61e23LTYHxFSjVOOo4gF+aKqKia1veZPol8ENJoOU4ow==
+  dependencies:
+    "@turf/centroid" "6.x"
+    "@turf/convex" "6.x"
+    "@turf/helpers" "6.x"
+    "@turf/invariant" "6.x"
+    "@turf/meta" "6.x"
+
+"@turf/centroid@6.x":
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/@turf/centroid/-/centroid-6.0.2.tgz#c4eb16b4bc60b692f74e1809cf9a7c4a4f5ba1cc"
+  integrity sha512-auyDauOtC4eddH7GC3CHFTDu2PKhpSeKCRhwhHhXtJqn2dWCJQNIoCeJRmfXRIbzCWhWvgvQafvvhq8HNvmvWw==
+  dependencies:
+    "@turf/helpers" "6.x"
+    "@turf/meta" "6.x"
+
 "@turf/clone@6.x":
   version "6.0.2"
   resolved "https://registry.yarnpkg.com/@turf/clone/-/clone-6.0.2.tgz#7563cebbb3e2e19f361599bb244467e0dcc205c9"
   integrity sha512-UVpYPnW3wRj3bPncR6Z2PRbowBk+nEdVWgGewPxrKKLfvswtVtG9n/OIyvbU3E3ZOadBVxTH2uAMEMOz4800FA==
   dependencies:
     "@turf/helpers" "6.x"
+
+"@turf/convex@6.x":
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/@turf/convex/-/convex-6.0.3.tgz#d7e9912b96483f1504cdd2f60b4b1bbdbf77416c"
+  integrity sha512-S9zvcKiqkIiQ/fhnEP5ftDrsVY3Sh0XeLDVZY761nlvuvzLVzz26Gq7H3NMsCJlmIcQS9jPARFBVpRZi6eTV8Q==
+  dependencies:
+    "@turf/helpers" "6.x"
+    "@turf/meta" "6.x"
+    concaveman "*"
 
 "@turf/distance@6.x":
   version "6.0.1"
@@ -3594,6 +3622,17 @@ concat-stream@~1.5.0, concat-stream@~1.5.1:
     inherits "~2.0.1"
     readable-stream "~2.0.0"
     typedarray "~0.0.5"
+
+concaveman@*:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/concaveman/-/concaveman-1.1.1.tgz#6c2482580b2523cef82fc2bec00a0415e6e68162"
+  integrity sha1-bCSCWAslI874L8K+wAoEFebmgWI=
+  dependencies:
+    monotone-convex-hull-2d "^1.0.1"
+    point-in-polygon "^1.0.1"
+    rbush "^2.0.1"
+    robust-orientation "^1.1.3"
+    tinyqueue "^1.1.0"
 
 configstore@^3.0.0:
   version "3.1.2"
@@ -8911,6 +8950,13 @@ moment@2.22.2, "moment@>= 2.9.0":
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.2.tgz#3c257f9839fc0e93ff53149632239eb90783ff66"
   integrity sha1-PCV/mDn8DpP/UxSWMiOeuQeD/2Y=
 
+monotone-convex-hull-2d@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/monotone-convex-hull-2d/-/monotone-convex-hull-2d-1.0.1.tgz#47f5daeadf3c4afd37764baa1aa8787a40eee08c"
+  integrity sha1-R/Xa6t88Sv03dkuqGqh4ekDu4Iw=
+  dependencies:
+    robust-orientation "^1.1.3"
+
 moo@^0.4.3:
   version "0.4.3"
   resolved "https://registry.yarnpkg.com/moo/-/moo-0.4.3.tgz#3f847a26f31cf625a956a87f2b10fbc013bfd10e"
@@ -10184,7 +10230,7 @@ pngjs@^3.0.0, pngjs@^3.2.0, pngjs@^3.3.3:
   resolved "https://registry.yarnpkg.com/pngjs/-/pngjs-3.3.3.tgz#85173703bde3edac8998757b96e5821d0966a21b"
   integrity sha512-1n3Z4p3IOxArEs1VRXnZ/RXdfEniAUS9jb68g58FIXMNkPJeZd+Qh4Uq7/e0LVxAQGos1eIUrqrt4FpjdnEd+Q==
 
-point-in-polygon@1.0.1:
+point-in-polygon@1.0.1, point-in-polygon@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/point-in-polygon/-/point-in-polygon-1.0.1.tgz#d59b64e8fee41c49458aac82b56718c5957b2af7"
   integrity sha1-1Ztk6P7kHElFiqyCtWcYxZV7Kvc=
@@ -10919,6 +10965,11 @@ quick-lru@^1.0.0:
   resolved "https://registry.yarnpkg.com/quick-lru/-/quick-lru-1.1.0.tgz#4360b17c61136ad38078397ff11416e186dcfbb8"
   integrity sha1-Q2CxfGETatOAeDl/8RQW4Ybc+7g=
 
+quickselect@^1.0.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/quickselect/-/quickselect-1.1.1.tgz#852e412ce418f237ad5b660d70cffac647ae94c2"
+  integrity sha512-qN0Gqdw4c4KGPsBOQafj6yj/PA6c/L63f6CaZ/DCF/xF4Esu3jVmKLUDYxghFx8Kb/O7y9tI7x2RjTSXwdK1iQ==
+
 raf@^3.1.0, raf@^3.4.0:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/raf/-/raf-3.4.0.tgz#a28876881b4bc2ca9117d4138163ddb80f781575"
@@ -11003,6 +11054,13 @@ raw-body@2.3.2:
     http-errors "1.6.2"
     iconv-lite "0.4.19"
     unpipe "1.0.0"
+
+rbush@^2.0.1:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/rbush/-/rbush-2.0.2.tgz#bb6005c2731b7ba1d5a9a035772927d16a614605"
+  integrity sha512-XBOuALcTm+O/H8G90b6pzu6nX6v2zCKiFG4BJho8a+bY6AER6t8uQUZdi5bomQc0AprCWhEGa7ncAbbRap0bRA==
+  dependencies:
+    quickselect "^1.0.1"
 
 rc@^1.0.1, rc@^1.1.6, rc@^1.2.7:
   version "1.2.8"
@@ -11945,6 +12003,34 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
   dependencies:
     hash-base "^3.0.0"
     inherits "^2.0.1"
+
+robust-orientation@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/robust-orientation/-/robust-orientation-1.1.3.tgz#daff5b00d3be4e60722f0e9c0156ef967f1c2049"
+  integrity sha1-2v9bANO+TmByLw6cAVbvln8cIEk=
+  dependencies:
+    robust-scale "^1.0.2"
+    robust-subtract "^1.0.0"
+    robust-sum "^1.0.0"
+    two-product "^1.0.2"
+
+robust-scale@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/robust-scale/-/robust-scale-1.0.2.tgz#775132ed09542d028e58b2cc79c06290bcf78c32"
+  integrity sha1-d1Ey7QlULQKOWLLMecBikLz3jDI=
+  dependencies:
+    two-product "^1.0.2"
+    two-sum "^1.0.0"
+
+robust-subtract@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/robust-subtract/-/robust-subtract-1.0.0.tgz#e0b164e1ed8ba4e3a5dda45a12038348dbed3e9a"
+  integrity sha1-4LFk4e2LpOOl3aRaEgODSNvtPpo=
+
+robust-sum@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/robust-sum/-/robust-sum-1.0.0.tgz#16646e525292b4d25d82757a286955e0bbfa53d9"
+  integrity sha1-FmRuUlKStNJdgnV6KGlV4Lv6U9k=
 
 rst-selector-parser@^2.2.3:
   version "2.2.3"
@@ -13176,6 +13262,11 @@ tinycolor2@^1.1.2:
   resolved "https://registry.yarnpkg.com/tinycolor2/-/tinycolor2-1.4.1.tgz#f4fad333447bc0b07d4dc8e9209d8f39a8ac77e8"
   integrity sha1-9PrTM0R7wLB9TcjpIJ2POaisd+g=
 
+tinyqueue@^1.1.0:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/tinyqueue/-/tinyqueue-1.2.3.tgz#b6a61de23060584da29f82362e45df1ec7353f3d"
+  integrity sha512-Qz9RgWuO9l8lT+Y9xvbzhPT2efIUIFd69N7eF7tJ9lnQl0iLj1M7peK7IoUGZL9DJHw9XftqLreccfxcQgYLxA==
+
 tmp@0.0.30:
   version "0.0.30"
   resolved "https://registry.yarnpkg.com/tmp/-/tmp-0.0.30.tgz#72419d4a8be7d6ce75148fd8b324e593a711c2ed"
@@ -13362,18 +13453,6 @@ tunnel-agent@~0.4.1:
   resolved "https://registry.yarnpkg.com/tunnel-agent/-/tunnel-agent-0.4.3.tgz#6373db76909fe570e08d73583365ed828a74eeeb"
   integrity sha1-Y3PbdpCf5XDgjXNYM2Xtgop07us=
 
-turf-linestring@1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/turf-linestring/-/turf-linestring-1.0.2.tgz#604a63a7c54c9346ab9f39f273bbb7ece05a3096"
-  integrity sha1-YEpjp8VMk0arnznyc7u37OBaMJY=
-
-turf-point@2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/turf-point/-/turf-point-2.0.1.tgz#a2dcc30a2d20f44cf5c6271df7bae2c0e2146069"
-  integrity sha1-otzDCi0g9Ez1xicd97riwOIUYGk=
-  dependencies:
-    minimist "^1.1.0"
-
 turf-polygon@1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/turf-polygon/-/turf-polygon-1.0.3.tgz#671dd34849864509281af18e236f67a7448c6363"
@@ -13383,6 +13462,16 @@ tweetnacl@^0.14.3, tweetnacl@~0.14.0:
   version "0.14.5"
   resolved "https://registry.yarnpkg.com/tweetnacl/-/tweetnacl-0.14.5.tgz#5ae68177f192d4456269d108afa93ff8743f4f64"
   integrity sha1-WuaBd/GS1EViadEIr6k/+HQ/T2Q=
+
+two-product@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/two-product/-/two-product-1.0.2.tgz#67d95d4b257a921e2cb4bd7af9511f9088522eaa"
+  integrity sha1-Z9ldSyV6kh4stL16+VEfkIhSLqo=
+
+two-sum@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/two-sum/-/two-sum-1.0.0.tgz#31d3f32239e4f731eca9df9155e2b297f008ab64"
+  integrity sha1-MdPzIjnk9zHsqd+RVeKyl/AIq2Q=
 
 type-check@~0.3.2:
   version "0.3.2"

@@ -23,133 +23,154 @@ const ExtendedContent = ({ trafficAnnouncement }, { intl }) => {
 
   return (
     <ul className="extended-content">
-      {trafficAnnouncement.class.map(item => (
-        <li key={`${item.class}_${item.subclass}`}>
+      {trafficAnnouncement.class &&
+        trafficAnnouncement.class.map(item => (
+          <li key={`${item.class}_${item.subclass}`}>
+            <FormattedMessage
+              id={`traffic-announcement-class-${item.class.toLowerCase()}`}
+              defaultMessage={item.class}
+            >
+              {(...content) => <span>{`${content}:`}</span>}
+            </FormattedMessage>
+            {intl.formatMessage({
+              id: `traffic-announcement-subclass-${item.subclass.toLowerCase()}`,
+              defaultMessage: item.subclass,
+            })}
+          </li>
+        ))}
+      {modesOfTransport && (
+        <li>
           <FormattedMessage
-            id={`traffic-announcement-class-${item.class.toLowerCase()}`}
-            defaultMessage={item.class}
+            id="traffic-announcement-modes-of-transport"
+            defaultMessage="Modes of transport"
+          >
+            {(...content) => <span>{`${content}:`}</span>}
+          </FormattedMessage>
+          {modesOfTransport
+            .map(item =>
+              intl.formatMessage({
+                id: `traffic-announcement-modes-of-transport-${item.toLowerCase()}`,
+                defaultMessage: item,
+              }),
+            )
+            .join(', ')}
+        </li>
+      )}
+      {severity && (
+        <li>
+          <FormattedMessage
+            id="traffic-announcement-severity"
+            defaultMessage="Severity"
           >
             {(...content) => <span>{`${content}:`}</span>}
           </FormattedMessage>
           {intl.formatMessage({
-            id: `traffic-announcement-subclass-${item.subclass.toLowerCase()}`,
-            defaultMessage: item.subclass,
+            id: `traffic-announcement-severity-${severity.toLowerCase()}`,
+            defaultMessage: severity,
           })}
         </li>
-      ))}
-      <li>
-        <FormattedMessage
-          id="traffic-announcement-modes-of-transport"
-          defaultMessage="Modes of transport"
-        >
-          {(...content) => <span>{`${content}:`}</span>}
-        </FormattedMessage>
-        {modesOfTransport
-          .map(item =>
-            intl.formatMessage({
-              id: `traffic-announcement-modes-of-transport-${item.toLowerCase()}`,
-              defaultMessage: item,
-            }),
-          )
-          .join(', ')}
-      </li>
-      <li>
-        <FormattedMessage
-          id="traffic-announcement-severity"
-          defaultMessage="Severity"
-        >
-          {(...content) => <span>{`${content}:`}</span>}
-        </FormattedMessage>
-        {intl.formatMessage({
-          id: `traffic-announcement-severity-${severity.toLowerCase()}`,
-          defaultMessage: severity,
-        })}
-      </li>
-      <li>
-        <FormattedMessage
-          id="traffic-announcement-traffic-direction"
-          defaultMessage="Direction"
-        >
-          {(...content) => <span>{`${content}:`}</span>}
-        </FormattedMessage>
-        {intl.formatMessage({
-          id: `traffic-announcement-traffic-direction-${trafficDirection.toLowerCase()}`,
-          defaultMessage: trafficDirection,
-        })}
-      </li>
-      <li>
-        <FormattedMessage
-          id="traffic-announcement-temporary-speed-limit"
-          defaultMessage="Temporary speed limit"
-        >
-          {(...content) => <span>{`${content}:`}</span>}
-        </FormattedMessage>
-        {`${temporarySpeedLimit} km/h`}
-      </li>
-      <li>
-        <FormattedMessage
-          id="traffic-announcement-duration"
-          defaultMessage="Estimated duration"
-        >
-          {(...content) => <span>{`${content}:`}</span>}
-        </FormattedMessage>
-        {intl.formatMessage({
-          id: `traffic-announcement-duration-${duration.toLowerCase()}`,
-          defaultMessage: duration,
-        })}
-      </li>
-      <li>
-        <FormattedMessage
-          id="traffic-announcement-additional-info"
-          defaultMessage="Additional info"
-        >
-          {(...content) => <span>{`${content}:`}</span>}
-        </FormattedMessage>
-        {intl.formatMessage({
-          id: `traffic-announcement-additional-info-${additionalInfo.toLowerCase()}`,
-          defaultMessage: additionalInfo,
-        })}
-      </li>
-      <li>
-        <FormattedMessage
-          id="traffic-announcement-oversize-load"
-          defaultMessage="Special transport"
-        >
-          {(...content) => <span>{`${content}:`}</span>}
-        </FormattedMessage>
-        {`${oversizeLoad} `}
-        {intl.formatMessage({
-          id: 'traffic-announcement-oversize-load-definition',
-          defaultMessage: '(W. x H. x L. in meters)',
-        })}
-      </li>
-      <li>
-        <FormattedMessage
-          id="traffic-announcement-vehicle-size-limit"
-          defaultMessage="Vehicle limitations"
-        >
-          {(...content) => <span>{`${content}:`}</span>}
-        </FormattedMessage>
-        {`${vehicleSizeLimit} `}
-        {intl.formatMessage({
-          id: 'traffic-announcement-vehicle-size-limit-definition',
-          defaultMessage: '(W. x H. x L. x Weight in meters and tons)',
-        })}
-      </li>
-      <li className="link">
-        <a href={url} target="_blank" rel="noopener noreferrer">
-          {url}
-        </a>
-      </li>
-      <li>
-        <img
-          src={imageUrl}
-          alt=""
-          onClick={() => {
-            window.open(imageUrl, '_blank');
-          }}
-        />
-      </li>
+      )}
+      {trafficDirection && (
+        <li>
+          <FormattedMessage
+            id="traffic-announcement-traffic-direction"
+            defaultMessage="Direction"
+          >
+            {(...content) => <span>{`${content}:`}</span>}
+          </FormattedMessage>
+          {intl.formatMessage({
+            id: `traffic-announcement-traffic-direction-${trafficDirection.toLowerCase()}`,
+            defaultMessage: trafficDirection,
+          })}
+        </li>
+      )}
+      {temporarySpeedLimit && (
+        <li>
+          <FormattedMessage
+            id="traffic-announcement-temporary-speed-limit"
+            defaultMessage="Temporary speed limit"
+          >
+            {(...content) => <span>{`${content}:`}</span>}
+          </FormattedMessage>
+          {`${temporarySpeedLimit} km/h`}
+        </li>
+      )}
+      {duration && (
+        <li>
+          <FormattedMessage
+            id="traffic-announcement-duration"
+            defaultMessage="Estimated duration"
+          >
+            {(...content) => <span>{`${content}:`}</span>}
+          </FormattedMessage>
+          {intl.formatMessage({
+            id: `traffic-announcement-duration-${duration.toLowerCase()}`,
+            defaultMessage: duration,
+          })}
+        </li>
+      )}
+      {additionalInfo && (
+        <li>
+          <FormattedMessage
+            id="traffic-announcement-additional-info"
+            defaultMessage="Additional info"
+          >
+            {(...content) => <span>{`${content}:`}</span>}
+          </FormattedMessage>
+          {intl.formatMessage({
+            id: `traffic-announcement-additional-info-${additionalInfo.toLowerCase()}`,
+            defaultMessage: additionalInfo,
+          })}
+        </li>
+      )}
+      {oversizeLoad && (
+        <li>
+          <FormattedMessage
+            id="traffic-announcement-oversize-load"
+            defaultMessage="Special transport"
+          >
+            {(...content) => <span>{`${content}:`}</span>}
+          </FormattedMessage>
+          {`${oversizeLoad} `}
+          {intl.formatMessage({
+            id: 'traffic-announcement-oversize-load-definition',
+            defaultMessage: '(W. x H. x L. in meters)',
+          })}
+        </li>
+      )}
+      {vehicleSizeLimit && (
+        <li>
+          <FormattedMessage
+            id="traffic-announcement-vehicle-size-limit"
+            defaultMessage="Vehicle limitations"
+          >
+            {(...content) => <span>{`${content}:`}</span>}
+          </FormattedMessage>
+          {`${vehicleSizeLimit} `}
+          {intl.formatMessage({
+            id: 'traffic-announcement-vehicle-size-limit-definition',
+            defaultMessage: '(W. x H. x L. x Weight in meters and tons)',
+          })}
+        </li>
+      )}
+      {url && (
+        <li className="link">
+          <a href={url} target="_blank" rel="noopener noreferrer">
+            {url}
+          </a>
+        </li>
+      )}
+      {imageUrl && (
+        <li>
+          <img
+            src={imageUrl}
+            alt=""
+            onClick={() => {
+              window.open(imageUrl, '_blank');
+            }}
+          />
+        </li>
+      )}
     </ul>
   );
 };

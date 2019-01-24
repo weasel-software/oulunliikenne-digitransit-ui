@@ -363,25 +363,6 @@ export function drawFluencyPath(tile, points, color = '#999999') {
   tile.ctx.stroke();
 }
 
-export function drawPathWithCircles(tile, points, color = '#000000') {
-  const scale = 1;
-  const caseRadius = getCaseRadius(tile.coords.z) * scale;
-
-  for (let i = 0, ref = points.length; i < ref; i++) {
-    const point = points[i];
-    tile.ctx.beginPath();
-    tile.ctx.fillStyle = color;
-    tile.ctx.arc(
-      point.x / tile.ratio,
-      point.y / tile.ratio,
-      caseRadius * tile.scaleratio,
-      0,
-      Math.PI * 2,
-    );
-    tile.ctx.fill();
-  }
-}
-
 export function drawParkAndRideIcon(tile, geom, width, height) {
   getImageFromSpriteCache('icon-icon_park-and-ride', width, height).then(
     image => {
