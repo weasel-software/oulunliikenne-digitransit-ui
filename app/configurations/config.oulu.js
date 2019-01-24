@@ -86,7 +86,13 @@ export default configMerger(walttiConfig, {
   disorders: {
     showDisorders: true,
     disordersMinZoom: 13,
+    showIcons: true,
     showLines: false,
+  },
+
+  trafficAnnouncements: {
+    showPolygonCenterIcon: false,
+    showLineIcons: true,
   },
 
   roadConditions: {

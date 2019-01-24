@@ -1,11 +1,7 @@
 import { VectorTile } from '@mapbox/vector-tile';
 import Protobuf from 'pbf';
 import get from 'lodash/get';
-import {
-  drawFluencyIcon,
-  drawFluencyPath,
-  // drawPathWithCircles,
-} from '../../../util/mapIconUtils';
+import { drawFluencyIcon, drawFluencyPath } from '../../../util/mapIconUtils';
 import { isBrowser } from '../../../util/browser';
 
 let timeOfLastUpdate = null;
@@ -72,97 +68,51 @@ export default class Fluencies {
       }
     }
 
-    for (let j = 0, geomListRef = geometryList.length; j < geomListRef; j++) {
-      const geometry = geometryList[j];
-
-      if (this.config.fluencies && this.config.fluencies.showIcons) {
-        for (let k = 0, geomRef = geometry.length; k < geomRef; k++) {
-          const geom = geometry[k];
-          if (
-            geom.x > 0 &&
-            geom.y > 0 &&
-            geom.x < feature.extent &&
-            geom.y < feature.extent
-          ) {
-            if (k === 0 || k === geomRef - 1) {
-              if (!this.config.fluencies.showLines) {
-                this.features.push({
-                  geom,
-                  properties: feature.properties,
-                });
-              }
-              drawFluencyIcon(this.tile, geom, this.imageSize);
-            }
-          }
-        }
-      }
-
+    geometryList.forEach(geom => {
       if (
         this.config.fluencies &&
         this.config.fluencies.showLines &&
-        geometry.length
+        geom.length > 1
       ) {
         let color = '#999999';
 
-        if (
-          this.config.fluencies.colors &&
-          this.config.fluencies.colors[trafficFlow]
-        ) {
-          color = this.config.fluencies.colors[trafficFlow];
-        } else if (
-          this.config.fluencies.colors &&
-          this.config.fluencies.colors.DEFAULT
-        ) {
-          color = this.config.fluencies.colors.DEFAULT;
+        if (this.config.fluencies.colors) {
+          if (this.config.fluencies.colors[trafficFlow]) {
+            color = this.config.fluencies.colors[trafficFlow];
+          } else if (this.config.fluencies.colors.DEFAULT) {
+            color = this.config.fluencies.colors.DEFAULT;
+          }
         }
 
-        drawFluencyPath(this.tile, geometry, color);
-
-        const treshold = 200;
-        const fillPoints = geometry
-          .map((point, index, array) => {
-            let currentPoint = point;
-            const nextPoint = array[index + 1];
-            const pointList = [{ ...point }];
-
-            if (!nextPoint) {
-              return pointList;
-            }
-
-            while (currentPoint) {
-              const deltaX = nextPoint.x - currentPoint.x;
-              const deltaY = nextPoint.y - currentPoint.y;
-              const goalDist = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-
-              if (goalDist > treshold) {
-                const ratio = treshold / goalDist;
-                const Xmove = ratio * deltaX;
-                const Ymove = ratio * deltaY;
-                const newPoint = {
-                  x: Xmove + currentPoint.x,
-                  y: Ymove + currentPoint.y,
-                };
-                pointList.push(newPoint);
-                currentPoint = newPoint;
-              } else {
-                currentPoint = false;
-              }
-            }
-
-            return pointList;
-          })
-          .flat();
-
-        // To visualise the fill point on the path uncomment the following line
-        // drawPathWithCircles(this.tile, fillPoints);
-
+        drawFluencyPath(this.tile, geom, color);
         this.features.push({
-          lineString: fillPoints,
+          lineString: geom,
           geom: null,
           properties: feature.properties,
         });
       }
-    }
+
+      if (this.config.fluencies && this.config.fluencies.showIcons) {
+        const iconPoints = [geom[0], geom.slice(-1)[0]];
+        iconPoints.forEach(point => {
+          if (
+            point &&
+            point.x > 0 &&
+            point.y > 0 &&
+            point.x < feature.extent &&
+            point.y < feature.extent
+          ) {
+            drawFluencyIcon(this.tile, point, this.imageSize);
+            if (!this.config.fluencies.showLines) {
+              this.features.push({
+                geom: point,
+                properties: feature.properties,
+              });
+            }
+          }
+        });
+      }
+    });
   };
 
   onTimeChange = () => {
