@@ -2,7 +2,7 @@ import { VectorTile } from '@mapbox/vector-tile';
 import Protobuf from 'pbf';
 import get from 'lodash/get';
 import centerOfMass from '@turf/center-of-mass';
-import turfPolygon from 'turf-polygon';
+import { polygon as turfPolygon } from '@turf/helpers';
 
 import {
   drawDisorderIcon,
@@ -76,15 +76,19 @@ export default class Disorders {
 
               geometryList.forEach(geom => {
                 if (type === 'LineString') {
-                  drawDisorderPath(this.tile, geom);
-                  this.features.push({
-                    lineString: geom,
-                    geom: null,
-                    properties: feature.properties,
-                  });
+                  if (currentConfig.showLines) {
+                    drawDisorderPath(this.tile, geom);
+                    this.features.push({
+                      lineString: geom,
+                      geom: null,
+                      properties: feature.properties,
+                    });
+                  }
 
                   if (currentConfig && currentConfig.showLineIcons) {
-                    const iconPoints = [geom[0], geom.slice(-1)[0]];
+                    const iconPoints = currentConfig.showLines
+                      ? [geom[0], geom.slice(-1)[0]]
+                      : geom;
                     iconPoints.forEach(point => {
                       if (
                         point &&
@@ -94,16 +98,24 @@ export default class Disorders {
                         point.y < feature.extent
                       ) {
                         drawDisorderIcon(this.tile, point, this.imageSize);
+                        if (!currentConfig.showLines) {
+                          this.features.push({
+                            geom: point,
+                            properties: feature.properties,
+                          });
+                        }
                       }
                     });
                   }
                 } else if (type === 'Polygon') {
-                  drawDisorderPolygon(this.tile, geom);
-                  this.features.push({
-                    polygon: geom,
-                    geom: null,
-                    properties: feature.properties,
-                  });
+                  if (currentConfig.showPolygons) {
+                    drawDisorderPolygon(this.tile, geom);
+                    this.features.push({
+                      polygon: geom,
+                      geom: null,
+                      properties: feature.properties,
+                    });
+                  }
 
                   if (currentConfig && currentConfig.showPolygonCenterIcon) {
                     const formatedPolygon = geom.map(cords => [
@@ -127,9 +139,15 @@ export default class Disorders {
                         centerPointFormated,
                         this.imageSize,
                       );
+                      if (!currentConfig.showPolygons) {
+                        this.features.push({
+                          geom: centerPointFormated,
+                          properties: feature.properties,
+                        });
+                      }
                     }
                   }
-                } else if (type === 'Point') {
+                } else if (type === 'Point' && currentConfig.showIcons) {
                   drawDisorderIcon(this.tile, geom[0], this.imageSize);
                   this.features.push({
                     geom: geom[0],
