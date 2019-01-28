@@ -2,8 +2,8 @@ import flatten from 'lodash/flatten';
 import omit from 'lodash/omit';
 import L from 'leaflet';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
-import pointToLineDistance from '@turf/point-to-line-distance';
-import turfPolygon from 'turf-polygon';
+import { point as turfPoint, polygon as turfPolygon } from '@turf/helpers';
+import { distanceToPolygon } from 'distance-to-polygon';
 
 import { isBrowser } from '../../../util/browser';
 import { isLayerEnabled } from '../../../util/mapLayerUtils';
@@ -179,7 +179,7 @@ class TileContainer {
             ]);
 
             const pointWithinDist = booleanPointInPolygon(
-              localPoint,
+              turfPoint(localPoint),
               turfPolygon([formatedPolygon]),
             );
 
@@ -204,16 +204,12 @@ class TileContainer {
               cords.y / this.ratio,
             ]);
 
-            const pointToLineDist = pointToLineDistance(
+            const pointToLineDist = distanceToPolygon(
               localPoint,
               formatedLineString,
-              {
-                units: 'kilometers',
-                method: 'planar',
-              },
             );
 
-            if (pointToLineDist / 100 < 10 * this.scaleratio) {
+            if (pointToLineDist < 20) {
               currentFeature.feature.geom = {
                 x: localPoint[0] * this.ratio,
                 y: localPoint[1] * this.ratio,
