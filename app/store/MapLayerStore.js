@@ -1,6 +1,12 @@
 import Store from 'fluxible/addons/BaseStore';
 import PropTypes from 'prop-types';
-import { setMapLayerSettings, getMapLayerSettings } from './localStorage';
+import get from 'lodash/get';
+import {
+  setMapLayerSettings,
+  getMapLayerSettings,
+  setMapLayerModeSpecificSettings,
+  getMapLayerModeSpecificSettings,
+} from './localStorage';
 
 class MapLayerStore extends Store {
   static defaultLayers = {
@@ -34,35 +40,72 @@ class MapLayerStore extends Store {
 
   static handlers = {
     UpdateMapLayers: 'updateMapLayers',
+    UpdateMapLayersMode: 'updateMapLayersMode',
   };
 
   static storeName = 'MapLayerStore';
 
   mapLayers = { ...MapLayerStore.defaultLayers };
+  mode = null;
 
   constructor(dispatcher) {
     super(dispatcher);
 
-    const { config } = dispatcher.getContext();
+    // this.mode = 'CAR';
+
+    this.initLayers();
+  }
+
+  initLayers = () => {
+    const { config } = this.getContext();
+
+    if (config.useModeSpecificMapLayers && this.mode) {
+      this.mapLayers = {
+        ...get(
+          config,
+          `mapLayerDefaultsModeSpecific[${this.mode}]`,
+          this.mapLayers,
+        ),
+      };
+    }
+
     this.mapLayers.citybike =
       config.transportModes.citybike &&
       config.transportModes.citybike.availableForSelection;
 
-    const storedMapLayers = getMapLayerSettings();
+    const storedMapLayers =
+      config.useModeSpecificMapLayers && this.mode
+        ? getMapLayerModeSpecificSettings(this.mode)
+        : getMapLayerSettings();
+
     if (Object.keys(storedMapLayers).length > 0) {
       this.mapLayers = { ...storedMapLayers };
     }
-  }
+    this.emitChange();
+  };
 
   getMapLayers = () => ({ ...this.mapLayers });
 
   updateMapLayers = mapLayers => {
+    const { config } = this.getContext();
+
     this.mapLayers = {
       ...this.mapLayers,
       ...mapLayers,
     };
-    setMapLayerSettings({ ...this.mapLayers });
+
+    if (config.useModeSpecificMapLayers && this.mode) {
+      setMapLayerModeSpecificSettings(this.mode, { ...this.mapLayers });
+    } else {
+      setMapLayerSettings({ ...this.mapLayers });
+    }
+
     this.emitChange();
+  };
+
+  updateMapLayersMode = mode => {
+    this.mode = mode;
+    this.initLayers();
   };
 }
 

@@ -95,8 +95,8 @@ class SelectMapLayersDialog extends React.Component {
     this.updateSetting({ ticketSales });
   };
 
-  renderContents = (
-    {
+  renderContents = () => {
+    const {
       citybike,
       parkAndRide,
       stop,
@@ -110,12 +110,13 @@ class SelectMapLayersDialog extends React.Component {
       tmsStations,
       roadConditions,
       fluencies,
-    },
-    config,
-  ) => {
+    } = this.props.mapLayers;
+    const { config } = this.props;
+
     const isTransportModeEnabled = transportMode =>
       transportMode && transportMode.availableForSelection;
     const transportModes = config.transportModes || {};
+
     return (
       <React.Fragment>
         <div className="checkbox-grouping">
@@ -343,7 +344,7 @@ class SelectMapLayersDialog extends React.Component {
         isOpen={this.props.isOpen}
         isFullscreenOnMobile
       >
-        {this.renderContents(this.props.mapLayers, this.props.config)}
+        {this.renderContents()}
       </BubbleDialog>
     );
   }

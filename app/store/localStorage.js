@@ -282,14 +282,6 @@ export function setFavouriteRoutesStorage(data) {
   setItem('favouriteRoutes', data);
 }
 
-export function getModeStorage() {
-  return getItemAsJson('mode', '{}');
-}
-
-export function setModeStorage(data) {
-  setItem('mode', data);
-}
-
 export function getOldSearchesStorage() {
   return getItemAsJson('saved-searches', '{"items": []}');
 }
@@ -323,3 +315,10 @@ export const setMapLayerSettings = settings => {
 };
 
 export const getMapLayerSettings = () => getItemAsJson('map-layers', '{}');
+
+export const setMapLayerModeSpecificSettings = (mode, settings) => {
+  setItem(`map-layers-${mode}`, settings);
+};
+
+export const getMapLayerModeSpecificSettings = mode =>
+  getItemAsJson(`map-layers-${mode}`, '{}');

@@ -2,8 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import ComponentUsageExample from './ComponentUsageExample';
 import ToggleButton from './ToggleButton';
-import { isKeyboardSelectionEvent } from '../util/browser';
-import { isBrowser } from '../util/browser';
+import { isKeyboardSelectionEvent, isBrowser } from '../util/browser';
+import { updateMapLayersMode } from '../action/MapLayerActions';
 
 class ModeSelect extends React.Component {
   constructor(props) {
@@ -62,6 +62,8 @@ class ModeSelect extends React.Component {
         if (applyFocus && this.dialogRef) {
           this.dialogRef.closeDialog(applyFocus);
         }
+
+        this.context.executeAction(updateMapLayersMode, streetMode);
       },
     );
   }
@@ -126,6 +128,10 @@ ModeSelect.propTypes = {
 ModeSelect.defaultProps = {
   selectedStreetMode: undefined,
   streetModeConfigs: [],
+};
+
+ModeSelect.contextTypes = {
+  executeAction: PropTypes.func.isRequired,
 };
 
 export default ModeSelect;

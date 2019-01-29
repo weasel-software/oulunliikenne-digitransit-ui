@@ -1,5 +1,7 @@
-export const updateMapLayers = (actionContext, mapLayerSettings) => {
+export function updateMapLayers(actionContext, mapLayerSettings) {
   actionContext.dispatch('UpdateMapLayers', mapLayerSettings);
-};
+}
 
-export default updateMapLayers;
+export function updateMapLayersMode(actionContext, mode) {
+  actionContext.dispatch('UpdateMapLayersMode', mode);
+}
