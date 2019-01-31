@@ -7,6 +7,7 @@ import {
   setMapLayerModeSpecificSettings,
   getMapLayerModeSpecificSettings,
 } from './localStorage';
+import { getStreetMode } from '../util/modeUtils';
 
 class MapLayerStore extends Store {
   static defaultLayers = {
@@ -51,7 +52,8 @@ class MapLayerStore extends Store {
   constructor(dispatcher) {
     super(dispatcher);
 
-    // this.mode = 'CAR';
+    const { config } = dispatcher.getContext();
+    this.mode = getStreetMode(null, config);
 
     this.initLayers();
   }
@@ -104,8 +106,10 @@ class MapLayerStore extends Store {
   };
 
   updateMapLayersMode = mode => {
-    this.mode = mode;
-    this.initLayers();
+    if (this.mode !== mode) {
+      this.mode = mode;
+      this.initLayers();
+    }
   };
 }
 

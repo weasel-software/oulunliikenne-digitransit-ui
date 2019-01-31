@@ -1,3 +1,5 @@
+import get from 'lodash/get';
+import find from 'lodash/find';
 import { isBrowser, isWindowsPhone, isIOSApp } from '../util/browser';
 import { OptimizeType } from '../constants';
 
@@ -69,18 +71,26 @@ export function removeItem(k) {
   }
 }
 
-export function getCustomizedSettings() {
+export function getCustomizedSettingsFull() {
   return getItemAsJson('customizedSettings', '{}');
 }
 
-export function setCustomizedSettings(data) {
+export function getCustomizedSettings(streetMode) {
+  const customizedSettings = getItemAsJson('customizedSettings', '{}');
+  if (streetMode) {
+    return get(customizedSettings, streetMode, {});
+  }
+  return find(customizedSettings, 'active') || {};
+}
+
+export function setCustomizedSettings(data, streetMode) {
   const getNumberValueOrDefault = (value, defaultValue) =>
     value !== undefined && value !== null ? Number(value) : defaultValue;
   const getValueOrDefault = (value, defaultValue) =>
     value !== undefined ? value : defaultValue;
 
   // Get old settings and test if set values have changed
-  const oldSettings = getCustomizedSettings();
+  const oldSettings = getCustomizedSettings(streetMode);
   const optimize = getValueOrDefault(data.optimize, oldSettings.optimize);
 
   const newSettings = {
@@ -117,6 +127,7 @@ export function setCustomizedSettings(data) {
       oldSettings.walkReluctance,
     ),
     walkSpeed: getNumberValueOrDefault(data.walkSpeed, oldSettings.walkSpeed),
+    active: true,
   };
   if (optimize === OptimizeType.Triangle) {
     newSettings.safetyFactor = getNumberValueOrDefault(
@@ -137,7 +148,25 @@ export function setCustomizedSettings(data) {
     delete newSettings.timeFactor;
   }
 
-  setItem('customizedSettings', newSettings);
+  const fullSettings = getCustomizedSettingsFull();
+
+  Object.keys(fullSettings).forEach(key => {
+    fullSettings[key].active = false;
+  });
+
+  fullSettings[streetMode] = newSettings;
+
+  setItem('customizedSettings', fullSettings);
+}
+
+export function setActiveCustomizedSettings(streetMode) {
+  const fullSettings = getCustomizedSettingsFull();
+
+  Object.keys(fullSettings).forEach(key => {
+    fullSettings[key].active = key === streetMode;
+  });
+
+  setItem('customizedSettings', fullSettings);
 }
 
 export function resetCustomizedSettings() {

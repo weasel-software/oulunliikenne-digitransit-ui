@@ -5,11 +5,15 @@ import {
   sortedUniq,
   without,
   xor,
+  get,
 } from 'lodash';
 
 import inside from 'point-in-polygon';
 import { replaceQueryParams } from './queryUtils';
-import { getCustomizedSettings } from '../store/localStorage';
+import {
+  getCustomizedSettings,
+  setActiveCustomizedSettings,
+} from '../store/localStorage';
 import { isInBoundingBox } from './geo-utils';
 
 /**
@@ -89,6 +93,16 @@ export const buildStreetModeQuery = (
       .filter(tm => tm.defaultValue)
       .map(tm => tm.name);
   }
+
+  const customizedTransportModes = get(
+    getCustomizedSettings(streetMode),
+    'modes',
+  );
+
+  if (customizedTransportModes) {
+    return { modes: customizedTransportModes.join(',') };
+  }
+
   return {
     modes: isExclusive
       ? streetMode.toUpperCase()
@@ -262,6 +276,7 @@ export const setStreetMode = (
     isExclusive,
   );
   replaceQueryParams(router, modesQuery);
+  setActiveCustomizedSettings(streetMode);
 };
 
 /**

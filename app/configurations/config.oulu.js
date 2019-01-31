@@ -199,8 +199,8 @@ export default configMerger(walttiConfig, {
     },
 
     ferry: {
-      availableForSelection: true,
-      defaultValue: true,
+      availableForSelection: false,
+      defaultValue: false,
     },
 
     citybike: {
@@ -276,6 +276,7 @@ export default configMerger(walttiConfig, {
     altPositionMobile: false,
     layers: {
       containerClassName: 'bubble-dialog-component-container-alt',
+      streetModeHeader: true,
       headerId: 'settings',
       icon: 'settings',
       buttonText: 'settings',
@@ -351,26 +352,27 @@ export default configMerger(walttiConfig, {
     ],
   },
 
+  mapLayerShowTerminals: false,
   useModeSpecificMapLayers: true,
   mapLayerDefaultsModeSpecific: {
     PUBLIC_TRANSPORT: {
       parkAndRide: false,
       stop: {
         bus: true,
-        ferry: true,
-        rail: true,
-        subway: true,
-        tram: true,
+        ferry: false,
+        rail: false,
+        subway: false,
+        tram: false,
       },
       terminal: {
-        bus: true,
-        rail: true,
-        subway: true,
+        bus: false,
+        rail: false,
+        subway: false,
       },
       ticketSales: {
-        salesPoint: true,
-        servicePoint: true,
-        ticketMachine: true,
+        salesPoint: false,
+        servicePoint: false,
+        ticketMachine: false,
       },
       parkingStations: false,
       disorders: false,
@@ -382,7 +384,7 @@ export default configMerger(walttiConfig, {
       fluencies: false,
     },
     CAR: {
-      parkAndRide: true,
+      parkAndRide: false,
       stop: {
         bus: false,
         ferry: false,
@@ -400,14 +402,14 @@ export default configMerger(walttiConfig, {
         servicePoint: false,
         ticketMachine: false,
       },
-      parkingStations: true,
-      disorders: false,
-      roadworks: false,
-      cameraStations: false,
+      parkingStations: false,
+      disorders: true,
+      roadworks: true,
+      cameraStations: true,
       weatherStations: false,
       tmsStations: false,
       roadConditions: false,
-      fluencies: false,
+      fluencies: true,
     },
     BICYCLE: {
       parkAndRide: false,
@@ -429,7 +431,7 @@ export default configMerger(walttiConfig, {
         ticketMachine: false,
       },
       parkingStations: false,
-      disorders: false,
+      disorders: true,
       roadworks: false,
       cameraStations: false,
       weatherStations: false,
@@ -457,7 +459,7 @@ export default configMerger(walttiConfig, {
         ticketMachine: false,
       },
       parkingStations: false,
-      disorders: false,
+      disorders: true,
       roadworks: false,
       cameraStations: false,
       weatherStations: false,
