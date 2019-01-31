@@ -2,8 +2,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Relay from 'react-relay/classic';
 import connectToStores from 'fluxible-addons-react/connectToStores';
-import { intlShape } from 'react-intl';
+import { FormattedMessage, intlShape } from 'react-intl';
 import moment from 'moment';
+import isEmpty from 'lodash/isEmpty';
 
 import Card from '../../Card';
 import CardHeader from '../../CardHeader';
@@ -13,6 +14,10 @@ import ComponentUsageExample from '../../ComponentUsageExample';
 /* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions */
 function CameraStationPopup({ camera, lang }, { intl }) {
   const localName = camera.names[lang] || camera.name;
+
+  const cameraPresets = camera.presets.filter(
+    item => moment().diff(moment(item.measuredTime), 'hours') < 24,
+  );
 
   return (
     <div className="card">
@@ -26,24 +31,33 @@ function CameraStationPopup({ camera, lang }, { intl }) {
           icon="icon-icon_camera-station"
           unlinked
         />
-        <ImageSlider>
-          {camera.presets.map(item => (
-            <figure className="slide" key={item.presetId}>
-              <figcaption>
-                {item.presentationName}
-                {item.measuredTime &&
-                  ` (${moment(item.measuredTime).format('HH:mm:ss')})`}
-              </figcaption>
-              <img
-                src={item.imageUrl}
-                alt={item.presentationName}
-                onClick={() => {
-                  window.open(item.imageUrl, '_blank');
-                }}
-              />
-            </figure>
-          ))}
-        </ImageSlider>
+        {isEmpty(cameraPresets) ? (
+          <div className="card-empty">
+            <FormattedMessage
+              id="traffic-camera-no-recent-images"
+              defaultMessage="No recent images"
+            />
+          </div>
+        ) : (
+          <ImageSlider>
+            {cameraPresets.map(item => (
+              <figure className="slide" key={item.presetId}>
+                <figcaption>
+                  {item.presentationName}
+                  {item.measuredTime &&
+                    ` (${moment(item.measuredTime).format('HH:mm:ss')})`}
+                </figcaption>
+                <img
+                  src={item.imageUrl}
+                  alt={item.presentationName}
+                  onClick={() => {
+                    window.open(item.imageUrl, '_blank');
+                  }}
+                />
+              </figure>
+            ))}
+          </ImageSlider>
+        )}
       </Card>
     </div>
   );

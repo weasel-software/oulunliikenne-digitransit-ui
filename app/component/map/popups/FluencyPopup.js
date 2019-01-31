@@ -25,7 +25,7 @@ function FluencyPopup(
         />
         <FluencyContent
           averageSpeed={averageSpeed}
-          speedLimit={speedLimit}
+          // speedLimit={speedLimit}
           trafficFlow={trafficFlow}
         />
       </Card>
