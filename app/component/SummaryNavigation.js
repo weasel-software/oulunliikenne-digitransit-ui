@@ -11,6 +11,7 @@ import { getDrawerWidth, isBrowser } from '../util/browser';
 import * as ModeUtils from '../util/modeUtils';
 import { parseLocation } from '../util/path';
 import withBreakpoint from '../util/withBreakpoint';
+import { updateMapLayersMode } from '../action/MapLayerActions';
 
 class SummaryNavigation extends React.Component {
   static propTypes = {
@@ -37,6 +38,7 @@ class SummaryNavigation extends React.Component {
     piwik: PropTypes.object,
     router: routerShape,
     location: PropTypes.object.isRequired,
+    executeAction: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
@@ -107,20 +109,22 @@ class SummaryNavigation extends React.Component {
     }
   };
 
-  renderStreetModeSelector = (config, router) => (
+  renderStreetModeSelector = (config, router, executeAction) => (
     <div className="street-mode-selector-panel-container">
       <StreetModeSelectorPanel
         selectedStreetMode={ModeUtils.getStreetMode(router.location, config)}
-        selectStreetMode={(streetMode, isExclusive) =>
-          ModeUtils.setStreetMode(streetMode, config, router, isExclusive)
-        }
+        selectStreetMode={(streetMode, isExclusive) => {
+          ModeUtils.setStreetMode(streetMode, config, router, isExclusive);
+          executeAction(updateMapLayersMode, streetMode);
+        }}
         streetModeConfigs={ModeUtils.getAvailableStreetModeConfigs(config)}
+        showRouteHereButton
       />
     </div>
   );
 
   render() {
-    const { config, router } = this.context;
+    const { config, router, executeAction } = this.context;
     const className = cx({ 'bp-large': this.props.breakpoint === 'large' });
     const isOpen = this.getOffcanvasState();
 
@@ -158,7 +162,7 @@ class SummaryNavigation extends React.Component {
         />
         {isBrowser && (
           <React.Fragment>
-            {this.renderStreetModeSelector(config, router)}
+            {this.renderStreetModeSelector(config, router, executeAction)}
             <div className={cx('quicksettings-separator-line')} />
             <QuickSettingsPanel
               timeSelectorStartTime={this.props.startTime}

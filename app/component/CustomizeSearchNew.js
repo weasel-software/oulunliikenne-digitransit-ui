@@ -29,6 +29,7 @@ import {
   removeUnpreferredRoute,
   replaceQueryParams,
 } from '../util/queryUtils';
+import { updateMapLayersMode } from '../action/MapLayerActions';
 
 class CustomizeSearch extends React.Component {
   static contextTypes = {
@@ -36,6 +37,7 @@ class CustomizeSearch extends React.Component {
     router: routerShape.isRequired,
     location: PropTypes.object.isRequired,
     config: PropTypes.object.isRequired,
+    executeAction: PropTypes.func.isRequired,
   };
 
   static propTypes = {
@@ -77,6 +79,7 @@ class CustomizeSearch extends React.Component {
       location: { query },
       intl,
       router,
+      executeAction,
     } = this.context;
     const {
       config: { accessibilityOptions },
@@ -117,9 +120,15 @@ class CustomizeSearch extends React.Component {
                 router.location,
                 config,
               )}
-              selectStreetMode={(streetMode, isExclusive) =>
-                ModeUtils.setStreetMode(streetMode, config, router, isExclusive)
-              }
+              selectStreetMode={(streetMode, isExclusive) => {
+                ModeUtils.setStreetMode(
+                  streetMode,
+                  config,
+                  router,
+                  isExclusive,
+                );
+                executeAction(updateMapLayersMode, streetMode);
+              }}
               showButtonTitles
               streetModeConfigs={ModeUtils.getAvailableStreetModeConfigs(
                 config,

@@ -172,6 +172,80 @@ export default configMerger(walttiConfig, {
   availableModes: ['transport', 'walk', 'bicycle', 'car'],
   defaultMode: 'transport',
 
+  transportModes: {
+    bus: {
+      availableForSelection: true,
+      defaultValue: true,
+    },
+
+    tram: {
+      availableForSelection: false,
+      defaultValue: false,
+    },
+
+    rail: {
+      availableForSelection: true,
+      defaultValue: true,
+    },
+
+    subway: {
+      availableForSelection: false,
+      defaultValue: false,
+    },
+
+    airplane: {
+      availableForSelection: false,
+      defaultValue: false,
+    },
+
+    ferry: {
+      availableForSelection: false,
+      defaultValue: false,
+    },
+
+    citybike: {
+      availableForSelection: false,
+      defaultValue: false,
+    },
+  },
+
+  streetModes: {
+    public_transport: {
+      availableForSelection: true,
+      defaultValue: true,
+      exclusive: false,
+      icon: 'bus-withoutBox',
+    },
+
+    walk: {
+      availableForSelection: true,
+      defaultValue: false,
+      exclusive: true,
+      icon: 'walk',
+    },
+
+    bicycle: {
+      availableForSelection: true,
+      defaultValue: false,
+      exclusive: true,
+      icon: 'bicycle-withoutBox',
+    },
+
+    car: {
+      availableForSelection: true,
+      defaultValue: false,
+      exclusive: true,
+      icon: 'car-withoutBox',
+    },
+
+    car_park: {
+      availableForSelection: false,
+      defaultValue: false,
+      exclusive: false,
+      icon: 'car_park-withoutBox',
+    },
+  },
+
   toggleableSearch: true,
   toggleableFavourites: true,
 
@@ -202,7 +276,8 @@ export default configMerger(walttiConfig, {
     altPositionMobile: false,
     layers: {
       containerClassName: 'bubble-dialog-component-container-alt',
-      headerId: 'motorist',
+      streetModeHeader: true,
+      headerId: 'settings',
       icon: 'settings',
       buttonText: 'settings',
     },
@@ -275,5 +350,122 @@ export default configMerger(walttiConfig, {
         ],
       },
     ],
+  },
+
+  mapLayerShowTerminals: false,
+  useModeSpecificMapLayers: true,
+  mapLayerDefaultsModeSpecific: {
+    PUBLIC_TRANSPORT: {
+      parkAndRide: false,
+      stop: {
+        bus: true,
+        ferry: false,
+        rail: false,
+        subway: false,
+        tram: false,
+      },
+      terminal: {
+        bus: false,
+        rail: false,
+        subway: false,
+      },
+      ticketSales: {
+        salesPoint: false,
+        servicePoint: false,
+        ticketMachine: false,
+      },
+      parkingStations: false,
+      disorders: false,
+      roadworks: false,
+      cameraStations: false,
+      weatherStations: false,
+      tmsStations: false,
+      roadConditions: false,
+      fluencies: false,
+    },
+    CAR: {
+      parkAndRide: false,
+      stop: {
+        bus: false,
+        ferry: false,
+        rail: false,
+        subway: false,
+        tram: false,
+      },
+      terminal: {
+        bus: false,
+        rail: false,
+        subway: false,
+      },
+      ticketSales: {
+        salesPoint: false,
+        servicePoint: false,
+        ticketMachine: false,
+      },
+      parkingStations: false,
+      disorders: true,
+      roadworks: true,
+      cameraStations: true,
+      weatherStations: false,
+      tmsStations: false,
+      roadConditions: false,
+      fluencies: true,
+    },
+    BICYCLE: {
+      parkAndRide: false,
+      stop: {
+        bus: false,
+        ferry: false,
+        rail: false,
+        subway: false,
+        tram: false,
+      },
+      terminal: {
+        bus: false,
+        rail: false,
+        subway: false,
+      },
+      ticketSales: {
+        salesPoint: false,
+        servicePoint: false,
+        ticketMachine: false,
+      },
+      parkingStations: false,
+      disorders: true,
+      roadworks: false,
+      cameraStations: false,
+      weatherStations: false,
+      tmsStations: false,
+      roadConditions: false,
+      fluencies: false,
+    },
+    WALK: {
+      parkAndRide: false,
+      stop: {
+        bus: false,
+        ferry: false,
+        rail: false,
+        subway: false,
+        tram: false,
+      },
+      terminal: {
+        bus: false,
+        rail: false,
+        subway: false,
+      },
+      ticketSales: {
+        salesPoint: false,
+        servicePoint: false,
+        ticketMachine: false,
+      },
+      parkingStations: false,
+      disorders: true,
+      roadworks: false,
+      cameraStations: false,
+      weatherStations: false,
+      tmsStations: false,
+      roadConditions: false,
+      fluencies: false,
+    },
   },
 });

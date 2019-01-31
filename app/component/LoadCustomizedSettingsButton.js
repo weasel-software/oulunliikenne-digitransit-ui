@@ -9,6 +9,7 @@ import { FormattedMessage } from 'react-intl';
 
 import { getCustomizedSettings } from '../store/localStorage';
 import { getDefaultSettings } from '../util/planParamUtil';
+import { getStreetMode } from '../util/modeUtils';
 import { getDrawerWidth } from '../util/browser';
 import SecondaryButton from './SecondaryButton';
 
@@ -42,7 +43,11 @@ class LoadCustomizedSettingsButton extends React.Component {
 
     // const querySettings = getQuerySettings(this.context.location.query);
     const defaultSettings = getDefaultSettings(this.context.config);
-    const getSettings = getCustomizedSettings();
+    const streetMode = getStreetMode(
+      this.context.router.location,
+      this.context.config,
+    );
+    const getSettings = getCustomizedSettings(streetMode);
     if (isEmpty(getSettings) || isEqual(getSettings, defaultSettings)) {
       this.props.noSettingsFound();
     } else {

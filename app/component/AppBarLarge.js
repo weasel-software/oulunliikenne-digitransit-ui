@@ -19,10 +19,11 @@ import {
   setStreetMode,
   getAvailableStreetModeConfigs,
 } from '../util/modeUtils';
+import { updateMapLayersMode } from '../action/MapLayerActions';
 
 const AppBarLarge = (
   { titleClicked, logo },
-  { router, location, config, intl },
+  { router, location, config, intl, executeAction },
 ) => {
   const openDisruptionInfo = () => {
     router.push({
@@ -73,9 +74,10 @@ const AppBarLarge = (
           <div className="navi-modes padding-left-large">
             <ModeSelect
               selectedStreetMode={getStreetMode(router.location, config)}
-              selectStreetMode={(streetMode, isExclusive) =>
-                setStreetMode(streetMode, config, router, isExclusive)
-              }
+              selectStreetMode={(streetMode, isExclusive) => {
+                setStreetMode(streetMode, config, router, isExclusive);
+                executeAction(updateMapLayersMode, streetMode);
+              }}
               streetModeConfigs={getAvailableStreetModeConfigs(config)}
             />
           </div>
@@ -156,6 +158,7 @@ AppBarLarge.contextTypes = {
   location: locationShape.isRequired,
   config: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
+  executeAction: PropTypes.func.isRequired,
 };
 
 AppBarLarge.description = () => (

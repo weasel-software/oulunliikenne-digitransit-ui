@@ -36,7 +36,8 @@ import SelectStreetModeDialog from './SelectStreetModeDialog';
 import events from '../util/events';
 import * as ModeUtils from '../util/modeUtils';
 import withBreakpoint from '../util/withBreakpoint';
-import ContentToggle from './ContentToggle'
+import ContentToggle from './ContentToggle';
+import { updateMapLayersMode } from '../action/MapLayerActions';
 
 const debug = d('IndexPage.js');
 
@@ -170,12 +171,13 @@ class IndexPage extends React.Component {
     );
   };
 
-  renderStreetModeSelector = (config, router) => (
+  renderStreetModeSelector = (config, router, executeAction) => (
     <SelectStreetModeDialog
       selectedStreetMode={ModeUtils.getStreetMode(router.location, config)}
-      selectStreetMode={(streetMode, isExclusive) =>
-        ModeUtils.setStreetMode(streetMode, config, router, isExclusive)
-      }
+      selectStreetMode={(streetMode, isExclusive) => {
+        ModeUtils.setStreetMode(streetMode, config, router, isExclusive);
+        executeAction(updateMapLayersMode, streetMode);
+      }}
       streetModeConfigs={ModeUtils.getAvailableStreetModeConfigs(config)}
     />
   );
@@ -184,7 +186,7 @@ class IndexPage extends React.Component {
 
   /* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
   render() {
-    const { config, router } = this.context;
+    const { config, router, executeAction } = this.context;
     const { breakpoint, destination, origin, routes, tab } = this.props;
     const { mapExpanded } = this.state;
 
@@ -241,7 +243,7 @@ class IndexPage extends React.Component {
           origin={origin}
           renderCustomButtons={() => (
             <React.Fragment>
-              {this.renderStreetModeSelector(config, router)}
+              {this.renderStreetModeSelector(config, router, executeAction)}
               {this.renderMapLayerSelector()}
             </React.Fragment>
           )}
@@ -274,7 +276,7 @@ class IndexPage extends React.Component {
             origin={origin}
             renderCustomButtons={() => (
               <React.Fragment>
-                {this.renderStreetModeSelector(config, router)}
+                {this.renderStreetModeSelector(config, router, executeAction)}
                 {this.renderMapLayerSelector()}
               </React.Fragment>
             )}

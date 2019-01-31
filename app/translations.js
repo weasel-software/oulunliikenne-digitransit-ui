@@ -745,7 +745,7 @@ const translations = {
     'right-now': 'Right now',
     roadwork: 'Roadwork',
     roadworks: 'Roadworks',
-    'road-condition': 'Road condition',
+    'road-condition': 'Road conditions',
     'road-condition-air': 'Air',
     'road-condition-condition': 'Condition',
     'road-condition-now': 'Now',
@@ -1099,7 +1099,7 @@ const translations = {
     'warning-call-agency-no-route':
       'Only on demand. Needs to be booked in advance.',
     'weather-at-destination': 'Weather at the destination',
-    'weather-stations': 'Weather stations',
+    'weather-stations': 'Road weather',
     yesterday: 'Yesterday',
     'your-favourites': 'Favorites',
     zones: 'Fare zones',
@@ -2009,7 +2009,7 @@ const translations = {
     'warning-call-agency-no-route':
       'Liikennöidään kutsujoukkoliikenteenä, joka on tilattava etukäteen',
     'weather-at-destination': 'Sää määränpäässä',
-    'weather-stations': 'Sääasemat',
+    'weather-stations': 'Tiesää',
     yesterday: 'Eilen',
     'your-favourites': 'Suosikkisi',
     zones: 'Lippuvyöhykkeet',
@@ -3224,7 +3224,7 @@ const translations = {
     'warning-call-agency-no-route':
       'Trafikeras enligt behov som bör beställas på förhand.',
     'weather-at-destination': 'Vädret på destinationen',
-    'weather-stations': 'Väderstationer',
+    'weather-stations': 'Vägväder',
     yesterday: 'I går',
     'your-favourites': 'Favoriter',
     zones: 'Biljettzoner',
