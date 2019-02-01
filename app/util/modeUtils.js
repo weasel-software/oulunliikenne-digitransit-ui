@@ -276,7 +276,9 @@ export const setStreetMode = (
     isExclusive,
   );
   replaceQueryParams(router, modesQuery);
-  setActiveCustomizedSettings(streetMode);
+
+  const modes = modesQuery.modes.split(',');
+  setActiveCustomizedSettings(streetMode, modes);
 };
 
 /**

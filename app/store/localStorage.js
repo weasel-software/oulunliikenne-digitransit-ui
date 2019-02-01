@@ -159,12 +159,19 @@ export function setCustomizedSettings(data, streetMode) {
   setItem('customizedSettings', fullSettings);
 }
 
-export function setActiveCustomizedSettings(streetMode) {
+export function setActiveCustomizedSettings(streetMode, modes) {
   const fullSettings = getCustomizedSettingsFull();
 
   Object.keys(fullSettings).forEach(key => {
     fullSettings[key].active = key === streetMode;
   });
+
+  if (!get(fullSettings, streetMode)) {
+    fullSettings[streetMode] = {
+      modes: modes || [],
+      active: true,
+    };
+  }
 
   setItem('customizedSettings', fullSettings);
 }
