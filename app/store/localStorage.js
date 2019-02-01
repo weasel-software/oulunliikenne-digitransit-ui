@@ -358,3 +358,6 @@ export const setMapLayerModeSpecificSettings = (mode, settings) => {
 
 export const getMapLayerModeSpecificSettings = mode =>
   getItemAsJson(`map-layers-${mode}`, '{}');
+
+export const removeMapLayerModeSpecificSettings = mode =>
+  localStorage.removeItem(`map-layers-${mode}`);
