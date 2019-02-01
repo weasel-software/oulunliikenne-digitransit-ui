@@ -11,6 +11,14 @@ import ComponentUsageExample from '../../ComponentUsageExample';
 function TmsStationPopup({ station, lang }, { intl }) {
   const localName = station.names[lang] || station.name;
 
+  console.log({
+    sensors: station.sensorValues,
+    direction1Municipality: station.direction1Municipality,
+    direction1MunicipalityCode: station.direction1MunicipalityCode,
+    direction2Municipality: station.direction2Municipality,
+    calculatorDeviceType: station.calculatorDeviceType,
+  });
+
   return (
     <div className="card">
       <Card className="padding-small">
@@ -26,6 +34,8 @@ function TmsStationPopup({ station, lang }, { intl }) {
         <TmsStationContent
           sensors={station.sensorValues}
           measuredTime={station.measuredTime}
+          direction1={station.direction1Municipality}
+          direction2={station.direction2Municipality}
         />
       </Card>
     </div>
@@ -76,6 +86,8 @@ export default Relay.createContainer(
           sensorValue,
           sensorUnit
         }
+        direction1Municipality
+        direction2Municipality
       }
     `,
     },

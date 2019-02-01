@@ -2,14 +2,19 @@ import connectToStores from 'fluxible-addons-react/connectToStores';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { intlShape } from 'react-intl';
+import { locationShape } from 'react-router';
 
 import get from 'lodash/get';
 import Toggle from 'material-ui/Toggle';
 import BubbleDialog from './BubbleDialog';
 import Checkbox from './Checkbox';
-import { updateMapLayers } from '../action/MapLayerActions';
+import {
+  updateMapLayers,
+  updateMapLayersMode,
+} from '../action/MapLayerActions';
 import MapLayerStore, { mapLayerShape } from '../store/MapLayerStore';
 import withBreakpoint from '../util/withBreakpoint';
+import { getStreetMode } from '../util/modeUtils';
 
 import ComponentUsageExample from './ComponentUsageExample';
 
@@ -51,6 +56,27 @@ InputField.contextTypes = {
 };
 
 class SelectMapLayersDialog extends React.Component {
+  componentDidMount = () => {
+    const { config, location } = this.props;
+    const streetMode = getStreetMode(location, config);
+    this.props.executeAction(updateMapLayersMode, streetMode);
+  };
+
+  getHeaderId = () => {
+    const { config, location } = this.props;
+    const streetMode = getStreetMode(location, config);
+    const headerId =
+      get(config, 'mapTrackingButtons.layers.streetModeHeader', false) &&
+      streetMode
+        ? `street-mode-${streetMode.toLowerCase()}`
+        : get(
+            config,
+            'mapTrackingButtons.layers.headerId',
+            'select-map-layers-header',
+          );
+    return headerId;
+  };
+
   updateSetting = newSetting => {
     this.props.updateMapLayers({
       ...this.props.mapLayers,
@@ -95,8 +121,8 @@ class SelectMapLayersDialog extends React.Component {
     this.updateSetting({ ticketSales });
   };
 
-  renderContents = (
-    {
+  renderContents = () => {
+    const {
       citybike,
       parkAndRide,
       stop,
@@ -110,75 +136,92 @@ class SelectMapLayersDialog extends React.Component {
       tmsStations,
       roadConditions,
       fluencies,
-    },
-    config,
-  ) => {
+    } = this.props.mapLayers;
+    const { config } = this.props;
+
     const isTransportModeEnabled = transportMode =>
       transportMode && transportMode.availableForSelection;
     const transportModes = config.transportModes || {};
+
+    const isMapLayerEnabled = mapLayer =>
+      get(this.props.mapLayers, mapLayer, null) !== null;
+
     return (
       <React.Fragment>
         <div className="checkbox-grouping">
           {isTransportModeEnabled(transportModes.bus) && (
             <React.Fragment>
-              <InputField
-                checked={stop.bus}
-                labelId="map-layer-stop-bus"
-                defaultMessage="Bus stop"
-                onChange={e =>
-                  this.updateStopSetting({ bus: e.target.checked })
-                }
-              />
-              <InputField
-                checked={terminal.bus}
-                labelId="map-layer-terminal-bus"
-                defaultMessage="Bus terminal"
-                onChange={e =>
-                  this.updateTerminalSetting({ bus: e.target.checked })
-                }
-              />
+              {isMapLayerEnabled('stop.bus') && (
+                <InputField
+                  checked={stop.bus}
+                  labelId="map-layer-stop-bus"
+                  defaultMessage="Bus stop"
+                  onChange={e =>
+                    this.updateStopSetting({ bus: e.target.checked })
+                  }
+                />
+              )}
+              {isMapLayerEnabled('terminal.bus') && (
+                <InputField
+                  checked={terminal.bus}
+                  labelId="map-layer-terminal-bus"
+                  defaultMessage="Bus terminal"
+                  onChange={e =>
+                    this.updateTerminalSetting({ bus: e.target.checked })
+                  }
+                />
+              )}
             </React.Fragment>
           )}
-          {isTransportModeEnabled(transportModes.tram) && (
-            <InputField
-              checked={stop.tram}
-              labelId="map-layer-stop-tram"
-              defaultMessage="Tram stop"
-              onChange={e => this.updateStopSetting({ tram: e.target.checked })}
-            />
-          )}
-          {isTransportModeEnabled(transportModes.rail) && (
-            <InputField
-              checked={terminal.rail}
-              labelId="map-layer-terminal-rail"
-              defaultMessage="Railway station"
-              onChange={e =>
-                this.updateStopAndTerminalSetting({ rail: e.target.checked })
-              }
-            />
-          )}
-          {isTransportModeEnabled(transportModes.subway) && (
-            <InputField
-              checked={terminal.subway}
-              labelId="map-layer-terminal-subway"
-              defaultMessage="Subway station"
-              onChange={e =>
-                this.updateStopAndTerminalSetting({ subway: e.target.checked })
-              }
-            />
-          )}
-          {isTransportModeEnabled(transportModes.ferry) && (
-            <InputField
-              checked={cameraStations}
-              labelId="cameras"
-              defaultMessage="Cameras"
-              onChange={e =>
-                this.updateSetting({ cameraStations: e.target.checked })
-              }
-            />
-          )}
+          {isTransportModeEnabled(transportModes.tram) &&
+            isMapLayerEnabled('stop.tram') && (
+              <InputField
+                checked={stop.tram}
+                labelId="map-layer-stop-tram"
+                defaultMessage="Tram stop"
+                onChange={e =>
+                  this.updateStopSetting({ tram: e.target.checked })
+                }
+              />
+            )}
+          {isTransportModeEnabled(transportModes.rail) &&
+            isMapLayerEnabled('terminal.rail') && (
+              <InputField
+                checked={terminal.rail}
+                labelId="map-layer-terminal-rail"
+                defaultMessage="Railway station"
+                onChange={e =>
+                  this.updateStopAndTerminalSetting({ rail: e.target.checked })
+                }
+              />
+            )}
+          {isTransportModeEnabled(transportModes.subway) &&
+            isMapLayerEnabled('terminal.subway') && (
+              <InputField
+                checked={terminal.subway}
+                labelId="map-layer-terminal-subway"
+                defaultMessage="Subway station"
+                onChange={e =>
+                  this.updateStopAndTerminalSetting({
+                    subway: e.target.checked,
+                  })
+                }
+              />
+            )}
+          {isTransportModeEnabled(transportModes.ferry) &&
+            isMapLayerEnabled('stop.ferry') && (
+              <InputField
+                checked={stop.ferry}
+                labelId="map-layer-stop-ferry"
+                defaultMessage="Ferries"
+                onChange={e =>
+                  this.updateStopSetting({ ferry: e.target.checked })
+                }
+              />
+            )}
           {config.cityBike &&
-            config.cityBike.showCityBikes && (
+            config.cityBike.showCityBikes &&
+            isMapLayerEnabled('citybike') && (
               <InputField
                 checked={citybike}
                 labelId="map-layer-citybike"
@@ -189,7 +232,8 @@ class SelectMapLayersDialog extends React.Component {
               />
             )}
           {config.parkAndRide &&
-            config.parkAndRide.showParkAndRide && (
+            config.parkAndRide.showParkAndRide &&
+            isMapLayerEnabled('parkAndRide') && (
               <InputField
                 checked={parkAndRide}
                 labelId="map-layer-park-and-ride"
@@ -200,7 +244,8 @@ class SelectMapLayersDialog extends React.Component {
               />
             )}
           {config.parkingStations &&
-            config.parkingStations.showParkingStations && (
+            config.parkingStations.showParkingStations &&
+            isMapLayerEnabled('parkingStations') && (
               <InputField
                 checked={parkingStations}
                 labelId="parking"
@@ -210,19 +255,21 @@ class SelectMapLayersDialog extends React.Component {
                 }
               />
             )}
-          {config.disorders &&
-            config.disorders.showDisorders && (
+          {config.fluencies &&
+            config.fluencies.showFluencies &&
+            isMapLayerEnabled('fluencies') && (
               <InputField
-                checked={disorders}
-                labelId="disruptions"
-                defaultMessage="Disruptions"
+                checked={fluencies}
+                labelId="fluency"
+                defaultMessage="Fluency"
                 onChange={e =>
-                  this.updateSetting({ disorders: e.target.checked })
+                  this.updateSetting({ fluencies: e.target.checked })
                 }
               />
             )}
           {config.roadworks &&
-            config.roadworks.showRoadworks && (
+            config.roadworks.showRoadworks &&
+            isMapLayerEnabled('roadworks') && (
               <InputField
                 checked={roadworks}
                 labelId="roadworks"
@@ -232,8 +279,21 @@ class SelectMapLayersDialog extends React.Component {
                 }
               />
             )}
+          {config.disorders &&
+            config.disorders.showDisorders &&
+            isMapLayerEnabled('disorders') && (
+              <InputField
+                checked={disorders}
+                labelId="disruptions"
+                defaultMessage="Disruptions"
+                onChange={e =>
+                  this.updateSetting({ disorders: e.target.checked })
+                }
+              />
+            )}
           {config.cameraStations &&
-            config.cameraStations.showCameraStations && (
+            config.cameraStations.showCameraStations &&
+            isMapLayerEnabled('cameraStations') && (
               <InputField
                 checked={cameraStations}
                 labelId="cameras"
@@ -244,7 +304,8 @@ class SelectMapLayersDialog extends React.Component {
               />
             )}
           {config.weatherStations &&
-            config.weatherStations.showWeatherStations && (
+            config.weatherStations.showWeatherStations &&
+            isMapLayerEnabled('weatherStations') && (
               <InputField
                 checked={weatherStations}
                 labelId="weather-stations"
@@ -254,19 +315,9 @@ class SelectMapLayersDialog extends React.Component {
                 }
               />
             )}
-          {config.tmsStations &&
-            config.tmsStations.showTmsStations && (
-              <InputField
-                checked={tmsStations}
-                labelId="traffic-monitoring"
-                defaultMessage="Traffic monitoring"
-                onChange={e =>
-                  this.updateSetting({ tmsStations: e.target.checked })
-                }
-              />
-            )}
           {config.roadConditions &&
-            config.roadConditions.showRoadConditions && (
+            config.roadConditions.showRoadConditions &&
+            isMapLayerEnabled('roadConditions') && (
               <InputField
                 checked={roadConditions}
                 labelId="road-condition"
@@ -276,42 +327,49 @@ class SelectMapLayersDialog extends React.Component {
                 }
               />
             )}
-          {config.fluencies &&
-            config.fluencies.showFluencies && (
+          {config.tmsStations &&
+            config.tmsStations.showTmsStations &&
+            isMapLayerEnabled('tmsStations') && (
               <InputField
-                checked={fluencies}
-                labelId="fluency"
-                defaultMessage="Fluency"
+                checked={tmsStations}
+                labelId="traffic-monitoring"
+                defaultMessage="Traffic monitoring"
                 onChange={e =>
-                  this.updateSetting({ fluencies: e.target.checked })
+                  this.updateSetting({ tmsStations: e.target.checked })
                 }
               />
             )}
         </div>
         {config.ticketSales &&
-          config.ticketSales.showTicketSales && (
+          config.ticketSales.showTicketSales &&
+          (isMapLayerEnabled('ticketSales.ticketMachine') ||
+            isMapLayerEnabled('ticketSales.salesPoint')) && (
             <div className="checkbox-grouping">
-              <InputField
-                checked={ticketSales.ticketMachine}
-                labelId="map-layer-ticket-sales-machine"
-                defaultMessage="Ticket machine"
-                onChange={e =>
-                  this.updateTicketSalesSetting({
-                    ticketMachine: e.target.checked,
-                  })
-                }
-              />
-              <InputField
-                checked={ticketSales.salesPoint}
-                labelId="map-layer-ticket-sales-point"
-                defaultMessage="Travel Card top up"
-                onChange={e =>
-                  this.updateTicketSalesSetting({
-                    salesPoint: e.target.checked,
-                    servicePoint: e.target.checked,
-                  })
-                }
-              />
+              {isMapLayerEnabled('ticketSales.ticketMachine') && (
+                <InputField
+                  checked={ticketSales.ticketMachine}
+                  labelId="map-layer-ticket-sales-machine"
+                  defaultMessage="Ticket machine"
+                  onChange={e =>
+                    this.updateTicketSalesSetting({
+                      ticketMachine: e.target.checked,
+                    })
+                  }
+                />
+              )}
+              {isMapLayerEnabled('ticketSales.salesPoint') && (
+                <InputField
+                  checked={ticketSales.salesPoint}
+                  labelId="map-layer-ticket-sales-point"
+                  defaultMessage="Travel Card top up"
+                  onChange={e =>
+                    this.updateTicketSalesSetting({
+                      salesPoint: e.target.checked,
+                      servicePoint: e.target.checked,
+                    })
+                  }
+                />
+              )}
             </div>
           )}
       </React.Fragment>
@@ -320,6 +378,8 @@ class SelectMapLayersDialog extends React.Component {
 
   render() {
     const { config, breakpoint } = this.props;
+    const headerId = this.getHeaderId();
+
     return (
       <BubbleDialog
         containerClassName={get(
@@ -328,11 +388,7 @@ class SelectMapLayersDialog extends React.Component {
           undefined,
         )}
         contentClassName="select-map-layers-dialog-content"
-        header={get(
-          config,
-          'mapTrackingButtons.layers.headerId',
-          'select-map-layers-header',
-        )}
+        header={headerId}
         id="mapLayerSelector"
         icon={get(config, 'mapTrackingButtons.layers.icon', 'map-layers')}
         buttonText={
@@ -343,7 +399,7 @@ class SelectMapLayersDialog extends React.Component {
         isOpen={this.props.isOpen}
         isFullscreenOnMobile
       >
-        {this.renderContents(this.props.mapLayers, this.props.config)}
+        {this.renderContents()}
       </BubbleDialog>
     );
   }
@@ -399,16 +455,20 @@ const mapLayersConfigShape = PropTypes.shape({
 
 SelectMapLayersDialog.propTypes = {
   config: mapLayersConfigShape,
+  location: locationShape,
   isOpen: PropTypes.bool,
   mapLayers: mapLayerShape.isRequired,
   updateMapLayers: PropTypes.func.isRequired,
   breakpoint: PropTypes.string,
+  executeAction: PropTypes.func,
 };
 
 SelectMapLayersDialog.defaultProps = {
   config: {},
+  location: null,
   isOpen: false,
   breakpoint: 'large',
+  executeAction: null,
 };
 
 SelectMapLayersDialog.description = (
@@ -461,12 +521,15 @@ const connectedComponent = connectToStores(
   [MapLayerStore],
   context => ({
     config: context.config,
+    location: context.location,
     mapLayers: context.getStore(MapLayerStore).getMapLayers(),
     updateMapLayers: mapLayers =>
       context.executeAction(updateMapLayers, { ...mapLayers }),
+    executeAction: context.executeAction,
   }),
   {
     config: mapLayersConfigShape,
+    location: locationShape,
     executeAction: PropTypes.func,
   },
 );

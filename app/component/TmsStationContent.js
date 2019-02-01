@@ -5,78 +5,71 @@ import moment from 'moment';
 import ComponentUsageExample from './ComponentUsageExample';
 import { lang as exampleLang } from './ExampleData';
 
-const TmsStationContent = ({ sensors, measuredTime }) => {
-  const speedSensorA = sensors.find(
+const TmsStationContent = ({
+  sensors,
+  measuredTime,
+  direction1,
+  direction2,
+}) => {
+  const speedSensor1 = sensors.find(
     item => item.name === 'KESKINOPEUS_5MIN_LIUKUVA_SUUNTA1',
   );
-  const speedSensorB = sensors.find(
+  const speedSensor2 = sensors.find(
     item => item.name === 'KESKINOPEUS_5MIN_LIUKUVA_SUUNTA2',
   );
-  const vechicleCountSensorA = sensors.find(
+  const vechicleCountSensor1 = sensors.find(
     item => item.name === 'OHITUKSET_5MIN_LIUKUVA_SUUNTA1',
   );
-  const vechicleCountSensorB = sensors.find(
+  const vechicleCountSensor2 = sensors.find(
     item => item.name === 'OHITUKSET_5MIN_LIUKUVA_SUUNTA2',
   );
   return (
     <table className="component-list">
       <tbody>
-        {speedSensorA && (
+        <tr>
+          <td colSpan={2}>
+            <FormattedMessage
+              id="average-speed"
+              defaultMessage="Average speed"
+            />
+          </td>
+        </tr>
+        {speedSensor1 && (
           <tr>
-            <td>
-              <FormattedMessage
-                id="average-speed"
-                defaultMessage="Average speed"
-              >
-                {(...content) => `${content} A:`}
-              </FormattedMessage>
-            </td>
-            <td>{`${speedSensorA.sensorValue} ${speedSensorA.sensorUnit}`}</td>
+            <td>{`${direction1}:`}</td>
+            <td>{`${speedSensor1.sensorValue} ${speedSensor1.sensorUnit}`}</td>
           </tr>
         )}
-        {speedSensorB && (
+        {speedSensor2 && (
           <tr>
-            <td>
-              <FormattedMessage
-                id="average-speed"
-                defaultMessage="Average speed"
-              >
-                {(...content) => `${content} B:`}
-              </FormattedMessage>
-            </td>
-            <td>{`${speedSensorB.sensorValue} ${speedSensorB.sensorUnit}`}</td>
+            <td>{`${direction2}:`}</td>
+            <td>{`${speedSensor2.sensorValue} ${speedSensor2.sensorUnit}`}</td>
           </tr>
         )}
-        {vechicleCountSensorA && (
+        <tr>
+          <td colSpan={2}>
+            <FormattedMessage
+              id="traffic-count"
+              defaultMessage="Traffic count"
+            />
+          </td>
+        </tr>
+        {vechicleCountSensor1 && (
           <tr>
+            <td>{`${direction1}:`}</td>
             <td>
-              <FormattedMessage
-                id="traffic-count"
-                defaultMessage="Traffic count"
-              >
-                {(...content) => `${content} A:`}
-              </FormattedMessage>
-            </td>
-            <td>
-              {`${vechicleCountSensorA.sensorValue} ${
-                vechicleCountSensorA.sensorUnit
+              {`${vechicleCountSensor1.sensorValue} ${
+                vechicleCountSensor1.sensorUnit
               }`}
             </td>
           </tr>
         )}
-        {vechicleCountSensorB && (
+        {vechicleCountSensor2 && (
           <tr>
+            <td>{`${direction2}:`}</td>
             <td>
-              <FormattedMessage
-                id="traffic-count"
-                defaultMessage="Traffic count"
-              >
-                {(...content) => `${content} B:`}
-              </FormattedMessage>
-            </td>
-            <td>
-              {`${vechicleCountSensorB.sensorValue} ${
-                vechicleCountSensorB.sensorUnit
+              {`${vechicleCountSensor2.sensorValue} ${
+                vechicleCountSensor2.sensorUnit
               }`}
             </td>
           </tr>

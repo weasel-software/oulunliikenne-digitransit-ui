@@ -6,26 +6,21 @@ import { routerShape, locationShape } from 'react-router';
 import connectToStores from 'fluxible-addons-react/connectToStores';
 import Card from '../../Card';
 import CardHeader from '../../CardHeader';
-import DisorderContent from '../../DisorderContent';
+import TrafficAnnouncementContent from '../../TrafficAnnouncementContent';
 import ComponentUsageExample from '../../ComponentUsageExample';
 
-function DisorderPopup(
-  { trafficDisorder, lang },
+function TrafficAnnouncementPopup(
+  { trafficAnnouncement, lang },
   { intl, router, location, config: { defaultLanguage } },
 ) {
-  if (!trafficDisorder) {
+  if (!trafficAnnouncement) {
     return null;
   }
 
-  const { startTime, endTime, description, geojson } = trafficDisorder;
-  const locations = geojson.features.map(item => item.properties);
-  const firstLocation = locations.length ? locations[0].firstName : '';
-  const lastLocation =
-    locations.length > 1
-      ? ` - ${locations[locations.length - 1].firstName}`
-      : '';
-  const locationName = `${firstLocation}${lastLocation}`;
-  const comment = description[lang] || description[defaultLanguage] || '';
+  const titleLocal =
+    trafficAnnouncement.title[lang] ||
+    trafficAnnouncement.title[defaultLanguage] ||
+    '';
 
   const openMoreInfoModal = () => {
     router.push({
@@ -33,9 +28,12 @@ function DisorderPopup(
       state: {
         ...location.state,
         moreInfoModalOpen: true,
-        moreInfoModalTitle: locationName,
+        moreInfoModalTitle: titleLocal,
         moreInfoModalContent: (
-          <DisorderContent comment={comment} start={startTime} end={endTime} />
+          <TrafficAnnouncementContent
+            trafficAnnouncement={trafficAnnouncement}
+            type="extended"
+          />
         ),
       },
     });
@@ -49,16 +47,11 @@ function DisorderPopup(
             id: 'traffic-restriction',
             defaultMessage: 'Traffic restriction',
           })}
-          description={locationName}
+          description={titleLocal}
           icon="icon-icon_disorder"
           unlinked
         />
-        <DisorderContent
-          locationName={locationName}
-          comment={comment}
-          start={startTime}
-          end={endTime}
-        />
+        <TrafficAnnouncementContent trafficAnnouncement={trafficAnnouncement} />
         <button className="read-more" onClick={openMoreInfoModal}>
           {`${intl.formatMessage({
             id: 'more',
@@ -70,27 +63,27 @@ function DisorderPopup(
   );
 }
 
-DisorderPopup.displayName = 'DisorderPopup';
+TrafficAnnouncementPopup.displayName = 'TrafficAnnouncementPopup';
 
-DisorderPopup.description = (
+TrafficAnnouncementPopup.description = (
   <div>
-    <p>Renders a traffic disorder popup.</p>
+    <p>Renders a traffic announcement popup.</p>
     <ComponentUsageExample description="">
-      <DisorderPopup context="context object here" />
+      <TrafficAnnouncementPopup context="context object here" />
     </ComponentUsageExample>
   </div>
 );
 
-DisorderPopup.propTypes = {
-  trafficDisorder: PropTypes.object,
+TrafficAnnouncementPopup.propTypes = {
+  trafficAnnouncement: PropTypes.object,
   lang: PropTypes.string.isRequired,
 };
 
-DisorderPopup.defaultProps = {
-  trafficDisorder: null,
+TrafficAnnouncementPopup.defaultProps = {
+  trafficAnnouncement: null,
 };
 
-DisorderPopup.contextTypes = {
+TrafficAnnouncementPopup.contextTypes = {
   intl: intlShape.isRequired,
   router: routerShape.isRequired,
   location: locationShape.isRequired,
@@ -100,24 +93,43 @@ DisorderPopup.contextTypes = {
 };
 
 export default Relay.createContainer(
-  connectToStores(DisorderPopup, ['PreferencesStore'], context => ({
+  connectToStores(TrafficAnnouncementPopup, ['PreferencesStore'], context => ({
     lang: context.getStore('PreferencesStore').getLanguage(),
   })),
   {
     fragments: {
-      trafficDisorder: () => Relay.QL`
-        fragment on TrafficDisorder {
-          disorderId
-          severity
-          status
-          startTime
-          endTime
+      trafficAnnouncement: () => Relay.QL`
+        fragment on TrafficAnnouncement {
+          announcementId
+          class {
+            class
+            subclass
+          }
           description {
             fi
             sv
             en
           }
+          severity
+          status
+          startTime
+          endTime
           geojson
+          title {
+            fi
+            sv
+            en
+          }
+          modesOfTransport
+          trafficDirection
+          temporarySpeedLimit
+          duration
+          additionalInfo
+          detour
+          oversizeLoad
+          vehicleSizeLimit
+          url
+          imageUrl
         }
       `,
     },

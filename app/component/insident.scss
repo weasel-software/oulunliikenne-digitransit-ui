@@ -36,3 +36,26 @@
     overflow-y: auto;
   }
 }
+
+.extended-content {
+  list-style-type: none;
+  padding: 0;
+
+  li {
+    margin: 0 0 5px;
+
+    &.link {
+      margin-bottom: 10px;
+    }
+
+    span {
+      display: inline-block;
+      min-width: 25%;
+      margin-right: 10px;
+    }
+
+    img {
+      cursor: pointer;
+    }
+  }
+}

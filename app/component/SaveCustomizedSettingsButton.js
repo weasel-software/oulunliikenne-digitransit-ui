@@ -13,6 +13,7 @@ import {
 import { getCurrentSettings, getDefaultSettings } from '../util/planParamUtil';
 import { getQuerySettings } from '../util/queryUtils';
 import { getDrawerWidth } from '../util/browser';
+import { getStreetMode } from '../util/modeUtils';
 
 class SaveCustomizedSettingsButton extends React.Component {
   static propTypes = {
@@ -43,7 +44,11 @@ class SaveCustomizedSettingsButton extends React.Component {
     }
 
     const querySettings = getQuerySettings(this.context.location.query);
-    const customizedSettings = getCustomizedSettings();
+    const streetMode = getStreetMode(
+      this.context.location,
+      this.context.config,
+    );
+    const customizedSettings = getCustomizedSettings(streetMode);
     const currentSettings = getCurrentSettings(
       this.context.config,
       this.context.location.query,
@@ -56,7 +61,7 @@ class SaveCustomizedSettingsButton extends React.Component {
     ) {
       this.props.noSettingsFound();
     } else {
-      setCustomizedSettings(querySettings);
+      setCustomizedSettings(querySettings, streetMode);
       this.setState({
         open: true,
       });

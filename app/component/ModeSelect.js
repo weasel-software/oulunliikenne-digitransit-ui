@@ -2,23 +2,25 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import ComponentUsageExample from './ComponentUsageExample';
 import ToggleButton from './ToggleButton';
-import { isKeyboardSelectionEvent } from '../util/browser';
-import { isBrowser } from '../util/browser';
+import { isKeyboardSelectionEvent, isBrowser } from '../util/browser';
 
 class ModeSelect extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      selectedStreetMode:
-        this.props.selectedStreetMode ||
-        this.props.streetModeConfigs.find(c => c.defaultValue).name,
+      defaultSelectedStreetMode: this.props.streetModeConfigs.find(
+        c => c.defaultValue,
+      ).name,
     };
   }
 
   getButtons() {
     const { streetModeConfigs } = this.props;
-    const { selectedStreetMode } = this.state;
+    const { defaultSelectedStreetMode } = this.state;
+
+    const selectedStreetMode =
+      this.props.selectedStreetMode || defaultSelectedStreetMode;
 
     if (!streetModeConfigs.length) {
       return null;
@@ -53,17 +55,10 @@ class ModeSelect extends React.Component {
   }
 
   selectMode(streetMode, isExclusive, applyFocus = false) {
-    this.setState(
-      {
-        selectedStreetMode: streetMode,
-      },
-      () => {
-        this.props.selectStreetMode(streetMode.toUpperCase(), isExclusive);
-        if (applyFocus && this.dialogRef) {
-          this.dialogRef.closeDialog(applyFocus);
-        }
-      },
-    );
+    this.props.selectStreetMode(streetMode.toUpperCase(), isExclusive);
+    if (applyFocus && this.dialogRef) {
+      this.dialogRef.closeDialog(applyFocus);
+    }
   }
 
   render() {

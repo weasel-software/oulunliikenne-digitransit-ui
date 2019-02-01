@@ -13,15 +13,7 @@ const RoadworkContent = ({ comment, start, end, type }) => {
     <div className="roadwork-container">
       <div className="insident-info">
         {type && <span className="description">{type}</span>}
-        <span className="duration">
-          <FormattedMessage
-            id="disruption-duration"
-            values={{ start: startFormated, end: endFormated }}
-            defaultMessage="Duration {start} - {end}"
-          >
-            {(...content) => content}
-          </FormattedMessage>
-        </span>
+        <span className="duration">{`${startFormated} - ${endFormated}`}</span>
       </div>
       <p className="insident-message">{comment}</p>
     </div>

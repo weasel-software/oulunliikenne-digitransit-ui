@@ -82,9 +82,10 @@ class QuickSettingsPanel extends React.Component {
   };
 
   getQuickOptionSets = () => {
-    const { config } = this.context;
+    const { config, location } = this.context;
     const defaultSettings = getDefaultSettings(config);
-    const customizedSettings = getCustomizedSettings();
+    const streetMode = getStreetMode(location, config);
+    const customizedSettings = getCustomizedSettings(streetMode);
     delete defaultSettings.modes;
     delete customizedSettings.modes;
 
@@ -270,8 +271,11 @@ class QuickSettingsPanel extends React.Component {
   }
 
   render() {
-    const arriveBy = get(this.context.location, 'query.arriveBy', 'false');
-    const customizedSettings = getCustomizedSettings();
+    const { config, location } = this.context;
+
+    const arriveBy = get(location, 'query.arriveBy', 'false');
+    const streetMode = getStreetMode(location, config);
+    const customizedSettings = getCustomizedSettings(streetMode);
     const quickOption = this.matchQuickOption();
     const applicableQuickOptionSets = this.getApplicableQuickOptionSets();
 

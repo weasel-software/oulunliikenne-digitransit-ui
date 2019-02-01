@@ -1,6 +1,9 @@
 import flatten from 'lodash/flatten';
 import omit from 'lodash/omit';
 import L from 'leaflet';
+import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
+import { point as turfPoint, polygon as turfPolygon } from '@turf/helpers';
+import { distanceToPolygon } from 'distance-to-polygon';
 
 import { isBrowser } from '../../../util/browser';
 import { isLayerEnabled } from '../../../util/mapLayerUtils';
@@ -165,27 +168,52 @@ class TileContainer {
             return null;
           }
 
+          // Polygon check
+          if (feature.feature.polygon) {
+            const currentFeature = { ...feature };
+            const { polygon } = currentFeature.feature;
+
+            const formatedPolygon = polygon.map(cords => [
+              cords.x / this.ratio,
+              cords.y / this.ratio,
+            ]);
+
+            const pointWithinDist = booleanPointInPolygon(
+              turfPoint(localPoint),
+              turfPolygon([formatedPolygon]),
+            );
+
+            if (pointWithinDist) {
+              currentFeature.feature.geom = {
+                x: localPoint[0] * this.ratio,
+                y: localPoint[1] * this.ratio,
+              };
+              return currentFeature;
+            }
+
+            return null;
+          }
+
           // LineString check
           if (feature.feature.lineString) {
             const currentFeature = { ...feature };
             const { lineString } = currentFeature.feature;
 
-            const pointWithinDist = lineString.reduce((res, current) => {
-              if (res) {
-                return res;
-              }
-              const distance = Math.sqrt(
-                (localPoint[0] - current.x / this.ratio) ** 2 +
-                  (localPoint[1] - current.y / this.ratio) ** 2,
-              );
-              if (distance < 22 * this.scaleratio) {
-                return current;
-              }
-              return res;
-            }, undefined);
+            const formatedLineString = lineString.map(cords => [
+              cords.x / this.ratio,
+              cords.y / this.ratio,
+            ]);
 
-            if (pointWithinDist) {
-              currentFeature.feature.geom = pointWithinDist;
+            const pointToLineDist = distanceToPolygon(
+              localPoint,
+              formatedLineString,
+            );
+
+            if (pointToLineDist < 20) {
+              currentFeature.feature.geom = {
+                x: localPoint[0] * this.ratio,
+                y: localPoint[1] * this.ratio,
+              };
               return currentFeature;
             }
 

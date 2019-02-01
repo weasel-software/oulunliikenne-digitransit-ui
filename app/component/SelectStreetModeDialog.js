@@ -15,9 +15,9 @@ class SelectStreetModeDialog extends React.Component {
 
     this.onDialogOpen = this.onDialogOpen.bind(this);
     this.state = {
-      selectedStreetMode:
-        this.props.selectedStreetMode ||
-        this.props.streetModeConfigs.find(c => c.defaultValue).name,
+      defaultSelectedStreetMode: this.props.streetModeConfigs.find(
+        c => c.defaultValue,
+      ).name,
     };
   }
 
@@ -29,7 +29,10 @@ class SelectStreetModeDialog extends React.Component {
 
   getStreetModeSelectButtons() {
     const { streetModeConfigs } = this.props;
-    const { selectedStreetMode } = this.state;
+    const { defaultSelectedStreetMode } = this.state;
+
+    const selectedStreetMode =
+      this.props.selectedStreetMode || defaultSelectedStreetMode;
 
     if (!streetModeConfigs.length) {
       return null;
@@ -63,22 +66,18 @@ class SelectStreetModeDialog extends React.Component {
   }
 
   selectStreetMode(streetMode, isExclusive, applyFocus = false) {
-    this.setState(
-      {
-        selectedStreetMode: streetMode,
-      },
-      () => {
-        this.props.selectStreetMode(streetMode.toUpperCase(), isExclusive);
-        if (applyFocus && this.dialogRef) {
-          this.dialogRef.closeDialog(applyFocus);
-        }
-      },
-    );
+    this.props.selectStreetMode(streetMode.toUpperCase(), isExclusive);
+    if (applyFocus && this.dialogRef) {
+      this.dialogRef.closeDialog(applyFocus);
+    }
   }
 
   render() {
     const { isOpen, streetModeConfigs } = this.props;
-    const { selectedStreetMode } = this.state;
+    const { defaultSelectedStreetMode } = this.state;
+
+    const selectedStreetMode =
+      this.props.selectedStreetMode || defaultSelectedStreetMode;
 
     return (
       <BubbleDialog

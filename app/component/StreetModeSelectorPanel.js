@@ -47,6 +47,7 @@ class StreetModeSelectorPanel extends React.Component {
   }
 
   render() {
+    const { showRouteHereButton } = this.props;
     const { intl } = this.context;
     return (
       <div className={cx('street-mode-selector-panel', this.props.className)}>
@@ -56,22 +57,24 @@ class StreetModeSelectorPanel extends React.Component {
         <div className="street-mode-selector-panel-buttons">
           {this.getStreetModeSelectButtons()}
         </div>
-        <div className="route-here-container">
-          <RouteHere>
-            <div
-              title={intl.formatMessage({
-                id: 'route-here-button',
-                defaultMessage: 'Copy route here',
-              })}
-              aria-label={intl.formatMessage({
-                id: 'route-here-button',
-                defaultMessage: 'Copy route here',
-              })}
-            >
-              <Icon img="icon-icon_clipboard" />
-            </div>
-          </RouteHere>
-        </div>
+        {showRouteHereButton && (
+          <div className="route-here-container">
+            <RouteHere>
+              <div
+                title={intl.formatMessage({
+                  id: 'route-here-button',
+                  defaultMessage: 'Copy route here',
+                })}
+                aria-label={intl.formatMessage({
+                  id: 'route-here-button',
+                  defaultMessage: 'Copy route here',
+                })}
+              >
+                <Icon img="icon-icon_clipboard" />
+              </div>
+            </RouteHere>
+          </div>
+        )}
       </div>
     );
   }
@@ -82,6 +85,7 @@ StreetModeSelectorPanel.propTypes = {
   selectStreetMode: PropTypes.func.isRequired,
   selectedStreetMode: PropTypes.string,
   showButtonTitles: PropTypes.bool,
+  showRouteHereButton: PropTypes.bool,
   streetModeConfigs: PropTypes.arrayOf(
     PropTypes.shape({
       defaultValue: PropTypes.bool.isRequired,
@@ -95,6 +99,7 @@ StreetModeSelectorPanel.defaultProps = {
   className: undefined,
   selectedStreetMode: undefined,
   showButtonTitles: false,
+  showRouteHereButton: false,
   streetModeConfigs: [],
 };
 
