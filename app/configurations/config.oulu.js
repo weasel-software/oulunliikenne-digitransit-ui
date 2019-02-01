@@ -91,6 +91,11 @@ export default configMerger(walttiConfig, {
     showPolygons: false,
     showPolygonCenterIcon: true,
     showLineIcons: true,
+    colors: {
+      LOW: '#0073BF',
+      MEDIUM: '#FFC107',
+      HIGH: '#DC3545',
+    },
   },
 
   trafficAnnouncements: {
@@ -99,6 +104,11 @@ export default configMerger(walttiConfig, {
     showPolygons: true,
     showPolygonCenterIcon: false,
     showLineIcons: false,
+    colors: {
+      LOW: '#0073BF',
+      MEDIUM: '#FFC107',
+      HIGH: '#DC3545',
+    },
   },
 
   roadConditions: {

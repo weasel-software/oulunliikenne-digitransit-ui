@@ -110,27 +110,26 @@ export default Relay.createContainer(
             sv
             en
           }
-          severity # TrafficDisruptionSeverity
-          status # TrafficDisruptionValidityStatus
-          startTime # GraphQLDateTime
-          endTime # GraphQLDateTime
-          geojson # FeatureCollectionObject
+          severity
+          status
+          startTime
+          endTime
+          geojson
           title {
             fi
             sv
             en
           }
-          modesOfTransport # LIST, TrafficDisruptionModeOfTransport
-          class # LIST, TrafficDisruptionClass
-          trafficDirection # String
-          temporarySpeedLimit # Int
-          duration # String
-          additionalInfo # String
-          detour # FeatureCollectionObject
-          oversizeLoad # String
-          vehicleSizeLimit # String
-          url # String
-          imageUrl # String
+          modesOfTransport
+          trafficDirection
+          temporarySpeedLimit
+          duration
+          additionalInfo
+          detour
+          oversizeLoad
+          vehicleSizeLimit
+          url
+          imageUrl
         }
       `,
     },
