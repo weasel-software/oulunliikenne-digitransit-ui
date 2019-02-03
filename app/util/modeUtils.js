@@ -282,6 +282,18 @@ export const setStreetMode = (
 };
 
 /**
+ * Updates the browser's url to reflect the selected street mode.
+ *
+ * @param {*} location The current router location
+ * @param {*} config The configuration for the software installation
+ */
+export const activateCurrentStreetMode = (location, config) => {
+  const streetMode = getStreetMode(location, config);
+  const modes = getModes(location, config);
+  setActiveCustomizedSettings(streetMode, modes);
+};
+
+/**
  * Checks if the mode has been configured not to allow bikes on board.
  *
  * @param {*} config The configuration for the software installation
