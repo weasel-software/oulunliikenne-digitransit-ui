@@ -76,6 +76,12 @@ class IndexPage extends React.Component {
   componentDidMount() {
     // auto select nearby tab if none selected and bp=large
     if (this.props.tab === undefined) {
+      // Activate the current streetmode before redirect in case it is set in url
+      ModeUtils.activateCurrentStreetMode(
+        this.context.router.location,
+        this.context.config,
+      );
+
       this.clickNearby();
     }
 
