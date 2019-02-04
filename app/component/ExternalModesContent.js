@@ -17,9 +17,14 @@ function ExternalModesContent(
             rel="noopener noreferrer"
           >
             {item.icon && (
-              <span
+              <img
                 className="item-icon"
-                style={{ WebkitMaskImage: `url("${item.icon}")` }}
+                src={item.icon}
+                alt={
+                  item.title[currentLanguage] ||
+                  item.title[defaultLanguage] ||
+                  ''
+                }
               />
             )}
             {item.title[currentLanguage] || item.title[defaultLanguage] || ''}
