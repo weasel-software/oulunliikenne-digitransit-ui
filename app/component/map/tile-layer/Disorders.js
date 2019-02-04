@@ -6,6 +6,7 @@ import centerOfMass from '@turf/center-of-mass';
 import { polygon as turfPolygon } from '@turf/helpers';
 import moment from 'moment';
 import { getStreetMode } from '../../../util/modeUtils';
+import { StreetMode } from '../../../constants';
 
 import {
   drawDisorderIcon,
@@ -108,6 +109,8 @@ export default class Disorders {
     const lastFetch = timeOfLastFetch[id];
     const currentTime = new Date().getTime();
 
+    const lightTrafficModes = [StreetMode.Walk, StreetMode.Bicycle];
+
     const callback = readyState => {
       if (readyState.done) {
         timeOfLastFetch[id] = new Date().getTime();
@@ -119,9 +122,9 @@ export default class Disorders {
         if (feature.properties.type === 'TrafficAnnouncement') {
           const streetMode = getStreetMode(null, this.config);
           draw =
-            (['WALK', 'BICYCLE'].includes(streetMode) &&
+            (lightTrafficModes.includes(streetMode) &&
               result.modesOfTransport.includes('UNPROTECTED_ROAD_USERS')) ||
-            (!['WALK', 'BICYCLE'].includes(streetMode) &&
+            (!lightTrafficModes.includes(streetMode) &&
               result.modesOfTransport.includes('PASSENGER_TRANSPORT'));
         }
 
