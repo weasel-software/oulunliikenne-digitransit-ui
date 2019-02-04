@@ -1,7 +1,7 @@
 import get from 'lodash/get';
 import find from 'lodash/find';
 import { isBrowser, isWindowsPhone, isIOSApp } from '../util/browser';
-import { OptimizeType } from '../constants';
+import { OptimizeType, StreetMode } from '../constants';
 
 const getLocalStorage = runningInBrowser =>
   runningInBrowser ? window.localStorage : global.localStorage;
@@ -170,6 +170,8 @@ export function setActiveCustomizedSettings(streetMode, modes) {
     fullSettings[streetMode] = {
       modes: modes || [],
       active: true,
+      optimize:
+        streetMode === StreetMode.Bicycle ? OptimizeType.Greenways : undefined,
     };
   }
 
