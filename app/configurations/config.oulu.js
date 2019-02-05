@@ -54,6 +54,8 @@ export default configMerger(walttiConfig, {
   useAltRelatimeClient: true,
   routePrefix: 'OULU',
 
+  stopsMinZoom: 13,
+
   tmsStations: {
     showTmsStations: true,
     tmsStationsMinZoom: 13,
@@ -95,6 +97,7 @@ export default configMerger(walttiConfig, {
       LOW: '#0073BF',
       MEDIUM: '#FFC107',
       HIGH: '#DC3545',
+      // ACCIDENT: '#DC3545',
     },
   },
 
@@ -368,6 +371,8 @@ export default configMerger(walttiConfig, {
       stop: {
         bus: true,
       },
+      cameraStations: false,
+      weatherStations: false,
       // disorders: false,
     },
     CAR: {
@@ -383,11 +388,13 @@ export default configMerger(walttiConfig, {
     BICYCLE: {
       disorders: true,
       weatherStations: false,
+      cameraStations: false,
       // tmsStations: false,
     },
     WALK: {
       disorders: true,
       weatherStations: false,
+      cameraStations: false,
       // tmsStations: false,
     },
   },
