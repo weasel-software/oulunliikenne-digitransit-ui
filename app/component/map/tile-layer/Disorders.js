@@ -1,6 +1,7 @@
 import { VectorTile } from '@mapbox/vector-tile';
 import Protobuf from 'pbf';
 import Relay from 'react-relay/classic';
+import geojsonvt from 'geojson-vt';
 import get from 'lodash/get';
 import centerOfMass from '@turf/center-of-mass';
 import { polygon as turfPolygon } from '@turf/helpers';
@@ -84,11 +85,14 @@ export default class Disorders {
               query ($id: String!){
                 trafficAnnouncement(id: $id) {
                   severity
-                  startTime
                   status
+                  startTime
                   endTime
                   modesOfTransport
                   detour
+                  class {
+                    class
+                  }
                 }
               }`,
             { id },
@@ -115,6 +119,7 @@ export default class Disorders {
       if (readyState.done) {
         timeOfLastFetch[id] = new Date().getTime();
         const result = Relay.Store.readQuery(query)[0];
+
         let draw =
           result.status === 'ACTIVE' ||
           moment().isBetween(result.startTime, result.endTime);
@@ -153,82 +158,159 @@ export default class Disorders {
       this.tile.coords.y,
       this.tile.coords.z,
     );
+
     const type = get(geojson, 'geometry.type');
     const color = get(currentConfig, `colors.${result.severity}`);
+    const detourColor = get(currentConfig, 'colors.DETOUR');
+    const accidentColor = get(currentConfig, 'colors.ACCIDENT');
+    const isAccident = get(result, 'class', []).filter(
+      item => item.class === 'ACC',
+    ).length;
 
     geometryList.forEach(geom => {
-      if (type === 'LineString') {
-        if (currentConfig.showLines) {
-          drawDisorderPath(this.tile, geom, color);
-          this.features.push({
-            lineString: geom,
-            geom: null,
-            properties: feature.properties,
+      this.drawGeom(
+        feature,
+        geom,
+        type,
+        currentConfig,
+        color,
+        isAccident ? accidentColor : undefined,
+      );
+    });
+
+    const detour = get(result, 'detour');
+
+    if (detour && get(currentConfig, 'showDetours', false)) {
+      detour.features.forEach(detourFeature => {
+        const tileIndex = geojsonvt(detourFeature, {
+          maxZoom: 24,
+        });
+        const detourTile = tileIndex.getTile(
+          this.tile.coords.z + (this.tile.props.zoomOffset || 0),
+          this.tile.coords.x,
+          this.tile.coords.y,
+        );
+
+        if (detourTile) {
+          detourTile.features.forEach(geom => {
+            const currentFeature = feature;
+            const currentType = detourFeature.geometry.type;
+            const currentGeom = (currentType === 'Point'
+              ? geom.geometry
+              : geom.geometry[0]
+            ).map(coord => ({
+              x: coord[0],
+              y: coord[1],
+            }));
+
+            this.drawGeom(
+              currentFeature,
+              currentGeom,
+              currentType,
+              currentConfig,
+              detourColor,
+              detourColor,
+            );
           });
         }
+      });
+    }
+  };
 
-        if (currentConfig && currentConfig.showLineIcons) {
-          const iconPoints = currentConfig.showLines
-            ? [geom[0], geom.slice(-1)[0]]
-            : geom;
-          iconPoints.forEach(point => {
-            if (
-              point &&
-              point.x > 0 &&
-              point.y > 0 &&
-              point.x < feature.extent &&
-              point.y < feature.extent
-            ) {
-              drawDisorderIcon(this.tile, point, this.imageSize);
-              if (!currentConfig.showLines) {
-                this.features.push({
-                  geom: point,
-                  properties: feature.properties,
-                });
-              }
-            }
-          });
-        }
-      } else if (type === 'Polygon') {
-        if (currentConfig.showPolygons) {
-          drawDisorderPolygon(this.tile, geom, color);
-          this.features.push({
-            polygon: geom,
-            geom: null,
-            properties: feature.properties,
-          });
-        }
+  drawGeom = (
+    feature,
+    geom,
+    type,
+    currentConfig,
+    color,
+    overrideColor = undefined,
+  ) => {
+    if (type === 'LineString') {
+      if (currentConfig.showLines) {
+        drawDisorderPath(this.tile, geom, color);
+        this.features.push({
+          lineString: geom,
+          geom: null,
+          properties: feature.properties,
+        });
+      }
 
-        if (currentConfig && currentConfig.showPolygonCenterIcon) {
-          const formatedPolygon = geom.map(cords => [cords.x, cords.y]);
-          const centerPoint = get(
-            centerOfMass(turfPolygon([formatedPolygon])),
-            'geometry.coordinates',
-            [],
-          );
-
-          if (centerPoint.length) {
-            const centerPointFormated = {
-              x: centerPoint[0],
-              y: centerPoint[1],
-            };
-
-            drawDisorderIcon(this.tile, centerPointFormated, this.imageSize);
-            if (!currentConfig.showPolygons) {
+      if (currentConfig && currentConfig.showLineIcons) {
+        const iconPoints = currentConfig.showLines
+          ? [geom[0], geom.slice(-1)[0]]
+          : geom;
+        iconPoints.forEach(point => {
+          if (
+            point &&
+            point.x > 0 &&
+            point.y > 0 &&
+            point.x < feature.extent &&
+            point.y < feature.extent
+          ) {
+            drawDisorderIcon(
+              this.tile,
+              point,
+              this.imageSize,
+              overrideColor || undefined,
+            );
+            if (!currentConfig.showLines) {
               this.features.push({
-                geom: centerPointFormated,
+                geom: point,
                 properties: feature.properties,
               });
             }
           }
-        }
-      } else if (type === 'Point' && currentConfig.showIcons) {
-        drawDisorderIcon(this.tile, geom[0], this.imageSize);
+        });
+      }
+    } else if (type === 'Polygon') {
+      if (currentConfig.showPolygons) {
+        drawDisorderPolygon(this.tile, geom, color);
         this.features.push({
-          geom: geom[0],
+          polygon: geom,
+          geom: null,
           properties: feature.properties,
         });
       }
-    });
+
+      if (currentConfig && currentConfig.showPolygonCenterIcon) {
+        const formatedPolygon = geom.map(cords => [cords.x, cords.y]);
+        const centerPoint = get(
+          centerOfMass(turfPolygon([formatedPolygon])),
+          'geometry.coordinates',
+          [],
+        );
+
+        if (centerPoint.length) {
+          const centerPointFormated = {
+            x: centerPoint[0],
+            y: centerPoint[1],
+          };
+
+          drawDisorderIcon(
+            this.tile,
+            centerPointFormated,
+            this.imageSize,
+            overrideColor || undefined,
+          );
+          if (!currentConfig.showPolygons) {
+            this.features.push({
+              geom: centerPointFormated,
+              properties: feature.properties,
+            });
+          }
+        }
+      }
+    } else if (type === 'Point' && currentConfig.showIcons) {
+      drawDisorderIcon(
+        this.tile,
+        geom[0],
+        this.imageSize,
+        overrideColor || undefined,
+      );
+      this.features.push({
+        geom: geom[0],
+        properties: feature.properties,
+      });
+    }
   };
 }
