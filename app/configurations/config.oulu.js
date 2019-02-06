@@ -108,7 +108,7 @@ export default configMerger(walttiConfig, {
     showPolygons: true,
     showPolygonCenterIcon: false,
     showLineIcons: false,
-    showDetours: true,
+    showDetours: false,
     colors: {
       LOW: '#0073BF',
       MEDIUM: '#FFC107',
