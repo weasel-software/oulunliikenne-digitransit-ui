@@ -120,21 +120,23 @@ export default class Disorders {
         timeOfLastFetch[id] = new Date().getTime();
         const result = Relay.Store.readQuery(query)[0];
 
-        let draw =
-          result.status === 'ACTIVE' ||
-          moment().isBetween(result.startTime, result.endTime);
+        if (result) {
+          let draw =
+            result.status === 'ACTIVE' ||
+            moment().isBetween(result.startTime, result.endTime);
 
-        if (feature.properties.type === 'TrafficAnnouncement') {
-          const streetMode = getStreetMode(null, this.config);
-          draw =
-            (lightTrafficModes.includes(streetMode) &&
-              result.modesOfTransport.includes('UNPROTECTED_ROAD_USERS')) ||
-            (!lightTrafficModes.includes(streetMode) &&
-              result.modesOfTransport.includes('PASSENGER_TRANSPORT'));
-        }
+          if (feature.properties.type === 'TrafficAnnouncement') {
+            const streetMode = getStreetMode(null, this.config);
+            draw =
+              (lightTrafficModes.includes(streetMode) &&
+                result.modesOfTransport.includes('UNPROTECTED_ROAD_USERS')) ||
+              (!lightTrafficModes.includes(streetMode) &&
+                result.modesOfTransport.includes('PASSENGER_TRANSPORT'));
+          }
 
-        if (draw) {
-          this.drawItem(geometryList, feature, result);
+          if (draw) {
+            this.drawItem(geometryList, feature, result);
+          }
         }
       }
       return this;
