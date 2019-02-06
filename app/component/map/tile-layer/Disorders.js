@@ -1,7 +1,6 @@
 import { VectorTile } from '@mapbox/vector-tile';
 import Protobuf from 'pbf';
 import Relay from 'react-relay/classic';
-import geojsonvt from 'geojson-vt';
 import get from 'lodash/get';
 import centerOfMass from '@turf/center-of-mass';
 import { polygon as turfPolygon } from '@turf/helpers';
@@ -89,7 +88,6 @@ export default class Disorders {
                   startTime
                   endTime
                   modesOfTransport
-                  detour
                   class {
                     class
                   }
@@ -162,71 +160,26 @@ export default class Disorders {
     );
 
     const type = get(geojson, 'geometry.type');
-    const color = get(currentConfig, `colors.${result.severity}`);
-    const detourColor = get(currentConfig, 'colors.DETOUR');
-    const accidentColor = get(currentConfig, 'colors.ACCIDENT');
     const isAccident = get(result, 'class', []).filter(
       item => item.class === 'ACC',
     ).length;
+    const isDetour = get(feature, 'properties.detour', false);
+
+    // Default color according to severity, changes if detour or accident
+    let color = get(currentConfig, `colors.${result.severity}`);
+
+    if (isDetour) {
+      color = get(currentConfig, 'colors.DETOUR') || color;
+    } else if (isAccident) {
+      color = isAccident ? get(currentConfig, 'colors.ACCIDENT') : color;
+    }
 
     geometryList.forEach(geom => {
-      this.drawGeom(
-        feature,
-        geom,
-        type,
-        currentConfig,
-        color,
-        isAccident ? accidentColor : undefined,
-      );
+      this.drawGeom(feature, geom, type, currentConfig, color);
     });
-
-    const detour = get(result, 'detour');
-
-    if (detour && get(currentConfig, 'showDetours', false)) {
-      detour.features.forEach(detourFeature => {
-        const tileIndex = geojsonvt(detourFeature, {
-          maxZoom: 24,
-        });
-        const detourTile = tileIndex.getTile(
-          this.tile.coords.z + (this.tile.props.zoomOffset || 0),
-          this.tile.coords.x,
-          this.tile.coords.y,
-        );
-
-        if (detourTile) {
-          detourTile.features.forEach(geom => {
-            const currentFeature = feature;
-            const currentType = detourFeature.geometry.type;
-            const currentGeom = (currentType === 'Point'
-              ? geom.geometry
-              : geom.geometry[0]
-            ).map(coord => ({
-              x: coord[0],
-              y: coord[1],
-            }));
-
-            this.drawGeom(
-              currentFeature,
-              currentGeom,
-              currentType,
-              currentConfig,
-              detourColor,
-              detourColor,
-            );
-          });
-        }
-      });
-    }
   };
 
-  drawGeom = (
-    feature,
-    geom,
-    type,
-    currentConfig,
-    color,
-    overrideColor = undefined,
-  ) => {
+  drawGeom = (feature, geom, type, currentConfig, color) => {
     if (type === 'LineString') {
       if (currentConfig.showLines) {
         drawDisorderPath(this.tile, geom, color);
@@ -249,12 +202,7 @@ export default class Disorders {
             point.x < feature.extent &&
             point.y < feature.extent
           ) {
-            drawDisorderIcon(
-              this.tile,
-              point,
-              this.imageSize,
-              overrideColor || undefined,
-            );
+            drawDisorderIcon(this.tile, point, this.imageSize, color);
             if (!currentConfig.showLines) {
               this.features.push({
                 geom: point,
@@ -292,7 +240,7 @@ export default class Disorders {
             this.tile,
             centerPointFormated,
             this.imageSize,
-            overrideColor || undefined,
+            color,
           );
           if (!currentConfig.showPolygons) {
             this.features.push({
@@ -303,12 +251,7 @@ export default class Disorders {
         }
       }
     } else if (type === 'Point' && currentConfig.showIcons) {
-      drawDisorderIcon(
-        this.tile,
-        geom[0],
-        this.imageSize,
-        overrideColor || undefined,
-      );
+      drawDisorderIcon(this.tile, geom[0], this.imageSize, color);
       this.features.push({
         geom: geom[0],
         properties: feature.properties,

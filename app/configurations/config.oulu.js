@@ -114,7 +114,7 @@ export default configMerger(walttiConfig, {
       MEDIUM: '#FFC107',
       HIGH: '#DC3545',
       ACCIDENT: '#DC3545',
-      DETOUR: '#3CFC32',
+      DETOUR: '#00cc66',
     },
   },
 
