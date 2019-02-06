@@ -71,6 +71,16 @@ const getImageFromSpriteCache = memoize(
   (icon, w, h, fill) => `${icon}_${w}_${h}_${fill}`,
 );
 
+function changeImageColor(image, hex) {
+  const base64 = image.src.replace(/^.+base64,/, '').replace(/"?\)$/, '');
+  const xml = window
+    .atob(base64)
+    .replace(/fill="#[A-Za-z0-9]+"/, `fill="${hex}"`);
+  const newBase64 = window.btoa(xml);
+  const newSrc = `data:image/svg+xml;base64,${newBase64}`;
+  image.src = newSrc;
+}
+
 function drawIconImage(image, tile, geom, width, height) {
   tile.ctx.drawImage(
     image,
@@ -247,7 +257,7 @@ export function drawRoadworkPath(tile, points, color = '#0073BF') {
   tile.ctx.stroke();
 }
 
-export function drawDisorderIcon(tile, geom, imageSize) {
+export function drawDisorderIcon(tile, geom, imageSize, color) {
   getImageFromSpriteCache('icon-icon_disorder', imageSize, imageSize).then(
     image => {
       const minPos = imageSize * tile.scaleratio;
@@ -258,7 +268,17 @@ export function drawDisorderIcon(tile, geom, imageSize) {
       geom.x = geom.x > maxPos ? maxPos : geom.x;
       geom.y = geom.y > maxPos ? maxPos : geom.y;
 
-      drawIconImage(image, tile, geom, imageSize, imageSize);
+      if (color) {
+        const imageClone = image.cloneNode(true);
+        changeImageColor(imageClone, color);
+
+        setTimeout(
+          () => drawIconImage(imageClone, tile, geom, imageSize, imageSize),
+          0,
+        );
+      } else {
+        drawIconImage(image, tile, geom, imageSize, imageSize);
+      }
     },
   );
 }

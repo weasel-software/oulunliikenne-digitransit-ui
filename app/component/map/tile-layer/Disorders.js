@@ -84,11 +84,13 @@ export default class Disorders {
               query ($id: String!){
                 trafficAnnouncement(id: $id) {
                   severity
-                  startTime
                   status
+                  startTime
                   endTime
                   modesOfTransport
-                  detour
+                  class {
+                    class
+                  }
                 }
               }`,
             { id },
@@ -115,21 +117,24 @@ export default class Disorders {
       if (readyState.done) {
         timeOfLastFetch[id] = new Date().getTime();
         const result = Relay.Store.readQuery(query)[0];
-        let draw =
-          result.status === 'ACTIVE' ||
-          moment().isBetween(result.startTime, result.endTime);
 
-        if (feature.properties.type === 'TrafficAnnouncement') {
-          const streetMode = getStreetMode(null, this.config);
-          draw =
-            (lightTrafficModes.includes(streetMode) &&
-              result.modesOfTransport.includes('UNPROTECTED_ROAD_USERS')) ||
-            (!lightTrafficModes.includes(streetMode) &&
-              result.modesOfTransport.includes('PASSENGER_TRANSPORT'));
-        }
+        if (result) {
+          let draw =
+            result.status === 'ACTIVE' ||
+            moment().isBetween(result.startTime, result.endTime);
 
-        if (draw) {
-          this.drawItem(geometryList, feature, result);
+          if (feature.properties.type === 'TrafficAnnouncement') {
+            const streetMode = getStreetMode(null, this.config);
+            draw =
+              (lightTrafficModes.includes(streetMode) &&
+                result.modesOfTransport.includes('UNPROTECTED_ROAD_USERS')) ||
+              (!lightTrafficModes.includes(streetMode) &&
+                result.modesOfTransport.includes('PASSENGER_TRANSPORT'));
+          }
+
+          if (draw) {
+            this.drawItem(geometryList, feature, result);
+          }
         }
       }
       return this;
@@ -153,82 +158,104 @@ export default class Disorders {
       this.tile.coords.y,
       this.tile.coords.z,
     );
+
     const type = get(geojson, 'geometry.type');
-    const color = get(currentConfig, `colors.${result.severity}`);
+    const isAccident = get(result, 'class', []).filter(
+      item => item.class === 'ACC',
+    ).length;
+    const isDetour = get(feature, 'properties.detour', false);
+
+    // Default color according to severity, changes if detour or accident
+    let color = get(currentConfig, `colors.${result.severity}`);
+
+    if (isDetour) {
+      color = get(currentConfig, 'colors.DETOUR') || color;
+    } else if (isAccident) {
+      color = isAccident ? get(currentConfig, 'colors.ACCIDENT') : color;
+    }
 
     geometryList.forEach(geom => {
-      if (type === 'LineString') {
-        if (currentConfig.showLines) {
-          drawDisorderPath(this.tile, geom, color);
-          this.features.push({
-            lineString: geom,
-            geom: null,
-            properties: feature.properties,
-          });
-        }
+      this.drawGeom(feature, geom, type, currentConfig, color);
+    });
+  };
 
-        if (currentConfig && currentConfig.showLineIcons) {
-          const iconPoints = currentConfig.showLines
-            ? [geom[0], geom.slice(-1)[0]]
-            : geom;
-          iconPoints.forEach(point => {
-            if (
-              point &&
-              point.x > 0 &&
-              point.y > 0 &&
-              point.x < feature.extent &&
-              point.y < feature.extent
-            ) {
-              drawDisorderIcon(this.tile, point, this.imageSize);
-              if (!currentConfig.showLines) {
-                this.features.push({
-                  geom: point,
-                  properties: feature.properties,
-                });
-              }
-            }
-          });
-        }
-      } else if (type === 'Polygon') {
-        if (currentConfig.showPolygons) {
-          drawDisorderPolygon(this.tile, geom, color);
-          this.features.push({
-            polygon: geom,
-            geom: null,
-            properties: feature.properties,
-          });
-        }
+  drawGeom = (feature, geom, type, currentConfig, color) => {
+    if (type === 'LineString') {
+      if (currentConfig.showLines) {
+        drawDisorderPath(this.tile, geom, color);
+        this.features.push({
+          lineString: geom,
+          geom: null,
+          properties: feature.properties,
+        });
+      }
 
-        if (currentConfig && currentConfig.showPolygonCenterIcon) {
-          const formatedPolygon = geom.map(cords => [cords.x, cords.y]);
-          const centerPoint = get(
-            centerOfMass(turfPolygon([formatedPolygon])),
-            'geometry.coordinates',
-            [],
-          );
-
-          if (centerPoint.length) {
-            const centerPointFormated = {
-              x: centerPoint[0],
-              y: centerPoint[1],
-            };
-
-            drawDisorderIcon(this.tile, centerPointFormated, this.imageSize);
-            if (!currentConfig.showPolygons) {
+      if (currentConfig && currentConfig.showLineIcons) {
+        const iconPoints = currentConfig.showLines
+          ? [geom[0], geom.slice(-1)[0]]
+          : geom;
+        iconPoints.forEach(point => {
+          if (
+            point &&
+            point.x > 0 &&
+            point.y > 0 &&
+            point.x < feature.extent &&
+            point.y < feature.extent
+          ) {
+            drawDisorderIcon(this.tile, point, this.imageSize, color);
+            if (!currentConfig.showLines) {
               this.features.push({
-                geom: centerPointFormated,
+                geom: point,
                 properties: feature.properties,
               });
             }
           }
-        }
-      } else if (type === 'Point' && currentConfig.showIcons) {
-        drawDisorderIcon(this.tile, geom[0], this.imageSize);
+        });
+      }
+    } else if (type === 'Polygon') {
+      if (currentConfig.showPolygons) {
+        drawDisorderPolygon(this.tile, geom, color);
         this.features.push({
-          geom: geom[0],
+          polygon: geom,
+          geom: null,
           properties: feature.properties,
         });
       }
-    });
+
+      if (currentConfig && currentConfig.showPolygonCenterIcon) {
+        const formatedPolygon = geom.map(cords => [cords.x, cords.y]);
+        const centerPoint = get(
+          centerOfMass(turfPolygon([formatedPolygon])),
+          'geometry.coordinates',
+          [],
+        );
+
+        if (centerPoint.length) {
+          const centerPointFormated = {
+            x: centerPoint[0],
+            y: centerPoint[1],
+          };
+
+          drawDisorderIcon(
+            this.tile,
+            centerPointFormated,
+            this.imageSize,
+            color,
+          );
+          if (!currentConfig.showPolygons) {
+            this.features.push({
+              geom: centerPointFormated,
+              properties: feature.properties,
+            });
+          }
+        }
+      }
+    } else if (type === 'Point' && currentConfig.showIcons) {
+      drawDisorderIcon(this.tile, geom[0], this.imageSize, color);
+      this.features.push({
+        geom: geom[0],
+        properties: feature.properties,
+      });
+    }
   };
 }

@@ -35,10 +35,6 @@ class VectorTileLayerContainer extends React.Component {
         layers.push(Fluencies);
       }
 
-      if (config.roadworks && config.roadworks.showRoadworks) {
-        layers.push(Roadworks);
-      }
-
       layers.push(Stops);
 
       if (config.cityBike && config.cityBike.showCityBikes) {
@@ -64,10 +60,6 @@ class VectorTileLayerContainer extends React.Component {
         layers.push(CameraStations);
       }
 
-      if (config.disorders && config.disorders.showDisorders) {
-        layers.push(Disorders);
-      }
-
       if (
         config.weatherStations &&
         config.weatherStations.showWeatherStations
@@ -77,6 +69,14 @@ class VectorTileLayerContainer extends React.Component {
 
       if (config.tmsStations && config.tmsStations.showTmsStations) {
         layers.push(TmsStations);
+      }
+
+      if (config.roadworks && config.roadworks.showRoadworks) {
+        layers.push(Roadworks);
+      }
+
+      if (config.disorders && config.disorders.showDisorders) {
+        layers.push(Disorders);
       }
     }
 

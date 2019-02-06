@@ -97,7 +97,8 @@ export default configMerger(walttiConfig, {
       LOW: '#0073BF',
       MEDIUM: '#FFC107',
       HIGH: '#DC3545',
-      // ACCIDENT: '#DC3545',
+      ACCIDENT: '#DC3545',
+      DETOUR: '#3CFC32',
     },
   },
 
@@ -107,10 +108,13 @@ export default configMerger(walttiConfig, {
     showPolygons: true,
     showPolygonCenterIcon: false,
     showLineIcons: false,
+    showDetours: false,
     colors: {
       LOW: '#0073BF',
       MEDIUM: '#FFC107',
       HIGH: '#DC3545',
+      ACCIDENT: '#DC3545',
+      DETOUR: '#00cc66',
     },
   },
 
