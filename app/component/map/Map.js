@@ -177,6 +177,7 @@ export default class Map extends React.Component {
           hilightedStops={this.props.hilightedStops}
           showStops={this.props.showStops}
           disableMapTracking={this.props.disableMapTracking}
+          setRealtimeBusses={this.props.setRealtimeBusses}
         />
         <PositionMarker key="position" />
       </LeafletMap>

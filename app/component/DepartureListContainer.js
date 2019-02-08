@@ -72,6 +72,24 @@ class DepartureListContainer extends Component {
     return null;
   };
 
+  componentDidMount() {
+    if (this.props.setRealtimeBusses) {
+      const { currentTime } = this.props;
+      const departures = asDepartures(this.props.stoptimes)
+        .filter(departure => departure.realtime)
+        .filter(departure => !(this.props.isTerminal && departure.isArrival))
+        .filter(departure => currentTime < departure.stoptime)
+        .slice(0, this.props.limit);
+      this.props.setRealtimeBusses(departures);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.props.setRealtimeBusses) {
+      this.props.setRealtimeBusses([]);
+    }
+  }
+
   render() {
     const departureObjs = [];
     const { currentTime } = this.props;
@@ -180,6 +198,10 @@ export default Relay.createContainer(DepartureListContainer, {
           trip {
             gtfsId
             tripHeadsign
+            stops {
+              code
+              gtfsId
+            }
             pattern {
               route {
                 gtfsId

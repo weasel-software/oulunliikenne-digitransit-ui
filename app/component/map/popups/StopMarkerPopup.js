@@ -36,6 +36,7 @@ class StopMarkerPopup extends React.PureComponent {
           timeRange={terminal ? TERMINAL_TIME_RANGE : STOP_TIME_RANGE}
           limit={NUMBER_OF_DEPARTURES}
           className="padding-small cursor-pointer"
+          setRealtimeBusses={this.props.setRealtimeBusses}
         />
         <MarkerPopupBottom
           location={{

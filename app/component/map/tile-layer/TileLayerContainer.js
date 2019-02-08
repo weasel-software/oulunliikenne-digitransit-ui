@@ -234,7 +234,7 @@ class TileLayerContainer extends GridLayer {
                     })
               }
               renderLoading={this.state.showSpinner ? loadingPopup : undefined}
-              renderFetched={data => <StopMarkerPopup {...data} />}
+              renderFetched={data => <StopMarkerPopup {...data} setRealtimeBusses={this.props.setRealtimeBusses} />}
             />
           );
         } else if (this.state.selectableTargets[0].layer === 'citybike') {
