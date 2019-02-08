@@ -387,7 +387,7 @@ export default configMerger(walttiConfig, {
       weatherStations: false,
       tmsStations: false,
       roadConditions: false,
-      // fluencies: true,
+      fluencies: true,
     },
     BICYCLE: {
       disorders: true,
