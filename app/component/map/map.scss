@@ -177,17 +177,6 @@ div.leaflet-marker-icon.vehicle-icon {
   }
 }
 
-div.leaflet-marker-icon.vehicle-icon.small-map-icon {
-  > span > svg.icon {
-    stroke-width: 40px;
-    stroke: white;
-    width: 0.78em;
-    height: 0.78em;
-    top: -0.2em;
-    left: -0.2em;
-  }
-}
-
 .bp-large .map-with-tracking-buttons {
   bottom: 32px;
 }
@@ -630,5 +619,33 @@ div.map-click-prevent-overlay {
   div.spinner-loader {
     width: $spinner-size * 0.5;
     height: $spinner-size * 0.5;
+  }
+}
+
+div.leaflet-marker-icon.vehicle-realtime-icon {
+  border: none;
+  background: none;
+
+  > span > svg.icon {
+    width: 1.3em;
+    height: 1.3em;
+    top: -0.325em;
+    left: -0.325em;
+  }
+
+  .icon-text {
+    fill: $white;
+    font-family: $font-family;
+    font-size: 1rem;
+    font-weight: bold;
+    text-anchor: middle;
+
+    &.medium {
+      font-size: .85rem;
+    }
+
+    &.long {
+      font-size: .65rem;
+    }
   }
 }

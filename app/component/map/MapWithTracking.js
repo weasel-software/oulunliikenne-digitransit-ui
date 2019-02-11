@@ -76,7 +76,7 @@ class MapWithTrackingStateHandler extends React.Component {
       focusOnOrigin: props.origin.ready,
       origin: props.origin,
       shouldShowDefaultLocation: !hasOriginorPosition,
-      realtimeBusses: [],
+      realtimeBusses: null,
     };
   }
 
@@ -143,7 +143,7 @@ class MapWithTrackingStateHandler extends React.Component {
   };
 
   setRealtimeBusses = departures => {
-    if (departures.length) {
+    if (departures && departures.length) {
       this.props.executeAction(
         this.props.config.useAltRelatimeClient
           ? altStartRealTimeClient
@@ -152,7 +152,24 @@ class MapWithTrackingStateHandler extends React.Component {
           route: departure.pattern.route.gtfsId.split(':')[1],
         })),
       );
-      this.setState({ realtimeBusses: departures });
+
+      const departuresModified = departures.map(departure => ({
+        ...departure,
+        pattern: {
+          ...departure.pattern,
+          stops: [...departure.trip.stops]
+            .reverse()
+            .reduce(
+              (result, stop) =>
+                result.length || stop.code === departure.stop.code
+                  ? [...result, stop]
+                  : result,
+              [],
+            ),
+        },
+      }));
+
+      this.setState({ realtimeBusses: departuresModified });
     } else {
       const { client } = this.props.getStore('RealTimeInformationStore');
 
@@ -164,6 +181,8 @@ class MapWithTrackingStateHandler extends React.Component {
           client,
         );
       }
+
+      this.setState({ realtimeBusses: null });
     }
   };
 
@@ -203,23 +222,14 @@ class MapWithTrackingStateHandler extends React.Component {
       );
     }
 
-    if (realtimeBusses.length) {
+    if (realtimeBusses) {
       realtimeBusses.forEach(departure => {
         leafletObjs.push(
           <VehicleMarkerContainer
             key={departure.pattern.stoptime}
-            pattern={{
-              ...departure.pattern,
-              stops: [...departure.trip.stops]
-                .reverse()
-                .reduce(
-                  (result, stop) =>
-                    result.length || stop.code === departure.stop.code
-                      ? [...result, stop]
-                      : result,
-                  [],
-                ),
-            }}
+            pattern={departure.pattern}
+            shortName={departure.pattern.route.shortName}
+            className="vehicle-realtime-icon"
           />,
         );
       });

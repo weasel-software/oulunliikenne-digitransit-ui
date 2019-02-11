@@ -86,7 +86,7 @@ class DepartureListContainer extends Component {
 
   componentWillUnmount() {
     if (this.props.setRealtimeBusses) {
-      this.props.setRealtimeBusses([]);
+      this.props.setRealtimeBusses(null);
     }
   }
 
