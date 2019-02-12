@@ -20,6 +20,8 @@ const StopCardContainer = connectToStores(
         isTerminal={props.isTerminal}
         currentTime={props.relay.variables.startTime}
         showPlatformCodes
+        showRealtimeVehicles={props.showRealtimeVehicles}
+        hasRealtimeVehicles={props.hasRealtimeVehicles}
       />
     ),
   }),

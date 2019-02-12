@@ -38,6 +38,7 @@ import * as ModeUtils from '../util/modeUtils';
 import withBreakpoint from '../util/withBreakpoint';
 import ContentToggle from './ContentToggle';
 import { updateMapLayersMode } from '../action/MapLayerActions';
+import { clearDepartures } from '../action/RealtimeDeparturesActions';
 
 const debug = d('IndexPage.js');
 
@@ -63,6 +64,11 @@ class IndexPage extends React.Component {
         }),
       }).isRequired,
     ).isRequired,
+    realtimeDepartures: PropTypes.array,
+  };
+
+  static defaultProps = {
+    realtimeDepartures: undefined,
   };
 
   constructor(props, context) {
@@ -160,6 +166,11 @@ class IndexPage extends React.Component {
     this.setState(prevState => ({ mapExpanded: !prevState.mapExpanded }));
   };
 
+  deactivateRealtimeVehicles = () => {
+    const { executeAction } = this.context;
+    executeAction(clearDepartures);
+  };
+
   renderTab = () => {
     let Tab;
     switch (this.props.tab) {
@@ -193,7 +204,14 @@ class IndexPage extends React.Component {
   /* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
   render() {
     const { config, router, executeAction } = this.context;
-    const { breakpoint, destination, origin, routes, tab } = this.props;
+    const {
+      breakpoint,
+      destination,
+      origin,
+      routes,
+      tab,
+      realtimeDepartures,
+    } = this.props;
     const { mapExpanded } = this.state;
 
     const footerOptions = Object.assign(
@@ -227,6 +245,14 @@ class IndexPage extends React.Component {
             />
           </div>
         </ContentToggle>
+        {realtimeDepartures && (
+          <button
+            className="realtime-toggle"
+            onClick={this.deactivateRealtimeVehicles}
+          >
+            <Icon img="icon-icon_realtime_off" />
+          </button>
+        )}
         <ContentToggle
           icon="icon_star"
           iconClass="favourites-toggle"
@@ -305,6 +331,14 @@ class IndexPage extends React.Component {
                 />
               </div>
             </ContentToggle>
+            {realtimeDepartures && (
+              <button
+                className="realtime-toggle"
+                onClick={this.deactivateRealtimeVehicles}
+              >
+                <Icon img="icon-icon_realtime_off" />
+              </button>
+            )}
           </MapWithTracking>
         </div>
         <div style={{ position: 'relative' }}>
@@ -345,7 +379,8 @@ const Index = shouldUpdate(
       isEqual(nextProps.breakpoint, props.breakpoint) &&
       isEqual(nextProps.lang, props.lang) &&
       isEqual(nextProps.locationState, props.locationState) &&
-      isEqual(nextProps.showSpinner, props.showSpinner)
+      isEqual(nextProps.showSpinner, props.showSpinner) &&
+      isEqual(nextProps.realtimeDepartures, props.realtimeDepartures)
     ),
 )(IndexPage);
 
@@ -387,8 +422,11 @@ const tabs = [TAB_FAVOURITES, TAB_NEARBY];
 
 const IndexPageWithPosition = connectToStores(
   IndexPageWithBreakpoint,
-  ['PositionStore'],
+  ['PositionStore', 'RealtimeDeparturesStore'],
   (context, props) => {
+    const realtimeDepartures = context
+      .getStore('RealtimeDeparturesStore')
+      .getDepartures();
     const locationState = context.getStore('PositionStore').getLocationState();
 
     // allow using url without all parameters set. assume:
@@ -415,6 +453,7 @@ const IndexPageWithPosition = connectToStores(
       newProps.tab = tab;
     }
 
+    newProps.realtimeDepartures = realtimeDepartures;
     newProps.locationState = locationState;
     newProps.origin = processLocation(from, locationState, context.intl);
     newProps.destination = processLocation(to, locationState, context.intl);

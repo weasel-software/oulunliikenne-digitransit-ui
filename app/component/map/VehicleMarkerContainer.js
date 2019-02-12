@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Relay from 'react-relay/classic';
 import connectToStores from 'fluxible-addons-react/connectToStores';
+import cx from 'classnames';
 
 import RouteMarkerPopup from './route/RouteMarkerPopup';
 import FuzzyTripRoute from '../../route/FuzzyTripRoute';
@@ -15,23 +16,35 @@ const MODES_WITH_ICONS = ['bus', 'tram', 'rail', 'subway', 'ferry'];
 
 let Popup;
 
-function getVehicleIcon(mode, heading, useSmallIcon = false) {
+function getVehicleIcon(mode, heading, shortName, className) {
   if (!isBrowser) {
     return null;
   }
 
-  if (MODES_WITH_ICONS.indexOf(mode) !== -1) {
-    return {
-      element: <IconWithTail img={`icon-icon_${mode}-live`} rotate={heading} />,
-      className: `vehicle-icon ${mode} ${useSmallIcon ? 'small-map-icon' : ''}`,
-      iconSize: [20, 20],
-      iconAnchor: [10, 10],
-    };
-  }
+  const filteredMode = MODES_WITH_ICONS.includes(mode) ? mode : 'bus';
 
   return {
-    element: <iconAsString img="icon-icon_bus-live" rotate={heading} />,
-    className: `vehicle-icon bus ${useSmallIcon ? 'small-map-icon' : ''}`,
+    element: (
+      <IconWithTail
+        img={`icon-icon_${filteredMode}${shortName ? '_text' : ''}-live`}
+        rotate={heading}
+      >
+        {shortName && (
+          <text
+            x="50%"
+            y="50%"
+            dy=".3em"
+            className={cx('icon-text', {
+              medium: shortName.length > 2,
+              long: shortName.length > 3,
+            })}
+          >
+            {shortName}
+          </text>
+        )}
+      </IconWithTail>
+    ),
+    className: `${className || 'vehicle-icon'} ${filteredMode}`,
     iconSize: [20, 20],
     iconAnchor: [10, 10],
   };
@@ -73,7 +86,12 @@ function VehicleMarkerContainer(props, { config }) {
           lat: message.lat,
           lon: message.long,
         }}
-        icon={getVehicleIcon(message.mode, message.heading, false)}
+        icon={getVehicleIcon(
+          message.mode,
+          message.heading,
+          props.shortName,
+          props.className,
+        )}
       >
         <Popup
           offset={[106, 16]}
@@ -125,11 +143,15 @@ VehicleMarkerContainer.propTypes = {
       long: PropTypes.number.isRequired,
     }).isRequired,
   ).isRequired,
+  shortName: PropTypes.string,
+  className: PropTypes.string,
 };
 
 VehicleMarkerContainer.defaultProps = {
   tripStart: undefined,
   pattern: undefined,
+  shortName: undefined,
+  className: undefined,
 };
 
 export default connectToStores(
