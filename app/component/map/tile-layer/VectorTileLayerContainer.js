@@ -88,7 +88,6 @@ class VectorTileLayerContainer extends React.Component {
         tileSize={config.map.tileSize || 256}
         zoomOffset={config.map.zoomOffset || 0}
         disableMapTracking={disableMapTracking}
-        setRealtimeBusses={this.props.setRealtimeBusses}
       />
     );
   }

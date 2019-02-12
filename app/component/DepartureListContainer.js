@@ -8,6 +8,10 @@ import cx from 'classnames';
 import Departure from './Departure';
 import { isBrowser } from '../util/browser';
 import { PREFIX_ROUTES } from '../util/path';
+import {
+  updateDepartures,
+  clearDepartures,
+} from '../action/RealtimeDeparturesActions';
 
 const hasActiveDisruption = (t, alerts) =>
   filter(
@@ -59,11 +63,49 @@ class DepartureListContainer extends Component {
     className: PropTypes.string,
     isTerminal: PropTypes.bool,
     showPlatformCodes: PropTypes.bool,
+    showRealtimeVehicles: PropTypes.bool,
+    hasRealtimeVehicles: PropTypes.func,
   };
 
   static defaultProps = {
     showPlatformCodes: false,
+    showRealtimeVehicles: false,
+    hasRealtimeVehicles: undefined,
   };
+
+  static contextTypes = {
+    executeAction: PropTypes.func.isRequired,
+  };
+
+  componentDidMount() {
+    const departures = this.getDepartures().filter(
+      departure => departure.realtime,
+    );
+
+    if (Array.isArray(departures) && departures.length) {
+      const { hasRealtimeVehicles } = this.props;
+      if (hasRealtimeVehicles) {
+        hasRealtimeVehicles();
+      }
+    }
+  }
+
+  componentWillReceiveProps(newProps) {
+    if (
+      newProps.showRealtimeVehicles !== this.props.showRealtimeVehicles &&
+      newProps.showRealtimeVehicles
+    ) {
+      const departures = this.getDepartures().filter(
+        departure => departure.realtime,
+      );
+      this.context.executeAction(updateDepartures, departures);
+    } else if (
+      newProps.showRealtimeVehicles !== this.props.showRealtimeVehicles &&
+      !newProps.showRealtimeVehicles
+    ) {
+      this.context.executeAction(clearDepartures);
+    }
+  }
 
   onScroll = () => {
     if (this.props.infiniteScroll && isBrowser) {
@@ -72,23 +114,13 @@ class DepartureListContainer extends Component {
     return null;
   };
 
-  componentDidMount() {
-    if (this.props.setRealtimeBusses) {
-      const { currentTime } = this.props;
-      const departures = asDepartures(this.props.stoptimes)
-        .filter(departure => departure.realtime)
-        .filter(departure => !(this.props.isTerminal && departure.isArrival))
-        .filter(departure => currentTime < departure.stoptime)
-        .slice(0, this.props.limit);
-      this.props.setRealtimeBusses(departures);
-    }
-  }
-
-  componentWillUnmount() {
-    if (this.props.setRealtimeBusses) {
-      this.props.setRealtimeBusses(null);
-    }
-  }
+  getDepartures = () => {
+    const { currentTime } = this.props;
+    return asDepartures(this.props.stoptimes)
+      .filter(departure => !(this.props.isTerminal && departure.isArrival))
+      .filter(departure => currentTime < departure.stoptime)
+      .slice(0, this.props.limit);
+  };
 
   render() {
     const departureObjs = [];
@@ -103,10 +135,7 @@ class DepartureListContainer extends Component {
       .startOf('day')
       .unix();
 
-    const departures = asDepartures(this.props.stoptimes)
-      .filter(departure => !(this.props.isTerminal && departure.isArrival))
-      .filter(departure => currentTime < departure.stoptime)
-      .slice(0, this.props.limit);
+    const departures = this.getDepartures();
 
     departures.forEach(departure => {
       if (departure.stoptime >= tomorrow) {

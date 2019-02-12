@@ -18,6 +18,11 @@ class MarkerPopupBottom extends React.Component {
 
   static propTypes = {
     location: dtLocationShape.isRequired,
+    children: PropTypes.node,
+  };
+
+  static defaultProps = {
+    children: undefined,
   };
 
   static contextTypes = {
@@ -103,6 +108,7 @@ class MarkerPopupBottom extends React.Component {
             defaultMessage="Route from here"
           />
         </div>
+        {this.props.children}
         <div onClick={() => this.routeTo()} className="route cursor-pointer">
           <FormattedMessage id="route-here" defaultMessage="Route here" />
         </div>

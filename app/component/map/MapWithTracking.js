@@ -13,11 +13,14 @@ import VehicleMarkerContainer from '../map/VehicleMarkerContainer';
 import {
   startRealTimeClient,
   stopRealTimeClient,
+  updateTopic,
 } from '../../action/realTimeClientAction';
 import {
   startRealTimeClient as altStartRealTimeClient,
   stopRealTimeClient as altStopRealTimeClient,
+  updateTopic as altUpdateTopic,
 } from '../../action/altRealTimeClientAction';
+import { clearDepartures } from '../../action/RealtimeDeparturesActions';
 
 const DEFAULT_ZOOM = 12;
 const FOCUS_ZOOM = 16;
@@ -76,7 +79,6 @@ class MapWithTrackingStateHandler extends React.Component {
       focusOnOrigin: props.origin.ready,
       origin: props.origin,
       shouldShowDefaultLocation: !hasOriginorPosition,
-      realtimeBusses: null,
     };
   }
 
@@ -100,7 +102,62 @@ class MapWithTrackingStateHandler extends React.Component {
     ) {
       this.useOrigin(newProps.origin);
     }
+
+    if (newProps.realtimeDepartures !== this.props.realtimeDepartures) {
+      this.setRealtimeClient(newProps.realtimeDepartures);
+    }
   }
+
+  componentWillUnmount() {
+    this.props.executeAction(clearDepartures);
+
+    const { client } = this.props.getStore('RealTimeInformationStore');
+    if (client) {
+      this.props.executeAction(
+        this.props.config.useAltRelatimeClient
+          ? stopRealTimeClient
+          : altStopRealTimeClient,
+        client,
+      );
+    }
+  }
+
+  setRealtimeClient = departures => {
+    const { client, subscriptions } = this.props.getStore(
+      'RealTimeInformationStore',
+    );
+
+    if (Array.isArray(departures) && departures.length) {
+      if (client) {
+        this.props.executeAction(
+          this.props.config.useAltRelatimeClient ? altUpdateTopic : updateTopic,
+          {
+            client,
+            oldTopics: subscriptions,
+            newTopic: departures.map(departure => ({
+              route: departure.pattern.route.gtfsId.split(':')[1],
+            })),
+          },
+        );
+      } else {
+        this.props.executeAction(
+          this.props.config.useAltRelatimeClient
+            ? altStartRealTimeClient
+            : startRealTimeClient,
+          departures.map(departure => ({
+            route: departure.pattern.route.gtfsId.split(':')[1],
+          })),
+        );
+      }
+    } else if (client) {
+      this.props.executeAction(
+        this.props.config.useAltRelatimeClient
+          ? stopRealTimeClient
+          : altStopRealTimeClient,
+        client,
+      );
+    }
+  };
 
   usePosition(origin) {
     this.setState({
@@ -142,50 +199,6 @@ class MapWithTrackingStateHandler extends React.Component {
     });
   };
 
-  setRealtimeBusses = departures => {
-    if (departures && departures.length) {
-      this.props.executeAction(
-        this.props.config.useAltRelatimeClient
-          ? altStartRealTimeClient
-          : startRealTimeClient,
-        departures.map(departure => ({
-          route: departure.pattern.route.gtfsId.split(':')[1],
-        })),
-      );
-
-      const departuresModified = departures.map(departure => ({
-        ...departure,
-        pattern: {
-          ...departure.pattern,
-          stops: [...departure.trip.stops]
-            .reverse()
-            .reduce(
-              (result, stop) =>
-                result.length || stop.code === departure.stop.code
-                  ? [...result, stop]
-                  : result,
-              [],
-            ),
-        },
-      }));
-
-      this.setState({ realtimeBusses: departuresModified });
-    } else {
-      const { client } = this.props.getStore('RealTimeInformationStore');
-
-      if (client) {
-        this.props.executeAction(
-          this.props.config.useAltRelatimeClient
-            ? stopRealTimeClient
-            : altStopRealTimeClient,
-          client,
-        );
-      }
-
-      this.setState({ realtimeBusses: null });
-    }
-  };
-
   render() {
     const {
       position,
@@ -194,9 +207,9 @@ class MapWithTrackingStateHandler extends React.Component {
       children,
       renderCustomButtons,
       breakpoint,
+      realtimeDepartures,
       ...rest
     } = this.props;
-    const { realtimeBusses } = this.state;
     let location;
 
     if (
@@ -222,11 +235,11 @@ class MapWithTrackingStateHandler extends React.Component {
       );
     }
 
-    if (realtimeBusses) {
-      realtimeBusses.forEach(departure => {
+    if (realtimeDepartures) {
+      realtimeDepartures.forEach(departure => {
         leafletObjs.push(
           <VehicleMarkerContainer
-            key={departure.pattern.stoptime}
+            key={departure.stoptime}
             pattern={departure.pattern}
             shortName={departure.pattern.route.shortName}
             className="vehicle-realtime-icon"
@@ -250,7 +263,6 @@ class MapWithTrackingStateHandler extends React.Component {
         disableMapTracking={this.disableMapTracking}
         {...rest}
         leafletObjs={leafletObjs}
-        setRealtimeBusses={this.setRealtimeBusses}
       >
         {children}
         {(!config.mapTrackingButtons ||
@@ -288,12 +300,11 @@ const MapWithTracking = connectToStores(
     executeAction: PropTypes.func.isRequired,
     getStore: PropTypes.func.isRequired,
   })(MapWithTrackingStateHandler),
-  ['PositionStore'],
-  ({ getStore }) => {
-    const position = getStore('PositionStore').getLocationState();
-
-    return { position };
-  },
+  ['PositionStore', 'RealtimeDeparturesStore'],
+  ({ getStore }) => ({
+    position: getStore('PositionStore').getLocationState(),
+    realtimeDepartures: getStore('RealtimeDeparturesStore').getDepartures(),
+  }),
 );
 
 MapWithTracking.description = (

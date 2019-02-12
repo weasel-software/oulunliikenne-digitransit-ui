@@ -299,9 +299,18 @@ div.leaflet-marker-icon.vehicle-icon {
       flex-grow: 1;
       text-align: center;
       text-decoration: none;
+      border-right: 1px solid $light-gray;
 
-      &:first-child {
-        border-right: 1px solid $light-gray;
+      &.special {
+        padding: 0.45em 0 0;
+
+        svg {
+          font-size: 1.3em;
+        }
+      }
+
+      &:last-child {
+        border-right: none;
       }
     }
   }

@@ -8,6 +8,7 @@ import PopupMock from './PopupMock';
 import MarkerPopupBottom from '../MarkerPopupBottom';
 import StopCardContainer from '../../StopCardContainer';
 import ComponentUsageExample from '../../ComponentUsageExample';
+import Icon from '../../Icon';
 
 import mockData from './StopMarkerPopup.mockdata';
 
@@ -16,13 +17,29 @@ const STOP_TIME_RANGE = 12 * 60 * 60;
 const TERMINAL_TIME_RANGE = 60 * 60;
 
 class StopMarkerPopup extends React.PureComponent {
+  state = {
+    showRealtimeVehicles: false,
+    hasRealtimeVehicles: false,
+  };
+
   componentWillReceiveProps({ relay, currentTime }) {
     const currUnix = this.props.currentTime;
     if (currUnix !== currentTime) {
       relay.setVariables({ currentTime: currUnix });
     }
   }
+
+  toggleRealtimeMap = () => {
+    this.setState({ showRealtimeVehicles: !this.state.showRealtimeVehicles });
+  };
+
+  hasRealtimeVehicles = () => {
+    this.setState({ hasRealtimeVehicles: true });
+  };
+
+  /* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
   render() {
+    const { showRealtimeVehicles, hasRealtimeVehicles } = this.state;
     const stop = this.props.stop || this.props.terminal;
     const terminal = this.props.terminal !== null;
 
@@ -36,7 +53,8 @@ class StopMarkerPopup extends React.PureComponent {
           timeRange={terminal ? TERMINAL_TIME_RANGE : STOP_TIME_RANGE}
           limit={NUMBER_OF_DEPARTURES}
           className="padding-small cursor-pointer"
-          setRealtimeBusses={this.props.setRealtimeBusses}
+          showRealtimeVehicles={showRealtimeVehicles}
+          hasRealtimeVehicles={this.hasRealtimeVehicles}
         />
         <MarkerPopupBottom
           location={{
@@ -44,7 +62,22 @@ class StopMarkerPopup extends React.PureComponent {
             lat: stop.lat,
             lon: stop.lon,
           }}
-        />
+        >
+          {hasRealtimeVehicles && (
+            <div
+              className="route cursor-pointer special"
+              onClick={this.toggleRealtimeMap}
+            >
+              <Icon
+                img={
+                  showRealtimeVehicles
+                    ? 'icon-icon_realtime_off'
+                    : 'icon-icon_realtime_on'
+                }
+              />
+            </div>
+          )}
+        </MarkerPopupBottom>
       </div>
     );
   }
