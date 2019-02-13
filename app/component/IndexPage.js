@@ -49,6 +49,7 @@ class IndexPage extends React.Component {
     piwik: PropTypes.object,
     config: PropTypes.object.isRequired,
     executeAction: PropTypes.func.isRequired,
+    intl: intlShape.isRequired,
   };
 
   static propTypes = {
@@ -203,7 +204,7 @@ class IndexPage extends React.Component {
 
   /* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
   render() {
-    const { config, router, executeAction } = this.context;
+    const { config, router, executeAction, intl } = this.context;
     const {
       breakpoint,
       destination,
@@ -249,6 +250,10 @@ class IndexPage extends React.Component {
           <button
             className="realtime-toggle"
             onClick={this.deactivateRealtimeVehicles}
+            title={intl.formatMessage({
+              id: 'hide-realtime-on-map',
+              defaultMessage: 'Hide vehicles on map',
+            })}
           >
             <Icon img="icon-icon_realtime_off" />
           </button>
@@ -335,6 +340,10 @@ class IndexPage extends React.Component {
               <button
                 className="realtime-toggle"
                 onClick={this.deactivateRealtimeVehicles}
+                title={intl.formatMessage({
+                  id: 'hide-realtime-on-map',
+                  defaultMessage: 'Hide vehicles on map',
+                })}
               >
                 <Icon img="icon-icon_realtime_off" />
               </button>
