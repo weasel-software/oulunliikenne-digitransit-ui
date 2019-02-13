@@ -59,13 +59,11 @@ export default class Fluencies {
     timeOfLastUpdate = new Date().getTime();
     const { trafficFlow } = feature.properties;
 
-    if (!get(feature, 'properties.name')) {
-      if (get(this.config, 'fluencies.showEmpty')) {
-        // eslint-disable-next-line no-param-reassign
-        feature.properties = { ...feature.properties, name: '' };
-      } else {
-        return;
-      }
+    if (
+      !get(feature, 'properties.name') &&
+      !get(this.config, 'fluencies.showEmpty')
+    ) {
+      return;
     }
 
     geometryList.forEach(geom => {
@@ -85,11 +83,14 @@ export default class Fluencies {
         }
 
         drawFluencyPath(this.tile, geom, color);
-        this.features.push({
-          lineString: geom,
-          geom: null,
-          properties: feature.properties,
-        });
+
+        if (get(feature, 'properties.name')) {
+          this.features.push({
+            lineString: geom,
+            geom: null,
+            properties: feature.properties,
+          });
+        }
       }
 
       if (this.config.fluencies && this.config.fluencies.showIcons) {
@@ -103,7 +104,10 @@ export default class Fluencies {
             point.y < feature.extent
           ) {
             drawFluencyIcon(this.tile, point, this.imageSize);
-            if (!this.config.fluencies.showLines) {
+            if (
+              !this.config.fluencies.showLines &&
+              get(feature, 'properties.name')
+            ) {
               this.features.push({
                 geom: point,
                 properties: feature.properties,
