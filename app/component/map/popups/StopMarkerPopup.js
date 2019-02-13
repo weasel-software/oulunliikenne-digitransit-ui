@@ -20,17 +20,24 @@ class StopMarkerPopup extends React.PureComponent {
   state = {
     showRealtimeVehicles: false,
     hasRealtimeVehicles: false,
+    updateRealtimeVehicles: true,
   };
 
-  componentWillReceiveProps({ relay, currentTime }) {
+  componentWillReceiveProps({ relay, currentTime, realtimeDepartures }) {
     const currUnix = this.props.currentTime;
     if (currUnix !== currentTime) {
       relay.setVariables({ currentTime: currUnix });
     }
+    if (realtimeDepartures === null && this.state.showRealtimeVehicles) {
+      this.toggleRealtimeMap(false);
+    }
   }
 
-  toggleRealtimeMap = () => {
-    this.setState({ showRealtimeVehicles: !this.state.showRealtimeVehicles });
+  toggleRealtimeMap = update => {
+    this.setState({
+      showRealtimeVehicles: !this.state.showRealtimeVehicles,
+      updateRealtimeVehicles: update !== false,
+    });
   };
 
   hasRealtimeVehicles = () => {
@@ -39,7 +46,14 @@ class StopMarkerPopup extends React.PureComponent {
 
   /* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
   render() {
-    const { showRealtimeVehicles, hasRealtimeVehicles } = this.state;
+    const {
+      showRealtimeVehicles,
+      hasRealtimeVehicles,
+      updateRealtimeVehicles,
+    } = this.state;
+    const {
+      config: { stopsShowRealtimeTracking },
+    } = this.context;
     const stop = this.props.stop || this.props.terminal;
     const terminal = this.props.terminal !== null;
 
@@ -54,6 +68,7 @@ class StopMarkerPopup extends React.PureComponent {
           limit={NUMBER_OF_DEPARTURES}
           className="padding-small cursor-pointer"
           showRealtimeVehicles={showRealtimeVehicles}
+          updateRealtimeVehicles={updateRealtimeVehicles}
           hasRealtimeVehicles={this.hasRealtimeVehicles}
         />
         <MarkerPopupBottom
@@ -63,20 +78,21 @@ class StopMarkerPopup extends React.PureComponent {
             lon: stop.lon,
           }}
         >
-          {hasRealtimeVehicles && (
-            <div
-              className="route cursor-pointer special"
-              onClick={this.toggleRealtimeMap}
-            >
-              <Icon
-                img={
-                  showRealtimeVehicles
-                    ? 'icon-icon_realtime_off'
-                    : 'icon-icon_realtime_on'
-                }
-              />
-            </div>
-          )}
+          {stopsShowRealtimeTracking &&
+            hasRealtimeVehicles && (
+              <div
+                className="route cursor-pointer special"
+                onClick={this.toggleRealtimeMap}
+              >
+                <Icon
+                  img={
+                    showRealtimeVehicles
+                      ? 'icon-icon_realtime_off'
+                      : 'icon-icon_realtime_on'
+                  }
+                />
+              </div>
+            )}
         </MarkerPopupBottom>
       </div>
     );
@@ -93,14 +109,30 @@ StopMarkerPopup.propTypes = {
     }).isRequired,
     setVariables: PropTypes.func.isRequired,
   }).isRequired,
+  realtimeDepartures: PropTypes.array,
+};
+
+StopMarkerPopup.defaultProps = {
+  realtimeDepartures: undefined,
+};
+
+StopMarkerPopup.contextTypes = {
+  config: PropTypes.shape({
+    stopsShowRealtimeTracking: PropTypes.bool,
+  }),
 };
 
 const StopMarkerPopupContainer = Relay.createContainer(
-  connectToStores(StopMarkerPopup, ['TimeStore'], ({ getStore }) => ({
-    currentTime: getStore('TimeStore')
-      .getCurrentTime()
-      .unix(),
-  })),
+  connectToStores(
+    StopMarkerPopup,
+    ['TimeStore', 'RealtimeDeparturesStore'],
+    ({ getStore }) => ({
+      currentTime: getStore('TimeStore')
+        .getCurrentTime()
+        .unix(),
+      realtimeDepartures: getStore('RealtimeDeparturesStore').getDepartures(),
+    }),
+  ),
   {
     fragments: {
       stop: ({ currentTime }) => Relay.QL`
