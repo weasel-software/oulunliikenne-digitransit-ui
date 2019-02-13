@@ -30,6 +30,11 @@ function NavbarLinksContent(
     }
   };
 
+  const openLink = evt => {
+    const win = window.open(evt.target.href, evt.target.target);
+    win.focus();
+  };
+
   return (
     <Modal
       open
@@ -54,6 +59,9 @@ function NavbarLinksContent(
                 href={
                   item.url[currentLanguage] || item.url[defaultLanguage] || ''
                 }
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={openLink}
               >
                 {item.title[currentLanguage] ||
                   item.title[defaultLanguage] ||
