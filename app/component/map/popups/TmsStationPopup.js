@@ -11,14 +11,6 @@ import ComponentUsageExample from '../../ComponentUsageExample';
 function TmsStationPopup({ station, lang }, { intl }) {
   const localName = station.names[lang] || station.name;
 
-  console.log({
-    sensors: station.sensorValues,
-    direction1Municipality: station.direction1Municipality,
-    direction1MunicipalityCode: station.direction1MunicipalityCode,
-    direction2Municipality: station.direction2Municipality,
-    calculatorDeviceType: station.calculatorDeviceType,
-  });
-
   return (
     <div className="card">
       <Card className="padding-small">
