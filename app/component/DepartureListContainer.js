@@ -65,12 +65,14 @@ class DepartureListContainer extends Component {
     showPlatformCodes: PropTypes.bool,
     showRealtimeVehicles: PropTypes.bool,
     hasRealtimeVehicles: PropTypes.func,
+    updateRealtimeVehicles: PropTypes.bool,
   };
 
   static defaultProps = {
     showPlatformCodes: false,
     showRealtimeVehicles: false,
     hasRealtimeVehicles: undefined,
+    updateRealtimeVehicles: true,
   };
 
   static contextTypes = {
@@ -91,19 +93,21 @@ class DepartureListContainer extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    if (
-      newProps.showRealtimeVehicles !== this.props.showRealtimeVehicles &&
-      newProps.showRealtimeVehicles
-    ) {
-      const departures = this.getDepartures().filter(
-        departure => departure.realtime,
-      );
-      this.context.executeAction(updateDepartures, departures);
-    } else if (
-      newProps.showRealtimeVehicles !== this.props.showRealtimeVehicles &&
-      !newProps.showRealtimeVehicles
-    ) {
-      this.context.executeAction(clearDepartures);
+    if (newProps.updateRealtimeVehicles) {
+      if (
+        newProps.showRealtimeVehicles !== this.props.showRealtimeVehicles &&
+        newProps.showRealtimeVehicles
+      ) {
+        const departures = this.getDepartures().filter(
+          departure => departure.realtime,
+        );
+        this.context.executeAction(updateDepartures, departures);
+      } else if (
+        newProps.showRealtimeVehicles !== this.props.showRealtimeVehicles &&
+        !newProps.showRealtimeVehicles
+      ) {
+        this.context.executeAction(clearDepartures);
+      }
     }
   }
 

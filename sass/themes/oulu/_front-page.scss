@@ -89,8 +89,10 @@
   }
 }
 
-.bp-medium .realtime-toggle {
-  right: 1em;
+.bp-medium, .bp-small {
+  .realtime-toggle {
+    right: 1em;
+  }
 }
 
 .fpccontainer {
