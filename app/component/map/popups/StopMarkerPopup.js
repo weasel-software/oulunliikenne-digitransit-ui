@@ -8,6 +8,7 @@ import PopupMock from './PopupMock';
 import MarkerPopupBottom from '../MarkerPopupBottom';
 import StopCardContainer from '../../StopCardContainer';
 import ComponentUsageExample from '../../ComponentUsageExample';
+import Icon from '../../Icon';
 
 import mockData from './StopMarkerPopup.mockdata';
 
@@ -16,13 +17,43 @@ const STOP_TIME_RANGE = 12 * 60 * 60;
 const TERMINAL_TIME_RANGE = 60 * 60;
 
 class StopMarkerPopup extends React.PureComponent {
-  componentWillReceiveProps({ relay, currentTime }) {
+  state = {
+    showRealtimeVehicles: false,
+    hasRealtimeVehicles: false,
+    updateRealtimeVehicles: true,
+  };
+
+  componentWillReceiveProps({ relay, currentTime, realtimeDepartures }) {
     const currUnix = this.props.currentTime;
     if (currUnix !== currentTime) {
       relay.setVariables({ currentTime: currUnix });
     }
+    if (realtimeDepartures === null && this.state.showRealtimeVehicles) {
+      this.toggleRealtimeMap(false);
+    }
   }
+
+  toggleRealtimeMap = update => {
+    this.setState({
+      showRealtimeVehicles: !this.state.showRealtimeVehicles,
+      updateRealtimeVehicles: update !== false,
+    });
+  };
+
+  hasRealtimeVehicles = () => {
+    this.setState({ hasRealtimeVehicles: true });
+  };
+
+  /* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
   render() {
+    const {
+      showRealtimeVehicles,
+      hasRealtimeVehicles,
+      updateRealtimeVehicles,
+    } = this.state;
+    const {
+      config: { stopsShowRealtimeTracking },
+    } = this.context;
     const stop = this.props.stop || this.props.terminal;
     const terminal = this.props.terminal !== null;
 
@@ -36,6 +67,9 @@ class StopMarkerPopup extends React.PureComponent {
           timeRange={terminal ? TERMINAL_TIME_RANGE : STOP_TIME_RANGE}
           limit={NUMBER_OF_DEPARTURES}
           className="padding-small cursor-pointer"
+          showRealtimeVehicles={showRealtimeVehicles}
+          updateRealtimeVehicles={updateRealtimeVehicles}
+          hasRealtimeVehicles={this.hasRealtimeVehicles}
         />
         <MarkerPopupBottom
           location={{
@@ -43,7 +77,23 @@ class StopMarkerPopup extends React.PureComponent {
             lat: stop.lat,
             lon: stop.lon,
           }}
-        />
+        >
+          {stopsShowRealtimeTracking &&
+            hasRealtimeVehicles && (
+              <div
+                className="route cursor-pointer special"
+                onClick={this.toggleRealtimeMap}
+              >
+                <Icon
+                  img={
+                    showRealtimeVehicles
+                      ? 'icon-icon_realtime_off'
+                      : 'icon-icon_realtime_on'
+                  }
+                />
+              </div>
+            )}
+        </MarkerPopupBottom>
       </div>
     );
   }
@@ -59,14 +109,30 @@ StopMarkerPopup.propTypes = {
     }).isRequired,
     setVariables: PropTypes.func.isRequired,
   }).isRequired,
+  realtimeDepartures: PropTypes.array,
+};
+
+StopMarkerPopup.defaultProps = {
+  realtimeDepartures: undefined,
+};
+
+StopMarkerPopup.contextTypes = {
+  config: PropTypes.shape({
+    stopsShowRealtimeTracking: PropTypes.bool,
+  }),
 };
 
 const StopMarkerPopupContainer = Relay.createContainer(
-  connectToStores(StopMarkerPopup, ['TimeStore'], ({ getStore }) => ({
-    currentTime: getStore('TimeStore')
-      .getCurrentTime()
-      .unix(),
-  })),
+  connectToStores(
+    StopMarkerPopup,
+    ['TimeStore', 'RealtimeDeparturesStore'],
+    ({ getStore }) => ({
+      currentTime: getStore('TimeStore')
+        .getCurrentTime()
+        .unix(),
+      realtimeDepartures: getStore('RealtimeDeparturesStore').getDepartures(),
+    }),
+  ),
   {
     fragments: {
       stop: ({ currentTime }) => Relay.QL`

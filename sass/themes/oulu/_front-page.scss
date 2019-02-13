@@ -50,7 +50,8 @@
 }
 
 
-.favourites-toggle {
+.favourites-toggle,
+.realtime-toggle {
   display: inline-block;
   width: 50px;
   height: 48px;
@@ -76,6 +77,21 @@
   &:hover {
     color: #222;
     background: #fff;
+  }
+}
+
+.realtime-toggle {
+  right: 90px;
+
+  svg {
+    font-size: 1.3em;
+    margin-bottom: -4px;
+  }
+}
+
+.bp-medium, .bp-small {
+  .realtime-toggle {
+    right: 1em;
   }
 }
 

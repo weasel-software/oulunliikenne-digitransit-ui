@@ -55,6 +55,7 @@ export default configMerger(walttiConfig, {
   routePrefix: 'OULU',
 
   stopsMinZoom: 13,
+  stopsShowRealtimeTracking: true,
 
   tmsStations: {
     showTmsStations: true,
@@ -387,7 +388,7 @@ export default configMerger(walttiConfig, {
       weatherStations: false,
       tmsStations: false,
       roadConditions: false,
-      // fluencies: true,
+      fluencies: true,
     },
     BICYCLE: {
       disorders: true,

@@ -22,23 +22,7 @@ function getTopic(options) {
 
 export function parseMessage(topic, message, actionContext) {
   let parsedMessage;
-  const [
-    ,
-    ,
-    ,
-    ,
-    ,
-    transportMode,
-    // operatorId,
-    vehicleNumber,
-    routeId,
-    // directionId,
-    // headsign,
-    // startTime,
-    // nextStop,
-    // geohashLevel,
-    // geohash,
-  ] = topic.split('/');
+  const [, , , , , transportMode, vehicleNumber, routeId] = topic.split('/');
 
   if (message instanceof Uint8Array) {
     parsedMessage = JSON.parse(message).VP;
