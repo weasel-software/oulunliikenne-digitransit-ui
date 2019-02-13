@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Relay from 'react-relay/classic';
 import connectToStores from 'fluxible-addons-react/connectToStores';
+import { intlShape } from 'react-intl';
 
 import PopupMock from './PopupMock';
 import MarkerPopupBottom from '../MarkerPopupBottom';
@@ -53,6 +54,7 @@ class StopMarkerPopup extends React.PureComponent {
     } = this.state;
     const {
       config: { stopsShowRealtimeTracking },
+      intl,
     } = this.context;
     const stop = this.props.stop || this.props.terminal;
     const terminal = this.props.terminal !== null;
@@ -83,6 +85,17 @@ class StopMarkerPopup extends React.PureComponent {
               <div
                 className="route cursor-pointer special"
                 onClick={this.toggleRealtimeMap}
+                title={intl.formatMessage(
+                  showRealtimeVehicles
+                    ? {
+                        id: 'hide-realtime-on-map',
+                        defaultMessage: 'Hide vehicles on map',
+                      }
+                    : {
+                        id: 'show-realtime-on-map',
+                        defaultMessage: 'Show vehicles on map',
+                      },
+                )}
               >
                 <Icon
                   img={
@@ -117,6 +130,7 @@ StopMarkerPopup.defaultProps = {
 };
 
 StopMarkerPopup.contextTypes = {
+  intl: intlShape.isRequired,
   config: PropTypes.shape({
     stopsShowRealtimeTracking: PropTypes.bool,
   }),
