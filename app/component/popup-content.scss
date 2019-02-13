@@ -70,3 +70,22 @@
     }
   }
 }
+
+.pricing-list {
+  margin: 1em 0 0;
+  padding: 1em 0 0;
+  border-top: solid 1px $light-gray;
+  font-family: $font-family;
+  font-weight: $font-weight-book;
+  font-size: $font-size-small;
+  color: $gray;
+
+  tbody {
+    vertical-align: top;
+  }
+
+  td:first-child {
+    padding-right: .5em;
+    color: lighten($gray, 20%);
+  }
+}

@@ -4,6 +4,7 @@ import Relay from 'react-relay/classic';
 import { intlShape } from 'react-intl';
 import MarkerPopupBottom from '../MarkerPopupBottom';
 import ParkingStationAvailability from './ParkingStationAvailability';
+import ParkingStationPricing from '../../ParkingStationPricing';
 import Card from '../../Card';
 import CardHeader from '../../CardHeader';
 import ComponentUsageExample from '../../ComponentUsageExample';
@@ -31,7 +32,15 @@ class ParkingStationPopup extends React.Component {
 
   render() {
     const {
-      station: { name, spacesAvailable, maxCapacity, realtime, lon, lat },
+      station: {
+        name,
+        spacesAvailable,
+        maxCapacity,
+        realtime,
+        lon,
+        lat,
+        pricing,
+      },
     } = this.props;
 
     return (
@@ -58,6 +67,7 @@ class ParkingStationPopup extends React.Component {
               }
             />
           )}
+          {pricing && <ParkingStationPricing pricing={pricing} />}
         </Card>
         <MarkerPopupBottom
           location={{
@@ -81,6 +91,18 @@ export default Relay.createContainer(ParkingStationPopup, {
         realtime
         lon
         lat
+        pricing {
+          title {
+            fi
+            sv
+            en
+          }
+          value {
+            fi
+            sv
+            en
+          }
+        }
       }
     `,
   },
