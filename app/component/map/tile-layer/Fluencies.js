@@ -82,7 +82,9 @@ export default class Fluencies {
           }
         }
 
-        drawFluencyPath(this.tile, geom, color);
+        const { lineWidth } = this.config.fluencies;
+
+        drawFluencyPath(this.tile, geom, color, lineWidth);
 
         if (get(feature, 'properties.name')) {
           this.features.push({

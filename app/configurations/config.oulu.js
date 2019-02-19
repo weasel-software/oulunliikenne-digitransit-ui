@@ -137,6 +137,7 @@ export default configMerger(walttiConfig, {
     fluenciesMinZoom: 7,
     showIcons: false,
     showLines: true,
+    lineWidth: 5,
     showEmpty: true,
     colors: {
       TRAFFIC_FLOW_NORMAL: '#28A745',

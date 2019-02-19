@@ -389,7 +389,12 @@ export function drawFluencyIcon(tile, geom, imageSize) {
   );
 }
 
-export function drawFluencyPath(tile, points, color = '#999999') {
+export function drawFluencyPath(
+  tile,
+  points,
+  color = '#999999',
+  lineWidth = 8,
+) {
   const { lineCap, lineJoin } = tile.ctx;
   tile.ctx.lineCap = 'round';
   tile.ctx.lineJoin = 'round';
@@ -404,7 +409,7 @@ export function drawFluencyPath(tile, points, color = '#999999') {
   }
 
   tile.ctx.strokeStyle = color;
-  tile.ctx.lineWidth = 8;
+  tile.ctx.lineWidth = lineWidth;
   tile.ctx.stroke();
   tile.ctx.lineCap = lineCap;
   tile.ctx.lineJoin = lineJoin;

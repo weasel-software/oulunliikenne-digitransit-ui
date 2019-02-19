@@ -433,6 +433,7 @@ div.route-tabs .tabs-navigation.bp-large {
 .footer-text {
   @include font-book;
   color: $gray;
+  cursor: auto;
 }
 
 .footer-separator {
