@@ -56,6 +56,7 @@ export default configMerger(walttiConfig, {
 
   stopsMinZoom: 13,
   stopsShowRealtimeTracking: true,
+  stopsShowRealtimeTrackingDefault: true,
 
   tmsStations: {
     showTmsStations: true,

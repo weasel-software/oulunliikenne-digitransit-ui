@@ -320,6 +320,11 @@ export default {
     default: 18,
   },
 
+  // Show button in stops popup for showing the arriving vehicles on the map in realtime
+  stopsShowRealtimeTracking: false,
+  // Enable realtime vehicles on map by default when opening stops popup
+  stopsShowRealtimeTrackingDefault: false,
+
   appBarLink: { name: 'Digitransit', href: 'https://www.digitransit.fi/' },
 
   colors: {

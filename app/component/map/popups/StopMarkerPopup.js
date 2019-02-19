@@ -24,6 +24,13 @@ class StopMarkerPopup extends React.PureComponent {
     updateRealtimeVehicles: true,
   };
 
+  componentDidMount() {
+    const { stopsShowRealtimeTrackingDefault } = this.context.config;
+    if (stopsShowRealtimeTrackingDefault) {
+      this.toggleRealtimeMap();
+    }
+  }
+
   componentWillReceiveProps({ relay, currentTime, realtimeDepartures }) {
     const currUnix = this.props.currentTime;
     if (currUnix !== currentTime) {
@@ -133,6 +140,7 @@ StopMarkerPopup.contextTypes = {
   intl: intlShape.isRequired,
   config: PropTypes.shape({
     stopsShowRealtimeTracking: PropTypes.bool,
+    stopsShowRealtimeTrackingDefault: PropTypes.bool,
   }),
 };
 
