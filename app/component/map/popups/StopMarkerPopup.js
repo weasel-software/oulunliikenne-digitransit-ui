@@ -13,7 +13,8 @@ import Icon from '../../Icon';
 
 import mockData from './StopMarkerPopup.mockdata';
 
-const NUMBER_OF_DEPARTURES = 5;
+const NUMBER_OF_DEPARTURES = 30;
+const NUMBER_OF_DEPARTURES_LIMIT = 5;
 const STOP_TIME_RANGE = 12 * 60 * 60;
 const TERMINAL_TIME_RANGE = 60 * 60;
 
@@ -70,11 +71,11 @@ class StopMarkerPopup extends React.PureComponent {
       <div className="card">
         <StopCardContainer
           stop={stop}
-          numberOfDepartures={(terminal ? 3 : 1) * NUMBER_OF_DEPARTURES}
+          numberOfDepartures={NUMBER_OF_DEPARTURES}
           startTime={this.props.relay.variables.currentTime}
           isTerminal={terminal}
           timeRange={terminal ? TERMINAL_TIME_RANGE : STOP_TIME_RANGE}
-          limit={NUMBER_OF_DEPARTURES}
+          limit={NUMBER_OF_DEPARTURES_LIMIT}
           className="padding-small cursor-pointer"
           showRealtimeVehicles={showRealtimeVehicles}
           updateRealtimeVehicles={updateRealtimeVehicles}
@@ -179,8 +180,7 @@ const StopMarkerPopupContainer = Relay.createContainer(
         ${StopCardContainer.getFragment('stop', {
           startTime: currentTime,
           timeRange: TERMINAL_TIME_RANGE,
-          // Terminals do not show arrivals, so we need some slack
-          numberOfDepartures: NUMBER_OF_DEPARTURES * 3,
+          numberOfDepartures: NUMBER_OF_DEPARTURES,
         })}
       }
     `,

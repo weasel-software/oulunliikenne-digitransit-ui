@@ -324,6 +324,7 @@ export default {
   stopsShowRealtimeTracking: false,
   // Enable realtime vehicles on map by default when opening stops popup
   stopsShowRealtimeTrackingDefault: false,
+  stopsRealtimeTrackingLimit: 5,
 
   appBarLink: { name: 'Digitransit', href: 'https://www.digitransit.fi/' },
 

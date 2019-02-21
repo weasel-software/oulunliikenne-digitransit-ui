@@ -57,6 +57,7 @@ export default configMerger(walttiConfig, {
   stopsMinZoom: 13,
   stopsShowRealtimeTracking: true,
   stopsShowRealtimeTrackingDefault: true,
+  stopsRealtimeTrackingLimit: 8,
 
   tmsStations: {
     showTmsStations: true,
@@ -331,7 +332,7 @@ export default configMerger(walttiConfig, {
       {
         name: 'footer-feedback',
         nameEn: 'Submit feedback',
-        href: 'http://www.oulunjoukkoliikenne.fi/palautteet',
+        href: 'mailto:palaute.oulunliikenne@ouka.fi?subject=Oulunliikenne BETA palaute',
         icon: 'icon-icon_speech-bubble',
       },
       {
@@ -347,8 +348,24 @@ export default configMerger(walttiConfig, {
     fi: [
       {
         header: 'Tietoja palvelusta',
+        // header: 'Tietoja Oulunliikenne.fi-palvelusta',
         paragraphs: [
-          'Tämän palvelun tarjoaa Oulun joukkoliikenne joukkoliikenteen reittisuunnittelua varten Oulun, Iin, Kempeleen, Limingan, Lumijoen, Muhoksen ja Tyrnävän alueella. Palvelu kattaa joukkoliikenteen, kävelyn, pyöräilyn ja yksityisautoilun rajatuilta osin. Palvelu perustuu Digitransit palvelualustaan.',
+          'Oulunliikenne.fi-palvelu sisältää joukkoliikenteen, kävelyn, pyöräilyn ja autoilun reittioppaat, joukkoliikenteen reaaliaikaisen pysäkki-informaation sekä tietoja liikenneolosuhteista ja liikenteen sujuvuudesta. Palvelun tilaajina ovat Oulun kaupunki ja Pohjois-Pohjanmaan ELY-keskus. Palveluntuottajana toimii Digia Oyj. Palvelu perustuu Digitransit-palvelualustaan.',
+        ],
+      },
+      {
+        header: 'Digitransit palvelualusta',
+        paragraphs: [
+          'Digitransit-palvelualusta on HSL:n ja Traficomin kehittämä avoimen lähdekoodin reititystuote.',
+        ],
+      },
+      {
+        header: 'Tietolähteet',
+        paragraphs: [
+          'Kartat, tiedot kaduista, rakennuksista, pysäkkien sijainneista ynnä muusta tarjoaa © OpenStreetMap contributors. Jos teet muutoksia OSM-karttapohjaan, ilmoita asiasta Oulunliikenne.fi:n ”Anna palautetta” -toiminnolla, jotta muutokset saadaan näkyviin myös Oulunliikenne.fi –palveluun.',
+          'Osoitetiedot tuodaan Väestörekisterikeskuksen rakennustietorekisteristä.',
+          'Joukkoliikenteen reitit ja aikataulut ladataan Oulun joukkoliikenteen tietokannasta. Joukkoliikenteen aikatauluja ja reittejä koskevaa palautetta voit antaa: https://www.oulunjoukkoliikenne.fi/asiakaspalvelu',
+          'Useiden sivustolla esitettyjen liikennetietojen lähteenä on Traffic Management Finland / digitraffic.fi, lisenssi CC 4.0 BY.',
         ],
       },
     ],
