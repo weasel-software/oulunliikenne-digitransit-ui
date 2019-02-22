@@ -81,7 +81,13 @@ class MapLayerStore extends Store {
         : getMapLayerSettings();
 
     if (Object.keys(storedMapLayers).length > 0) {
-      this.mapLayers = { ...storedMapLayers };
+      // Use the structure from config but the stored values (keeps things up to date when config is changed)
+      this.mapLayers = Object.keys(storedMapLayers).reduce((result, key) => {
+        if (Object.keys(result).includes(key)) {
+          result[key] = storedMapLayers[key];
+        }
+        return result;
+      }, this.mapLayers);
     }
     this.emitChange();
   };
