@@ -389,6 +389,18 @@ export default configMerger(walttiConfig, {
     ],
   },
 
+  introPopup: {
+    fi: {
+      header: 'Oulunliikenne.fi uudistuu',
+      paragraphs: [
+        'Oulunliikenne.fi:n uusi versio otetaan käyttöön 2.6.2019. Tämä on uuden palvelun koekäyttöversio, joka toimii siihen saakka rinnan nykyisen palvelun kanssa.',
+        'Voit antaa uuteen palveluun liittyvää palautetta ja kehittämisvinkkejä sivun alareunan ”Anna palautetta” –toiminolla.',
+        'Koekäytön aikana palvelu ei vielä kata aivan kaikkia nykyisiä tietolajeja. Mm. kävelijöiden ja pyöräilijöiden laskentatiedot sekä reaaliaikaiset kunnossapitotilannetiedot puuttuvat.',
+        'Uusi Oulunliikenne.fi perustuu HSL:n ja Traficomin kehittämään avoimen lähdekoodin Digitransit-palvelualustaan. Monet käyttöliittymän ominaisuuksista tulevat suoraan Reittiopas.fi:n ominaisuuksista.',
+      ],
+    },
+  },
+
   useModeSpecificMapLayers: true,
   mapLayerDefaultsModeSpecific: {
     PUBLIC_TRANSPORT: {

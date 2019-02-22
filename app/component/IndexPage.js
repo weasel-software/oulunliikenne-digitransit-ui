@@ -39,6 +39,7 @@ import withBreakpoint from '../util/withBreakpoint';
 import ContentToggle from './ContentToggle';
 import { updateMapLayersMode } from '../action/MapLayerActions';
 import { clearDepartures } from '../action/RealtimeDeparturesActions';
+import IntroPopup from './IntroPopup';
 
 const debug = d('IndexPage.js');
 
@@ -294,6 +295,7 @@ class IndexPage extends React.Component {
             />
           </div>
         )}
+        <IntroPopup />
       </div>
     ) : (
       <div
@@ -375,6 +377,7 @@ class IndexPage extends React.Component {
             {this.renderTab()}
           </FrontPagePanelSmall>
         </div>
+        <IntroPopup />
       </div>
     );
   }
