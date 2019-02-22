@@ -1,4 +1,5 @@
 import ceil from 'lodash/ceil';
+import chunk from 'lodash/chunk';
 import moment from 'moment';
 
 const AWS = require('aws-sdk');
@@ -83,7 +84,12 @@ export function startRealTimeClient(actionContext, originalOptions, done) {
         host: actionContext.config.URL.MQTT,
       });
 
-      client.on('connect', () => client.subscribe(topics));
+      client.on('connect', () => {
+        // A single SUBSCRIBE request is limited a maximum of eight subscriptions. So we need to subscribe in chunks of max 8
+        const topicsChunkList = chunk(topics, 8);
+        topicsChunkList.forEach(topicsChunk => client.subscribe(topicsChunk));
+      });
+
       // client.on('error', e => console.log(e));
       // client.on('close', () => console.log('Client connection closed'));
       client.on('message', (t, m) => parseMessage(t, m, actionContext));
