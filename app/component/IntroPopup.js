@@ -14,8 +14,12 @@ class IntroPopup extends React.Component {
     super(props);
 
     this.state = {
-      showPopup: getShowIntroPopup(),
+      showPopup: false,
     };
+  }
+
+  componentWillReceiveProps() {
+    this.setState({ showPopup: getShowIntroPopup() });
   }
 
   toggleVisibility = () => {

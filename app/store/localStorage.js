@@ -361,14 +361,22 @@ export const setMapLayerModeSpecificSettings = (mode, settings) => {
 export const getMapLayerModeSpecificSettings = mode =>
   getItemAsJson(`map-layers-${mode}`, '{}');
 
-export const removeMapLayerModeSpecificSettings = mode =>
-  localStorage.removeItem(`map-layers-${mode}`);
-
-export const setShowIntroPopup = () => {
-  setItem(`show-intro-popup`, false);
+export const removeMapLayerModeSpecificSettings = mode => {
+  const localStorage = getLocalStorage(isBrowser);
+  if (localStorage) {
+    localStorage.removeItem(`map-layers-${mode}`);
+  }
 };
 
-export const getShowIntroPopup = () => getItemAsJson(`show-intro-popup`, true);
+export const setShowIntroPopup = () => {
+  setItem('show-intro-popup', false);
+};
 
-export const removeShowIntroPopup = () =>
-  localStorage.removeItem(`show-intro-popup`);
+export const getShowIntroPopup = () => getItemAsJson('show-intro-popup', true);
+
+export const removeShowIntroPopup = () => {
+  const localStorage = getLocalStorage(isBrowser);
+  if (localStorage) {
+    localStorage.removeItem('show-intro-popup');
+  }
+};
