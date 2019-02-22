@@ -64,7 +64,7 @@ function shouldShowVehicle(message, pattern, tripStart, config) {
   return (
     message.lat &&
     message.long &&
-    code.substr(0, message.route.length) === message.route &&
+    code.split(':')[1] === message.route.split(':')[1] &&
     (direction === undefined || message.direction === direction) &&
     (tripStart === undefined || message.tripStartTime === tripStart) &&
     (stops === undefined ||
