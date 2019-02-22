@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Relay from 'react-relay/classic';
 import filter from 'lodash/filter';
+import uniqBy from 'lodash/uniqBy';
 import moment from 'moment';
 import { Link } from 'react-router';
 import cx from 'classnames';
@@ -77,11 +78,16 @@ class DepartureListContainer extends Component {
 
   static contextTypes = {
     executeAction: PropTypes.func.isRequired,
+    config: PropTypes.shape({
+      stopsRealtimeTrackingLimit: PropTypes.number,
+    }),
   };
 
   componentDidMount() {
-    const departures = this.getDepartures().filter(
-      departure => departure.realtime,
+    const { stopsRealtimeTrackingLimit } = this.context.config;
+    const departures = uniqBy(
+      this.getDepartures(true, stopsRealtimeTrackingLimit),
+      item => item.pattern.code,
     );
 
     if (Array.isArray(departures) && departures.length) {
@@ -98,8 +104,10 @@ class DepartureListContainer extends Component {
         newProps.showRealtimeVehicles !== this.props.showRealtimeVehicles &&
         newProps.showRealtimeVehicles
       ) {
-        const departures = this.getDepartures().filter(
-          departure => departure.realtime,
+        const { stopsRealtimeTrackingLimit } = this.context.config;
+        const departures = uniqBy(
+          this.getDepartures(true, stopsRealtimeTrackingLimit),
+          item => item.pattern.code,
         );
         this.context.executeAction(updateDepartures, departures);
       } else if (
@@ -118,12 +126,17 @@ class DepartureListContainer extends Component {
     return null;
   };
 
-  getDepartures = () => {
+  getDepartures = (onlyRealtime, limit) => {
     const { currentTime } = this.props;
-    return asDepartures(this.props.stoptimes)
+    // eslint-disable-next-line no-param-reassign
+    limit = limit || this.props.limit;
+
+    const departures = asDepartures(this.props.stoptimes)
       .filter(departure => !(this.props.isTerminal && departure.isArrival))
       .filter(departure => currentTime < departure.stoptime)
-      .slice(0, this.props.limit);
+      .filter(departure => (onlyRealtime ? departure.realtime : true));
+
+    return departures.slice(0, limit);
   };
 
   render() {

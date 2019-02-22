@@ -85,6 +85,7 @@ export function startRealTimeClient(actionContext, originalOptions, done) {
 
       client.on('connect', () => client.subscribe(topics));
       // client.on('error', e => console.log(e));
+      // client.on('close', () => console.log('Client connection closed'));
       client.on('message', (t, m) => parseMessage(t, m, actionContext));
 
       actionContext.dispatch('RealTimeClientStarted', { client, topics });

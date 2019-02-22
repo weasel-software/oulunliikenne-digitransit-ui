@@ -22,6 +22,7 @@ const StopCardContainer = connectToStores(
         showPlatformCodes
         showRealtimeVehicles={props.showRealtimeVehicles}
         hasRealtimeVehicles={props.hasRealtimeVehicles}
+        updateRealtimeVehicles={props.updateRealtimeVehicles}
       />
     ),
   }),

@@ -246,6 +246,7 @@ export function drawRoadworkPath(tile, points, color = '#0073BF') {
   const { lineCap, lineJoin } = tile.ctx;
   tile.ctx.lineCap = 'round';
   tile.ctx.lineJoin = 'round';
+  tile.ctx.globalCompositeOperation = 'destination-over';
 
   tile.ctx.beginPath();
   for (let i = 0, ref = points.length; i < ref; i++) {
@@ -262,6 +263,7 @@ export function drawRoadworkPath(tile, points, color = '#0073BF') {
 
   tile.ctx.lineCap = lineCap;
   tile.ctx.lineJoin = lineJoin;
+  tile.ctx.globalCompositeOperation = 'source-over';
 }
 
 export function drawDisorderIcon(tile, geom, imageSize, color) {
@@ -294,6 +296,7 @@ export function drawDisorderPath(tile, points, color = '#0073BF') {
   const { lineCap, lineJoin } = tile.ctx;
   tile.ctx.lineCap = 'round';
   tile.ctx.lineJoin = 'round';
+  tile.ctx.globalCompositeOperation = 'destination-over';
 
   tile.ctx.beginPath();
   for (let i = 0, ref = points.length; i < ref; i++) {
@@ -309,6 +312,7 @@ export function drawDisorderPath(tile, points, color = '#0073BF') {
 
   tile.ctx.lineCap = lineCap;
   tile.ctx.lineJoin = lineJoin;
+  tile.ctx.globalCompositeOperation = 'source-over';
 }
 
 export function drawDisorderPolygon(tile, points, color = '#0073BF') {
@@ -355,6 +359,7 @@ export function drawRoadConditionPath(tile, points, color = '#999999') {
   const { lineCap, lineJoin } = tile.ctx;
   tile.ctx.lineCap = 'round';
   tile.ctx.lineJoin = 'round';
+  tile.ctx.globalCompositeOperation = 'destination-over';
 
   tile.ctx.beginPath();
   for (let i = 0, ref = points.length; i < ref; i++) {
@@ -366,11 +371,12 @@ export function drawRoadConditionPath(tile, points, color = '#999999') {
   }
 
   tile.ctx.strokeStyle = color;
-  tile.ctx.lineWidth = 8;
+  tile.ctx.lineWidth = 5;
   tile.ctx.stroke();
 
   tile.ctx.lineCap = lineCap;
   tile.ctx.lineJoin = lineJoin;
+  tile.ctx.globalCompositeOperation = 'source-over';
 }
 
 export function drawFluencyIcon(tile, geom, imageSize) {
@@ -389,10 +395,16 @@ export function drawFluencyIcon(tile, geom, imageSize) {
   );
 }
 
-export function drawFluencyPath(tile, points, color = '#999999') {
+export function drawFluencyPath(
+  tile,
+  points,
+  color = '#999999',
+  lineWidth = 5,
+) {
   const { lineCap, lineJoin } = tile.ctx;
   tile.ctx.lineCap = 'round';
   tile.ctx.lineJoin = 'round';
+  tile.ctx.globalCompositeOperation = 'destination-over';
 
   tile.ctx.beginPath();
   for (let i = 0, ref = points.length; i < ref; i++) {
@@ -404,10 +416,11 @@ export function drawFluencyPath(tile, points, color = '#999999') {
   }
 
   tile.ctx.strokeStyle = color;
-  tile.ctx.lineWidth = 8;
+  tile.ctx.lineWidth = lineWidth;
   tile.ctx.stroke();
   tile.ctx.lineCap = lineCap;
   tile.ctx.lineJoin = lineJoin;
+  tile.ctx.globalCompositeOperation = 'source-over';
 }
 
 export function drawParkAndRideIcon(tile, geom, width, height) {

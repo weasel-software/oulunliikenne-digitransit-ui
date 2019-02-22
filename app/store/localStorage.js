@@ -363,3 +363,12 @@ export const getMapLayerModeSpecificSettings = mode =>
 
 export const removeMapLayerModeSpecificSettings = mode =>
   localStorage.removeItem(`map-layers-${mode}`);
+
+export const setShowIntroPopup = () => {
+  setItem(`show-intro-popup`, false);
+};
+
+export const getShowIntroPopup = () => getItemAsJson(`show-intro-popup`, true);
+
+export const removeShowIntroPopup = () =>
+  localStorage.removeItem(`show-intro-popup`);

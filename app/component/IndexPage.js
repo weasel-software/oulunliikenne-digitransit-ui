@@ -39,6 +39,7 @@ import withBreakpoint from '../util/withBreakpoint';
 import ContentToggle from './ContentToggle';
 import { updateMapLayersMode } from '../action/MapLayerActions';
 import { clearDepartures } from '../action/RealtimeDeparturesActions';
+import IntroPopup from './IntroPopup';
 
 const debug = d('IndexPage.js');
 
@@ -246,18 +247,19 @@ class IndexPage extends React.Component {
             />
           </div>
         </ContentToggle>
-        {realtimeDepartures && (
-          <button
-            className="realtime-toggle"
-            onClick={this.deactivateRealtimeVehicles}
-            title={intl.formatMessage({
-              id: 'hide-realtime-on-map',
-              defaultMessage: 'Hide vehicles on map',
-            })}
-          >
-            <Icon img="icon-icon_realtime_off" />
-          </button>
-        )}
+        {realtimeDepartures &&
+          realtimeDepartures.length > 0 && (
+            <button
+              className="realtime-toggle"
+              onClick={this.deactivateRealtimeVehicles}
+              title={intl.formatMessage({
+                id: 'hide-realtime-on-map',
+                defaultMessage: 'Hide vehicles on map',
+              })}
+            >
+              <Icon img="icon-icon_realtime_off" />
+            </button>
+          )}
         <ContentToggle
           icon="icon_star"
           iconClass="favourites-toggle"
@@ -293,6 +295,7 @@ class IndexPage extends React.Component {
             />
           </div>
         )}
+        <IntroPopup />
       </div>
     ) : (
       <div
@@ -336,18 +339,19 @@ class IndexPage extends React.Component {
                 />
               </div>
             </ContentToggle>
-            {realtimeDepartures && (
-              <button
-                className="realtime-toggle"
-                onClick={this.deactivateRealtimeVehicles}
-                title={intl.formatMessage({
-                  id: 'hide-realtime-on-map',
-                  defaultMessage: 'Hide vehicles on map',
-                })}
-              >
-                <Icon img="icon-icon_realtime_off" />
-              </button>
-            )}
+            {realtimeDepartures &&
+              realtimeDepartures.length > 0 && (
+                <button
+                  className="realtime-toggle"
+                  onClick={this.deactivateRealtimeVehicles}
+                  title={intl.formatMessage({
+                    id: 'hide-realtime-on-map',
+                    defaultMessage: 'Hide vehicles on map',
+                  })}
+                >
+                  <Icon img="icon-icon_realtime_off" />
+                </button>
+              )}
           </MapWithTracking>
         </div>
         <div style={{ position: 'relative' }}>
@@ -373,6 +377,7 @@ class IndexPage extends React.Component {
             {this.renderTab()}
           </FrontPagePanelSmall>
         </div>
+        <IntroPopup />
       </div>
     );
   }
