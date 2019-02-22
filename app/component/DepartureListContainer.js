@@ -86,7 +86,7 @@ class DepartureListContainer extends Component {
   componentDidMount() {
     const { stopsRealtimeTrackingLimit } = this.context.config;
     const departures = uniqBy(
-      this.getDepartures(true, stopsRealtimeTrackingLimit),
+      this.getDepartures(stopsRealtimeTrackingLimit),
       item => item.pattern.code,
     );
 
@@ -106,7 +106,7 @@ class DepartureListContainer extends Component {
       ) {
         const { stopsRealtimeTrackingLimit } = this.context.config;
         const departures = uniqBy(
-          this.getDepartures(true, stopsRealtimeTrackingLimit),
+          this.getDepartures(stopsRealtimeTrackingLimit),
           item => item.pattern.code,
         );
         this.context.executeAction(updateDepartures, departures);
@@ -126,15 +126,14 @@ class DepartureListContainer extends Component {
     return null;
   };
 
-  getDepartures = (onlyRealtime, limit) => {
+  getDepartures = limit => {
     const { currentTime } = this.props;
     // eslint-disable-next-line no-param-reassign
     limit = limit || this.props.limit;
 
     const departures = asDepartures(this.props.stoptimes)
       .filter(departure => !(this.props.isTerminal && departure.isArrival))
-      .filter(departure => currentTime < departure.stoptime)
-      .filter(departure => (onlyRealtime ? departure.realtime : true));
+      .filter(departure => currentTime < departure.stoptime);
 
     return departures.slice(0, limit);
   };
