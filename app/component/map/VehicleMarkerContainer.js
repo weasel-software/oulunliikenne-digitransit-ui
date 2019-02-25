@@ -56,6 +56,12 @@ if (isBrowser) {
   /* eslint-enable global-require */
 }
 
+function findDeparture(departures, message) {
+  return (departures || []).find(
+    item => item.pattern.code.split(':')[1] === message.route.split(':')[1],
+  );
+}
+
 // if tripStartTime has been specified,
 // use only the updates for vehicles with matching startTime
 function shouldShowVehicle(message, pattern, tripStart, config) {
@@ -74,56 +80,91 @@ function shouldShowVehicle(message, pattern, tripStart, config) {
   );
 }
 
+function shouldShowVehicleAlt(message, departures, tripStart, config) {
+  const departure = findDeparture(departures, message);
+
+  if (!departure) {
+    return false;
+  }
+
+  const { direction, stops } = departure.pattern;
+
+  return (
+    message.lat &&
+    message.long &&
+    (direction === undefined || message.direction === direction) &&
+    (tripStart === undefined || message.tripStartTime === tripStart) &&
+    (stops === undefined ||
+      stops
+        .map(stop => stop.gtfsId)
+        .includes(`${config.routePrefix}:${message.next_stop}`))
+  );
+}
+
 function VehicleMarkerContainer(props, { config }) {
   return Object.entries(props.vehicles)
-    .filter(([, message]) =>
-      shouldShowVehicle(message, props.pattern, props.tripStart, config),
-    )
-    .map(([id, message]) => (
-      <IconMarker
-        key={id}
-        position={{
-          lat: message.lat,
-          lon: message.long,
-        }}
-        icon={getVehicleIcon(
-          message.mode,
-          message.heading,
-          props.shortName,
-          props.className,
-        )}
-      >
-        <Popup
-          offset={[106, 16]}
-          maxWidth={250}
-          minWidth={250}
-          className="popup"
+    .filter(([, message]) => {
+      if (props.departures) {
+        return shouldShowVehicleAlt(
+          message,
+          props.departures,
+          props.tripStart,
+          config,
+        );
+      }
+
+      return shouldShowVehicle(message, props.pattern, props.tripStart, config);
+    })
+    .map(([id, message]) => {
+      const departure = findDeparture(props.departures, message);
+      const shortName = departure ? departure.shortName : props.shortName;
+
+      return (
+        <IconMarker
+          key={id}
+          position={{
+            lat: message.lat,
+            lon: message.long,
+          }}
+          icon={getVehicleIcon(
+            message.mode,
+            message.heading,
+            shortName,
+            props.className,
+          )}
         >
-          <Relay.RootContainer
-            Component={RouteMarkerPopup}
-            route={
-              new FuzzyTripRoute({
-                tripId: message.tripId,
-                route: message.route,
-                direction: message.direction,
-                date: message.operatingDay,
-                time:
-                  message.tripStartTime.substring(0, 2) * 60 * 60 +
-                  message.tripStartTime.substring(2, 4) * 60,
-              })
-            }
-            renderLoading={() => (
-              <div className="card" style={{ height: '12rem' }}>
-                <Loading />
-              </div>
-            )}
-            renderFetched={data => (
-              <RouteMarkerPopup {...data} message={message} />
-            )}
-          />
-        </Popup>
-      </IconMarker>
-    ));
+          <Popup
+            offset={[106, 16]}
+            maxWidth={250}
+            minWidth={250}
+            className="popup"
+          >
+            <Relay.RootContainer
+              Component={RouteMarkerPopup}
+              route={
+                new FuzzyTripRoute({
+                  tripId: message.tripId,
+                  route: message.route,
+                  direction: message.direction,
+                  date: message.operatingDay,
+                  time:
+                    message.tripStartTime.substring(0, 2) * 60 * 60 +
+                    message.tripStartTime.substring(2, 4) * 60,
+                })
+              }
+              renderLoading={() => (
+                <div className="card" style={{ height: '12rem' }}>
+                  <Loading />
+                </div>
+              )}
+              renderFetched={data => (
+                <RouteMarkerPopup {...data} message={message} />
+              )}
+            />
+          </Popup>
+        </IconMarker>
+      );
+    });
 }
 
 VehicleMarkerContainer.contextTypes = {
@@ -145,6 +186,7 @@ VehicleMarkerContainer.propTypes = {
   ).isRequired,
   shortName: PropTypes.string,
   className: PropTypes.string,
+  departures: PropTypes.array,
 };
 
 VehicleMarkerContainer.defaultProps = {
@@ -152,6 +194,7 @@ VehicleMarkerContainer.defaultProps = {
   pattern: undefined,
   shortName: undefined,
   className: undefined,
+  departures: undefined,
 };
 
 export default connectToStores(

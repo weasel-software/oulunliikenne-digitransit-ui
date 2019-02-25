@@ -236,16 +236,16 @@ class MapWithTrackingStateHandler extends React.Component {
     }
 
     if (realtimeDepartures) {
-      realtimeDepartures.forEach(departure => {
-        leafletObjs.push(
-          <VehicleMarkerContainer
-            key={departure.stoptime}
-            pattern={departure.pattern}
-            shortName={departure.pattern.route.shortName}
-            className="vehicle-realtime-icon"
-          />,
-        );
-      });
+      leafletObjs.push(
+        <VehicleMarkerContainer
+          key="vehicleMarkers"
+          departures={realtimeDepartures.map(departure => ({
+            pattern: departure.pattern,
+            shortName: departure.pattern.route.shortName,
+          }))}
+          className="vehicle-realtime-icon"
+        />,
+      );
     }
 
     return (
