@@ -120,6 +120,12 @@
   }
 }
 
+.popup .departure-list {
+  max-height: 100px;
+  padding: 4px 0 0;
+  overflow-y: scroll;
+}
+
 .popup .route-destination:last-child {
   width: calc(100% - 7.5em);
 }

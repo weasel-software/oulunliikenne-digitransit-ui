@@ -14,7 +14,7 @@ import Icon from '../../Icon';
 import mockData from './StopMarkerPopup.mockdata';
 
 const NUMBER_OF_DEPARTURES = 30;
-const NUMBER_OF_DEPARTURES_LIMIT = 5;
+const NUMBER_OF_DEPARTURES_LIMIT = 15;
 const STOP_TIME_RANGE = 12 * 60 * 60;
 const TERMINAL_TIME_RANGE = 60 * 60;
 
