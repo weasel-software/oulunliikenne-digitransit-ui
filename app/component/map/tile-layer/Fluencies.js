@@ -86,13 +86,11 @@ export default class Fluencies {
 
         drawFluencyPath(this.tile, geom, color, lineWidth);
 
-        if (get(feature, 'properties.name')) {
-          this.features.push({
-            lineString: geom,
-            geom: null,
-            properties: feature.properties,
-          });
-        }
+        this.features.push({
+          lineString: geom,
+          geom: null,
+          properties: { name: '', ...feature.properties },
+        });
       }
 
       if (this.config.fluencies && this.config.fluencies.showIcons) {
@@ -106,13 +104,10 @@ export default class Fluencies {
             point.y < feature.extent
           ) {
             drawFluencyIcon(this.tile, point, this.imageSize);
-            if (
-              !this.config.fluencies.showLines &&
-              get(feature, 'properties.name')
-            ) {
+            if (!this.config.fluencies.showLines) {
               this.features.push({
                 geom: point,
-                properties: feature.properties,
+                properties: { name: '', ...feature.properties },
               });
             }
           }
