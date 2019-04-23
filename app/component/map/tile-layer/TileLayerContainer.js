@@ -191,7 +191,9 @@ class TileLayerContainer extends GridLayer {
               this.context.config,
             ),
           ),
-          item => `${get(item, 'feature.properties.id')}_${get(item, 'layer')}`,
+          item =>
+            `${get(item, 'feature.properties.id') ||
+              get(item, 'feature.properties.code')}_${get(item, 'layer')}`,
         ),
         coords,
         showSpinner: true,
