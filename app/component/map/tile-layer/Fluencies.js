@@ -1,6 +1,7 @@
 import { VectorTile } from '@mapbox/vector-tile';
 import Protobuf from 'pbf';
 import get from 'lodash/get';
+import moment from 'moment';
 import { drawFluencyIcon, drawFluencyPath } from '../../../util/mapIconUtils';
 import { isBrowser } from '../../../util/browser';
 
@@ -57,6 +58,17 @@ export default class Fluencies {
 
   fetchAndDrawStatus = ({ geometryList, feature }) => {
     timeOfLastUpdate = new Date().getTime();
+
+    if (feature.properties.trafficFlow !== 'TRAFFIC_FLOW_UNKNOWN') {
+      if (
+        // feature.properties.measuredTime &&
+        moment().diff(moment(feature.properties.measuredTime || 0), 'minutes') >
+        30
+      ) {
+        feature.properties = { trafficFlow: 'TRAFFIC_FLOW_UNKNOWN' };
+      }
+    }
+
     const { trafficFlow } = feature.properties;
 
     if (
