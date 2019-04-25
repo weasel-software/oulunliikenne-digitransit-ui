@@ -51,7 +51,7 @@ export default configMerger(walttiConfig, {
     mobileDefaultExpanded: true,
   },
 
-  useAltRelatimeClient: true,
+  useAltRealtimeClient: true,
   routePrefix: 'OULU',
 
   stopsMinZoom: 13,

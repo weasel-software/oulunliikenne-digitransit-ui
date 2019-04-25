@@ -236,7 +236,7 @@ export default {
     locationAware: true,
   },
 
-  useAltRelatimeClient: false,
+  useAltRealtimeClient: false,
   routePrefix: 'HSL',
 
   parkAndRide: {

@@ -114,7 +114,7 @@ class MapWithTrackingStateHandler extends React.Component {
     const { client } = this.props.getStore('RealTimeInformationStore');
     if (client) {
       this.props.executeAction(
-        this.props.config.useAltRelatimeClient
+        this.props.config.useAltRealtimeClient
           ? stopRealTimeClient
           : altStopRealTimeClient,
         client,
@@ -130,7 +130,7 @@ class MapWithTrackingStateHandler extends React.Component {
     if (Array.isArray(departures) && departures.length) {
       if (client) {
         this.props.executeAction(
-          this.props.config.useAltRelatimeClient ? altUpdateTopic : updateTopic,
+          this.props.config.useAltRealtimeClient ? altUpdateTopic : updateTopic,
           {
             client,
             oldTopics: subscriptions,
@@ -141,7 +141,7 @@ class MapWithTrackingStateHandler extends React.Component {
         );
       } else {
         this.props.executeAction(
-          this.props.config.useAltRelatimeClient
+          this.props.config.useAltRealtimeClient
             ? altStartRealTimeClient
             : startRealTimeClient,
           departures.map(departure => ({
@@ -151,7 +151,7 @@ class MapWithTrackingStateHandler extends React.Component {
       }
     } else if (client) {
       this.props.executeAction(
-        this.props.config.useAltRelatimeClient
+        this.props.config.useAltRealtimeClient
           ? stopRealTimeClient
           : altStopRealTimeClient,
         client,
