@@ -63,7 +63,7 @@ export default class Fluencies {
       if (
         // feature.properties.measuredTime &&
         moment().diff(moment(feature.properties.measuredTime || 0), 'minutes') >
-        30
+        15
       ) {
         feature.properties = { trafficFlow: 'TRAFFIC_FLOW_UNKNOWN' };
       }

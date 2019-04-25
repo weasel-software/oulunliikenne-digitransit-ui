@@ -18,7 +18,7 @@ function getTopic(options) {
   // MQTT topic cannot have more than 7 forward slashes in AWS IoT, so for oulunliikenne we use a shorter version than HSL.
   // Also, we don't have any other data anyways, so we don't lose anything.
   // /hfp/<version>/journey/<temporal_type>/<transport_mode>/<vehicle_number>/<route_id>
-  return `/hfp/v1/journey/ongoing/+/+/${routeId}`;
+  return `/hfp/v1/journey/+/+/+/${routeId}`;
 }
 
 export function parseMessage(topic, message, actionContext) {
