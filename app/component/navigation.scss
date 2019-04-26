@@ -407,6 +407,16 @@ section.content {
         min-height: 27cm;
       }
     }
+
+    &.alt-view {
+      .main-content {
+        width: 450px;
+      }
+
+      .map-content {
+        width: calc(100% - 450px);
+      }
+    }
   }
 }
 
