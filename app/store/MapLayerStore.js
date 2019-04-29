@@ -42,12 +42,15 @@ class MapLayerStore extends Store {
   static handlers = {
     UpdateMapLayers: 'updateMapLayers',
     UpdateMapLayersMode: 'updateMapLayersMode',
+    SetHighlightedStop: 'setHighlightedStop',
+    RemoveHighlightedStop: 'removeHighlightedStop',
   };
 
   static storeName = 'MapLayerStore';
 
   mapLayers = { ...MapLayerStore.defaultLayers };
   mode = null;
+  highlightedStop = null;
 
   constructor(dispatcher) {
     super(dispatcher);
@@ -117,6 +120,18 @@ class MapLayerStore extends Store {
       this.initLayers();
     }
   };
+
+  setHighlightedStop = stop => {
+    this.highlightedStop = stop;
+    this.emitChange();
+  };
+
+  removeHighlightedStop = () => {
+    this.highlightedStop = null;
+    this.emitChange();
+  };
+
+  getHighlightedStop = () => this.highlightedStop;
 }
 
 export const mapLayerShape = PropTypes.shape({

@@ -10,6 +10,10 @@ import MarkerPopupBottom from '../MarkerPopupBottom';
 import StopCardContainer from '../../StopCardContainer';
 import ComponentUsageExample from '../../ComponentUsageExample';
 import Icon from '../../Icon';
+import {
+  setHighlightedStop,
+  removeHighlightedStop,
+} from '../../../action/MapLayerActions';
 
 import mockData from './StopMarkerPopup.mockdata';
 
@@ -30,6 +34,9 @@ class StopMarkerPopup extends React.PureComponent {
     if (stopsShowRealtimeTrackingDefault) {
       this.toggleRealtimeMap();
     }
+
+    const stop = this.props.stop.gtfsId || this.props.terminal.gtfsId;
+    this.context.executeAction(setHighlightedStop, stop);
   }
 
   componentWillReceiveProps({ relay, currentTime, realtimeDepartures }) {
@@ -40,6 +47,10 @@ class StopMarkerPopup extends React.PureComponent {
     if (realtimeDepartures === null && this.state.showRealtimeVehicles) {
       this.toggleRealtimeMap(false);
     }
+  }
+
+  componentWillUnmount() {
+    this.context.executeAction(removeHighlightedStop);
   }
 
   toggleRealtimeMap = update => {
@@ -143,6 +154,7 @@ StopMarkerPopup.contextTypes = {
     stopsShowRealtimeTracking: PropTypes.bool,
     stopsShowRealtimeTrackingDefault: PropTypes.bool,
   }),
+  executeAction: PropTypes.func.isRequired,
 };
 
 const StopMarkerPopupContainer = Relay.createContainer(
