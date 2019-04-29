@@ -101,6 +101,10 @@ class TileLayerContainer extends GridLayer {
       this.leafletElement.remove();
       this.leafletElement = this.createLeafletElement(this.props);
       this.context.map.addLayer(this.leafletElement);
+
+      if (this.leafletElementHighlighted) {
+        this.leafletElementHighlighted.remove();
+      }
     }
 
     if (!isEqual(prevProps.highlightedStop, this.props.highlightedStop)) {
