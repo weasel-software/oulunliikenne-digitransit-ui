@@ -83,6 +83,10 @@
 .realtime-toggle {
   right: 90px;
 
+  &.realtime-toggle-stop {
+    right: 16px;
+  }
+
   svg {
     font-size: 1.3em;
     margin-bottom: -4px;

@@ -2,8 +2,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Relay from 'react-relay/classic';
 import some from 'lodash/some';
+import get from 'lodash/get';
 import mapProps from 'recompose/mapProps';
 import connectToStores from 'fluxible-addons-react/connectToStores';
+import { routerShape } from 'react-router';
 
 import StopPageTabContainer from './StopPageTabContainer';
 import DepartureListHeader from './DepartureListHeader';
@@ -29,23 +31,49 @@ class StopPageContentOptions extends React.Component {
     initialDate: PropTypes.string.isRequired,
     setDate: PropTypes.func.isRequired,
     currentTime: PropTypes.number.isRequired,
+    realtimeDepartures: PropTypes.array,
   };
 
   static defaultProps = {
     printUrl: null,
+    realtimeDepartures: undefined,
   };
 
-  constructor(props) {
+  static contextTypes = {
+    router: routerShape.isRequired,
+  };
+
+  constructor(props, context) {
     super(props);
     this.state = {
       showTab: 'right-now', // Show right-now as default
+      showRealtimeVehicles: false,
+      updateRealtimeVehicles: true,
+      stopId: get(context, 'router.params.stopId'),
     };
   }
 
-  componentWillReceiveProps({ relay, currentTime }) {
+  componentDidMount() {
+    this.toggleRealtimeMap();
+  }
+
+  componentWillReceiveProps({ relay, currentTime, realtimeDepartures }) {
     const currUnix = this.props.currentTime;
     if (currUnix !== currentTime) {
       relay.setVariables({ startTime: currUnix });
+    }
+    if (this.state.showRealtimeVehicles) {
+      if (realtimeDepartures === null) {
+        this.toggleRealtimeMap(false);
+      }
+    } else if (
+      this.state.stopId !== get(this.context, 'router.params.stopId') &&
+      realtimeDepartures !== null
+    ) {
+      this.setState({
+        stopId: get(this.context, 'router.params.stopId'),
+      });
+      this.toggleRealtimeMap();
     }
   }
 
@@ -59,7 +87,16 @@ class StopPageContentOptions extends React.Component {
     });
   };
 
+  toggleRealtimeMap = update => {
+    this.setState({
+      showRealtimeVehicles: !this.state.showRealtimeVehicles,
+      updateRealtimeVehicles: update !== false,
+    });
+  };
+
   render() {
+    const { showRealtimeVehicles, updateRealtimeVehicles } = this.state;
+
     // Currently shows only next departures, add Timetables
     return (
       <div className="stop-page-content-wrapper">
@@ -70,7 +107,11 @@ class StopPageContentOptions extends React.Component {
         </div>
         {this.state.showTab === 'right-now' && (
           <div className="stop-scroll-container momentum-scroll">
-            <DepartureListContainerWithProps {...this.props.departureProps} />
+            <DepartureListContainerWithProps
+              {...this.props.departureProps}
+              showRealtimeVehicles={showRealtimeVehicles}
+              updateRealtimeVehicles={updateRealtimeVehicles}
+            />
           </div>
         )}
         {this.state.showTab === 'timetable' && (
@@ -100,6 +141,8 @@ const DepartureListContainerWithProps = mapProps(props => ({
   rowClasses: 'padding-normal border-bottom',
   currentTime: props.relay.variables.startTime,
   showPlatformCodes: true,
+  showRealtimeVehicles: props.showRealtimeVehicles,
+  updateRealtimeVehicles: props.updateRealtimeVehicles,
 }))(DepartureListContainer);
 
 const StopPageContent = withBreakpoint(
@@ -131,11 +174,16 @@ StopPageContentOrEmpty.propTypes = {
 };
 
 export default Relay.createContainer(
-  connectToStores(StopPageContentOrEmpty, ['TimeStore'], ({ getStore }) => ({
-    currentTime: getStore('TimeStore')
-      .getCurrentTime()
-      .unix(),
-  })),
+  connectToStores(
+    StopPageContentOrEmpty,
+    ['TimeStore', 'RealtimeDeparturesStore'],
+    ({ getStore }) => ({
+      currentTime: getStore('TimeStore')
+        .getCurrentTime()
+        .unix(),
+      realtimeDepartures: getStore('RealtimeDeparturesStore').getDepartures(),
+    }),
+  ),
   {
     fragments: {
       stop: ({ date }) => Relay.QL`

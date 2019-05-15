@@ -4,6 +4,7 @@ import React from 'react';
 import Relay from 'react-relay/classic';
 import connectToStores from 'fluxible-addons-react/connectToStores';
 import { intlShape } from 'react-intl';
+import { routerShape } from 'react-router';
 
 import PopupMock from './PopupMock';
 import MarkerPopupBottom from '../MarkerPopupBottom';
@@ -23,15 +24,19 @@ const STOP_TIME_RANGE = 12 * 60 * 60;
 const TERMINAL_TIME_RANGE = 60 * 60;
 
 class StopMarkerPopup extends React.PureComponent {
-  state = {
-    showRealtimeVehicles: false,
-    hasRealtimeVehicles: false,
-    updateRealtimeVehicles: true,
-  };
+  constructor(props, { router }) {
+    super(props);
+    this.state = {
+      showRealtimeVehicles: false,
+      hasRealtimeVehicles: false,
+      updateRealtimeVehicles: true,
+      isStopPage: !!router.params.stopId,
+    };
+  }
 
   componentDidMount() {
     const { stopsShowRealtimeTrackingDefault } = this.context.config;
-    if (stopsShowRealtimeTrackingDefault) {
+    if (!this.state.isStopPage && stopsShowRealtimeTrackingDefault) {
       this.toggleRealtimeMap();
     }
 
@@ -70,6 +75,7 @@ class StopMarkerPopup extends React.PureComponent {
       showRealtimeVehicles,
       hasRealtimeVehicles,
       updateRealtimeVehicles,
+      isStopPage,
     } = this.state;
     const {
       config: { stopsShowRealtimeTracking },
@@ -99,7 +105,8 @@ class StopMarkerPopup extends React.PureComponent {
             lon: stop.lon,
           }}
         >
-          {stopsShowRealtimeTracking &&
+          {!isStopPage &&
+            stopsShowRealtimeTracking &&
             hasRealtimeVehicles && (
               <div
                 className="route cursor-pointer special"
@@ -155,6 +162,7 @@ StopMarkerPopup.contextTypes = {
     stopsShowRealtimeTrackingDefault: PropTypes.bool,
   }),
   executeAction: PropTypes.func.isRequired,
+  router: routerShape.isRequired,
 };
 
 const StopMarkerPopupContainer = Relay.createContainer(
