@@ -44,6 +44,8 @@ class MapLayerStore extends Store {
     UpdateMapLayersMode: 'updateMapLayersMode',
     SetHighlightedStop: 'setHighlightedStop',
     RemoveHighlightedStop: 'removeHighlightedStop',
+    SetHighlightedFluency: 'setHighlightedFluency',
+    RemoveHighlightedFluency: 'removeHighlightedFluency',
   };
 
   static storeName = 'MapLayerStore';
@@ -51,6 +53,7 @@ class MapLayerStore extends Store {
   mapLayers = { ...MapLayerStore.defaultLayers };
   mode = null;
   highlightedStop = null;
+  highlightedFluency = null;
 
   constructor(dispatcher) {
     super(dispatcher);
@@ -132,6 +135,18 @@ class MapLayerStore extends Store {
   };
 
   getHighlightedStop = () => this.highlightedStop;
+
+  setHighlightedFluency = fluency => {
+    this.highlightedFluency = fluency;
+    this.emitChange();
+  };
+
+  removeHighlightedFluency = () => {
+    this.highlightedFluency = null;
+    this.emitChange();
+  };
+
+  getHighlightedFluency = () => this.highlightedFluency;
 }
 
 export const mapLayerShape = PropTypes.shape({

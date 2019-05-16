@@ -13,3 +13,11 @@ export function setHighlightedStop(actionContext, stop) {
 export function removeHighlightedStop(actionContext) {
   actionContext.dispatch('RemoveHighlightedStop');
 }
+
+export function setHighlightedFluency(actionContext, stop) {
+  actionContext.dispatch('SetHighlightedFluency', stop);
+}
+
+export function removeHighlightedFluency(actionContext) {
+  actionContext.dispatch('RemoveHighlightedFluency');
+}

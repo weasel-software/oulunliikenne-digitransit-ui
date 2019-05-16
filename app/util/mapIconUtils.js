@@ -400,11 +400,16 @@ export function drawFluencyPath(
   points,
   color = '#999999',
   lineWidth = 5,
+  feather = false,
 ) {
-  const { lineCap, lineJoin } = tile.ctx;
+  const { lineCap, lineJoin, filter } = tile.ctx;
   tile.ctx.lineCap = 'round';
   tile.ctx.lineJoin = 'round';
   tile.ctx.globalCompositeOperation = 'destination-over';
+
+  if (feather) {
+    tile.ctx.filter = 'blur(2px)';
+  }
 
   tile.ctx.beginPath();
   for (let i = 0, ref = points.length; i < ref; i++) {
@@ -420,6 +425,7 @@ export function drawFluencyPath(
   tile.ctx.stroke();
   tile.ctx.lineCap = lineCap;
   tile.ctx.lineJoin = lineJoin;
+  tile.ctx.filter = filter;
   tile.ctx.globalCompositeOperation = 'source-over';
 }
 

@@ -148,6 +148,7 @@ export default configMerger(walttiConfig, {
     showIcons: false,
     showLines: true,
     lineWidth: 5,
+    lineWidthHighlighted: 10,
     showEmpty: true,
     colors: {
       TRAFFIC_FLOW_NORMAL: '#28A745',

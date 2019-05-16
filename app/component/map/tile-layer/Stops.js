@@ -75,6 +75,13 @@ class Stops {
             for (let i = 0, ref = vt.layers.stops.length - 1; i <= ref; i++) {
               const feature = vt.layers.stops.feature(i);
               if (
+                this.tile.props.isHighlight &&
+                (!this.tile.props.highlightedStop ||
+                  this.tile.props.highlightedStop !== feature.properties.gtfsId)
+              ) {
+                continue; // eslint-disable-line
+              }
+              if (
                 feature.properties.type &&
                 (feature.properties.parentStation === 'null' ||
                   this.config.terminalStopsMaxZoom - 1 <=

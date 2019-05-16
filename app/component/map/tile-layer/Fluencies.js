@@ -49,6 +49,15 @@ export default class Fluencies {
         if (vt.layers.fluency != null) {
           for (let i = 0, ref = vt.layers.fluency.length - 1; i <= ref; i++) {
             const feature = vt.layers.fluency.feature(i);
+
+            if (
+              this.tile.props.isHighlight &&
+              this.tile.props.highlightedFluency !==
+                `${feature.properties.name}_${feature.properties.detName}`
+            ) {
+              continue; // eslint-disable-line
+            }
+
             const geometryList = feature.loadGeometry();
             featureList.push({ geometryList, feature });
           }
@@ -65,7 +74,7 @@ export default class Fluencies {
         moment().diff(moment(feature.properties.measuredTime || 0), 'minutes') >
         15
       ) {
-        feature.properties = { trafficFlow: 'TRAFFIC_FLOW_UNKNOWN' };
+        feature.properties.trafficFlow = 'TRAFFIC_FLOW_UNKNOWN'; // eslint-disable-line
       }
     }
 
@@ -94,9 +103,14 @@ export default class Fluencies {
           }
         }
 
-        const { lineWidth } = this.config.fluencies;
+        const { lineWidth, lineWidthHighlighted } = this.config.fluencies;
 
-        drawFluencyPath(this.tile, geom, color, lineWidth);
+        drawFluencyPath(
+          this.tile,
+          geom,
+          color,
+          this.tile.props.isHighlight ? lineWidthHighlighted : lineWidth,
+        );
 
         this.features.push({
           lineString: geom,

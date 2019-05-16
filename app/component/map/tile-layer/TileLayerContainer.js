@@ -62,10 +62,12 @@ class TileLayerContainer extends GridLayer {
     disableMapTracking: PropTypes.func,
     mapLayers: mapLayerShape.isRequired,
     highlightedStop: PropTypes.string,
+    highlightedFluency: PropTypes.string,
   };
 
   static defaultProps = {
     highlightedStop: null,
+    highlightedFluency: null,
   };
 
   static contextTypes = {
@@ -107,12 +109,15 @@ class TileLayerContainer extends GridLayer {
       }
     }
 
-    if (!isEqual(prevProps.highlightedStop, this.props.highlightedStop)) {
+    if (
+      !isEqual(prevProps.highlightedStop, this.props.highlightedStop) ||
+      !isEqual(prevProps.highlightedFluency, this.props.highlightedFluency)
+    ) {
       if (this.leafletElementHighlighted) {
         this.leafletElementHighlighted.remove();
       }
 
-      if (this.props.highlightedStop) {
+      if (this.props.highlightedStop || this.props.highlightedFluency) {
         this.leafletElementHighlighted = this.createLeafletElement(
           this.props,
           false,
@@ -202,8 +207,17 @@ class TileLayerContainer extends GridLayer {
   createTile = (tileCoords, done) =>
     this.createTileExt(tileCoords, done, this.props);
 
-  createTileAlt = (tileCoords, done) =>
-    this.createTileExt(tileCoords, done, { ...this.props, isHighlight: true });
+  createTileAlt = (tileCoords, done) => {
+    const props = { ...this.props };
+    props.layers = props.layers.filter(layer =>
+      ['Stops', 'Fluencies'].includes(layer.name),
+    );
+
+    return this.createTileExt(tileCoords, done, {
+      ...props,
+      isHighlight: true,
+    });
+  };
 
   createTileExt = (tileCoords, done, props) => {
     const tile = new TileContainer(
@@ -500,5 +514,6 @@ export default connectToStores(
   context => ({
     mapLayers: context.getStore(MapLayerStore).getMapLayers(),
     highlightedStop: context.getStore(MapLayerStore).getHighlightedStop(),
+    highlightedFluency: context.getStore(MapLayerStore).getHighlightedFluency(),
   }),
 );
