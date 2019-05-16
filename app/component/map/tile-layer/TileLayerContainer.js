@@ -218,20 +218,29 @@ class TileLayerContainer extends GridLayer {
         this.props.disableMapTracking(); // disable now that popup opens
       }
 
-      this.setState({
-        selectableTargets: uniqBy(
-          selectableTargets.filter(target =>
-            isFeatureLayerEnabled(
-              target.feature,
-              target.layer,
-              this.props.mapLayers,
-              this.context.config,
-            ),
+      let selectableTargetsFiltered = uniqBy(
+        selectableTargets.filter(target =>
+          isFeatureLayerEnabled(
+            target.feature,
+            target.layer,
+            this.props.mapLayers,
+            this.context.config,
           ),
-          item =>
-            `${get(item, 'feature.properties.id') ||
-              get(item, 'feature.properties.code')}_${get(item, 'layer')}`,
         ),
+        item =>
+          `${get(item, 'feature.properties.id') ||
+            get(item, 'feature.properties.code')}_${get(item, 'layer')}`,
+      );
+
+      // Prevent some of the items from showing up in select-popup
+      if (selectableTargetsFiltered.length > 1) {
+        selectableTargetsFiltered = selectableTargetsFiltered.filter(
+          target => !['fluencies'].includes(target.layer),
+        );
+      }
+
+      this.setState({
+        selectableTargets: selectableTargetsFiltered,
         coords,
         showSpinner: true,
       });
