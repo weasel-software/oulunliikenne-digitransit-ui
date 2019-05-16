@@ -192,9 +192,9 @@ const TrafficAnnouncementContent = (
   const descriptionLocal =
     description[lang] || description[defaultLanguage] || '';
   const startFormated = startTime
-    ? moment(startTime).format('DD.MM.YYYY HH:MM')
+    ? moment(startTime).format('DD.MM.YYYY HH:mm')
     : '';
-  const endFormated = endTime ? moment(endTime).format('DD.MM.YYYY HH:MM') : '';
+  const endFormated = endTime ? moment(endTime).format('DD.MM.YYYY HH:mm') : '';
 
   return (
     <div className="disorder-container">

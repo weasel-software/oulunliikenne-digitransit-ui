@@ -17,8 +17,8 @@ function DisruptionRow({ routes, startTime, endTime, description, cause }) {
             />
           )}
           <span className="time bold">
-            {`${startTime.format('DD.MM.YYYY HH:MM')} - ${endTime.format(
-              'DD.MM.YYYY HH:MM',
+            {`${startTime.format('DD.MM.YYYY HH:mm')} - ${endTime.format(
+              'DD.MM.YYYY HH:mm',
             )}`}
           </span>
         </div>

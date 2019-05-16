@@ -120,8 +120,7 @@ export default class Disorders {
 
         if (result) {
           let draw =
-            result.status === 'ACTIVE' ||
-            moment().isBetween(result.startTime, result.endTime);
+            result.status === 'ACTIVE' || moment().isBefore(result.endTime);
 
           if (feature.properties.type === 'TrafficAnnouncement') {
             const streetMode = getStreetMode(null, this.config);
@@ -168,21 +167,31 @@ export default class Disorders {
     // Default color according to severity, changes if detour or accident
     let color = get(currentConfig, `colors.${result.severity}`);
 
-    if (isDetour) {
+    if (moment().isBefore(result.startTime) && currentConfig.showUpcoming) {
+      color = get(currentConfig, 'colors.UPCOMING') || color;
+      if (isDetour && !currentConfig.showUpcomingDetour) {
+        return;
+      }
+    } else if (isDetour) {
+      if (!currentConfig.showDetours) {
+        return;
+      }
       color = get(currentConfig, 'colors.DETOUR') || color;
     } else if (isAccident) {
       color = isAccident ? get(currentConfig, 'colors.ACCIDENT') : color;
     }
 
+    const geomColor = get(currentConfig, 'colors.GEOM_OVERRIDE', color);
+
     geometryList.forEach(geom => {
-      this.drawGeom(feature, geom, type, currentConfig, color);
+      this.drawGeom(feature, geom, type, currentConfig, color, geomColor);
     });
   };
 
-  drawGeom = (feature, geom, type, currentConfig, color) => {
+  drawGeom = (feature, geom, type, currentConfig, color, geomColor) => {
     if (type === 'LineString') {
       if (currentConfig.showLines) {
-        drawDisorderPath(this.tile, geom, color);
+        drawDisorderPath(this.tile, geom, geomColor);
         this.features.push({
           lineString: geom,
           geom: null,
@@ -214,7 +223,7 @@ export default class Disorders {
       }
     } else if (type === 'Polygon') {
       if (currentConfig.showPolygons) {
-        drawDisorderPolygon(this.tile, geom, color);
+        drawDisorderPolygon(this.tile, geom, geomColor);
         this.features.push({
           polygon: geom,
           geom: null,
