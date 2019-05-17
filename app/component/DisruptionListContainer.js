@@ -43,7 +43,7 @@ function DisruptionListContainer({ root }, { intl }) {
     );
   });
 
-  return <div>{alertElements}</div>;
+  return <div className="disruption-list">{alertElements}</div>;
 }
 
 DisruptionListContainer.contextTypes = {

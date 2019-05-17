@@ -23,7 +23,7 @@ function DisruptionRow({
               routes={routes.filter(route => route)}
             />
           )}
-          {stop && <span className="bold">{stop.name}</span>}
+          {stop && <span className="stop-list left bold">{stop.name}</span>}
           <span className="time bold">
             {`${startTime.format('DD.MM.YYYY HH:mm')} - ${endTime.format(
               'DD.MM.YYYY HH:mm',

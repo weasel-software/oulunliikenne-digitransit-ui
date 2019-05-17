@@ -1,5 +1,19 @@
+.disruption-list {
+  .row {
+    padding: .5em 1.5em 1em;
+
+    &:nth-child(odd) {
+      background: #eee;
+    }
+
+    section {
+      padding-bottom: 0 !important;
+    }
+  }
+}
+
 .disruption {
-  padding: 8px 12px;
+  padding: 8px 12px 8px 0;
   margin: 5px 0;
   border-radius: $border-radius;
 
@@ -18,10 +32,23 @@
 }
 
 .disruption-header  {
-  .route-list div {
-    font-family: $font-family;
-    font-weight: $font-weight-medium;
-    line-height: 1.5;
+  .route-list,
+  .stop-list {
+    padding: 0.15em .25em 0 0;
+
+    &.stop-list {
+      padding-top: 0;
+    }
+
+    div {
+      font-family: $font-family;
+      font-weight: $font-weight-medium;
+      line-height: 1.5;
+    }
+
+    .route-number {
+      min-width: 0;
+    }
   }
   .vehicle-number {
     &:before  {

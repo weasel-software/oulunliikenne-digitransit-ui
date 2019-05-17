@@ -30,10 +30,12 @@ function RouteList(props) {
 
 RouteList.propTypes = {
   className: PropTypes.string,
-  routes: PropTypes.shape({
-    mode: PropTypes.string.isRequired,
-    shortName: PropTypes.string,
-  }).isRequired,
+  routes: PropTypes.arrayOf(
+    PropTypes.shape({
+      mode: PropTypes.string.isRequired,
+      shortName: PropTypes.string,
+    }),
+  ).isRequired,
 };
 
 export default RouteList;
