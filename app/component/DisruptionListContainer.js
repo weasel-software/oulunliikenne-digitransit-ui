@@ -4,7 +4,6 @@ import Relay from 'react-relay/classic';
 import moment from 'moment';
 import { FormattedMessage, intlShape } from 'react-intl';
 import find from 'lodash/find';
-import uniqBy from 'lodash/uniqBy';
 import DisruptionRow from './DisruptionRow';
 
 function DisruptionListContainer({ root }, { intl }) {
@@ -17,19 +16,12 @@ function DisruptionListContainer({ root }, { intl }) {
     );
   }
 
-  const alerts = uniqBy(
-    root.alerts,
-    alert =>
-      `${alert.alertDescriptionText}_${alert.effectiveStartDate}_${
-        alert.effectiveEndDate
-      }`,
-  );
-
-  const alertElements = alerts.map(alert => {
+  const alertElements = root.alerts.map(alert => {
     const { id } = alert;
     const startTime = moment(alert.effectiveStartDate * 1000);
     const endTime = moment(alert.effectiveEndDate * 1000);
     const routes = alert.route ? [alert.route] : undefined;
+    const stop = alert.stop ? alert.stop : undefined;
     const translation = find(alert.alertDescriptionTextTranslations, [
       'language',
       intl.locale,
@@ -46,6 +38,7 @@ function DisruptionListContainer({ root }, { intl }) {
         startTime={startTime}
         endTime={endTime}
         routes={routes}
+        stop={stop}
       />
     );
   });
@@ -85,6 +78,10 @@ export default Relay.createContainer(DisruptionListContainer, {
           route {
             shortName
             mode
+          }
+          stop {
+            id
+            name
           }
         }
       }
