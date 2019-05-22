@@ -61,6 +61,13 @@ class TileLayerContainer extends GridLayer {
     zoomOffset: PropTypes.number.isRequired,
     disableMapTracking: PropTypes.func,
     mapLayers: mapLayerShape.isRequired,
+    highlightedStop: PropTypes.string,
+    highlightedFluency: PropTypes.string,
+  };
+
+  static defaultProps = {
+    highlightedStop: null,
+    highlightedFluency: null,
   };
 
   static contextTypes = {
@@ -87,11 +94,36 @@ class TileLayerContainer extends GridLayer {
     if (this.context.popupContainer != null) {
       this.context.popupContainer.openPopup();
     }
-    if (!isEqual(prevProps.mapLayers, this.props.mapLayers)) {
+
+    if (
+      !isEqual(prevProps.mapLayers, this.props.mapLayers) ||
+      !isEqual(prevProps.hilightedStops, this.props.hilightedStops)
+    ) {
       this.context.map.removeEventParent(this.leafletElement);
       this.leafletElement.remove();
       this.leafletElement = this.createLeafletElement(this.props);
       this.context.map.addLayer(this.leafletElement);
+
+      if (this.leafletElementHighlighted) {
+        this.leafletElementHighlighted.remove();
+      }
+    }
+
+    if (
+      !isEqual(prevProps.highlightedStop, this.props.highlightedStop) ||
+      !isEqual(prevProps.highlightedFluency, this.props.highlightedFluency)
+    ) {
+      if (this.leafletElementHighlighted) {
+        this.leafletElementHighlighted.remove();
+      }
+
+      if (this.props.highlightedStop || this.props.highlightedFluency) {
+        this.leafletElementHighlighted = this.createLeafletElement(
+          this.props,
+          false,
+        );
+        this.context.map.addLayer(this.leafletElementHighlighted);
+      }
     }
   }
 
@@ -154,12 +186,16 @@ class TileLayerContainer extends GridLayer {
     autoPan: false,
   };
 
-  createLeafletElement(props) {
-    const Layer = L.GridLayer.extend({ createTile: this.createTile });
+  createLeafletElement(props, withEventParent = true) {
+    const Layer = L.GridLayer.extend({
+      createTile: withEventParent ? this.createTile : this.createTileAlt,
+    });
     const leafletElement = new Layer(this.getOptions(props));
 
-    this.context.map.addEventParent(leafletElement);
-    leafletElement.on('click contextmenu', this.onClick);
+    if (withEventParent) {
+      this.context.map.addEventParent(leafletElement);
+      leafletElement.on('click contextmenu', this.onClick);
+    }
 
     return leafletElement;
   }
@@ -168,11 +204,26 @@ class TileLayerContainer extends GridLayer {
     size: this.props.tileSize || 256,
   });
 
-  createTile = (tileCoords, done) => {
+  createTile = (tileCoords, done) =>
+    this.createTileExt(tileCoords, done, this.props);
+
+  createTileAlt = (tileCoords, done) => {
+    const props = { ...this.props };
+    props.layers = props.layers.filter(layer =>
+      ['Stops', 'Fluencies'].includes(layer.name),
+    );
+
+    return this.createTileExt(tileCoords, done, {
+      ...props,
+      isHighlight: true,
+    });
+  };
+
+  createTileExt = (tileCoords, done, props) => {
     const tile = new TileContainer(
       tileCoords,
       done,
-      this.props,
+      props,
       this.context.config,
     );
 
@@ -181,18 +232,29 @@ class TileLayerContainer extends GridLayer {
         this.props.disableMapTracking(); // disable now that popup opens
       }
 
-      this.setState({
-        selectableTargets: uniqBy(
-          selectableTargets.filter(target =>
-            isFeatureLayerEnabled(
-              target.feature,
-              target.layer,
-              this.props.mapLayers,
-              this.context.config,
-            ),
+      let selectableTargetsFiltered = uniqBy(
+        selectableTargets.filter(target =>
+          isFeatureLayerEnabled(
+            target.feature,
+            target.layer,
+            this.props.mapLayers,
+            this.context.config,
           ),
-          item => `${get(item, 'feature.properties.id')}_${get(item, 'layer')}`,
         ),
+        item =>
+          `${get(item, 'feature.properties.id') ||
+            get(item, 'feature.properties.code')}_${get(item, 'layer')}`,
+      );
+
+      // Prevent some of the items from showing up in select-popup
+      if (selectableTargetsFiltered.length > 1) {
+        selectableTargetsFiltered = selectableTargetsFiltered.filter(
+          target => !['fluencies'].includes(target.layer),
+        );
+      }
+
+      this.setState({
+        selectableTargets: selectableTargetsFiltered,
         coords,
         showSpinner: true,
       });
@@ -451,5 +513,7 @@ export default connectToStores(
   [MapLayerStore],
   context => ({
     mapLayers: context.getStore(MapLayerStore).getMapLayers(),
+    highlightedStop: context.getStore(MapLayerStore).getHighlightedStop(),
+    highlightedFluency: context.getStore(MapLayerStore).getHighlightedFluency(),
   }),
 );

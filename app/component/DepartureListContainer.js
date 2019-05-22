@@ -1,10 +1,12 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Relay from 'react-relay/classic';
+import get from 'lodash/get';
 import filter from 'lodash/filter';
 import uniqBy from 'lodash/uniqBy';
 import moment from 'moment';
-import { Link } from 'react-router';
+import { Link, routerShape } from 'react-router';
+import getContext from 'recompose/getContext';
 import cx from 'classnames';
 import Departure from './Departure';
 import { isBrowser } from '../util/browser';
@@ -67,6 +69,7 @@ class DepartureListContainer extends Component {
     showRealtimeVehicles: PropTypes.bool,
     hasRealtimeVehicles: PropTypes.func,
     updateRealtimeVehicles: PropTypes.bool,
+    router: routerShape.isRequired,
   };
 
   static defaultProps = {
@@ -82,6 +85,14 @@ class DepartureListContainer extends Component {
       stopsRealtimeTrackingLimit: PropTypes.number,
     }),
   };
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      stopId: get(props, 'router.params.stopId'),
+    };
+  }
 
   componentDidMount() {
     const { stopsRealtimeTrackingLimit } = this.context.config;
@@ -101,8 +112,10 @@ class DepartureListContainer extends Component {
   componentWillReceiveProps(newProps) {
     if (newProps.updateRealtimeVehicles) {
       if (
-        newProps.showRealtimeVehicles !== this.props.showRealtimeVehicles &&
-        newProps.showRealtimeVehicles
+        newProps.showRealtimeVehicles &&
+        (newProps.showRealtimeVehicles !== this.props.showRealtimeVehicles ||
+          (get(newProps, 'router.params.stopId') &&
+            get(newProps, 'router.params.stopId') !== this.state.stopId))
       ) {
         const { stopsRealtimeTrackingLimit } = this.context.config;
         const departures = uniqBy(
@@ -110,6 +123,12 @@ class DepartureListContainer extends Component {
           item => item.pattern.code,
         );
         this.context.executeAction(updateDepartures, departures);
+
+        if (get(newProps, 'router.params.stopId')) {
+          this.setState({
+            stopId: get(newProps, 'router.params.stopId'),
+          });
+        }
       } else if (
         newProps.showRealtimeVehicles !== this.props.showRealtimeVehicles &&
         !newProps.showRealtimeVehicles
@@ -223,50 +242,55 @@ class DepartureListContainer extends Component {
   }
 }
 
-export default Relay.createContainer(DepartureListContainer, {
-  fragments: {
-    stoptimes: () => Relay.QL`
-      fragment on Stoptime @relay(plural:true) {
-          realtimeState
-          realtimeDeparture
-          scheduledDeparture
-          realtimeArrival
-          scheduledArrival
-          realtime
-          serviceDay
-          pickupType
-          stopHeadsign
-          stop {
-            code
-            platformCode
-          }
-          trip {
-            gtfsId
-            tripHeadsign
-            stops {
+export default Relay.createContainer(
+  getContext({
+    router: routerShape.isRequired,
+  })(DepartureListContainer),
+  {
+    fragments: {
+      stoptimes: () => Relay.QL`
+        fragment on Stoptime @relay(plural:true) {
+            realtimeState
+            realtimeDeparture
+            scheduledDeparture
+            realtimeArrival
+            scheduledArrival
+            realtime
+            serviceDay
+            pickupType
+            stopHeadsign
+            stop {
               code
+              platformCode
+            }
+            trip {
               gtfsId
-            }
-            pattern {
-              route {
+              tripHeadsign
+              stops {
+                code
                 gtfsId
-                shortName
-                longName
-                mode
-                color
-                alerts {
-                  id
-                  effectiveStartDate
-                  effectiveEndDate
-                }
-                agency {
-                  name
-                }
               }
-              code
+              pattern {
+                route {
+                  gtfsId
+                  shortName
+                  longName
+                  mode
+                  color
+                  alerts {
+                    id
+                    effectiveStartDate
+                    effectiveEndDate
+                  }
+                  agency {
+                    name
+                  }
+                }
+                code
+              }
             }
           }
-        }
-    `,
+      `,
+    },
   },
-});
+);

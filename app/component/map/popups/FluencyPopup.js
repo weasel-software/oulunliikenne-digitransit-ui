@@ -6,31 +6,49 @@ import Card from '../../Card';
 import CardHeader from '../../CardHeader';
 import ComponentUsageExample from '../../ComponentUsageExample';
 import FluencyContent from '../../FluencyContent';
+import {
+  setHighlightedFluency,
+  removeHighlightedFluency,
+} from '../../../action/MapLayerActions';
 
-function FluencyPopup(
-  { name, averageSpeed, speedLimit, trafficFlow },
-  { intl },
-) {
-  return (
-    <div className="card">
-      <Card className="padding-small">
-        <CardHeader
-          name={intl.formatMessage({
-            id: 'fluency',
-            defaultMessage: 'Fluency',
-          })}
-          description={name}
-          icon="icon-icon_fluency"
-          unlinked
-        />
-        <FluencyContent
-          averageSpeed={averageSpeed}
-          // speedLimit={speedLimit}
-          trafficFlow={trafficFlow}
-        />
-      </Card>
-    </div>
-  );
+class FluencyPopup extends React.Component {
+  componentDidMount() {
+    if (this.props.detName) {
+      this.context.executeAction(
+        setHighlightedFluency,
+        `${this.props.name}_${this.props.detName}`,
+      );
+    }
+  }
+
+  componentWillUnmount() {
+    this.context.executeAction(removeHighlightedFluency);
+  }
+
+  render() {
+    const { name, averageSpeed, trafficFlow, measuredTime } = this.props;
+    const { intl } = this.context;
+    return (
+      <div className="card">
+        <Card className="padding-small">
+          <CardHeader
+            name={intl.formatMessage({
+              id: 'fluency',
+              defaultMessage: 'Fluency',
+            })}
+            description={name}
+            icon="icon-icon_fluency"
+            unlinked
+          />
+          <FluencyContent
+            averageSpeed={averageSpeed}
+            trafficFlow={trafficFlow}
+            measuredTime={measuredTime}
+          />
+        </Card>
+      </div>
+    );
+  }
 }
 
 FluencyPopup.description = (
@@ -44,19 +62,22 @@ FluencyPopup.description = (
 
 FluencyPopup.propTypes = {
   name: PropTypes.string.isRequired,
+  detName: PropTypes.string,
   trafficFlow: PropTypes.string,
   averageSpeed: PropTypes.number,
-  speedLimit: PropTypes.number,
+  measuredTime: PropTypes.string,
 };
 
 FluencyPopup.defaultProps = {
+  detName: undefined,
   trafficFlow: null,
   averageSpeed: null,
-  speedLimit: null,
+  measuredTime: null,
 };
 
 FluencyPopup.contextTypes = {
   intl: intlShape.isRequired,
+  executeAction: PropTypes.func.isRequired,
 };
 
 export default FluencyPopup;

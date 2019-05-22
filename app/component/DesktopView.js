@@ -8,11 +8,15 @@ import Icon from './Icon';
 import ErrorBoundary from './ErrorBoundary';
 
 export default function DesktopView(
-  { title, header, map, content, homeUrl, scrollable },
+  { title, header, map, content, homeUrl, scrollable, altView },
   { intl: { formatMessage } },
 ) {
   return (
-    <div className="desktop">
+    <div
+      className={cx('desktop', {
+        'alt-view': altView,
+      })}
+    >
       <div className="main-content">
         <div className="desktop-title">
           <h2>
@@ -55,10 +59,12 @@ DesktopView.propTypes = {
   content: PropTypes.node,
   homeUrl: PropTypes.string,
   scrollable: PropTypes.bool,
+  altView: PropTypes.bool,
 };
 
 DesktopView.defaultProps = {
   scrollable: false,
+  altView: false,
 };
 
 DesktopView.contextTypes = {

@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
+import moment from 'moment';
 
 import ComponentUsageExample from './ComponentUsageExample';
 import { lang as exampleLang } from './ExampleData';
@@ -27,7 +28,7 @@ const getFlowTranslation = trafficFlow => {
   }
 };
 
-const FluencyContent = ({ trafficFlow, averageSpeed, speedLimit }) => (
+const FluencyContent = ({ trafficFlow, averageSpeed, measuredTime }) => (
   <table className="component-list">
     <tbody>
       {trafficFlow && (
@@ -50,14 +51,14 @@ const FluencyContent = ({ trafficFlow, averageSpeed, speedLimit }) => (
           <td>{`${averageSpeed} km/h`}</td>
         </tr>
       )}
-      {speedLimit && (
+      {measuredTime && (
         <tr>
           <td>
-            <FormattedMessage id="speed-limit" defaultMessage="Speed limit">
+            <FormattedMessage id="last-updated" defaultMessage="Last updated">
               {(...content) => `${content}:`}
             </FormattedMessage>
           </td>
-          <td>{`${speedLimit} km/h`}</td>
+          <td>{moment(measuredTime).format('HH:mm:ss') || ''}</td>
         </tr>
       )}
     </tbody>
@@ -78,13 +79,13 @@ FluencyContent.description = (
 FluencyContent.propTypes = {
   trafficFlow: PropTypes.string,
   averageSpeed: PropTypes.number,
-  speedLimit: PropTypes.number,
+  measuredTime: PropTypes.string,
 };
 
 FluencyContent.defaultProps = {
   trafficFlow: null,
   averageSpeed: null,
-  speedLimit: null,
+  measuredTime: null,
 };
 
 export default FluencyContent;

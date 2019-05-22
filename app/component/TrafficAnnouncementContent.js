@@ -18,7 +18,7 @@ const ExtendedContent = ({ trafficAnnouncement }, { intl }) => {
     oversizeLoad,
     vehicleSizeLimit,
     url,
-    imageUrl,
+    imageUrls,
   } = trafficAnnouncement;
 
   return (
@@ -160,17 +160,18 @@ const ExtendedContent = ({ trafficAnnouncement }, { intl }) => {
           </a>
         </li>
       )}
-      {imageUrl && (
-        <li>
-          <img
-            src={imageUrl}
-            alt=""
-            onClick={() => {
-              window.open(imageUrl, '_blank');
-            }}
-          />
-        </li>
-      )}
+      {imageUrls &&
+        imageUrls.map((imageUrl, key) => (
+          <li key={`image_${key}`}>
+            <img
+              src={imageUrl}
+              alt=""
+              onClick={() => {
+                window.open(imageUrl, '_blank');
+              }}
+            />
+          </li>
+        ))}
     </ul>
   );
 };
@@ -192,9 +193,9 @@ const TrafficAnnouncementContent = (
   const descriptionLocal =
     description[lang] || description[defaultLanguage] || '';
   const startFormated = startTime
-    ? moment(startTime).format('DD.MM.YYYY HH:MM')
+    ? moment(startTime).format('DD.MM.YYYY HH:mm')
     : '';
-  const endFormated = endTime ? moment(endTime).format('DD.MM.YYYY HH:MM') : '';
+  const endFormated = endTime ? moment(endTime).format('DD.MM.YYYY HH:mm') : '';
 
   return (
     <div className="disorder-container">

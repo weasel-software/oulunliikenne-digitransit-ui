@@ -233,27 +233,34 @@ class TileContainer {
         })
         .filter(item => item !== null);
 
-      if (nearest.length === 0 && e.type === 'click') {
-        // Must filter double clicks used for map navigation
+      if (e.type === 'click') {
         if (!this.timer) {
           this.timer = setTimeout(() => {
             this.timer = null;
-            return this.onSelectableTargetClicked([], e.latlng);
+
+            if (nearest.length === 0) {
+              return this.onSelectableTargetClicked([], e.latlng);
+            } else if (nearest.length === 1) {
+              L.DomEvent.stopPropagation(e);
+              // open menu for single stop
+              const latLon = L.latLng(this.project(nearest[0].feature.geom));
+              return this.onSelectableTargetClicked(nearest, latLon);
+            }
+            L.DomEvent.stopPropagation(e);
+            return this.onSelectableTargetClicked(nearest, e.latlng); // open menu for a list of stops
           }, 300);
         } else {
           clearTimeout(this.timer);
           this.timer = null;
         }
         return false;
-      } else if (nearest.length === 0 && e.type === 'contextmenu') {
+      } else if (e.type === 'contextmenu') {
         // no need to check double clicks
-        return this.onSelectableTargetClicked([], e.latlng);
-      } else if (nearest.length === 1) {
-        L.DomEvent.stopPropagation(e);
-        // open menu for single stop
-        const latLon = L.latLng(this.project(nearest[0].feature.geom));
-        return this.onSelectableTargetClicked(nearest, latLon);
+        if (nearest.length === 0) {
+          return this.onSelectableTargetClicked([], e.latlng);
+        }
       }
+
       L.DomEvent.stopPropagation(e);
       return this.onSelectableTargetClicked(nearest, e.latlng); // open menu for a list of stops
     }

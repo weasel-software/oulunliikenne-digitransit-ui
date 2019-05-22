@@ -50,7 +50,7 @@ class RoutePage extends React.Component {
     const route = this.props.route.gtfsId.split(':');
 
     this.context.executeAction(
-      this.context.config.useAltRelatimeClient
+      this.context.config.useAltRealtimeClient
         ? altStartRealTimeClient
         : startRealTimeClient,
       {
@@ -64,7 +64,7 @@ class RoutePage extends React.Component {
 
     if (client) {
       this.context.executeAction(
-        this.context.config.useAltRelatimeClient
+        this.context.config.useAltRealtimeClient
           ? stopRealTimeClient
           : altStopRealTimeClient,
         client,

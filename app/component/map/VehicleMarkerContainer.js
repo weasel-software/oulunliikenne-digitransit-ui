@@ -103,6 +103,7 @@ function shouldShowVehicleAlt(message, departures, tripStart, config) {
 
 function VehicleMarkerContainer(props, { config }) {
   return Object.entries(props.vehicles)
+    .filter(([, message]) => message.lat && message.long)
     .filter(([, message]) => {
       if (props.departures) {
         return shouldShowVehicleAlt(

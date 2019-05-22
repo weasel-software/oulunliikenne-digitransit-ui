@@ -4,32 +4,44 @@ import React from 'react';
 import Relay from 'react-relay/classic';
 import connectToStores from 'fluxible-addons-react/connectToStores';
 import { intlShape } from 'react-intl';
+import { routerShape } from 'react-router';
 
 import PopupMock from './PopupMock';
 import MarkerPopupBottom from '../MarkerPopupBottom';
 import StopCardContainer from '../../StopCardContainer';
 import ComponentUsageExample from '../../ComponentUsageExample';
 import Icon from '../../Icon';
+import {
+  setHighlightedStop,
+  removeHighlightedStop,
+} from '../../../action/MapLayerActions';
 
 import mockData from './StopMarkerPopup.mockdata';
 
 const NUMBER_OF_DEPARTURES = 30;
-const NUMBER_OF_DEPARTURES_LIMIT = 5;
+const NUMBER_OF_DEPARTURES_LIMIT = 15;
 const STOP_TIME_RANGE = 12 * 60 * 60;
 const TERMINAL_TIME_RANGE = 60 * 60;
 
 class StopMarkerPopup extends React.PureComponent {
-  state = {
-    showRealtimeVehicles: false,
-    hasRealtimeVehicles: false,
-    updateRealtimeVehicles: true,
-  };
+  constructor(props, { router }) {
+    super(props);
+    this.state = {
+      showRealtimeVehicles: false,
+      hasRealtimeVehicles: false,
+      updateRealtimeVehicles: true,
+      isStopPage: !!router.params.stopId,
+    };
+  }
 
   componentDidMount() {
     const { stopsShowRealtimeTrackingDefault } = this.context.config;
-    if (stopsShowRealtimeTrackingDefault) {
+    if (!this.state.isStopPage && stopsShowRealtimeTrackingDefault) {
       this.toggleRealtimeMap();
     }
+
+    const stop = this.props.stop.gtfsId || this.props.terminal.gtfsId;
+    this.context.executeAction(setHighlightedStop, stop);
   }
 
   componentWillReceiveProps({ relay, currentTime, realtimeDepartures }) {
@@ -40,6 +52,10 @@ class StopMarkerPopup extends React.PureComponent {
     if (realtimeDepartures === null && this.state.showRealtimeVehicles) {
       this.toggleRealtimeMap(false);
     }
+  }
+
+  componentWillUnmount() {
+    this.context.executeAction(removeHighlightedStop);
   }
 
   toggleRealtimeMap = update => {
@@ -59,6 +75,7 @@ class StopMarkerPopup extends React.PureComponent {
       showRealtimeVehicles,
       hasRealtimeVehicles,
       updateRealtimeVehicles,
+      isStopPage,
     } = this.state;
     const {
       config: { stopsShowRealtimeTracking },
@@ -88,7 +105,8 @@ class StopMarkerPopup extends React.PureComponent {
             lon: stop.lon,
           }}
         >
-          {stopsShowRealtimeTracking &&
+          {!isStopPage &&
+            stopsShowRealtimeTracking &&
             hasRealtimeVehicles && (
               <div
                 className="route cursor-pointer special"
@@ -143,6 +161,8 @@ StopMarkerPopup.contextTypes = {
     stopsShowRealtimeTracking: PropTypes.bool,
     stopsShowRealtimeTrackingDefault: PropTypes.bool,
   }),
+  executeAction: PropTypes.func.isRequired,
+  router: routerShape.isRequired,
 };
 
 const StopMarkerPopupContainer = Relay.createContainer(

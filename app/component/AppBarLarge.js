@@ -20,6 +20,7 @@ import {
   getAvailableStreetModeConfigs,
 } from '../util/modeUtils';
 import { updateMapLayersMode } from '../action/MapLayerActions';
+import { clearDepartures } from '../action/RealtimeDeparturesActions';
 
 const AppBarLarge = (
   { titleClicked, logo },
@@ -77,6 +78,7 @@ const AppBarLarge = (
               selectStreetMode={(streetMode, isExclusive) => {
                 setStreetMode(streetMode, config, router, isExclusive);
                 executeAction(updateMapLayersMode, streetMode);
+                executeAction(clearDepartures);
               }}
               streetModeConfigs={getAvailableStreetModeConfigs(config)}
             />

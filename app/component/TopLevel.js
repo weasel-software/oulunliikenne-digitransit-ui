@@ -117,6 +117,7 @@ class TopLevel extends React.Component {
               content={this.props.content}
               header={this.props.header}
               homeUrl={homeUrl}
+              altView={!!this.props.params.stopId}
             />
           )}
         />

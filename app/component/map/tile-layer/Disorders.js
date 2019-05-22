@@ -6,7 +6,6 @@ import centerOfMass from '@turf/center-of-mass';
 import { polygon as turfPolygon } from '@turf/helpers';
 import moment from 'moment';
 import { getStreetMode } from '../../../util/modeUtils';
-import { StreetMode } from '../../../constants';
 
 import {
   drawDisorderIcon,
@@ -111,8 +110,6 @@ export default class Disorders {
     const lastFetch = timeOfLastFetch[id];
     const currentTime = new Date().getTime();
 
-    const lightTrafficModes = [StreetMode.Walk, StreetMode.Bicycle];
-
     const callback = readyState => {
       if (readyState.done) {
         timeOfLastFetch[id] = new Date().getTime();
@@ -121,15 +118,14 @@ export default class Disorders {
         if (result) {
           let draw =
             result.status === 'ACTIVE' ||
-            moment().isBetween(result.startTime, result.endTime);
+            moment().isBefore(result.endTime) ||
+            !result.endTime;
 
           if (feature.properties.type === 'TrafficAnnouncement') {
             const streetMode = getStreetMode(null, this.config);
-            draw =
-              (lightTrafficModes.includes(streetMode) &&
-                result.modesOfTransport.includes('UNPROTECTED_ROAD_USERS')) ||
-              (!lightTrafficModes.includes(streetMode) &&
-                result.modesOfTransport.includes('PASSENGER_TRANSPORT'));
+            draw = result.modesOfTransport.includes(
+              streetMode === 'WALK' ? 'PEDESTRIAN' : streetMode,
+            );
           }
 
           if (draw) {
@@ -168,21 +164,31 @@ export default class Disorders {
     // Default color according to severity, changes if detour or accident
     let color = get(currentConfig, `colors.${result.severity}`);
 
-    if (isDetour) {
+    if (moment().isBefore(result.startTime) && currentConfig.showUpcoming) {
+      color = get(currentConfig, 'colors.UPCOMING') || color;
+      if (isDetour && !currentConfig.showUpcomingDetour) {
+        return;
+      }
+    } else if (isDetour) {
+      if (!currentConfig.showDetours) {
+        return;
+      }
       color = get(currentConfig, 'colors.DETOUR') || color;
     } else if (isAccident) {
       color = isAccident ? get(currentConfig, 'colors.ACCIDENT') : color;
     }
 
+    const geomColor = get(currentConfig, 'colors.GEOM_OVERRIDE', color);
+
     geometryList.forEach(geom => {
-      this.drawGeom(feature, geom, type, currentConfig, color);
+      this.drawGeom(feature, geom, type, currentConfig, color, geomColor);
     });
   };
 
-  drawGeom = (feature, geom, type, currentConfig, color) => {
+  drawGeom = (feature, geom, type, currentConfig, color, geomColor) => {
     if (type === 'LineString') {
       if (currentConfig.showLines) {
-        drawDisorderPath(this.tile, geom, color);
+        drawDisorderPath(this.tile, geom, geomColor);
         this.features.push({
           lineString: geom,
           geom: null,
@@ -214,7 +220,7 @@ export default class Disorders {
       }
     } else if (type === 'Polygon') {
       if (currentConfig.showPolygons) {
-        drawDisorderPolygon(this.tile, geom, color);
+        drawDisorderPolygon(this.tile, geom, geomColor);
         this.features.push({
           polygon: geom,
           geom: null,

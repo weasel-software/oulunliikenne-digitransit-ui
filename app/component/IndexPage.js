@@ -196,6 +196,7 @@ class IndexPage extends React.Component {
       selectStreetMode={(streetMode, isExclusive) => {
         ModeUtils.setStreetMode(streetMode, config, router, isExclusive);
         executeAction(updateMapLayersMode, streetMode);
+        this.deactivateRealtimeVehicles();
       }}
       streetModeConfigs={ModeUtils.getAvailableStreetModeConfigs(config)}
     />

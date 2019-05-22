@@ -88,7 +88,7 @@
                     },
                     {
                         "name": "agency",
-                        "description": "Get a single agency based on agency ID",
+                        "description": "Get a single agency based on agency ID, i.e. value of field `gtfsId` (ID format is `FeedId:StopId`)",
                         "args": [
                             {
                                 "name": "id",
@@ -840,6 +840,139 @@
                         "deprecationReason": null
                     },
                     {
+                        "name": "cancelledTripTimes",
+                        "description": "Get cancelled TripTimes.",
+                        "args": [
+                            {
+                                "name": "feeds",
+                                "description": "Feed feedIds (e.g. [\"HSL\"]).",
+                                "type": {
+                                    "kind": "LIST",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "SCALAR",
+                                        "name": "String",
+                                        "ofType": null
+                                    }
+                                },
+                                "defaultValue": null
+                            },
+                            {
+                                "name": "routes",
+                                "description": "Route gtfsIds (e.g. [\"HSL:1098\"]).",
+                                "type": {
+                                    "kind": "LIST",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "SCALAR",
+                                        "name": "String",
+                                        "ofType": null
+                                    }
+                                },
+                                "defaultValue": null
+                            },
+                            {
+                                "name": "patterns",
+                                "description": "TripPattern codes (e.g. [\"HSL:1098:1:01\"]).",
+                                "type": {
+                                    "kind": "LIST",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "SCALAR",
+                                        "name": "String",
+                                        "ofType": null
+                                    }
+                                },
+                                "defaultValue": null
+                            },
+                            {
+                                "name": "trips",
+                                "description": "Trip gtfsIds (e.g. [\"HSL:1098_20190405_Ma_2_1455\"]).",
+                                "type": {
+                                    "kind": "LIST",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "SCALAR",
+                                        "name": "String",
+                                        "ofType": null
+                                    }
+                                },
+                                "defaultValue": null
+                            },
+                            {
+                                "name": "minDate",
+                                "description": "Only cancelled trip times scheduled to run on minDate or after are returned. Format: \"2019-12-23\" or \"20191223\".",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "String",
+                                    "ofType": null
+                                },
+                                "defaultValue": null
+                            },
+                            {
+                                "name": "maxDate",
+                                "description": "Only cancelled trip times scheduled to run on maxDate or before are returned. Format: \"2019-12-23\" or \"20191223\".",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "String",
+                                    "ofType": null
+                                },
+                                "defaultValue": null
+                            },
+                            {
+                                "name": "minDepartureTime",
+                                "description": "Only cancelled trip times that have first stop departure time at\nminDepartureTime or after are returned. Format: seconds since midnight of minDate.",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "Int",
+                                    "ofType": null
+                                },
+                                "defaultValue": null
+                            },
+                            {
+                                "name": "maxDepartureTime",
+                                "description": "Only cancelled trip times that have first stop departure time at\nmaxDepartureTime or before are returned. Format: seconds since midnight of maxDate.",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "Int",
+                                    "ofType": null
+                                },
+                                "defaultValue": null
+                            },
+                            {
+                                "name": "minArrivalTime",
+                                "description": "Only cancelled trip times that have last stop arrival time at minArrivalTime\nor after are returned. Format: seconds since midnight of minDate.",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "Int",
+                                    "ofType": null
+                                },
+                                "defaultValue": null
+                            },
+                            {
+                                "name": "maxArrivalTime",
+                                "description": "Only cancelled trip times that have last stop arrival time at maxArrivalTime\nor before are returned. Format: seconds since midnight of maxDate.",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "Int",
+                                    "ofType": null
+                                },
+                                "defaultValue": null
+                            }
+                        ],
+                        "type": {
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "OBJECT",
+                                "name": "Stoptime",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
                         "name": "patterns",
                         "description": "Get all patterns",
                         "args": [],
@@ -975,7 +1108,22 @@
                     {
                         "name": "bikeRentalStations",
                         "description": "Get all bike rental stations",
-                        "args": [],
+                        "args": [
+                            {
+                                "name": "ids",
+                                "description": "",
+                                "type": {
+                                    "kind": "LIST",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "SCALAR",
+                                        "name": "String",
+                                        "ofType": null
+                                    }
+                                },
+                                "defaultValue": null
+                            }
+                        ],
                         "type": {
                             "kind": "LIST",
                             "name": null,
@@ -990,7 +1138,7 @@
                     },
                     {
                         "name": "bikeRentalStation",
-                        "description": "Get a single bike rental station based on its ID, i.e. value of field `stationId`",
+                        "description": "Get a single bike rental station based on its ID, i.e. value of field stationId",
                         "args": [
                             {
                                 "name": "id",
@@ -1581,6 +1729,16 @@
                                 "defaultValue": null
                             },
                             {
+                                "name": "omitCanceled",
+                                "description": "When false, return itineraries using canceled trips. Default value: true.",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "Boolean",
+                                    "ofType": null
+                                },
+                                "defaultValue": "true"
+                            },
+                            {
                                 "name": "ignoreRealtimeUpdates",
                                 "description": "When true, realtime updates are ignored during this search. Default value: false",
                                 "type": {
@@ -1637,6 +1795,20 @@
                                     "kind": "SCALAR",
                                     "name": "Boolean",
                                     "ofType": null
+                                },
+                                "defaultValue": null
+                            },
+                            {
+                                "name": "allowedBikeRentalNetworks",
+                                "description": "Which bike rental networks can be used. By default, all networks are allowed.",
+                                "type": {
+                                    "kind": "LIST",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "SCALAR",
+                                        "name": "String",
+                                        "ofType": null
+                                    }
                                 },
                                 "defaultValue": null
                             }
@@ -2197,7 +2369,7 @@
                     },
                     {
                         "name": "ecoCounterSites",
-                        "description": "Get all eco-counter sites",
+                        "description": "Get all eco-counter sites for all domains",
                         "args": [
                             {
                                 "name": "ids",
@@ -2228,8 +2400,22 @@
                     },
                     {
                         "name": "ecoCounterSite",
-                        "description": "Get a single eco-counter site based on its ID, i.e. value of field 'siteId'",
+                        "description": "Get a single eco-counter site based on its domain and ID, i.e. values of fields 'domain' and 'siteId'",
                         "args": [
+                            {
+                                "name": "domain",
+                                "description": "",
+                                "type": {
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "ENUM",
+                                        "name": "EcoCounterDomain",
+                                        "ofType": null
+                                    }
+                                },
+                                "defaultValue": null
+                            },
                             {
                                 "name": "id",
                                 "description": "",
@@ -2255,8 +2441,22 @@
                     },
                     {
                         "name": "ecoCounterSiteData",
-                        "description": "Get collected data from eco-counter site based on the value of field 'siteId'",
+                        "description": "Get collected data from eco-counter site based on the values of fields 'domain' and 'siteId'",
                         "args": [
+                            {
+                                "name": "domain",
+                                "description": "",
+                                "type": {
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "ENUM",
+                                        "name": "EcoCounterDomain",
+                                        "ofType": null
+                                    }
+                                },
+                                "defaultValue": null
+                            },
                             {
                                 "name": "id",
                                 "description": "",
@@ -2559,7 +2759,7 @@
                     },
                     {
                         "name": "gtfsId",
-                        "description": "Agency id",
+                        "description": "Agency feed and id",
                         "args": [],
                         "type": {
                             "kind": "NON_NULL",
@@ -3801,6 +4001,16 @@
                                     "ofType": null
                                 },
                                 "defaultValue": "false"
+                            },
+                            {
+                                "name": "omitCanceled",
+                                "description": "If false, returns also canceled trips",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "Boolean",
+                                    "ofType": null
+                                },
+                                "defaultValue": "true"
                             }
                         ],
                         "type": {
@@ -4129,6 +4339,16 @@
                                     "ofType": null
                                 },
                                 "defaultValue": "false"
+                            },
+                            {
+                                "name": "omitCanceled",
+                                "description": "If false, returns also canceled trips",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "Boolean",
+                                    "ofType": null
+                                },
+                                "defaultValue": "true"
                             }
                         ],
                         "type": {
@@ -4186,6 +4406,16 @@
                                     "ofType": null
                                 },
                                 "defaultValue": "false"
+                            },
+                            {
+                                "name": "omitCanceled",
+                                "description": "If false, returns also canceled trips",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "Boolean",
+                                    "ofType": null
+                                },
+                                "defaultValue": "true"
                             }
                         ],
                         "type": {
@@ -4243,6 +4473,16 @@
                                     "ofType": null
                                 },
                                 "defaultValue": "false"
+                            },
+                            {
+                                "name": "omitCanceled",
+                                "description": "If false, returns also canceled trips",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "Boolean",
+                                    "ofType": null
+                                },
+                                "defaultValue": "true"
                             }
                         ],
                         "type": {
@@ -4251,6 +4491,22 @@
                             "ofType": {
                                 "kind": "OBJECT",
                                 "name": "Stoptime",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "alerts",
+                        "description": "List of alerts which have an effect on this stop",
+                        "args": [],
+                        "type": {
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "OBJECT",
+                                "name": "Alert",
                                 "ofType": null
                             }
                         },
@@ -4929,51 +5185,6 @@
             },
             {
                 "kind": "OBJECT",
-                "name": "Geometry",
-                "description": "",
-                "fields": [
-                    {
-                        "name": "length",
-                        "description": "The number of points in the string",
-                        "args": [],
-                        "type": {
-                            "kind": "SCALAR",
-                            "name": "Int",
-                            "ofType": null
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
-                        "name": "points",
-                        "description": "List of coordinates of in a Google encoded polyline format (see\nhttps://developers.google.com/maps/documentation/utilities/polylinealgorithm)",
-                        "args": [],
-                        "type": {
-                            "kind": "SCALAR",
-                            "name": "Polyline",
-                            "ofType": null
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    }
-                ],
-                "inputFields": null,
-                "interfaces": [],
-                "enumValues": null,
-                "possibleTypes": null
-            },
-            {
-                "kind": "SCALAR",
-                "name": "Polyline",
-                "description": "List of coordinates in an encoded polyline format (see https://developers.google.com/maps/documentation/utilities/polylinealgorithm). The value appears in JSON as a string.",
-                "fields": null,
-                "inputFields": null,
-                "interfaces": null,
-                "enumValues": null,
-                "possibleTypes": null
-            },
-            {
-                "kind": "OBJECT",
                 "name": "Alert",
                 "description": "Alert of a current or upcoming disruption in public transportation",
                 "fields": [
@@ -4989,6 +5200,18 @@
                                 "name": "ID",
                                 "ofType": null
                             }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "alertHash",
+                        "description": "hashcode from the original GTFS-RT alert",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Int",
+                            "ofType": null
                         },
                         "isDeprecated": false,
                         "deprecationReason": null
@@ -5158,6 +5381,66 @@
                         "deprecationReason": null
                     },
                     {
+                        "name": "alertUrlTranslations",
+                        "description": "Url with more information in all different available languages",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "LIST",
+                                "name": null,
+                                "ofType": {
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "OBJECT",
+                                        "name": "TranslatedString",
+                                        "ofType": null
+                                    }
+                                }
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "alertEffect",
+                        "description": "Alert effect",
+                        "args": [],
+                        "type": {
+                            "kind": "ENUM",
+                            "name": "AlertEffectType",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "alertCause",
+                        "description": "Alert cause",
+                        "args": [],
+                        "type": {
+                            "kind": "ENUM",
+                            "name": "AlertCauseType",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "alertSeverityLevel",
+                        "description": "Alert severity level",
+                        "args": [],
+                        "type": {
+                            "kind": "ENUM",
+                            "name": "AlertSeverityLevelType",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
                         "name": "effectiveStartDate",
                         "description": "Time when this alert comes into effect. Format: Unix timestamp in seconds",
                         "args": [],
@@ -5225,6 +5508,240 @@
                 ],
                 "inputFields": null,
                 "interfaces": [],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "ENUM",
+                "name": "AlertEffectType",
+                "description": "Effect of a alert",
+                "fields": null,
+                "inputFields": null,
+                "interfaces": null,
+                "enumValues": [
+                    {
+                        "name": "NO_SERVICE",
+                        "description": "NO_SERVICE",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "REDUCED_SERVICE",
+                        "description": "REDUCED_SERVICE",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "SIGNIFICANT_DELAYS",
+                        "description": "SIGNIFICANT_DELAYS",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "DETOUR",
+                        "description": "DETOUR",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "ADDITIONAL_SERVICE",
+                        "description": "ADDITIONAL_SERVICE",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "MODIFIED_SERVICE",
+                        "description": "MODIFIED_SERVICE",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "OTHER_EFFECT",
+                        "description": "OTHER_EFFECT",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "UNKNOWN_EFFECT",
+                        "description": "UNKNOWN_EFFECT",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "STOP_MOVED",
+                        "description": "STOP_MOVED",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "NO_EFFECT",
+                        "description": "NO_EFFECT",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "possibleTypes": null
+            },
+            {
+                "kind": "ENUM",
+                "name": "AlertCauseType",
+                "description": "Cause of a alert",
+                "fields": null,
+                "inputFields": null,
+                "interfaces": null,
+                "enumValues": [
+                    {
+                        "name": "UNKNOWN_CAUSE",
+                        "description": "UNKNOWN_CAUSE",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "OTHER_CAUSE",
+                        "description": "OTHER_CAUSE",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "TECHNICAL_PROBLEM",
+                        "description": "TECHNICAL_PROBLEM",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "STRIKE",
+                        "description": "STRIKE",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "DEMONSTRATION",
+                        "description": "DEMONSTRATION",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "ACCIDENT",
+                        "description": "ACCIDENT",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "HOLIDAY",
+                        "description": "HOLIDAY",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "WEATHER",
+                        "description": "WEATHER",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "MAINTENANCE",
+                        "description": "MAINTENANCE",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "CONSTRUCTION",
+                        "description": "CONSTRUCTION",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "POLICE_ACTIVITY",
+                        "description": "POLICE_ACTIVITY",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "MEDICAL_EMERGENCY",
+                        "description": "MEDICAL_EMERGENCY",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "possibleTypes": null
+            },
+            {
+                "kind": "ENUM",
+                "name": "AlertSeverityLevelType",
+                "description": "Severity level of a alert",
+                "fields": null,
+                "inputFields": null,
+                "interfaces": null,
+                "enumValues": [
+                    {
+                        "name": "UNKNOWN_SEVERITY",
+                        "description": "Severity of alert is unknown",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "INFO",
+                        "description": "Info alerts are used for informational messages that should not have a\nsignificant effect on user's journey, for example: A single entrance to a\nmetro station is temporarily closed.",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "WARNING",
+                        "description": "Warning alerts are used when a single stop or route has a disruption that can\naffect user's journey, for example: All trams on a specific route are running\nwith irregular schedules.",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "SEVERE",
+                        "description": "Severe alerts are used when a significant part of public transport services is\naffected, for example: All train services are cancelled due to technical problems.",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "Geometry",
+                "description": "",
+                "fields": [
+                    {
+                        "name": "length",
+                        "description": "The number of points in the string",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Int",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "points",
+                        "description": "List of coordinates of in a Google encoded polyline format (see\nhttps://developers.google.com/maps/documentation/utilities/polylinealgorithm)",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Polyline",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "SCALAR",
+                "name": "Polyline",
+                "description": "List of coordinates in an encoded polyline format (see https://developers.google.com/maps/documentation/utilities/polylinealgorithm). The value appears in JSON as a string.",
+                "fields": null,
+                "inputFields": null,
+                "interfaces": null,
                 "enumValues": null,
                 "possibleTypes": null
             },
@@ -5846,6 +6363,16 @@
                                     "ofType": null
                                 },
                                 "defaultValue": "false"
+                            },
+                            {
+                                "name": "omitCanceled",
+                                "description": "If false, returns also canceled trips",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "Boolean",
+                                    "ofType": null
+                                },
+                                "defaultValue": "true"
                             }
                         ],
                         "type": {
@@ -5950,20 +6477,16 @@
                         "description": "Name of the bike rental station",
                         "args": [],
                         "type": {
-                            "kind": "NON_NULL",
-                            "name": null,
-                            "ofType": {
-                                "kind": "SCALAR",
-                                "name": "String",
-                                "ofType": null
-                            }
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
                         },
                         "isDeprecated": false,
                         "deprecationReason": null
                     },
                     {
                         "name": "bikesAvailable",
-                        "description": "Number of bikes currently available on the rental station. The total capacity\nof this bike rental station is the sum of fields `bikesAvailable` and\n`spacesAvailable`.",
+                        "description": "Number of bikes currently available on the rental station. The total capacity\nof this bike rental station is the sum of fields bikesAvailable and\nspacesAvailable.",
                         "args": [],
                         "type": {
                             "kind": "SCALAR",
@@ -5975,7 +6498,7 @@
                     },
                     {
                         "name": "spacesAvailable",
-                        "description": "Number of free spaces currently available on the rental station. The total\ncapacity of this bike rental station is the sum of fields `bikesAvailable` and\n`spacesAvailable`.  \n Note that this value being 0 does not necessarily indicate that bikes cannot\nbe returned to this station, as it might be possible to leave the bike in the\nvicinity of the rental station, even if the bike racks don't have any spaces\navailable (see field `allowDropoff`).",
+                        "description": "Number of free spaces currently available on the rental station. The total\ncapacity of this bike rental station is the sum of fields bikesAvailable and\nspacesAvailable. Note that this value being 0 does not necessarily indicate\nthat bikes cannot be returned to this station, as it might be possible to\nleave the bike in the vicinity of the rental station, even if the bike racks\ndon't have any spaces available (see field allowDropoff).",
                         "args": [],
                         "type": {
                             "kind": "SCALAR",
@@ -5987,7 +6510,7 @@
                     },
                     {
                         "name": "state",
-                        "description": "A description of the current state of this bike rental station, e.g. \"Station on\"",
+                        "description": "A description of the current state of this bike rental station, e.g. Station on",
                         "args": [],
                         "type": {
                             "kind": "SCALAR",
@@ -5999,7 +6522,7 @@
                     },
                     {
                         "name": "realtime",
-                        "description": "If true, values of `bikesAvailable` and `spacesAvailable` are updated from a\nreal-time source. If false, values of `bikesAvailable` and `spacesAvailable`\nare always the total capacity divided by two.",
+                        "description": "If true values of bikesAvailable and spacesAvailable are updated from a\nreal-time source. If false, values of bikesAvailable and spacesAvailable are\nalways the total capacity divided by two.",
                         "args": [],
                         "type": {
                             "kind": "SCALAR",
@@ -6023,7 +6546,7 @@
                     },
                     {
                         "name": "networks",
-                        "description": "",
+                        "description": "Networks",
                         "args": [],
                         "type": {
                             "kind": "LIST",
@@ -6038,8 +6561,8 @@
                         "deprecationReason": null
                     },
                     {
-                        "name": "lon",
-                        "description": "Longitude of the bike rental station (WGS 84)",
+                        "name": "lat",
+                        "description": "Latitude of the bike rental station (WGS 84)",
                         "args": [],
                         "type": {
                             "kind": "SCALAR",
@@ -6050,8 +6573,8 @@
                         "deprecationReason": null
                     },
                     {
-                        "name": "lat",
-                        "description": "Latitude of the bike rental station (WGS 84)",
+                        "name": "lon",
+                        "description": "Longitude of the bike rental station (WGS 84)",
                         "args": [],
                         "type": {
                             "kind": "SCALAR",
@@ -6634,6 +7157,16 @@
                         "type": {
                             "kind": "SCALAR",
                             "name": "String",
+                            "ofType": null
+                        },
+                        "defaultValue": null
+                    },
+                    {
+                        "name": "useUnpreferredRoutesPenalty",
+                        "description": "Penalty added for using route that is unpreferred, i.e. number of seconds that\nwe are willing to wait for route that is unpreferred.",
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Int",
                             "ofType": null
                         },
                         "defaultValue": null
@@ -7451,6 +7984,18 @@
                         "type": {
                             "kind": "SCALAR",
                             "name": "Boolean",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "realtimeState",
+                        "description": "State of real-time data",
+                        "args": [],
+                        "type": {
+                            "kind": "ENUM",
+                            "name": "RealtimeState",
                             "ofType": null
                         },
                         "isDeprecated": false,
@@ -9423,13 +9968,17 @@
                         "deprecationReason": null
                     },
                     {
-                        "name": "imageUrl",
-                        "description": "Image URL for more info regarding the traffic announcement",
+                        "name": "imageUrls",
+                        "description": "Image URLs for more info regarding the traffic announcement",
                         "args": [],
                         "type": {
-                            "kind": "SCALAR",
-                            "name": "String",
-                            "ofType": null
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "String",
+                                "ofType": null
+                            }
                         },
                         "isDeprecated": false,
                         "deprecationReason": null
@@ -9460,13 +10009,25 @@
                 "interfaces": null,
                 "enumValues": [
                     {
-                        "name": "PASSENGER_TRANSPORT",
+                        "name": "PUBLIC_TRANSPORT",
                         "description": "",
                         "isDeprecated": false,
                         "deprecationReason": null
                     },
                     {
-                        "name": "UNPROTECTED_ROAD_USERS",
+                        "name": "CAR",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "BICYCLE",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "PEDESTRIAN",
                         "description": "",
                         "isDeprecated": false,
                         "deprecationReason": null
@@ -11186,7 +11747,7 @@
                     },
                     {
                         "name": "userType",
-                        "description": "Eco-counter site user type",
+                        "description": "Eco-counter site user type; 1 = pedestrians, 2 = bicycles",
                         "args": [],
                         "type": {
                             "kind": "SCALAR",
@@ -11303,6 +11864,35 @@
                     }
                 ],
                 "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "ENUM",
+                "name": "EcoCounterDomain",
+                "description": "",
+                "fields": null,
+                "inputFields": null,
+                "interfaces": null,
+                "enumValues": [
+                    {
+                        "name": "Oulu_kaupunki",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "Oulu_ELY",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "Oulu_Kapy",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
                 "possibleTypes": null
             },
             {

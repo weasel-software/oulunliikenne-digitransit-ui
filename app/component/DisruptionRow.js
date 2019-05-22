@@ -5,7 +5,14 @@ import moment from 'moment';
 
 import RouteList from './RouteList';
 
-function DisruptionRow({ routes, startTime, endTime, description, cause }) {
+function DisruptionRow({
+  routes,
+  startTime,
+  endTime,
+  description,
+  cause,
+  stop,
+}) {
   return (
     <div className="row">
       <section className="grid-content">
@@ -16,9 +23,10 @@ function DisruptionRow({ routes, startTime, endTime, description, cause }) {
               routes={routes.filter(route => route)}
             />
           )}
+          {stop && <span className="stop-list left bold">{stop.name}</span>}
           <span className="time bold">
-            {`${startTime.format('DD.MM.YYYY HH:MM')} - ${endTime.format(
-              'DD.MM.YYYY HH:MM',
+            {`${startTime.format('DD.MM.YYYY HH:mm')} - ${endTime.format(
+              'DD.MM.YYYY HH:mm',
             )}`}
           </span>
         </div>
@@ -46,12 +54,14 @@ DisruptionRow.propTypes = {
   routes: PropTypes.arrayOf(PropTypes.object),
   description: PropTypes.node,
   cause: PropTypes.node,
+  stop: PropTypes.object,
 };
 
 DisruptionRow.defaultProps = {
   routes: [],
   description: null,
   cause: null,
+  stop: null,
 };
 
 export default DisruptionRow;

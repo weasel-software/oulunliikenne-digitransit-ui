@@ -1,6 +1,7 @@
 import { VectorTile } from '@mapbox/vector-tile';
 import Protobuf from 'pbf';
 import get from 'lodash/get';
+import moment from 'moment';
 import { drawFluencyIcon, drawFluencyPath } from '../../../util/mapIconUtils';
 import { isBrowser } from '../../../util/browser';
 
@@ -48,6 +49,15 @@ export default class Fluencies {
         if (vt.layers.fluency != null) {
           for (let i = 0, ref = vt.layers.fluency.length - 1; i <= ref; i++) {
             const feature = vt.layers.fluency.feature(i);
+
+            if (
+              this.tile.props.isHighlight &&
+              this.tile.props.highlightedFluency !==
+                `${feature.properties.name}_${feature.properties.detName}`
+            ) {
+              continue; // eslint-disable-line
+            }
+
             const geometryList = feature.loadGeometry();
             featureList.push({ geometryList, feature });
           }
@@ -57,6 +67,17 @@ export default class Fluencies {
 
   fetchAndDrawStatus = ({ geometryList, feature }) => {
     timeOfLastUpdate = new Date().getTime();
+
+    if (feature.properties.trafficFlow !== 'TRAFFIC_FLOW_UNKNOWN') {
+      if (
+        // feature.properties.measuredTime &&
+        moment().diff(moment(feature.properties.measuredTime || 0), 'minutes') >
+        15
+      ) {
+        feature.properties.trafficFlow = 'TRAFFIC_FLOW_UNKNOWN'; // eslint-disable-line
+      }
+    }
+
     const { trafficFlow } = feature.properties;
 
     if (
@@ -82,17 +103,20 @@ export default class Fluencies {
           }
         }
 
-        const { lineWidth } = this.config.fluencies;
+        const { lineWidth, lineWidthHighlighted } = this.config.fluencies;
 
-        drawFluencyPath(this.tile, geom, color, lineWidth);
+        drawFluencyPath(
+          this.tile,
+          geom,
+          color,
+          this.tile.props.isHighlight ? lineWidthHighlighted : lineWidth,
+        );
 
-        if (get(feature, 'properties.name')) {
-          this.features.push({
-            lineString: geom,
-            geom: null,
-            properties: feature.properties,
-          });
-        }
+        this.features.push({
+          lineString: geom,
+          geom: null,
+          properties: { name: '', ...feature.properties },
+        });
       }
 
       if (this.config.fluencies && this.config.fluencies.showIcons) {
@@ -106,13 +130,10 @@ export default class Fluencies {
             point.y < feature.extent
           ) {
             drawFluencyIcon(this.tile, point, this.imageSize);
-            if (
-              !this.config.fluencies.showLines &&
-              get(feature, 'properties.name')
-            ) {
+            if (!this.config.fluencies.showLines) {
               this.features.push({
                 geom: point,
-                properties: feature.properties,
+                properties: { name: '', ...feature.properties },
               });
             }
           }

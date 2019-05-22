@@ -129,7 +129,7 @@ export default Relay.createContainer(
           oversizeLoad
           vehicleSizeLimit
           url
-          imageUrl
+          imageUrls
         }
       `,
     },
