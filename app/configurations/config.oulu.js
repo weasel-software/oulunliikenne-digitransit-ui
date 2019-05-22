@@ -418,7 +418,7 @@ export default configMerger(walttiConfig, {
       },
       cameraStations: false,
       weatherStations: false,
-      // disorders: false,
+      disorders: true,
     },
     CAR: {
       parkingStations: false,
