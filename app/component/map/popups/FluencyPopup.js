@@ -13,10 +13,12 @@ import {
 
 class FluencyPopup extends React.Component {
   componentDidMount() {
-    if (this.props.detName) {
+    const { name, trafficDirection, detName } = this.props;
+
+    if (name) {
       this.context.executeAction(
         setHighlightedFluency,
-        `${this.props.name}_${this.props.detName}`,
+        trafficDirection ? `${name}_${trafficDirection}` : `${name}_${detName}`,
       );
     }
   }
@@ -63,6 +65,7 @@ FluencyPopup.description = (
 FluencyPopup.propTypes = {
   name: PropTypes.string.isRequired,
   detName: PropTypes.string,
+  trafficDirection: PropTypes.number,
   trafficFlow: PropTypes.string,
   averageSpeed: PropTypes.number,
   measuredTime: PropTypes.string,
@@ -70,6 +73,7 @@ FluencyPopup.propTypes = {
 
 FluencyPopup.defaultProps = {
   detName: undefined,
+  trafficDirection: undefined,
   trafficFlow: null,
   averageSpeed: null,
   measuredTime: null,
