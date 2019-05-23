@@ -123,9 +123,11 @@ export default class Disorders {
 
           if (feature.properties.type === 'TrafficAnnouncement') {
             const streetMode = getStreetMode(null, this.config);
-            draw = result.modesOfTransport.includes(
-              streetMode === 'WALK' ? 'PEDESTRIAN' : streetMode,
-            );
+            draw =
+              draw &&
+              result.modesOfTransport.includes(
+                streetMode === 'WALK' ? 'PEDESTRIAN' : streetMode,
+              );
           }
 
           if (draw) {
