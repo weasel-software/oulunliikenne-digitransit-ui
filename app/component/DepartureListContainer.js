@@ -4,6 +4,7 @@ import Relay from 'react-relay/classic';
 import get from 'lodash/get';
 import filter from 'lodash/filter';
 import uniqBy from 'lodash/uniqBy';
+import difference from 'lodash/difference';
 import moment from 'moment';
 import { Link, routerShape } from 'react-router';
 import getContext from 'recompose/getContext';
@@ -111,18 +112,31 @@ class DepartureListContainer extends Component {
 
   componentWillReceiveProps(newProps) {
     if (newProps.updateRealtimeVehicles) {
+      const { stopsRealtimeTrackingLimit } = this.context.config;
+      const departures = uniqBy(
+        this.getDepartures(stopsRealtimeTrackingLimit),
+        item => item.pattern.code,
+      );
+      const departuresNew = uniqBy(
+        this.getDepartures(stopsRealtimeTrackingLimit, newProps),
+        item => item.pattern.code,
+      );
+
       if (
         newProps.showRealtimeVehicles &&
         (newProps.showRealtimeVehicles !== this.props.showRealtimeVehicles ||
           (get(newProps, 'router.params.stopId') &&
-            get(newProps, 'router.params.stopId') !== this.state.stopId))
+            get(newProps, 'router.params.stopId') !== this.state.stopId &&
+            difference(
+              departures.map(departure =>
+                get(departure, 'pattern.route.gtfsId'),
+              ),
+              departuresNew.map(departure =>
+                get(departure, 'pattern.route.gtfsId'),
+              ),
+            ).length > 0))
       ) {
-        const { stopsRealtimeTrackingLimit } = this.context.config;
-        const departures = uniqBy(
-          this.getDepartures(stopsRealtimeTrackingLimit),
-          item => item.pattern.code,
-        );
-        this.context.executeAction(updateDepartures, departures);
+        this.context.executeAction(updateDepartures, departuresNew);
 
         if (get(newProps, 'router.params.stopId')) {
           this.setState({
@@ -145,13 +159,13 @@ class DepartureListContainer extends Component {
     return null;
   };
 
-  getDepartures = limit => {
-    const { currentTime } = this.props;
+  getDepartures = (definedLimit, props) => {
+    const { currentTime, isTerminal, stoptimes, limit } = props || this.props;
     // eslint-disable-next-line no-param-reassign
-    limit = limit || this.props.limit;
+    definedLimit = definedLimit || limit;
 
-    const departures = asDepartures(this.props.stoptimes)
-      .filter(departure => !(this.props.isTerminal && departure.isArrival))
+    const departures = asDepartures(stoptimes)
+      .filter(departure => !(isTerminal && departure.isArrival))
       .filter(departure => currentTime < departure.stoptime);
 
     return departures.slice(0, limit);
