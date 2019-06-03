@@ -341,7 +341,8 @@ export default configMerger(walttiConfig, {
       {
         name: 'footer-feedback',
         nameEn: 'Submit feedback',
-        href: 'mailto:palaute.oulunliikenne@ouka.fi?subject=Oulunliikenne BETA palaute',
+        href:
+          'mailto:palaute.oulunliikenne@ouka.fi?subject=Oulunliikenne BETA palaute',
         icon: 'icon-icon_speech-bubble',
       },
       {
@@ -398,6 +399,7 @@ export default configMerger(walttiConfig, {
     ],
   },
 
+  showIntroPopup: false,
   introPopup: {
     fi: {
       header: 'Oulunliikenne.fi uudistuu',

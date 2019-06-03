@@ -296,7 +296,7 @@ class IndexPage extends React.Component {
             />
           </div>
         )}
-        <IntroPopup />
+        {config.showIntroPopup && <IntroPopup />}
       </div>
     ) : (
       <div
