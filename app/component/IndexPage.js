@@ -378,7 +378,7 @@ class IndexPage extends React.Component {
             {this.renderTab()}
           </FrontPagePanelSmall>
         </div>
-        <IntroPopup />
+        {config.showIntroPopup && <IntroPopup />}
       </div>
     );
   }
