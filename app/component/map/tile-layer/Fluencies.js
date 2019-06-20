@@ -59,6 +59,8 @@ export default class Fluencies {
                   feature.properties.trafficDirection
                 }`,
               );
+            } else {
+              console.log('Fluencies', 'Not highlighted');
             }
 
             if (
