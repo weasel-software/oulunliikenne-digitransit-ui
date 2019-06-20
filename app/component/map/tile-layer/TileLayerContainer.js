@@ -129,6 +129,7 @@ class TileLayerContainer extends GridLayer {
           false,
         );
         this.context.map.addLayer(this.leafletElementHighlighted);
+        console.log('TileLayerContainer', 'Adding leafletElementHighlighted');
       }
     }
   }
