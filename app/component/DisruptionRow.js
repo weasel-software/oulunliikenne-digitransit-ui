@@ -1,9 +1,11 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { Link } from 'react-router';
 import { FormattedMessage } from 'react-intl';
 import moment from 'moment';
 
 import RouteList from './RouteList';
+import { PREFIX_STOPS } from '../util/path';
 
 function DisruptionRow({
   routes,
@@ -23,7 +25,11 @@ function DisruptionRow({
               routes={routes.filter(route => route)}
             />
           )}
-          {stop && <span className="stop-list left bold">{stop.name}</span>}
+          {stop && (
+            <Link to={`/${PREFIX_STOPS}/${encodeURIComponent(stop.gtfsId)}`}>
+              <span className="stop-list left bold">{stop.name}</span>
+            </Link>
+          )}
           <span className="time bold">
             {`${startTime.format('DD.MM.YYYY HH:mm')} - ${endTime.format(
               'DD.MM.YYYY HH:mm',
