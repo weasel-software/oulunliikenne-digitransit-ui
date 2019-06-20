@@ -3,6 +3,8 @@ import React from 'react';
 
 import BackButton from './BackButton';
 import DisruptionInfo from './DisruptionInfo';
+import NavbarLinks from './NavbarLinks';
+import ExternalModesAlt from './ExternalModesAlt';
 import MainMenuContainer from './MainMenuContainer';
 import ComponentUsageExample from './ComponentUsageExample';
 import MessageBar from './MessageBar';
@@ -11,6 +13,8 @@ import LogoSmall from './LogoSmall';
 const AppBarSmall = ({ disableBackButton, showLogo, title, homeUrl, logo }) => (
   <React.Fragment>
     <DisruptionInfo />
+    <NavbarLinks />
+    <ExternalModesAlt />
     <nav className="top-bar">
       {!disableBackButton && <BackButton />}
       <section className="title">
