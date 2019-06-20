@@ -50,12 +50,25 @@ export default class Fluencies {
           for (let i = 0, ref = vt.layers.fluency.length - 1; i <= ref; i++) {
             const feature = vt.layers.fluency.feature(i);
 
+            if (this.tile.props.isHighlight) {
+              console.log(
+                'Fluencies',
+                this.tile.props.highlightedFluency,
+                `${feature.properties.name}_${feature.properties.detName}`,
+                `${feature.properties.name}_${
+                  feature.properties.trafficDirection
+                }`,
+              );
+            }
+
             if (
               this.tile.props.isHighlight &&
               this.tile.props.highlightedFluency !==
                 `${feature.properties.name}_${feature.properties.detName}` &&
               this.tile.props.highlightedFluency !==
-                `${feature.properties.name}_${feature.properties.trafficDirection}`
+                `${feature.properties.name}_${
+                  feature.properties.trafficDirection
+                }`
             ) {
               continue; // eslint-disable-line
             }
