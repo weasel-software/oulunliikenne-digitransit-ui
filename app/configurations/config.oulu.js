@@ -54,43 +54,43 @@ export default configMerger(walttiConfig, {
   useAltRealtimeClient: true,
   routePrefix: 'OULU',
 
-  stopsMinZoom: 13,
+  stopsMinZoom: 11,
   stopsShowRealtimeTracking: true,
   stopsShowRealtimeTrackingDefault: true,
   stopsRealtimeTrackingLimit: 30,
 
   tmsStations: {
     showTmsStations: true,
-    tmsStationsMinZoom: 13,
+    tmsStationsMinZoom: 11,
   },
 
   weatherStations: {
     showWeatherStations: true,
-    weatherStationsMinZoom: 13,
+    weatherStationsMinZoom: 11,
   },
 
   parkingStations: {
     showParkingStations: true,
-    parkingStationsMinZoom: 13,
-    smallIconMinZoom: 14,
+    parkingStationsMinZoom: 11,
+    smallIconMinZoom: 13,
     availabilityThreshold: 0.25,
   },
 
   cameraStations: {
     showCameraStations: true,
-    cameraStationsMinZoom: 13,
+    cameraStationsMinZoom: 11,
   },
 
   roadworks: {
     showRoadworks: true,
-    roadworksMinZoom: 13,
+    roadworksMinZoom: 11,
     showIcons: true,
     showLines: false,
   },
 
   disorders: {
     showDisorders: true,
-    disordersMinZoom: 13,
+    disordersMinZoom: 11,
     showIcons: true,
     showLines: false,
     showPolygons: false,
