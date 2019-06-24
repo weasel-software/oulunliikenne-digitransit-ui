@@ -1,6 +1,23 @@
 /* Modal */
 #app .modal {
+  height: auto;
+
   h2  {
     margin-top: 0.25em;
+  }
+
+  .external-modes-list {
+    list-style: none;
+    padding: 0;
+    li {
+      margin: 1em 0;
+    }
+    a {
+      text-decoration: none;
+    }
+    img {
+      width: 2em;
+      margin-right: 1em;
+    }
   }
 }

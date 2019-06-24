@@ -1,14 +1,34 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, intlShape } from 'react-intl';
-import { Link } from 'react-router';
+import { Link, routerShape, locationShape } from 'react-router';
 
 import DisruptionInfoButtonContainer from './DisruptionInfoButtonContainer';
 import Icon from './Icon';
 import LangSelect from './LangSelect';
 import MainMenuLinks from './MainMenuLinks';
 
-function MainMenu(props, { config, intl }) {
+function MainMenu(props, { config, intl, router, location }) {
+  const openNavbarLinks = () => {
+    router.push({
+      ...location,
+      state: {
+        ...location.state,
+        navbarLinksOpen: true,
+      },
+    });
+  };
+
+  const openExternalModes = () => {
+    router.push({
+      ...location,
+      state: {
+        ...location.state,
+        externalModesOpen: true,
+      },
+    });
+  };
+
   /* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
   return (
     <div aria-hidden={!props.visible} className="main-menu no-select">
@@ -36,6 +56,33 @@ function MainMenu(props, { config, intl }) {
             <DisruptionInfoButtonContainer />
           </div>
         )}
+      <div className="offcanvas-section">
+        <button
+          className="noborder button cursor-pointer"
+          onClick={openNavbarLinks}
+          aria-label={intl.formatMessage({
+            id: 'links',
+            defaultMessage: 'Links',
+          })}
+        >
+          <FormattedMessage id="links" defaultMessage="Links" />
+        </button>
+      </div>
+      <div className="offcanvas-section">
+        <button
+          className="noborder button cursor-pointer"
+          onClick={openExternalModes}
+          aria-label={intl.formatMessage({
+            id: 'external-modes',
+            defaultMessage: 'Other transportation',
+          })}
+        >
+          <FormattedMessage
+            id="external-modes"
+            defaultMessage="Other transportation"
+          />
+        </button>
+      </div>
       <MainMenuLinks
         content={(
           [config.appBarLink].concat(config.footer && config.footer.content) ||
@@ -61,6 +108,8 @@ MainMenu.contextTypes = {
   getStore: PropTypes.func.isRequired,
   config: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
+  router: routerShape.isRequired,
+  location: locationShape.isRequired,
 };
 
 export default MainMenu;

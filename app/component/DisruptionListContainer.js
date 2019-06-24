@@ -82,6 +82,7 @@ export default Relay.createContainer(DisruptionListContainer, {
           stop {
             id
             name
+            gtfsId
           }
         }
       }

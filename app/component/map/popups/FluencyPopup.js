@@ -15,13 +15,6 @@ class FluencyPopup extends React.Component {
   componentDidMount() {
     const { name, trafficDirection, detName } = this.props;
 
-    console.log(
-      'FluencyPopup',
-      name,
-      `${name}_${trafficDirection}`,
-      `${name}_${detName}`,
-    );
-
     if (name) {
       this.context.executeAction(
         setHighlightedFluency,

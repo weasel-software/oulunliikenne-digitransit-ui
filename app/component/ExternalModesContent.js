@@ -7,14 +7,20 @@ function ExternalModesContent(
   { currentLanguage, root: { transportMenu } },
   { config: { defaultLanguage } },
 ) {
+  const openLink = evt => {
+    const win = window.open(evt.target.href, evt.target.target);
+    win.focus();
+  };
+
   return (
-    <ul>
+    <ul className="external-modes-list">
       {transportMenu.items.map(item => (
         <li key={item.menuItemId}>
           <a
             href={item.url[currentLanguage] || item.url[defaultLanguage] || ''}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={openLink}
           >
             {item.icon && (
               <img

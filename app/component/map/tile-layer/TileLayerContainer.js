@@ -95,12 +95,6 @@ class TileLayerContainer extends GridLayer {
       this.context.popupContainer.openPopup();
     }
 
-    console.log(
-      'TileLayerContainer',
-      prevProps.highlightedFluency,
-      this.props.highlightedFluency,
-    );
-
     if (
       !isEqual(prevProps.mapLayers, this.props.mapLayers) ||
       !isEqual(prevProps.hilightedStops, this.props.hilightedStops)
