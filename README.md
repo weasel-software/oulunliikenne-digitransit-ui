@@ -1,5 +1,17 @@
-[![Build Status](https://travis-ci.org/HSLdevcom/digitransit-ui.svg?branch=master)](https://travis-ci.org/HSLdevcom/digitransit-ui)
-[![codecov](https://codecov.io/gh/HSLdevcom/digitransit-ui/branch/master/graph/badge.svg)](https://codecov.io/gh/HSLdevcom/digitransit-ui)
+# oulunliikenne-digitransit-ui
+
+This is a fork of [Digitransit-ui](https://github.com/HSLdevcom/digitransit-ui) for the creation of a city specific version for the city of Oulu.
+
+To keep the branches separate from the remote ones this version is using ol-develop and ol-master:  
+**ol-develop** - When code is pushed to this branch the [development](https://next-dev.oulunliikenne.fi/) site will be automatically updated  
+**ol-master** - When code is pushed to this branch the [live](https://www.oulunliikenne.fi/) site will be automatically updated
+
+After `yarn install` use the command `CONFIG=oulu yarn run dev` to start the Oulu version
+
+[development site](https://next-dev.oulunliikenne.fi/)  
+[live site](https://www.oulunliikenne.fi/)
+
+---
 
 Digitransit-ui is a mobile friendly User interface built to work with Digitransit platform
 
