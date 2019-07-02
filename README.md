@@ -6,7 +6,10 @@ To keep the branches separate from the remote ones this version is using ol-deve
 **ol-develop** - When code is pushed to this branch the [development](https://next-dev.oulunliikenne.fi/) site will be automatically updated  
 **ol-master** - When code is pushed to this branch the [live](https://www.oulunliikenne.fi/) site will be automatically updated
 
-After `yarn install` use the command `CONFIG=oulu yarn run dev` to start the Oulu version
+**Running locally:**
+- `yarn build` to generate a manifest.json file 
+- `yarn install`
+- `CONFIG=oulu yarn run dev` to start the Oulu version
 
 [development site](https://next-dev.oulunliikenne.fi/)  
 [live site](https://www.oulunliikenne.fi/)
