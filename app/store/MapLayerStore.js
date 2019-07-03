@@ -41,6 +41,7 @@ class MapLayerStore extends Store {
 
   static handlers = {
     UpdateMapLayers: 'updateMapLayers',
+    ClearMapLayers: 'clearMapLayers',
     UpdateMapLayersMode: 'updateMapLayersMode',
     SetHighlightedStop: 'setHighlightedStop',
     RemoveHighlightedStop: 'removeHighlightedStop',
@@ -90,7 +91,7 @@ class MapLayerStore extends Store {
       // Use the structure from config but the stored values (keeps things up to date when config is changed)
       this.mapLayers = Object.keys(storedMapLayers).reduce((result, key) => {
         if (Object.keys(result).includes(key)) {
-          result[key] = storedMapLayers[key];
+          return { ...result, ...{ [key]: storedMapLayers[key] } };
         }
         return result;
       }, this.mapLayers);
@@ -115,6 +116,21 @@ class MapLayerStore extends Store {
     }
 
     this.emitChange();
+  };
+
+  clearMapLayers = () => {
+    const clearedMapLayers = Object.keys(this.mapLayers).reduce(
+      (result, key) => {
+        if (key === 'stop') {
+          const mapLayer = { [key]: { bus: false } };
+          return { ...result, ...mapLayer };
+        }
+        return { ...result, [key]: false };
+      },
+      {},
+    );
+
+    this.updateMapLayers(clearedMapLayers);
   };
 
   updateMapLayersMode = mode => {
