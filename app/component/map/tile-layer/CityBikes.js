@@ -56,7 +56,7 @@ class CityBikes {
 
           this.features = [];
 
-          if (vt.layers.stations != null) {
+          if (vt.layers.bicyclestations != null) {
             for (
               let i = 0, ref = vt.layers.bicyclestations.length - 1;
               i <= ref;
