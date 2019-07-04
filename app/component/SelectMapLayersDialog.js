@@ -137,6 +137,7 @@ class SelectMapLayersDialog extends React.Component {
       tmsStations,
       roadConditions,
       fluencies,
+      ecoCounters,
     } = this.props.mapLayers;
     const { config } = this.props;
 
@@ -337,6 +338,18 @@ class SelectMapLayersDialog extends React.Component {
                 defaultMessage="Traffic monitoring"
                 onChange={e =>
                   this.updateSetting({ tmsStations: e.target.checked })
+                }
+              />
+            )}
+          {config.ecoCounters &&
+            config.ecoCounters.showEcoCounters &&
+            isMapLayerEnabled('ecoCounters') && (
+              <InputField
+                checked={ecoCounters}
+                labelId="eco-counter"
+                defaultMessage="Eco Counters"
+                onChange={e =>
+                  this.updateSetting({ ecoCounters: e.target.checked })
                 }
               />
             )}
