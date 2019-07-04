@@ -58,11 +58,11 @@ class CityBikes {
 
           if (vt.layers.stations != null) {
             for (
-              let i = 0, ref = vt.layers.stations.length - 1;
+              let i = 0, ref = vt.layers.bicyclestations.length - 1;
               i <= ref;
               i++
             ) {
-              const feature = vt.layers.stations.feature(i);
+              const feature = vt.layers.bicyclestations.feature(i);
               [[feature.geom]] = feature.loadGeometry();
               this.features.push(pick(feature, ['geom', 'properties']));
             }
@@ -77,7 +77,7 @@ class CityBikes {
   fetchAndDrawStatus = ({ geom, properties: { id } }) => {
     const query = Relay.createQuery(
       Relay.QL`
-    query Test($id: String!){
+    query($id: String!) {
       bikeRentalStation(id: $id) {
         bikesAvailable
         spacesAvailable

@@ -36,7 +36,7 @@ export default configMerger(walttiConfig, {
     OTP: OTP_URL,
     MQTT: MQTT_URL,
     STOP_MAP: `${MAP_URL}/map/v1/waltti-stop-map/`,
-    CITYBIKE_MAP: `${MAP_URL}/map/v1/waltti-citybike-map/`,
+    CITYBIKE_MAP: `${AWS_MAP_URL}/map/bicyclestations/`,
     PARKING_STATIONS_MAP: `${AWS_MAP_URL}/map/carparks/`,
     CAMERASTATIONS_MAP: `${AWS_MAP_URL}/map/cameras/`,
     ROADWORKS_MAP: `${AWS_MAP_URL}/map/roadworks/`,
@@ -156,6 +156,18 @@ export default configMerger(walttiConfig, {
       TRAFFIC_MUCH_HEAVIER_THAN_NORMAL: '#DC3545',
       TRAFFIC_FLOW_UNKNOWN: '#999999',
     },
+  },
+
+  cityBike: {
+    // Config for map features. NOTE: availability for routing is controlled by
+    // transportModes.citybike.availableForSelection
+    showCityBikes: true,
+    showStationId: true,
+
+    cityBikeMinZoom: 14,
+    cityBikeSmallIconZoom: 14,
+    // When should bikeshare availability be rendered in orange rather than green
+    fewAvailableCount: 3,
   },
 
   feedIds: ['OULU'],
