@@ -72,7 +72,7 @@
                     },
                     {
                         "name": "ticketTypes",
-                        "description": "**This API is experimental and might change without further notice**  \n Return list of available ticket types.",
+                        "description": "Return list of available ticket types",
                         "args": [],
                         "type": {
                             "kind": "LIST",
@@ -1770,11 +1770,25 @@
                             },
                             {
                                 "name": "ticketTypes",
-                                "description": "A comma-separated list of allowed ticket types.",
+                                "description": "**Deprecated:** Use `allowedTicketTypes` instead.  \nA comma-separated list of allowed ticket types.",
                                 "type": {
                                     "kind": "SCALAR",
                                     "name": "String",
                                     "ofType": null
+                                },
+                                "defaultValue": null
+                            },
+                            {
+                                "name": "allowedTicketTypes",
+                                "description": "List of ticket types that are allowed to be used in itineraries.  \nSee `ticketTypes` query for list of possible ticket types.",
+                                "type": {
+                                    "kind": "LIST",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "SCALAR",
+                                        "name": "String",
+                                        "ofType": null
+                                    }
                                 },
                                 "defaultValue": null
                             },
@@ -4107,7 +4121,7 @@
                     },
                     {
                         "name": "zoneId",
-                        "description": "",
+                        "description": "ID of the zone where this stop is located",
                         "args": [],
                         "type": {
                             "kind": "SCALAR",
@@ -4635,7 +4649,7 @@
             {
                 "kind": "SCALAR",
                 "name": "Float",
-                "description": "The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point). ",
+                "description": "The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](https://en.wikipedia.org/wiki/IEEE_floating_point). ",
                 "fields": null,
                 "inputFields": null,
                 "interfaces": null,
@@ -5783,7 +5797,7 @@
             {
                 "kind": "OBJECT",
                 "name": "TicketType",
-                "description": "**This API is experimental and might change without further notice**  \n Describes ticket type",
+                "description": "Describes ticket type",
                 "fields": [
                     {
                         "name": "id",
@@ -5803,7 +5817,7 @@
                     },
                     {
                         "name": "fareId",
-                        "description": "",
+                        "description": "Ticket type ID in format `FeedId:TicketTypeId`. Ticket type IDs are usually\ncombination of ticket zones where the ticket is valid.",
                         "args": [],
                         "type": {
                             "kind": "NON_NULL",
@@ -5819,12 +5833,44 @@
                     },
                     {
                         "name": "price",
-                        "description": "",
+                        "description": "Price of the ticket in currency that is specified in `currency` field",
                         "args": [],
                         "type": {
                             "kind": "SCALAR",
                             "name": "Float",
                             "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "currency",
+                        "description": "ISO 4217 currency code",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "zones",
+                        "description": "List of zones where this ticket is valid.\n  Corresponds to field `zoneId` in **Stop** type.",
+                        "args": [],
+                        "type": {
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "NON_NULL",
+                                "name": null,
+                                "ofType": {
+                                    "kind": "SCALAR",
+                                    "name": "String",
+                                    "ofType": null
+                                }
+                            }
                         },
                         "isDeprecated": false,
                         "deprecationReason": null
@@ -8339,7 +8385,7 @@
                 "fields": [
                     {
                         "name": "fareId",
-                        "description": "",
+                        "description": "ID of the ticket type. Corresponds to `fareId` in **TicketType**.",
                         "args": [],
                         "type": {
                             "kind": "SCALAR",

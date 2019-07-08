@@ -23,6 +23,7 @@ import TrafficAnnouncementRoute from '../../../route/TrafficAnnouncementRoute';
 import WeatherStationRoute from '../../../route/WeatherStationRoute';
 import TmsStationRoute from '../../../route/TmsStationRoute';
 import RoadConditionRoute from '../../../route/RoadConditionRoute';
+import EcoCounterRoute from '../../../route/EcoCounterRoute';
 import StopMarkerPopup from '../popups/StopMarkerPopup';
 import MarkerSelectPopup from './MarkerSelectPopup';
 import CityBikePopup from '../popups/CityBikePopup';
@@ -45,11 +46,20 @@ import TileContainer from './TileContainer';
 import Loading from '../../Loading';
 import { isFeatureLayerEnabled } from '../../../util/mapLayerUtils';
 import MapLayerStore, { mapLayerShape } from '../../../store/MapLayerStore';
+import EcoCounterPopup from '../popups/EcoCounterPopup';
 
 const initialState = {
   selectableTargets: undefined,
   coords: undefined,
   showSpinner: true,
+};
+
+// TODO: Add other domains when site data is available.
+const getSideIdFromChannelId = (id, domain) => {
+  if (domain === 'Oulu_kaupunki') {
+    return `${id.slice(0, 2)}0${id.slice(3, id.length)}`;
+  }
+  return '100000647';
 };
 
 // TODO eslint doesn't know that TileLayerContainer is a react component,
@@ -470,6 +480,30 @@ class TileLayerContainer extends GridLayer {
         popup = (
           <Popup {...this.PopupOptions} key={id} position={this.state.coords}>
             {contents}
+          </Popup>
+        );
+      } else if (
+        this.state.selectableTargets.length >= 1 &&
+        this.state.selectableTargets[0].layer === 'ecoCounters'
+      ) {
+        const {
+          id: channelSiteId,
+          domain,
+        } = this.state.selectableTargets[0].feature.properties;
+        const siteId = getSideIdFromChannelId(channelSiteId, domain);
+        popup = (
+          <Popup
+            {...this.PopupOptions}
+            key={siteId}
+            position={this.state.coords}
+          >
+            <Relay.RootContainer
+              Component={EcoCounterPopup}
+              forceFetch
+              route={new EcoCounterRoute({ ids: [siteId] })}
+              renderLoading={loadingPopup}
+              renderFetched={data => <EcoCounterPopup {...data} />}
+            />
           </Popup>
         );
       } else if (this.state.selectableTargets.length > 1) {
