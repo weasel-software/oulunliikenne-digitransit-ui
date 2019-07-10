@@ -55,7 +55,7 @@ const initialState = {
 };
 
 // TODO: Add other domains when site data is available.
-const getSideIdFromChannelId = (id, domain) => {
+const getSiteIdFromChannelId = (id, domain) => {
   if (domain === 'Oulu_kaupunki') {
     return `${id.slice(0, 2)}0${id.slice(3, id.length)}`;
   }
@@ -490,7 +490,7 @@ class TileLayerContainer extends GridLayer {
           id: channelSiteId,
           domain,
         } = this.state.selectableTargets[0].feature.properties;
-        const siteId = getSideIdFromChannelId(channelSiteId, domain);
+        const siteId = getSiteIdFromChannelId(channelSiteId, domain);
         popup = (
           <Popup
             {...this.PopupOptions}
@@ -499,8 +499,12 @@ class TileLayerContainer extends GridLayer {
           >
             <Relay.RootContainer
               Component={EcoCounterPopup}
-              forceFetch
-              route={new EcoCounterRoute({ ids: [siteId] })}
+              route={
+                new EcoCounterRoute({
+                  id: siteId,
+                  domain: 'Oulu_kaupunki',
+                })
+              }
               renderLoading={loadingPopup}
               renderFetched={data => <EcoCounterPopup {...data} />}
             />

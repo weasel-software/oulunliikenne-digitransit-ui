@@ -2,14 +2,20 @@ import Relay from 'react-relay/classic';
 
 export default class EcoCounterRoute extends Relay.Route {
   static queries = {
-    sites: () => Relay.QL`
-      query($ids: [String]) {
-        ecoCounterSites(ids: $ids)
+    site: (Component, variables) => Relay.QL`
+      query {
+        viewer {        
+          ${Component.getFragment('site', {
+            id: variables.id,
+            domain: variables.domain,
+          })}
+        }
       }
     `,
   };
   static paramDefinitions = {
-    ids: { required: true },
+    id: { required: true },
+    domain: { required: true },
   };
   static routeName = 'EcoCounterRoute';
 }
