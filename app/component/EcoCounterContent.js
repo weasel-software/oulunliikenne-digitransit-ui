@@ -1,14 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Relay from 'react-relay/classic';
+import moment from 'moment';
+import LineChart from './LineChart';
 
-const EcoCounterContent = ({ data }) => {
-  console.log('data', data);
-  return <p>Data here</p>;
+const EcoCounterContent = ({ data: { ecoCounterSiteData } }) => {
+  const labels = ecoCounterSiteData.map(({ date }) =>
+    moment(date).format('HH'),
+  );
+  const data = ecoCounterSiteData.map(({ counts }) => (!counts ? 0 : counts));
+  return <LineChart data={data} labels={labels} />;
 };
 
 EcoCounterContent.propTypes = {
-  data: PropTypes.object.isRequired,
+  data: PropTypes.array.isRequired,
 };
 
 export default Relay.createContainer(EcoCounterContent, {
