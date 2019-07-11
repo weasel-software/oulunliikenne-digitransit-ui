@@ -47,6 +47,7 @@ import Loading from '../../Loading';
 import { isFeatureLayerEnabled } from '../../../util/mapLayerUtils';
 import MapLayerStore, { mapLayerShape } from '../../../store/MapLayerStore';
 import EcoCounterPopup from '../popups/EcoCounterPopup';
+import { isBrowser } from '../../../util/browser';
 
 const initialState = {
   selectableTargets: undefined,
@@ -491,9 +492,15 @@ class TileLayerContainer extends GridLayer {
           domain,
         } = this.state.selectableTargets[0].feature.properties;
         const siteId = getSiteIdFromChannelId(channelSiteId, domain);
+        const width =
+          isBrowser && window.innerWidth < 420 ? window.innerWidth : 420;
+        const options = {
+          maxWidth: width,
+          minWidth: width,
+        };
         popup = (
           <Popup
-            {...this.PopupOptions}
+            {...{ ...this.PopupOptions, ...options }}
             key={siteId}
             position={this.state.coords}
           >

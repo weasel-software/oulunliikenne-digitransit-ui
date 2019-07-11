@@ -3,9 +3,16 @@ import PropTypes from 'prop-types';
 import Relay from 'react-relay/classic';
 import moment from 'moment';
 import LineChart from './LineChart';
+import Icon from './Icon';
 
-const EcoCounterContent = ({ data: { outData, inData } }) => {
-  const labels = inData.map(({ date }) => moment().diff(moment(date), 'h'));
+const EcoCounterContent = ({
+  data: { outData, inData },
+  changeUserType,
+  userType,
+}) => {
+  const labels = inData.map(
+    ({ date }) => `${moment().diff(moment(date), 'h')}h`,
+  );
   const outDataCounts = outData.map(({ counts }) => (!counts ? 0 : counts));
   const inDataCounts = inData.map(({ counts }) => (!counts ? 0 : counts));
   const datasets = [
@@ -22,11 +29,33 @@ const EcoCounterContent = ({ data: { outData, inData } }) => {
       backgroundColor: 'rgba(0,0,0,0)',
     },
   ];
-  return <LineChart datasets={datasets} labels={labels} />;
+  return (
+    <div className="ecocounter-content">
+      <LineChart datasets={datasets} labels={labels} />
+      <div className="button-row">
+        <button
+          disabled={userType === 1}
+          className="ecocounter-button"
+          onClick={() => changeUserType(1)}
+        >
+          <Icon img="icon-icon_bicycle-withoutBox" viewBox="0 0 25 25" />
+        </button>
+        <button
+          disabled={userType === 2}
+          className="ecocounter-button"
+          onClick={() => changeUserType(2)}
+        >
+          <Icon img="icon-icon_walk" viewBox="0 0 25 25" />
+        </button>
+      </div>
+    </div>
+  );
 };
 
 EcoCounterContent.propTypes = {
   data: PropTypes.object.isRequired,
+  changeUserType: PropTypes.func.isRequired,
+  userType: PropTypes.number.isRequired,
 };
 
 export default Relay.createContainer(EcoCounterContent, {

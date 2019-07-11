@@ -236,7 +236,7 @@ div.leaflet-marker-icon.vehicle-icon {
   }
   .leaflet-popup-content {
     margin: 0;
-    width: 18rem !important;
+    width: 18rem;
     &.leaflet-popup-scrolled {
       overflow: inherit;
     }
@@ -650,11 +650,11 @@ div.leaflet-marker-icon.vehicle-realtime-icon {
     text-anchor: middle;
 
     &.medium {
-      font-size: .85rem;
+      font-size: 0.85rem;
     }
 
     &.long {
-      font-size: .65rem;
+      font-size: 0.65rem;
     }
   }
 }

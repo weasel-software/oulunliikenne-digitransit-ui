@@ -65,9 +65,11 @@ class EcoCounterPopup extends React.Component {
     return filtered;
   };
 
-  changeUserType = () => {
-    const userType = this.state.userType === WALKING ? CYCLING : WALKING;
-    this.setState({ userType });
+  changeUserType = type => {
+    if (this.state.userType !== type) {
+      const userType = type === WALKING ? WALKING : CYCLING;
+      this.setState({ userType });
+    }
   };
 
   render() {
@@ -100,6 +102,18 @@ class EcoCounterPopup extends React.Component {
               })
             }
             environment={Relay.Store}
+            render={({ done, props }) => {
+              if (done) {
+                return (
+                  <EcoCounterContent
+                    {...props}
+                    changeUserType={this.changeUserType}
+                    userType={this.state.userType}
+                  />
+                );
+              }
+              return undefined;
+            }}
           />
         </Card>
       </div>

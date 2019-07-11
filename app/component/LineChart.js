@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Chart from 'chart.js';
+import isEqual from 'lodash/isEqual';
 
 class LineChart extends React.Component {
   static propTypes = {
@@ -28,8 +29,24 @@ class LineChart extends React.Component {
     });
   }
 
+  componentDidUpdate(prevProps) {
+    const prevData = Object.keys(prevProps.datasets)
+      .map(key => prevProps.datasets[key].data)
+      .flat()
+      .sort();
+    const currData = Object.keys(this.props.datasets)
+      .map(key => this.props.datasets[key].data)
+      .flat()
+      .sort();
+    if (this.props.datasets && this.chart && !isEqual(prevData, currData)) {
+      this.chart.data.datasets = this.props.datasets;
+      this.chart.data.labels = this.props.labels;
+      this.chart.update();
+    }
+  }
+
   render() {
-    return <canvas ref={this.chartRef} height={400} width={400} />;
+    return <canvas ref={this.chartRef} />;
   }
 }
 

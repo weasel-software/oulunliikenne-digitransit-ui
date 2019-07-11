@@ -1,0 +1,22 @@
+.ecocounter-content {
+  display: flex;
+  flex-direction: column;
+
+  & .button-row {
+    display: flex;
+
+    & > .ecocounter-button {
+      padding: 6px;
+      border-radius: 3px;
+      font-size: 1rem;
+
+      &:nth-child(1) {
+        margin-right: 1rem;
+      }
+
+      &:disabled {
+        background-color: $gray;
+      }
+    }
+  }
+}
