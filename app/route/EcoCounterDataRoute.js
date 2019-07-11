@@ -12,7 +12,8 @@ class EcoCounterDataRoute extends Relay.Route {
   };
   static paramDefinitions = {
     domain: { required: true },
-    id: { required: true },
+    outId: { required: true },
+    inId: { required: true },
     step: { required: false },
     begin: { required: false },
     end: { require: false },

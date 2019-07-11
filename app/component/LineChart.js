@@ -5,7 +5,7 @@ import Chart from 'chart.js';
 class LineChart extends React.Component {
   static propTypes = {
     labels: PropTypes.array.isRequired,
-    data: PropTypes.array.isRequired,
+    datasets: PropTypes.array.isRequired,
   };
 
   constructor(props) {
@@ -14,22 +14,22 @@ class LineChart extends React.Component {
   }
 
   componentDidMount() {
-    console.log('this.chartRef', this.chartRef);
     this.chart = new Chart(this.chartRef.current, {
       type: 'line',
       data: {
         labels: this.props.labels,
-        datasets: [
-          {
-            data: this.props.data,
-          },
-        ],
+        datasets: this.props.datasets,
+      },
+      options: {
+        legend: {
+          reverse: true,
+        },
       },
     });
   }
 
   render() {
-    return <canvas ref={this.chartRef} height={400} />;
+    return <canvas ref={this.chartRef} height={400} width={400} />;
   }
 }
 

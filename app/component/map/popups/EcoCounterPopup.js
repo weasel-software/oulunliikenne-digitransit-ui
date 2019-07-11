@@ -10,8 +10,6 @@ import ComponentUsageExample from '../../ComponentUsageExample';
 import EcoCounterContent from '../../EcoCounterContent';
 import EcoCounterDataRoute from '../../../route/EcoCounterDataRoute';
 
-const TO_CENTRE = 'to-centre';
-const FROM_CENTRE = 'from-centre';
 const WALKING = 1;
 const CYCLING = 2;
 const STEPS = {
@@ -41,7 +39,6 @@ class EcoCounterPopup extends React.Component {
 
   state = {
     userType: WALKING,
-    direction: TO_CENTRE,
     step: STEPS.HOUR,
   };
 
@@ -60,18 +57,12 @@ class EcoCounterPopup extends React.Component {
     return endMoment.utc().format('YYYY-MM-DDTHH:mm:ss');
   };
 
-  getChannelByUserTypeAndDirection = () => {
+  getChannelsByUserType = () => {
     const channels = this.props.site.ecoCounterSite.channels || [];
     const filtered = channels.filter(
       channel => channel.userType === this.state.userType,
     );
-    return this.state.direction === FROM_CENTRE ? filtered[0] : filtered[1];
-  };
-
-  changeDirection = () => {
-    const direction =
-      this.state.direction === TO_CENTRE ? FROM_CENTRE : TO_CENTRE;
-    this.setState({ direction });
+    return filtered;
   };
 
   changeUserType = () => {
@@ -83,6 +74,7 @@ class EcoCounterPopup extends React.Component {
     const {
       site: { ecoCounterSite },
     } = this.props;
+    const channels = this.getChannelsByUserType();
     return (
       <div className="card">
         <Card className="padding-small">
@@ -99,7 +91,8 @@ class EcoCounterPopup extends React.Component {
             Container={EcoCounterContent}
             queryConfig={
               new EcoCounterDataRoute({
-                id: ecoCounterSite.channels[0].siteId,
+                outId: channels[0].siteId,
+                inId: channels[1].siteId,
                 domain: ecoCounterSite.domain,
                 begin: this.getBeginTime(),
                 step: this.state.step,
