@@ -1,5 +1,6 @@
 import Store from 'fluxible/addons/BaseStore';
 import reactCookie from 'react-cookie';
+import moment from 'moment-timezone/moment-timezone';
 import { isLangMockEn } from '../util/browser';
 
 /* Language is stored in cookie, server should set the language based on browser
@@ -36,6 +37,8 @@ class PreferencesStore extends Store {
     if (this.availableLanguages.indexOf(language) === -1) {
       return;
     }
+
+    moment.locale(language);
 
     reactCookie.save('lang', language, {
       // Good up to one year

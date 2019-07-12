@@ -493,7 +493,7 @@ class TileLayerContainer extends GridLayer {
         } = this.state.selectableTargets[0].feature.properties;
         const siteId = getSiteIdFromChannelId(channelSiteId, domain);
         const width =
-          isBrowser && window.innerWidth < 420 ? window.innerWidth : 420;
+          isBrowser && window.innerWidth < 420 ? window.innerWidth - 5 : 420;
         const options = {
           maxWidth: width,
           minWidth: width,

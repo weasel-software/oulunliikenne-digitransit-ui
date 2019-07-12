@@ -4,18 +4,25 @@
 
   & .button-row {
     display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
 
     & > .ecocounter-button {
-      padding: 6px;
+      padding: 0.3rem 0.5rem;
       border-radius: 3px;
       font-size: 1rem;
+      margin-right: 0.8rem;
 
-      &:nth-child(1) {
-        margin-right: 1rem;
+      &:last-child {
+        margin-right: 0;
       }
 
       &:disabled {
         background-color: $gray;
+      }
+
+      &.ecocounter-button--small {
+        font-size: 0.8rem;
       }
     }
   }

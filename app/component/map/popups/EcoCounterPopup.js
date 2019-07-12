@@ -9,9 +9,8 @@ import CardHeader from '../../CardHeader';
 import ComponentUsageExample from '../../ComponentUsageExample';
 import EcoCounterContent from '../../EcoCounterContent';
 import EcoCounterDataRoute from '../../../route/EcoCounterDataRoute';
+import LoadingPage from '../../LoadingPage';
 
-const WALKING = 1;
-const CYCLING = 2;
 const STEPS = {
   HOUR: 'hour',
   DAY: 'day',
@@ -38,7 +37,7 @@ class EcoCounterPopup extends React.Component {
   );
 
   state = {
-    userType: WALKING,
+    userType: 1,
     step: STEPS.HOUR,
   };
 
@@ -65,11 +64,12 @@ class EcoCounterPopup extends React.Component {
     return filtered;
   };
 
-  changeUserType = type => {
-    if (this.state.userType !== type) {
-      const userType = type === WALKING ? WALKING : CYCLING;
-      this.setState({ userType });
-    }
+  changeUserType = userType => {
+    this.setState({ userType });
+  };
+
+  changeStep = step => {
+    this.setState({ step });
   };
 
   render() {
@@ -102,15 +102,20 @@ class EcoCounterPopup extends React.Component {
               })
             }
             environment={Relay.Store}
-            render={({ done, props }) => {
+            render={({ done, loading, props }) => {
               if (done) {
                 return (
                   <EcoCounterContent
                     {...props}
                     changeUserType={this.changeUserType}
+                    changeStep={this.changeStep}
                     userType={this.state.userType}
+                    step={this.state.step}
+                    formatMessage={this.context.intl.formatMessage}
                   />
                 );
+              } else if (loading) {
+                return <LoadingPage />;
               }
               return undefined;
             }}

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Chart from 'chart.js';
 import isEqual from 'lodash/isEqual';
+import omit from 'lodash-es/omit';
 
 class LineChart extends React.Component {
   static propTypes = {
@@ -21,24 +22,16 @@ class LineChart extends React.Component {
         labels: this.props.labels,
         datasets: this.props.datasets,
       },
-      options: {
-        legend: {
-          reverse: true,
-        },
-      },
     });
   }
 
   componentDidUpdate(prevProps) {
-    const prevData = Object.keys(prevProps.datasets)
-      .map(key => prevProps.datasets[key].data)
-      .flat()
-      .sort();
-    const currData = Object.keys(this.props.datasets)
-      .map(key => this.props.datasets[key].data)
-      .flat()
-      .sort();
-    if (this.props.datasets && this.chart && !isEqual(prevData, currData)) {
+    const omitCircularReferences = datasets =>
+      datasets.map(ds => omit(ds, '_meta'));
+    const currData = omitCircularReferences(this.props.datasets);
+    const prevData = omitCircularReferences(prevProps.datasets);
+
+    if (this.props.datasets && this.chart && !isEqual(currData, prevData)) {
       this.chart.data.datasets = this.props.datasets;
       this.chart.data.labels = this.props.labels;
       this.chart.update();
