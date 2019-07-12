@@ -17,9 +17,17 @@ import SelectRoadConditionRow from './SelectRoadConditionRow';
 import SelectFluencyRow from './SelectFluencyRow';
 import ComponentUsageExample from '../../ComponentUsageExample';
 import { options } from '../../ExampleData';
+import SelectEcoCounterRow from './SelectEcoCounterRow';
 
 function MarkerSelectPopup(props) {
-  const rows = props.options.map(option => {
+  const filteredRows = props.options.reduce((acc, cur) => {
+    if (cur.layer === 'ecoCounters') {
+      const duplicate = acc.find(o => o.layer === cur.layer);
+      return !duplicate ? acc.concat([cur]) : acc;
+    }
+    return acc.concat([cur]);
+  }, []);
+  const rows = filteredRows.map(option => {
     if (option.layer === 'stop' && option.feature.properties.stops) {
       return (
         <SelectTerminalRow
@@ -119,6 +127,14 @@ function MarkerSelectPopup(props) {
     } else if (option.layer === 'fluencies') {
       return (
         <SelectFluencyRow
+          {...option.feature.properties}
+          key={option.feature.properties.id}
+          selectRow={() => props.selectRow(option)}
+        />
+      );
+    } else if (option.layer === 'ecoCounters') {
+      return (
+        <SelectEcoCounterRow
           {...option.feature.properties}
           key={option.feature.properties.id}
           selectRow={() => props.selectRow(option)}

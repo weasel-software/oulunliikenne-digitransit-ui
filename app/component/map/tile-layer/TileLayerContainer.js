@@ -286,9 +286,42 @@ class TileLayerContainer extends GridLayer {
         <Loading />
       </div>
     );
-
     if (typeof this.state.selectableTargets !== 'undefined') {
-      if (this.state.selectableTargets.length === 1) {
+      if (
+        this.state.selectableTargets.length >= 1 &&
+        this.state.selectableTargets[0].layer === 'ecoCounters'
+      ) {
+        const {
+          id: channelSiteId,
+          domain,
+        } = this.state.selectableTargets[0].feature.properties;
+        const siteId = getSiteIdFromChannelId(channelSiteId, domain);
+        const width =
+          isBrowser && window.innerWidth < 420 ? window.innerWidth - 5 : 420;
+        const options = {
+          maxWidth: width,
+          minWidth: width,
+        };
+        popup = (
+          <Popup
+            {...{ ...this.PopupOptions, ...options }}
+            key={siteId}
+            position={this.state.coords}
+          >
+            <Relay.RootContainer
+              Component={EcoCounterPopup}
+              route={
+                new EcoCounterRoute({
+                  id: siteId,
+                  domain: 'Oulu_kaupunki',
+                })
+              }
+              renderLoading={loadingPopup}
+              renderFetched={data => <EcoCounterPopup {...data} />}
+            />
+          </Popup>
+        );
+      } else if (this.state.selectableTargets.length === 1) {
         let id;
         if (this.state.selectableTargets[0].layer === 'stop') {
           id = this.state.selectableTargets[0].feature.properties.gtfsId;
@@ -481,40 +514,6 @@ class TileLayerContainer extends GridLayer {
         popup = (
           <Popup {...this.PopupOptions} key={id} position={this.state.coords}>
             {contents}
-          </Popup>
-        );
-      } else if (
-        this.state.selectableTargets.length >= 1 &&
-        this.state.selectableTargets[0].layer === 'ecoCounters'
-      ) {
-        const {
-          id: channelSiteId,
-          domain,
-        } = this.state.selectableTargets[0].feature.properties;
-        const siteId = getSiteIdFromChannelId(channelSiteId, domain);
-        const width =
-          isBrowser && window.innerWidth < 420 ? window.innerWidth - 5 : 420;
-        const options = {
-          maxWidth: width,
-          minWidth: width,
-        };
-        popup = (
-          <Popup
-            {...{ ...this.PopupOptions, ...options }}
-            key={siteId}
-            position={this.state.coords}
-          >
-            <Relay.RootContainer
-              Component={EcoCounterPopup}
-              route={
-                new EcoCounterRoute({
-                  id: siteId,
-                  domain: 'Oulu_kaupunki',
-                })
-              }
-              renderLoading={loadingPopup}
-              renderFetched={data => <EcoCounterPopup {...data} />}
-            />
           </Popup>
         );
       } else if (this.state.selectableTargets.length > 1) {
