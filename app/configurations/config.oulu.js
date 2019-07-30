@@ -164,7 +164,13 @@ export default configMerger(walttiConfig, {
     showCityBikes: true,
     showStationId: true,
 
-    cityBikeMinZoom: 14,
+    useUrl: {
+      fi: 'https://kaupunkipyorat.ouka.fi',
+      sv: 'https://kaupunkipyorat.ouka.fi/home',
+      en: 'https://kaupunkipyorat.ouka.fi/home',
+    },
+
+    cityBikeMinZoom: 11,
     cityBikeSmallIconZoom: 14,
     // When should bikeshare availability be rendered in orange rather than green
     fewAvailableCount: 3,
@@ -246,7 +252,7 @@ export default configMerger(walttiConfig, {
     },
 
     citybike: {
-      availableForSelection: false,
+      availableForSelection: true,
       defaultValue: false,
     },
   },
@@ -449,12 +455,14 @@ export default configMerger(walttiConfig, {
       weatherStations: false,
       cameraStations: false,
       // tmsStations: false,
+      // citybike: true, NOTE: taken from transportModes.citybike.availableForSelection
     },
     WALK: {
       disorders: true,
       weatherStations: false,
       cameraStations: false,
       // tmsStations: false,
+      // citybike: true, NOTE: taken from transportModes.citybike.availableForSelection
     },
   },
 });
