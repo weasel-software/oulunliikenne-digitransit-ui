@@ -1,7 +1,7 @@
 import connectToStores from 'fluxible-addons-react/connectToStores';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { intlShape } from 'react-intl';
+import { FormattedMessage, intlShape } from 'react-intl';
 import { locationShape } from 'react-router';
 
 import get from 'lodash/get';
@@ -9,6 +9,7 @@ import Toggle from 'material-ui/Toggle';
 import BubbleDialog from './BubbleDialog';
 import Checkbox from './Checkbox';
 import {
+  clearMapLayers,
   updateMapLayers,
   updateMapLayersMode,
 } from '../action/MapLayerActions';
@@ -372,6 +373,15 @@ class SelectMapLayersDialog extends React.Component {
               )}
             </div>
           )}
+        <button
+          className="standalone-btn dialog-clear-button"
+          onClick={this.props.clearMapLayers}
+        >
+          <FormattedMessage
+            id="clear-selected-options"
+            defaultMessage="Clear options"
+          />
+        </button>
       </React.Fragment>
     );
   };
@@ -459,6 +469,7 @@ SelectMapLayersDialog.propTypes = {
   isOpen: PropTypes.bool,
   mapLayers: mapLayerShape.isRequired,
   updateMapLayers: PropTypes.func.isRequired,
+  clearMapLayers: PropTypes.func.isRequired,
   breakpoint: PropTypes.string,
   executeAction: PropTypes.func,
 };
@@ -507,6 +518,7 @@ SelectMapLayersDialog.description = (
           ticketSales: { ticketMachine: true },
         }}
         updateMapLayers={() => {}}
+        clearMapLayers={() => {}}
       />
     </div>
   </ComponentUsageExample>
@@ -525,6 +537,7 @@ const connectedComponent = connectToStores(
     mapLayers: context.getStore(MapLayerStore).getMapLayers(),
     updateMapLayers: mapLayers =>
       context.executeAction(updateMapLayers, { ...mapLayers }),
+    clearMapLayers: () => context.executeAction(clearMapLayers),
     executeAction: context.executeAction,
   }),
   {

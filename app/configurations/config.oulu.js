@@ -36,7 +36,7 @@ export default configMerger(walttiConfig, {
     OTP: OTP_URL,
     MQTT: MQTT_URL,
     STOP_MAP: `${MAP_URL}/map/v1/waltti-stop-map/`,
-    CITYBIKE_MAP: `${MAP_URL}/map/v1/waltti-citybike-map/`,
+    CITYBIKE_MAP: `${AWS_MAP_URL}/map/bicyclestations/`,
     PARKING_STATIONS_MAP: `${AWS_MAP_URL}/map/carparks/`,
     CAMERASTATIONS_MAP: `${AWS_MAP_URL}/map/cameras/`,
     ROADWORKS_MAP: `${AWS_MAP_URL}/map/roadworks/`,
@@ -158,6 +158,24 @@ export default configMerger(walttiConfig, {
     },
   },
 
+  cityBike: {
+    // Config for map features. NOTE: availability for routing is controlled by
+    // transportModes.citybike.availableForSelection
+    showCityBikes: true,
+    showStationId: true,
+
+    useUrl: {
+      fi: 'https://kaupunkipyorat.ouka.fi',
+      sv: 'https://kaupunkipyorat.ouka.fi/home',
+      en: 'https://kaupunkipyorat.ouka.fi/home',
+    },
+
+    cityBikeMinZoom: 11,
+    cityBikeSmallIconZoom: 14,
+    // When should bikeshare availability be rendered in orange rather than green
+    fewAvailableCount: 3,
+  },
+
   feedIds: ['OULU'],
 
   sprites: 'svg-sprite.oulu.svg',
@@ -234,7 +252,7 @@ export default configMerger(walttiConfig, {
     },
 
     citybike: {
-      availableForSelection: false,
+      availableForSelection: true,
       defaultValue: false,
     },
   },
@@ -437,12 +455,14 @@ export default configMerger(walttiConfig, {
       weatherStations: false,
       cameraStations: false,
       // tmsStations: false,
+      // citybike: true, NOTE: taken from transportModes.citybike.availableForSelection
     },
     WALK: {
       disorders: true,
       weatherStations: false,
       cameraStations: false,
       // tmsStations: false,
+      // citybike: true, NOTE: taken from transportModes.citybike.availableForSelection
     },
   },
 });

@@ -24,4 +24,14 @@
   .option-checkbox-container + .option-checkbox-container {
     margin-top: 0.25em;
   }
+
+  & .dialog-clear-button {
+    margin-bottom: 0.25em;
+  }
+
+  &.bubble-dialog-content--fullscreen {
+    & .dialog-clear-button {
+      margin: 1em 0 0 0;
+    }
+  }
 }
