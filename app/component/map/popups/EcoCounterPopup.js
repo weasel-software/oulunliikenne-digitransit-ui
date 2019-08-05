@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import Relay from 'react-relay/classic';
+import _uniq from 'lodash/uniq';
 import moment from 'moment';
-import connectToStores from 'fluxible-addons-react/connectToStores';
 import { intlShape } from 'react-intl';
 import Card from '../../Card';
 import CardHeader from '../../CardHeader';
@@ -22,7 +22,7 @@ const STEPS = {
 class EcoCounterPopup extends React.Component {
   static displayName = 'EcoCounterPopup';
   static propTypes = {
-    site: PropTypes.object.isRequired,
+    channels: PropTypes.array.isRequired,
   };
   static contextTypes = {
     intl: intlShape.isRequired,
@@ -36,8 +36,11 @@ class EcoCounterPopup extends React.Component {
     </div>
   );
 
+  // eslint-disable-next-line react/sort-comp
+  availableUserTypes = _uniq(this.props.channels.map(c => c.userType));
+
   state = {
-    userType: 1,
+    userType: this.availableUserTypes[0],
     step: STEPS.HOUR,
   };
 
@@ -57,26 +60,27 @@ class EcoCounterPopup extends React.Component {
   };
 
   getChannelsByUserType = () => {
-    const channels = this.props.site.ecoCounterSite.channels || [];
+    const channels = this.props.channels || [];
     const filtered = channels.filter(
       channel => channel.userType === this.state.userType,
     );
     return filtered;
   };
 
-  changeUserType = userType => {
-    this.setState({ userType });
-  };
-
   changeStep = step => {
     this.setState({ step });
   };
 
+  changeUserType = userType => {
+    this.setState({ userType });
+  };
+
   render() {
-    const {
-      site: { ecoCounterSite },
-    } = this.props;
-    const channels = this.getChannelsByUserType();
+    const selectedChannels = this.getChannelsByUserType();
+    const inChannel = selectedChannels.find(c => c.direction === 1);
+    const inId = inChannel ? inChannel.id : null;
+    const outChannel = selectedChannels.find(c => c.direction === 2);
+    const outId = outChannel ? outChannel.id : null;
     return (
       <div className="card">
         <Card className="padding-small">
@@ -85,7 +89,7 @@ class EcoCounterPopup extends React.Component {
               id: 'eco-counter',
               defaultMessage: 'Eco counter',
             })}
-            description={ecoCounterSite.name}
+            description={this.props.channels[0].name}
             icon="icon-icon_eco-counter"
             unlinked
           />
@@ -93,9 +97,9 @@ class EcoCounterPopup extends React.Component {
             Container={EcoCounterContent}
             queryConfig={
               new EcoCounterDataRoute({
-                outId: channels[0].siteId,
-                inId: channels[1].siteId,
-                domain: ecoCounterSite.domain,
+                outId,
+                inId,
+                domain: this.props.channels[0].domain,
                 begin: this.getBeginTime(),
                 step: this.state.step,
                 end: moment.utc().format('YYYY-MM-DDTHH:mm:ss'),
@@ -112,6 +116,7 @@ class EcoCounterPopup extends React.Component {
                     userType={this.state.userType}
                     step={this.state.step}
                     formatMessage={this.context.intl.formatMessage}
+                    availableUserTypes={this.availableUserTypes}
                   />
                 );
               } else if (loading) {
@@ -126,37 +131,4 @@ class EcoCounterPopup extends React.Component {
   }
 }
 
-export default Relay.createContainer(
-  connectToStores(EcoCounterPopup, ['PreferencesStore'], context => ({
-    lang: context.getStore('PreferencesStore').getLanguage(),
-  })),
-  {
-    initialVariables: {
-      domain: null,
-      id: null,
-      end: null,
-      begin: null,
-      step: null,
-    },
-    fragments: {
-      site: () => Relay.QL`
-        fragment on Query {
-          ecoCounterSite(domain: $domain, id: $id) {
-            id
-            siteId
-            name
-            domain
-            lat
-            lon
-            channels {
-              id
-              siteId
-              name
-              userType
-            }
-          }
-        }
-      `,
-    },
-  },
-);
+export default EcoCounterPopup;

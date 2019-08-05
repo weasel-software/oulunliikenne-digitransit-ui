@@ -23,7 +23,6 @@ import TrafficAnnouncementRoute from '../../../route/TrafficAnnouncementRoute';
 import WeatherStationRoute from '../../../route/WeatherStationRoute';
 import TmsStationRoute from '../../../route/TmsStationRoute';
 import RoadConditionRoute from '../../../route/RoadConditionRoute';
-import EcoCounterRoute from '../../../route/EcoCounterRoute';
 import StopMarkerPopup from '../popups/StopMarkerPopup';
 import MarkerSelectPopup from './MarkerSelectPopup';
 import CityBikePopup from '../popups/CityBikePopup';
@@ -53,14 +52,6 @@ const initialState = {
   selectableTargets: undefined,
   coords: undefined,
   showSpinner: true,
-};
-
-// TODO: Add other domains when site data is available.
-const getSiteIdFromChannelId = (id, domain) => {
-  if (domain === 'Oulu_kaupunki') {
-    return `${id.slice(0, 2)}0${id.slice(3, id.length)}`;
-  }
-  return '100000647';
 };
 
 // TODO eslint doesn't know that TileLayerContainer is a react component,
@@ -277,10 +268,13 @@ class TileLayerContainer extends GridLayer {
   selectRow = option =>
     this.setState({ selectableTargets: [option], showSpinner: true });
 
+  isAllSameLayers = name =>
+    this.state.selectableTargets.filter(({ layer }) => layer !== name)
+      .length === 0;
+
   render() {
     let popup = null;
     let contents;
-
     const loadingPopup = () => (
       <div className="card" style={{ height: '12rem' }}>
         <Loading />
@@ -289,36 +283,24 @@ class TileLayerContainer extends GridLayer {
     if (typeof this.state.selectableTargets !== 'undefined') {
       if (
         this.state.selectableTargets.length >= 1 &&
-        this.state.selectableTargets[0].layer === 'ecoCounters'
+        this.isAllSameLayers('ecoCounters')
       ) {
-        const {
-          id: channelSiteId,
-          domain,
-        } = this.state.selectableTargets[0].feature.properties;
-        const siteId = getSiteIdFromChannelId(channelSiteId, domain);
         const width =
           isBrowser && window.innerWidth < 420 ? window.innerWidth - 5 : 420;
         const options = {
           maxWidth: width,
           minWidth: width,
         };
+        const channels = this.state.selectableTargets.map(({ feature }) => ({
+          ...feature.properties,
+        }));
         popup = (
           <Popup
             {...{ ...this.PopupOptions, ...options }}
-            key={siteId}
+            key={this.state.selectableTargets[0].feature.properties.id}
             position={this.state.coords}
           >
-            <Relay.RootContainer
-              Component={EcoCounterPopup}
-              route={
-                new EcoCounterRoute({
-                  id: siteId,
-                  domain: 'Oulu_kaupunki',
-                })
-              }
-              renderLoading={loadingPopup}
-              renderFetched={data => <EcoCounterPopup {...data} />}
-            />
+            <EcoCounterPopup channels={channels} />
           </Popup>
         );
       } else if (this.state.selectableTargets.length === 1) {

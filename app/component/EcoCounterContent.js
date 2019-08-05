@@ -35,6 +35,7 @@ const EcoCounterContent = ({
   step,
   changeStep,
   formatMessage,
+  availableUserTypes,
 }) => {
   const labels = inData.map(({ date }) =>
     formatDateByStep(date, step, formatMessage),
@@ -59,20 +60,24 @@ const EcoCounterContent = ({
     <div className="ecocounter-content">
       <LineChart datasets={datasets} labels={labels} />
       <div className="button-row">
-        <button
-          disabled={userType === WALKING}
-          className="ecocounter-button"
-          onClick={() => changeUserType(WALKING)}
-        >
-          <Icon img="icon-icon_bicycle-withoutBox" viewBox="0 0 25 25" />
-        </button>
-        <button
-          disabled={userType === CYCLING}
-          className="ecocounter-button"
-          onClick={() => changeUserType(CYCLING)}
-        >
-          <Icon img="icon-icon_walk" viewBox="0 0 25 25" />
-        </button>
+        {availableUserTypes.includes(WALKING) && (
+          <button
+            disabled={userType === WALKING}
+            className="ecocounter-button"
+            onClick={() => changeUserType(WALKING)}
+          >
+            <Icon img="icon-icon_bicycle-withoutBox" viewBox="0 0 25 25" />
+          </button>
+        )}
+        {availableUserTypes.includes(CYCLING) && (
+          <button
+            disabled={userType === CYCLING}
+            className="ecocounter-button"
+            onClick={() => changeUserType(CYCLING)}
+          >
+            <Icon img="icon-icon_walk" viewBox="0 0 25 25" />
+          </button>
+        )}
       </div>
       <div className="button-row">
         <button
@@ -115,6 +120,7 @@ EcoCounterContent.propTypes = {
   changeStep: PropTypes.func.isRequired,
   step: PropTypes.string.isRequired,
   formatMessage: PropTypes.func.isRequired,
+  availableUserTypes: PropTypes.array.isRequired,
 };
 
 export default Relay.createContainer(EcoCounterContent, {

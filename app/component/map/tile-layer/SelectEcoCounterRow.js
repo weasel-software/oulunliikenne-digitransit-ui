@@ -5,7 +5,6 @@ import ComponentUsageExample from '../../ComponentUsageExample';
 
 /* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
 function SelectEcoCounterRow(props) {
-  console.log('props', props);
   return (
     <div className="no-margin">
       <div className="cursor-pointer select-row" onClick={props.selectRow}>

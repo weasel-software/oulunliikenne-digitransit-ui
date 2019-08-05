@@ -41,7 +41,6 @@ export default class EcoCounters {
         const vt = new VectorTile(new Protobuf(buf));
 
         this.features = [];
-
         if (vt.layers.ecocounters != null) {
           for (
             let i = 0, ref = vt.layers.ecocounters.length - 1;
