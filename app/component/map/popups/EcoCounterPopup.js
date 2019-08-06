@@ -10,6 +10,7 @@ import ComponentUsageExample from '../../ComponentUsageExample';
 import EcoCounterContent from '../../EcoCounterContent';
 import EcoCounterDataRoute from '../../../route/EcoCounterDataRoute';
 import LoadingPage from '../../LoadingPage';
+import NetworkError from '../../NetworkError';
 
 const STEPS = {
   HOUR: 'hour',
@@ -106,7 +107,7 @@ class EcoCounterPopup extends React.Component {
               })
             }
             environment={Relay.Store}
-            render={({ done, loading, props }) => {
+            render={({ done, error, loading, retry, props }) => {
               if (done) {
                 return (
                   <EcoCounterContent
@@ -121,6 +122,8 @@ class EcoCounterPopup extends React.Component {
                 );
               } else if (loading) {
                 return <LoadingPage />;
+              } else if (error) {
+                return <NetworkError retry={retry} />;
               }
               return undefined;
             }}

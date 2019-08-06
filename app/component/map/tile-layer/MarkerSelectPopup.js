@@ -33,7 +33,7 @@ function MarkerSelectPopup(props) {
         <SelectTerminalRow
           {...option.feature.properties}
           key={option.feature.properties.gtfsId}
-          selectRow={() => props.selectRow(option)}
+          selectRow={() => props.selectRow([option])}
         />
       );
     } else if (option.layer === 'stop') {
@@ -41,7 +41,7 @@ function MarkerSelectPopup(props) {
         <SelectStopRow
           {...option.feature.properties}
           key={option.feature.properties.gtfsId}
-          selectRow={() => props.selectRow(option)}
+          selectRow={() => props.selectRow([option])}
         />
       );
     } else if (option.layer === 'citybike') {
@@ -49,7 +49,7 @@ function MarkerSelectPopup(props) {
         <SelectCityBikeRow
           {...option.feature.properties}
           key={option.feature.properties.stationId}
-          selectRow={() => props.selectRow(option)}
+          selectRow={() => props.selectRow([option])}
         />
       );
     } else if (option.layer === 'parkAndRide') {
@@ -57,7 +57,7 @@ function MarkerSelectPopup(props) {
         <SelectParkAndRideRow
           {...option.feature.properties}
           key={option.feature.properties.carParkId}
-          selectRow={() => props.selectRow(option)}
+          selectRow={() => props.selectRow([option])}
         />
       );
     } else if (option.layer === 'ticketSales') {
@@ -65,7 +65,7 @@ function MarkerSelectPopup(props) {
         <SelectTicketSalesRow
           {...option.feature.properties}
           key={option.feature.properties.FID}
-          selectRow={() => props.selectRow(option)}
+          selectRow={() => props.selectRow([option])}
         />
       );
     } else if (option.layer === 'cameraStations') {
@@ -73,7 +73,7 @@ function MarkerSelectPopup(props) {
         <SelectCameraStationRow
           {...option.feature.properties}
           key={option.feature.properties.id}
-          selectRow={() => props.selectRow(option)}
+          selectRow={() => props.selectRow([option])}
         />
       );
     } else if (option.layer === 'disorders') {
@@ -81,7 +81,7 @@ function MarkerSelectPopup(props) {
         <SelectDisorderRow
           {...option.feature.properties}
           key={option.feature.properties.id}
-          selectRow={() => props.selectRow(option)}
+          selectRow={() => props.selectRow([option])}
         />
       );
     } else if (option.layer === 'parkingStations') {
@@ -89,7 +89,7 @@ function MarkerSelectPopup(props) {
         <SelectParkingStationRow
           {...option.feature.properties}
           key={option.feature.properties.id}
-          selectRow={() => props.selectRow(option)}
+          selectRow={() => props.selectRow([option])}
         />
       );
     } else if (option.layer === 'roadworks') {
@@ -97,7 +97,7 @@ function MarkerSelectPopup(props) {
         <SelectRoadworkRow
           {...option.feature.properties}
           key={option.feature.properties.id}
-          selectRow={() => props.selectRow(option)}
+          selectRow={() => props.selectRow([option])}
         />
       );
     } else if (option.layer === 'tmsStations') {
@@ -105,7 +105,7 @@ function MarkerSelectPopup(props) {
         <SelectTmsStationRow
           {...option.feature.properties}
           key={`${option.feature.properties.id}_${option.layer}`}
-          selectRow={() => props.selectRow(option)}
+          selectRow={() => props.selectRow([option])}
         />
       );
     } else if (option.layer === 'weatherStations') {
@@ -113,7 +113,7 @@ function MarkerSelectPopup(props) {
         <SelectWeatherStationRow
           {...option.feature.properties}
           key={option.feature.properties.id}
-          selectRow={() => props.selectRow(option)}
+          selectRow={() => props.selectRow([option])}
         />
       );
     } else if (option.layer === 'roadConditions') {
@@ -121,7 +121,7 @@ function MarkerSelectPopup(props) {
         <SelectRoadConditionRow
           {...option.feature.properties}
           key={option.feature.properties.id}
-          selectRow={() => props.selectRow(option)}
+          selectRow={() => props.selectRow([option])}
         />
       );
     } else if (option.layer === 'fluencies') {
@@ -129,15 +129,16 @@ function MarkerSelectPopup(props) {
         <SelectFluencyRow
           {...option.feature.properties}
           key={option.feature.properties.id}
-          selectRow={() => props.selectRow(option)}
+          selectRow={() => props.selectRow([option])}
         />
       );
     } else if (option.layer === 'ecoCounters') {
+      const ecoCounters = props.options.filter(o => o.layer === 'ecoCounters');
       return (
         <SelectEcoCounterRow
           {...option.feature.properties}
           key={option.feature.properties.id}
-          selectRow={() => props.selectRow(option)}
+          selectRow={() => props.selectRow(ecoCounters)}
         />
       );
     }

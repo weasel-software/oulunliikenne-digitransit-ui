@@ -265,8 +265,8 @@ class TileLayerContainer extends GridLayer {
     return tile.el;
   };
 
-  selectRow = option =>
-    this.setState({ selectableTargets: [option], showSpinner: true });
+  selectRow = options =>
+    this.setState({ selectableTargets: options, showSpinner: true });
 
   isAllSameLayers = name =>
     this.state.selectableTargets.filter(({ layer }) => layer !== name)
