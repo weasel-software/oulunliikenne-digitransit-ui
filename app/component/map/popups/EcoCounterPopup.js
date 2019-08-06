@@ -32,7 +32,7 @@ class EcoCounterPopup extends React.Component {
     <div>
       <p>Renders an eco counter popup.</p>
       <ComponentUsageExample description="">
-        <EcoCounterPopup context="context object here" />
+        <EcoCounterPopup channels={[]} context="context object here" />
       </ComponentUsageExample>
     </div>
   );
@@ -79,9 +79,15 @@ class EcoCounterPopup extends React.Component {
   render() {
     const selectedChannels = this.getChannelsByUserType();
     const inChannel = selectedChannels.find(c => c.direction === 1);
-    const inId = inChannel ? inChannel.id : null;
     const outChannel = selectedChannels.find(c => c.direction === 2);
-    const outId = outChannel ? outChannel.id : null;
+    let inId = inChannel ? inChannel.id : null;
+    let outId = outChannel ? outChannel.id : null;
+    let directionAvailable = true;
+    if (!inId && !outId && selectedChannels.length > 0) {
+      inId = selectedChannels[0].id || null;
+      outId = selectedChannels[1].id || null;
+      directionAvailable = false;
+    }
     return (
       <div className="card">
         <Card className="padding-small">
@@ -118,6 +124,7 @@ class EcoCounterPopup extends React.Component {
                     step={this.state.step}
                     formatMessage={this.context.intl.formatMessage}
                     availableUserTypes={this.availableUserTypes}
+                    directionAvailable={directionAvailable}
                   />
                 );
               } else if (loading) {

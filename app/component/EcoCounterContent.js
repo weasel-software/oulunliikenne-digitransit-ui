@@ -36,6 +36,7 @@ const EcoCounterContent = ({
   changeStep,
   formatMessage,
   availableUserTypes,
+  directionAvailable,
 }) => {
   const labels = inData.map(({ date }) =>
     formatDateByStep(date, step, formatMessage),
@@ -44,13 +45,13 @@ const EcoCounterContent = ({
   const inDataCounts = inData.map(({ counts }) => (!counts ? 0 : counts));
   const datasets = [
     {
-      label: formatMessage({ id: 'from-city' }),
+      label: directionAvailable ? formatMessage({ id: 'from-city' }) : '',
       data: outDataCounts,
       borderColor: '#dc3545',
       backgroundColor: 'rgba(0,0,0,0)',
     },
     {
-      label: formatMessage({ id: 'to-city' }),
+      label: directionAvailable ? formatMessage({ id: 'to-city' }) : '',
       data: inDataCounts,
       borderColor: '#00AFFF',
       backgroundColor: 'rgba(0,0,0,0)',
@@ -121,6 +122,7 @@ EcoCounterContent.propTypes = {
   step: PropTypes.string.isRequired,
   formatMessage: PropTypes.func.isRequired,
   availableUserTypes: PropTypes.array.isRequired,
+  directionAvailable: PropTypes.bool.isRequired,
 };
 
 export default Relay.createContainer(EcoCounterContent, {

@@ -16,7 +16,7 @@ class EcoCounterDataRoute extends Relay.Route {
     inId: { required: true },
     step: { required: false },
     begin: { required: false },
-    end: { require: false },
+    end: { required: false },
   };
   static routeName = 'EcoCounterDataRoute';
 }
