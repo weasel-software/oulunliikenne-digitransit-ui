@@ -76,7 +76,7 @@ export const getAvailableTransportModes = config =>
  * @param {*} config The configuration for the software installation
  * @param {*} currentModes All currently selected transport and street modes
  * @param {*} streetMode The street mode to select
- * @param {boolean} isExclusive True, if only this mode shoud be selected; otherwise false.
+ * @param {boolean} isExclusive True, if only this mode should be selected; otherwise false.
  */
 export const buildStreetModeQuery = (
   config,

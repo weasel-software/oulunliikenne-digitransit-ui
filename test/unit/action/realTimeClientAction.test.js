@@ -19,6 +19,9 @@ describe('realTimeClientAction', () => {
           wasCalled = true;
           expect(message.lat).to.equal(123.12346);
         },
+        config: {
+          routePrefix: 'OULU',
+        },
       });
       expect(wasCalled).to.equal(true);
     });
@@ -37,6 +40,9 @@ describe('realTimeClientAction', () => {
         dispatch: (omitted, { message }) => {
           wasCalled = true;
           expect(message.long).to.equal(123.12346);
+        },
+        config: {
+          routePrefix: 'OULU',
         },
       });
       expect(wasCalled).to.equal(true);

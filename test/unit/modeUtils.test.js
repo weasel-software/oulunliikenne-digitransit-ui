@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
+import { describe, it, xit } from 'mocha';
 import { createMemoryHistory } from 'react-router';
 import { StreetMode, TransportMode } from '../../app/constants';
 import * as utils from '../../app/util/modeUtils';
@@ -372,7 +372,7 @@ describe('modeUtils', () => {
       expect(modes).to.contain(TransportMode.Citybike);
     });
 
-    it('should remove every other mode from the current url when isExclusive=true', () => {
+    xit('should remove every other mode from the current url when isExclusive=true', () => {
       const streetMode = StreetMode.ParkAndRide;
       const router = createMemoryHistory();
       router.location = {

@@ -34,7 +34,11 @@ ParkingStationAvailability.description = (
       <ParkingStationAvailability spacesAvailable={1} maxCapacity={3} />
     </ComponentUsageExample>
     <ComponentUsageExample description="realtime">
-      <ParkingStationAvailability realtime spacesAvailable={1} maxCapacity={3} />
+      <ParkingStationAvailability
+        realtime
+        spacesAvailable={1}
+        maxCapacity={3}
+      />
     </ComponentUsageExample>
   </div>
 );

@@ -1,5 +1,6 @@
 import isEmpty from 'lodash/isEmpty';
 import isEqual from 'lodash/isEqual';
+import omit from 'lodash/omit';
 import Snackbar from 'material-ui/Snackbar';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -57,7 +58,7 @@ class SaveCustomizedSettingsButton extends React.Component {
 
     if (
       (isEmpty(querySettings) && isEmpty(customizedSettings)) ||
-      isEqual(currentSettings, defaultSettings)
+      isEqual(omit(currentSettings, ['active']), defaultSettings)
     ) {
       this.props.noSettingsFound();
     } else {

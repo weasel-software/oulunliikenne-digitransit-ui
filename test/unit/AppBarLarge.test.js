@@ -42,7 +42,7 @@ describe('<AppBarLarge />', () => {
 
   it('should enable pointer events for the disruptions info icon', () => {
     const wrapper = shallowWithIntl(<AppBarLarge titleClicked={() => {}} />, {
-      context: { config: { textLogo: false } },
+      context: { config: { textLogo: false, appBarDisruptionInfo: true } },
     });
     const icon = wrapper.find(Icon);
     expect(icon.props().pointerEvents).to.equal(true);

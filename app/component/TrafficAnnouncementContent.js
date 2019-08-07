@@ -20,7 +20,6 @@ const ExtendedContent = ({ trafficAnnouncement }, { intl }) => {
     url,
     imageUrls,
   } = trafficAnnouncement;
-
   return (
     <ul className="extended-content">
       {trafficAnnouncement.class &&
@@ -162,6 +161,7 @@ const ExtendedContent = ({ trafficAnnouncement }, { intl }) => {
       )}
       {imageUrls &&
         imageUrls.map((imageUrl, key) => (
+          // eslint-disable-next-line react/no-array-index-key
           <li key={`image_${key}`}>
             <img
               src={imageUrl}

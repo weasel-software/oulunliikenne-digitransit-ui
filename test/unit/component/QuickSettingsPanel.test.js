@@ -142,12 +142,15 @@ describe('<QuickSettingsPanel />', () => {
     });
 
     it('should return "saved-settings" if the current settings come from localStorage', () => {
-      setCustomizedSettings({
-        optimize: OptimizeType.Triangle,
-        safetyFactor: 0.4,
-        slopeFactor: 0.4,
-        timeFactor: 0.2,
-      });
+      setCustomizedSettings(
+        {
+          optimize: OptimizeType.Triangle,
+          safetyFactor: 0.4,
+          slopeFactor: 0.4,
+          timeFactor: 0.2,
+        },
+        'PUBLIC_TRANSPORT',
+      );
 
       const wrapper = shallowWithIntl(
         <QuickSettingsPanel {...getDefaultProps()} />,
@@ -157,13 +160,15 @@ describe('<QuickSettingsPanel />', () => {
           },
         },
       );
-
       const currentOption = wrapper.instance().matchQuickOption();
       expect(currentOption).to.equal(QuickOptionSetType.SavedSettings);
     });
 
     it('should still return "saved-settings" if the current settings come from localStorage and they match another quick option set', () => {
-      setCustomizedSettings({ ...getDefaultSettings(defaultConfig) });
+      setCustomizedSettings(
+        { ...getDefaultSettings(defaultConfig) },
+        'PUBLIC_TRANSPORT',
+      );
 
       const wrapper = shallowWithIntl(
         <QuickSettingsPanel {...getDefaultProps()} />,
@@ -212,10 +217,13 @@ describe('<QuickSettingsPanel />', () => {
     });
 
     it('should remove all query params if the selected mode is "saved-settings"', () => {
-      setCustomizedSettings({
-        modes: StreetMode.Bicycle,
-        optimize: OptimizeType.Greenways,
-      });
+      setCustomizedSettings(
+        {
+          modes: StreetMode.Bicycle,
+          optimize: OptimizeType.Greenways,
+        },
+        'PUBLIC_TRANSPORT',
+      );
 
       const router = { ...createMemoryMockRouter() };
       router.replace({

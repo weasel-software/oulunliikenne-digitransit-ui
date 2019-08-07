@@ -58,18 +58,23 @@ const asDepartures = stoptimes =>
 class DepartureListContainer extends Component {
   static propTypes = {
     rowClasses: PropTypes.string.isRequired,
+    // eslint-disable-next-line react/no-unused-prop-types
     stoptimes: PropTypes.array.isRequired,
     currentTime: PropTypes.number.isRequired,
+    // eslint-disable-next-line react/no-unused-prop-types
     limit: PropTypes.number,
     infiniteScroll: PropTypes.bool,
     showStops: PropTypes.bool,
     routeLinks: PropTypes.bool,
     className: PropTypes.string,
+    // eslint-disable-next-line react/no-unused-prop-types
     isTerminal: PropTypes.bool,
     showPlatformCodes: PropTypes.bool,
     showRealtimeVehicles: PropTypes.bool,
     hasRealtimeVehicles: PropTypes.func,
+    // eslint-disable-next-line react/no-unused-prop-types
     updateRealtimeVehicles: PropTypes.bool,
+    // eslint-disable-next-line react/no-unused-prop-types
     router: routerShape.isRequired,
   };
 

@@ -95,7 +95,7 @@ TmsStationContent.description = (
   <div>
     <p>Renders content of a tms station popup</p>
     <ComponentUsageExample description="">
-      <TmsStationContent comment={exampleLang} />
+      <TmsStationContent direction1="" direction2="" comment={exampleLang} />
     </ComponentUsageExample>
   </div>
 );
@@ -103,6 +103,8 @@ TmsStationContent.description = (
 TmsStationContent.propTypes = {
   sensors: PropTypes.array.isRequired,
   measuredTime: PropTypes.string.isRequired,
+  direction1: PropTypes.string.isRequired,
+  direction2: PropTypes.string.isRequired,
 };
 
 export default TmsStationContent;

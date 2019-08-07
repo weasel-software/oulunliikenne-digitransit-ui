@@ -21,6 +21,7 @@ class RoutePatternSelect extends Component {
     serviceDay: PropTypes.string.isRequired,
     activeTab: PropTypes.string.isRequired,
     relay: PropTypes.object.isRequired,
+    // eslint-disable-next-line react/no-unused-prop-types
     gtfsId: PropTypes.string.isRequired,
   };
 

@@ -40,7 +40,6 @@ class IntroPopup extends React.Component {
     }
 
     const data = introPopup[currentLanguage] || introPopup[defaultLanguage];
-
     return (
       <Modal
         open
@@ -48,6 +47,7 @@ class IntroPopup extends React.Component {
         toggleVisibility={this.toggleVisibility}
       >
         {(data.paragraphs || []).map((paragraph, key) => (
+          // eslint-disable-next-line react/no-array-index-key
           <p key={key}>{paragraph}</p>
         ))}
       </Modal>
