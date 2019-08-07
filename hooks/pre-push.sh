@@ -2,4 +2,4 @@
 set -e
 set -x
 
-npm run test-local
+npm run test-unit
