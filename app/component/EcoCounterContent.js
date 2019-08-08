@@ -67,7 +67,7 @@ const EcoCounterContent = ({
             className="ecocounter-button"
             onClick={() => changeUserType(WALKING)}
           >
-            <Icon img="icon-icon_bicycle-withoutBox" viewBox="0 0 25 25" />
+            <Icon img="icon-icon_walk" viewBox="0 0 25 25" />
           </button>
         )}
         {availableUserTypes.includes(CYCLING) && (
@@ -76,7 +76,7 @@ const EcoCounterContent = ({
             className="ecocounter-button"
             onClick={() => changeUserType(CYCLING)}
           >
-            <Icon img="icon-icon_walk" viewBox="0 0 25 25" />
+            <Icon img="icon-icon_bicycle-withoutBox" viewBox="0 0 25 25" />
           </button>
         )}
       </div>
@@ -125,7 +125,7 @@ EcoCounterContent.propTypes = {
   directionAvailable: PropTypes.bool.isRequired,
 };
 
-export default Relay.createContainer(EcoCounterContent, {
+const ConnectedComponent = Relay.createContainer(EcoCounterContent, {
   initialVariables: {
     outId: null,
     inId: null,
@@ -163,3 +163,5 @@ export default Relay.createContainer(EcoCounterContent, {
     `,
   },
 });
+
+export { ConnectedComponent as default, EcoCounterContent as Component };

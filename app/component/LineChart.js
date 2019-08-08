@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Chart from 'chart.js';
 import isEqual from 'lodash/isEqual';
-import omit from 'lodash-es/omit';
+import omit from 'lodash/omit';
 
 class LineChart extends React.Component {
   static propTypes = {
