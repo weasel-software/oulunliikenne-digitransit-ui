@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { describe, xit } from 'mocha';
+import { describe, it } from 'mocha';
 import React from 'react';
 
 import { mountWithIntl } from '../helpers/mock-intl-enzyme';
@@ -9,7 +9,7 @@ import { Component as SelectMapLayersDialog } from '../../../app/component/Selec
 
 // TODO: Fix mountWithIntl rendering issues.
 describe('<SelectMapLayersDialog />', () => {
-  xit('should render', () => {
+  it('should render', () => {
     const props = {
       mapLayers: {
         stop: {},
@@ -18,6 +18,7 @@ describe('<SelectMapLayersDialog />', () => {
       },
       updateMapLayers: () => {},
       clearMapLayers: () => {},
+      executeAction: () => {},
     };
     const wrapper = mountWithIntl(<SelectMapLayersDialog isOpen {...props} />, {
       context: { ...mockContext },
@@ -28,7 +29,7 @@ describe('<SelectMapLayersDialog />', () => {
     );
   });
 
-  xit('should update the bus stop layer', () => {
+  it('should update the bus stop layer', () => {
     let mapLayers = {
       stop: {
         bus: false,
@@ -48,6 +49,8 @@ describe('<SelectMapLayersDialog />', () => {
       updateMapLayers: layers => {
         mapLayers = { ...layers };
       },
+      clearMapLayers: () => {},
+      executeAction: () => {},
     };
     const wrapper = mountWithIntl(<SelectMapLayersDialog isOpen {...props} />, {
       context: { ...mockContext },
@@ -62,7 +65,7 @@ describe('<SelectMapLayersDialog />', () => {
     expect(mapLayers.stop.bus).to.equal(true);
   });
 
-  xit('should update the bus terminal layer', () => {
+  it('should update the bus terminal layer', () => {
     let mapLayers = {
       stop: {},
       terminal: {
@@ -82,6 +85,8 @@ describe('<SelectMapLayersDialog />', () => {
       updateMapLayers: layers => {
         mapLayers = { ...layers };
       },
+      clearMapLayers: () => {},
+      executeAction: () => {},
     };
     const wrapper = mountWithIntl(<SelectMapLayersDialog isOpen {...props} />, {
       context: { ...mockContext },
@@ -90,13 +95,13 @@ describe('<SelectMapLayersDialog />', () => {
 
     wrapper
       .find('.option-checkbox input')
-      .at(1)
+      .at(0)
       .simulate('change', { target: { checked: true } });
 
     expect(mapLayers.terminal.bus).to.equal(true);
   });
 
-  xit('should update the tram stop layer', () => {
+  it('should update the tram stop layer', () => {
     let mapLayers = {
       stop: {
         tram: false,
@@ -116,6 +121,8 @@ describe('<SelectMapLayersDialog />', () => {
       updateMapLayers: layers => {
         mapLayers = { ...layers };
       },
+      clearMapLayers: () => {},
+      executeAction: () => {},
     };
     const wrapper = mountWithIntl(<SelectMapLayersDialog isOpen {...props} />, {
       context: { ...mockContext },
@@ -130,7 +137,7 @@ describe('<SelectMapLayersDialog />', () => {
     expect(mapLayers.stop.tram).to.equal(true);
   });
 
-  xit('should update the rail stop and terminal layers', () => {
+  it('should update the rail stop and terminal layers', () => {
     let mapLayers = {
       stop: {
         rail: false,
@@ -152,6 +159,8 @@ describe('<SelectMapLayersDialog />', () => {
       updateMapLayers: layers => {
         mapLayers = { ...layers };
       },
+      clearMapLayers: () => {},
+      executeAction: () => {},
     };
     const wrapper = mountWithIntl(<SelectMapLayersDialog isOpen {...props} />, {
       context: { ...mockContext },
@@ -167,7 +176,7 @@ describe('<SelectMapLayersDialog />', () => {
     expect(mapLayers.terminal.rail).to.equal(true);
   });
 
-  xit('should update the subway stop and terminal layers', () => {
+  it('should update the subway stop and terminal layers', () => {
     let mapLayers = {
       stop: {
         subway: false,
@@ -189,6 +198,8 @@ describe('<SelectMapLayersDialog />', () => {
       updateMapLayers: layers => {
         mapLayers = { ...layers };
       },
+      clearMapLayers: () => {},
+      executeAction: () => {},
     };
     const wrapper = mountWithIntl(<SelectMapLayersDialog isOpen {...props} />, {
       context: { ...mockContext },
@@ -204,7 +215,7 @@ describe('<SelectMapLayersDialog />', () => {
     expect(mapLayers.terminal.subway).to.equal(true);
   });
 
-  xit('should update the ferry stop layer', () => {
+  it('should update the ferry stop layer', () => {
     let mapLayers = {
       stop: {
         ferry: false,
@@ -224,6 +235,8 @@ describe('<SelectMapLayersDialog />', () => {
       updateMapLayers: layers => {
         mapLayers = { ...layers };
       },
+      clearMapLayers: () => {},
+      executeAction: () => {},
     };
     const wrapper = mountWithIntl(<SelectMapLayersDialog isOpen {...props} />, {
       context: { ...mockContext },
@@ -238,7 +251,7 @@ describe('<SelectMapLayersDialog />', () => {
     expect(mapLayers.stop.ferry).to.equal(true);
   });
 
-  xit('should update the citybike layer', () => {
+  it('should update the citybike layer', () => {
     let mapLayers = {
       citybike: false,
       stop: {},
@@ -260,6 +273,8 @@ describe('<SelectMapLayersDialog />', () => {
       updateMapLayers: layers => {
         mapLayers = { ...layers };
       },
+      clearMapLayers: () => {},
+      executeAction: () => {},
     };
     const wrapper = mountWithIntl(<SelectMapLayersDialog isOpen {...props} />, {
       context: { ...mockContext },
@@ -274,7 +289,7 @@ describe('<SelectMapLayersDialog />', () => {
     expect(mapLayers.citybike).to.equal(true);
   });
 
-  xit('should update the park&ride layer', () => {
+  it('should update the park&ride layer', () => {
     let mapLayers = {
       parkAndRide: false,
       stop: {},
@@ -291,6 +306,8 @@ describe('<SelectMapLayersDialog />', () => {
       updateMapLayers: layers => {
         mapLayers = { ...layers };
       },
+      clearMapLayers: () => {},
+      executeAction: () => {},
     };
     const wrapper = mountWithIntl(<SelectMapLayersDialog isOpen {...props} />, {
       context: { ...mockContext },
@@ -305,7 +322,7 @@ describe('<SelectMapLayersDialog />', () => {
     expect(mapLayers.parkAndRide).to.equal(true);
   });
 
-  xit('should update the ticket sales layers', () => {
+  it('should update the ticket sales layers', () => {
     let mapLayers = {
       stop: {},
       terminal: {},
@@ -325,6 +342,8 @@ describe('<SelectMapLayersDialog />', () => {
       updateMapLayers: layers => {
         mapLayers = { ...layers };
       },
+      clearMapLayers: () => {},
+      executeAction: () => {},
     };
     const wrapper = mountWithIntl(<SelectMapLayersDialog isOpen {...props} />, {
       context: { ...mockContext },
