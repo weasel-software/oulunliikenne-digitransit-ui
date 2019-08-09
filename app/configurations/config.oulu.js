@@ -462,13 +462,13 @@ export default configMerger(walttiConfig, {
       cameraStations: false,
       // tmsStations: false,
       // citybike: true, NOTE: taken from transportModes.citybike.availableForSelection
-      ecoCounters: false,
+      ecoCounters: true,
     },
     WALK: {
       disorders: true,
       weatherStations: false,
       cameraStations: false,
-      ecoCounters: false,
+      ecoCounters: true,
       // tmsStations: false,
       // citybike: true, NOTE: taken from transportModes.citybike.availableForSelection
     },
