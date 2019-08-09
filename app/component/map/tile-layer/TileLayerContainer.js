@@ -45,6 +45,8 @@ import TileContainer from './TileContainer';
 import Loading from '../../Loading';
 import { isFeatureLayerEnabled } from '../../../util/mapLayerUtils';
 import MapLayerStore, { mapLayerShape } from '../../../store/MapLayerStore';
+import EcoCounterPopup from '../popups/EcoCounterPopup';
+import { isBrowser } from '../../../util/browser';
 
 const initialState = {
   selectableTargets: undefined,
@@ -263,21 +265,45 @@ class TileLayerContainer extends GridLayer {
     return tile.el;
   };
 
-  selectRow = option =>
-    this.setState({ selectableTargets: [option], showSpinner: true });
+  selectRow = options =>
+    this.setState({ selectableTargets: options, showSpinner: true });
+
+  isAllSameLayers = name =>
+    this.state.selectableTargets.filter(({ layer }) => layer !== name)
+      .length === 0;
 
   render() {
     let popup = null;
     let contents;
-
     const loadingPopup = () => (
       <div className="card" style={{ height: '12rem' }}>
         <Loading />
       </div>
     );
-
     if (typeof this.state.selectableTargets !== 'undefined') {
-      if (this.state.selectableTargets.length === 1) {
+      if (
+        this.state.selectableTargets.length >= 1 &&
+        this.isAllSameLayers('ecoCounters')
+      ) {
+        const width =
+          isBrowser && window.innerWidth < 420 ? window.innerWidth - 5 : 420;
+        const options = {
+          maxWidth: width,
+          minWidth: width,
+        };
+        const channels = this.state.selectableTargets.map(({ feature }) => ({
+          ...feature.properties,
+        }));
+        popup = (
+          <Popup
+            {...{ ...this.PopupOptions, ...options }}
+            key={this.state.selectableTargets[0].feature.properties.id}
+            position={this.state.coords}
+          >
+            <EcoCounterPopup channels={channels} />
+          </Popup>
+        );
+      } else if (this.state.selectableTargets.length === 1) {
         let id;
         if (this.state.selectableTargets[0].layer === 'stop') {
           id = this.state.selectableTargets[0].feature.properties.gtfsId;

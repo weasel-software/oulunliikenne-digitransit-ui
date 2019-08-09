@@ -24,6 +24,7 @@ class TileContainer {
       config.tmsStations.tmsStationsMinZoom,
       config.roadConditions.roadConditionsMinZoom,
       config.fluencies.fluenciesMinZoom,
+      config.ecoCounters.ecoCounterMinZoom,
     );
 
     this.coords = coords;
@@ -105,6 +106,11 @@ class TileContainer {
         } else if (
           layerName === 'fluencies' &&
           this.coords.z >= config.fluencies.fluenciesMinZoom
+        ) {
+          return isEnabled;
+        } else if (
+          layerName === 'ecoCounters' &&
+          this.coords.z >= config.ecoCounters.ecoCounterMinZoom
         ) {
           return isEnabled;
         }

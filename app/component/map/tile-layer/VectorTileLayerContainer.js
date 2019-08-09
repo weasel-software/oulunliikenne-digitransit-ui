@@ -14,6 +14,7 @@ import WeatherStations from './WeatherStations';
 import TmsStations from './TmsStations';
 import RoadConditions from './RoadConditions';
 import Fluencies from './Fluencies';
+import EcoCounters from './EcoCounters';
 
 class VectorTileLayerContainer extends React.Component {
   constructor(props, context) {
@@ -77,6 +78,10 @@ class VectorTileLayerContainer extends React.Component {
 
       if (config.disorders && config.disorders.showDisorders) {
         layers.push(Disorders);
+      }
+
+      if (config.ecoCounters && config.ecoCounters.showEcoCounters) {
+        layers.push(EcoCounters);
       }
     }
 

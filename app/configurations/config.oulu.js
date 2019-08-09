@@ -45,6 +45,7 @@ export default configMerger(walttiConfig, {
     TMS_STATIONS_MAP: `${AWS_MAP_URL}/map/tmsstations/`,
     ROAD_CONDITIONS_MAP: `${AWS_MAP_URL}/map/roadconditions/`,
     FLUENCY_MAP: `${AWS_MAP_URL}/map/fluency/`,
+    ECO_COUNTERS_MAP: `${AWS_MAP_URL}/map/ecocounters/`,
   },
 
   map: {
@@ -174,6 +175,11 @@ export default configMerger(walttiConfig, {
     cityBikeSmallIconZoom: 14,
     // When should bikeshare availability be rendered in orange rather than green
     fewAvailableCount: 3,
+  },
+
+  ecoCounters: {
+    showEcoCounters: true,
+    ecoCounterMinZoom: 11,
   },
 
   feedIds: ['OULU'],
@@ -456,11 +462,13 @@ export default configMerger(walttiConfig, {
       cameraStations: false,
       // tmsStations: false,
       // citybike: true, NOTE: taken from transportModes.citybike.availableForSelection
+      ecoCounters: false,
     },
     WALK: {
       disorders: true,
       weatherStations: false,
       cameraStations: false,
+      ecoCounters: false,
       // tmsStations: false,
       // citybike: true, NOTE: taken from transportModes.citybike.availableForSelection
     },

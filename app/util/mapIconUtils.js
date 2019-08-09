@@ -455,6 +455,14 @@ export function drawTmsStationIcon(tile, geom, imageSize) {
   );
 }
 
+export function drawEcoCounterIcon(tile, geom, imageSize) {
+  getImageFromSpriteCache('icon-icon_eco-counter', imageSize, imageSize).then(
+    image => {
+      drawIconImage(image, tile, geom, imageSize, imageSize);
+    },
+  );
+}
+
 export function drawCitybikeIcon(tile, geom, imageSize) {
   return getImageFromSpriteCache(
     'icon-icon_citybike',
