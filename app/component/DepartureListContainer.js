@@ -28,6 +28,11 @@ const asDepartures = stoptimes =>
     ? []
     : stoptimes.map(stoptime => {
         const isArrival = stoptime.pickupType === 'NONE';
+        let isLastStop = false;
+        if (stoptime.trip && stoptime.trip.stops) {
+          const lastStop = stoptime.trip.stops.slice(-1).pop();
+          isLastStop = stoptime.stop.id === lastStop.id;
+        }
         /* OTP returns either scheduled time or realtime prediction in
            * 'realtimeDeparture' and 'realtimeArrival' fields.
            * EXCEPT when state is CANCELLED, then it returns -1 for realtime  */
@@ -45,6 +50,7 @@ const asDepartures = stoptimes =>
         return {
           canceled,
           isArrival,
+          isLastStop,
           stoptime: stoptimeTime,
           stop: stoptime.stop,
           realtime: stoptime.realtime,
@@ -101,7 +107,9 @@ class DepartureListContainer extends Component {
   }
 
   componentDidMount() {
-    const { stopsRealtimeTrackingLimit } = this.context.config;
+    const {
+      config: { stopsRealtimeTrackingLimit },
+    } = this.context;
     const departures = uniqBy(
       this.getDepartures(stopsRealtimeTrackingLimit),
       item => item.pattern.code,
@@ -116,8 +124,13 @@ class DepartureListContainer extends Component {
   }
 
   componentWillReceiveProps(newProps) {
+    const { showRealtimeVehicles } = this.props;
+    const { stopId } = this.state;
+    const { executeAction } = this.context;
     if (newProps.updateRealtimeVehicles) {
-      const { stopsRealtimeTrackingLimit } = this.context.config;
+      const {
+        config: { stopsRealtimeTrackingLimit },
+      } = this.context;
       const departures = uniqBy(
         this.getDepartures(stopsRealtimeTrackingLimit),
         item => item.pattern.code,
@@ -129,9 +142,9 @@ class DepartureListContainer extends Component {
 
       if (
         newProps.showRealtimeVehicles &&
-        (newProps.showRealtimeVehicles !== this.props.showRealtimeVehicles ||
+        (newProps.showRealtimeVehicles !== showRealtimeVehicles ||
           (get(newProps, 'router.params.stopId') &&
-            get(newProps, 'router.params.stopId') !== this.state.stopId &&
+            get(newProps, 'router.params.stopId') !== stopId &&
             difference(
               departures.map(departure =>
                 get(departure, 'pattern.route.gtfsId'),
@@ -141,7 +154,7 @@ class DepartureListContainer extends Component {
               ),
             ).length > 0))
       ) {
-        this.context.executeAction(updateDepartures, departuresNew);
+        executeAction(updateDepartures, departuresNew);
 
         if (get(newProps, 'router.params.stopId')) {
           this.setState({
@@ -149,16 +162,17 @@ class DepartureListContainer extends Component {
           });
         }
       } else if (
-        newProps.showRealtimeVehicles !== this.props.showRealtimeVehicles &&
+        newProps.showRealtimeVehicles !== showRealtimeVehicles &&
         !newProps.showRealtimeVehicles
       ) {
-        this.context.executeAction(clearDepartures);
+        executeAction(clearDepartures);
       }
     }
   }
 
   onScroll = () => {
-    if (this.props.infiniteScroll && isBrowser) {
+    const { infiniteScroll } = this.props;
+    if (infiniteScroll && isBrowser) {
       return this.scrollHandler;
     }
     return null;
@@ -178,7 +192,14 @@ class DepartureListContainer extends Component {
 
   render() {
     const departureObjs = [];
-    const { currentTime } = this.props;
+    const {
+      currentTime,
+      showStops,
+      rowClasses,
+      showPlatformCodes,
+      routeLinks,
+      className,
+    } = this.props;
     let currentDate = moment
       .unix(currentTime)
       .startOf('day')
@@ -224,17 +245,18 @@ class DepartureListContainer extends Component {
         <Departure
           key={id}
           departure={departure}
-          showStop={this.props.showStops}
+          showStop={showStops}
           currentTime={currentTime}
           hasDisruption={classes.disruption}
-          className={cx(classes, this.props.rowClasses)}
+          className={cx(classes, rowClasses)}
           canceled={departure.canceled}
           isArrival={departure.isArrival}
-          showPlatformCode={this.props.showPlatformCodes}
+          isLastStop={departure.isLastStop}
+          showPlatformCode={showPlatformCodes}
         />
       );
 
-      if (this.props.routeLinks) {
+      if (routeLinks) {
         departureObjs.push(
           <Link
             to={`/${PREFIX_ROUTES}/${departure.pattern.route.gtfsId}/pysakit/${
@@ -252,7 +274,7 @@ class DepartureListContainer extends Component {
 
     return (
       <div
-        className={cx('departure-list', this.props.className)}
+        className={cx('departure-list', className)}
         onScroll={this.onScroll()}
       >
         {departureObjs}
@@ -279,6 +301,7 @@ export default Relay.createContainer(
             pickupType
             stopHeadsign
             stop {
+              id
               code
               platformCode
             }
@@ -286,6 +309,7 @@ export default Relay.createContainer(
               gtfsId
               tripHeadsign
               stops {
+                id
                 code
                 gtfsId
               }
