@@ -559,6 +559,10 @@ export default {
     [18.776, 60.3316],
   ],
 
+  // Minimun distance between from and to locations in meters. User is noticed
+  // if distance is less than this.
+  minDistanceBetweenFromAndTo: 20,
+
   // If certain mode(s) only exist in limited number of areas, listing the areas as a list of polygons for
   // selected mode key will remove the mode(s) from queries if no coordinates in the query are within the polygon(s).
   // This reduces complexity in finding routes for the query.
@@ -566,7 +570,7 @@ export default {
 
   footer: {
     content: [
-      { label: `© HSL, Liikennevirasto ${YEAR}` },
+      { label: `© HSL, Traficom ${YEAR}` },
       {},
       {
         name: 'footer-feedback',
@@ -615,19 +619,19 @@ export default {
       {
         header: 'Tietoja palvelusta',
         paragraphs: [
-          'Palvelu kattaa joukkoliikenteen, kävelyn, pyöräilyn ja yksityisautoilun rajatuilta osin. Palvelu perustuu Digitransit palvelualustaan.',
+          'Palvelu kattaa joukkoliikenteen, kävelyn, pyöräilyn ja yksityisautoilun rajatuilta osin. Palvelu perustuu Digitransit-palvelualustaan.',
         ],
       },
       {
-        header: 'Digitransit palvelualusta',
+        header: 'Digitransit-palvelualusta',
         paragraphs: [
-          'Digitransit-palvelualusta on HSL:n ja Liikenneviraston kehittämä avoimen lähdekoodin reititystuote.',
+          'Digitransit-palvelualusta on HSL:n ja Traficomin kehittämä avoimen lähdekoodin reititystuote.',
         ],
       },
       {
         header: 'Tietolähteet',
         paragraphs: [
-          'Kartat, tiedot kaduista, rakennuksista, pysäkkien sijainnista ynnä muusta tarjoaa © OpenStreetMap contributors. Osoitetiedot tuodaan Väestörekisterikeskuksen rakennustietorekisteristä. Joukkoliikenteen reitit ja aikataulut ladataan Liikenneviraston valtakunnallisesta joukkoliikenteen tietokannasta.',
+          'Kartat, tiedot kaduista, rakennuksista, pysäkkien sijainnista ynnä muusta tarjoaa © OpenStreetMap contributors. Osoitetiedot tuodaan Väestörekisterikeskuksen rakennustietorekisteristä. Joukkoliikenteen reitit ja aikataulut ladataan Traficomin valtakunnallisesta joukkoliikenteen tietokannasta.',
         ],
       },
     ],
@@ -642,13 +646,13 @@ export default {
       {
         header: 'Digitransit-plattformen',
         paragraphs: [
-          'Digitransit-plattformen är en öppen programvara utvecklad av HRT och Trafikverket.',
+          'Digitransit-plattformen är en öppen programvara utvecklad av HRT och Traficom.',
         ],
       },
       {
         header: 'Datakällor',
         paragraphs: [
-          'Kartor, gator, byggnader, hållplatser och dylik information erbjuds av © OpenStreetMap contributors. Addressinformation hämtas från BRC:s byggnadsinformationsregister. Kollektivtrafikens rutter och tidtabeller hämtas från Trafikverkets landsomfattande kollektivtrafiksdatabas.',
+          'Kartor, gator, byggnader, hållplatser och dylik information erbjuds av © OpenStreetMap contributors. Addressinformation hämtas från BRC:s byggnadsinformationsregister. Kollektivtrafikens rutter och tidtabeller hämtas från Traficoms landsomfattande kollektivtrafiksdatabas.',
         ],
       },
     ],
@@ -663,13 +667,13 @@ export default {
       {
         header: 'Digitransit platform',
         paragraphs: [
-          'The Digitransit service platform is an open source routing platform developed by HSL and The Finnish Transport Agency.',
+          'The Digitransit service platform is an open source routing platform developed by HSL and Traficom.',
         ],
       },
       {
         header: 'Data sources',
         paragraphs: [
-          "Maps, streets, buildings, stop locations etc. are provided by © OpenStreetMap contributors. Address data is retrieved from the Building and Dwelling Register of the Finnish Population Register Center. Public transport routes and timetables are downloaded from Finnish Transport Agency's national public transit database.",
+          "Maps, streets, buildings, stop locations etc. are provided by © OpenStreetMap contributors. Address data is retrieved from the Building and Dwelling Register of the Finnish Population Register Center. Public transport routes and timetables are downloaded from Traficom's national public transit database.",
         ],
       },
     ],

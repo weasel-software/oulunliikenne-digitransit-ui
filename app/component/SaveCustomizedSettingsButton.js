@@ -91,6 +91,7 @@ class SaveCustomizedSettingsButton extends React.Component {
           </button>
         </div>
         <Snackbar
+          aria-hidden
           open={this.state.open}
           message={
             <FormattedMessage

@@ -44,7 +44,7 @@ describe('planParamUtil', () => {
       };
       const params = utils.preparePlanParams(config)(...defaultProps);
       const { modes } = params;
-      expect(modes).to.equal('BUS,WALK');
+      expect(modes).to.equal('BUS');
     });
 
     it('should use the optimize mode from query', () => {

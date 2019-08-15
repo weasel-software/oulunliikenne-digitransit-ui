@@ -101,9 +101,6 @@ export default {
     description: APP_DESCRIPTION,
   },
 
-  showTicketInformation: true,
-  ticketLink: 'https://www.hsl.fi/liput-ja-hinnat',
-
   transportModes: {
     airplane: {
       availableForSelection: false,
@@ -314,6 +311,10 @@ export default {
       },
     ],
   },
+
+  showTicketInformation: true,
+  ticketLink: 'https://www.hsl.fi/liput-ja-hinnat',
+  showTicketSelector: true,
 
   fares: [
     'HSL:hki',
