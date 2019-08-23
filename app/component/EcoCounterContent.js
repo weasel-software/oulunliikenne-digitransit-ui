@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Relay from 'react-relay/classic';
+import cx from 'classnames';
 import moment from 'moment';
 import LineChart from './LineChart';
 import Icon from './Icon';
@@ -15,11 +16,10 @@ const STEPS = {
   YEAR: 'year',
 };
 
-const formatDateByStep = (date, step, formatMsg) => {
+const formatDateByStep = (date, step) => {
   const m = moment(date);
   if (step === STEPS.HOUR) {
-    const diff = moment().diff(m, 'h');
-    return diff === 0 ? formatMsg({ id: 'now' }) : m.format('HH:mm');
+    return m.format('HH:mm');
   } else if (step === STEPS.DAY) {
     return m.format('DD.MM.');
   } else if (step === STEPS.WEEK) {
@@ -38,9 +38,7 @@ const EcoCounterContent = ({
   availableUserTypes,
   directionAvailable,
 }) => {
-  const labels = inData.map(({ date }) =>
-    formatDateByStep(date, step, formatMessage),
-  );
+  const labels = inData.map(({ date }) => formatDateByStep(date, step));
   const outDataCounts = outData.map(({ counts }) => (!counts ? 0 : counts));
   const inDataCounts = inData.map(({ counts }) => (!counts ? 0 : counts));
   const datasets = [
@@ -59,59 +57,81 @@ const EcoCounterContent = ({
   ];
   return (
     <div className="ecocounter-content">
-      <LineChart datasets={datasets} labels={labels} />
+      <LineChart datasets={datasets} labels={labels} title="Test" />
       <div className="button-row">
         {availableUserTypes.includes(WALKING) && (
-          <button
-            disabled={userType === WALKING}
-            className="ecocounter-button"
+          <EcoCounterButton
+            condition={userType === WALKING}
             onClick={() => changeUserType(WALKING)}
           >
             <Icon img="icon-icon_walk" viewBox="0 0 25 25" />
-          </button>
+          </EcoCounterButton>
         )}
         {availableUserTypes.includes(CYCLING) && (
-          <button
-            disabled={userType === CYCLING}
-            className="ecocounter-button"
+          <EcoCounterButton
+            condition={userType === CYCLING}
             onClick={() => changeUserType(CYCLING)}
           >
             <Icon img="icon-icon_bicycle-withoutBox" viewBox="0 0 25 25" />
-          </button>
+          </EcoCounterButton>
         )}
       </div>
       <div className="button-row">
-        <button
-          disabled={step === STEPS.HOUR}
-          className="ecocounter-button ecocounter-button--small"
+        <EcoCounterButton
+          condition={step === STEPS.HOUR}
           onClick={() => changeStep(STEPS.HOUR)}
+          isSmall
         >
           {formatMessage({ id: 'hourly' })}
-        </button>
-        <button
-          disabled={step === STEPS.DAY}
-          className="ecocounter-button ecocounter-button--small"
+        </EcoCounterButton>
+        <EcoCounterButton
+          condition={step === STEPS.DAY}
           onClick={() => changeStep(STEPS.DAY)}
+          isSmall
         >
           {formatMessage({ id: 'daily' })}
-        </button>
-        <button
-          disabled={step === STEPS.WEEK}
-          className="ecocounter-button ecocounter-button--small"
+        </EcoCounterButton>
+        <EcoCounterButton
+          condition={step === STEPS.WEEK}
           onClick={() => changeStep(STEPS.WEEK)}
+          isSmall
         >
           {formatMessage({ id: 'weekly' })}
-        </button>
-        <button
-          disabled={step === STEPS.MONTH}
-          className="ecocounter-button ecocounter-button--small"
+        </EcoCounterButton>
+        <EcoCounterButton
+          condition={step === STEPS.MONTH}
           onClick={() => changeStep(STEPS.MONTH)}
+          isSmall
         >
           {formatMessage({ id: 'monthly' })}
-        </button>
+        </EcoCounterButton>
       </div>
     </div>
   );
+};
+
+const EcoCounterButton = ({
+  condition,
+  isSmall = false,
+  children,
+  onClick,
+}) => (
+  <button
+    className={cx('ecocounter-button', {
+      'ecocounter-button--small': isSmall,
+      'ecocounter-button--active': condition,
+    })}
+    onClick={onClick}
+  >
+    {children}
+  </button>
+);
+
+EcoCounterButton.propTypes = {
+  condition: PropTypes.bool.isRequired,
+  children: PropTypes.node.isRequired,
+  onClick: PropTypes.func.isRequired,
+  isSmall: PropTypes.bool,
 };
 
 EcoCounterContent.propTypes = {

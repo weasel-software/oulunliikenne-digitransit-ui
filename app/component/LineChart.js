@@ -22,6 +22,17 @@ class LineChart extends React.Component {
         labels: this.props.labels,
         datasets: this.props.datasets,
       },
+      options: {
+        scales: {
+          yAxes: [
+            {
+              ticks: {
+                beginAtZero: true,
+              },
+            },
+          ],
+        },
+      },
     });
   }
 

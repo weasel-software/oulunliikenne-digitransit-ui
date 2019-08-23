@@ -45,9 +45,22 @@ class EcoCounterPopup extends React.Component {
     step: STEPS.HOUR,
   };
 
-  getBeginTime = () => {
+  // TODO: Use current time and and date, once the api returns counts for current date.
+  getEndMoment = () =>
+    moment()
+      .subtract(1, 'd')
+      .hours(23)
+      .minutes(59)
+      .seconds(59);
+
+  getEndTimestamp = () =>
+    this.getEndMoment()
+      .utc()
+      .format('YYYY-MM-DDTHH:mm:ss');
+
+  getBeginTimestamp = () => {
     const { step } = this.state;
-    const endMoment = moment();
+    const endMoment = this.getEndMoment();
     if (step === STEPS.DAY) {
       endMoment.subtract(1, 'w');
     } else if (step === STEPS.WEEK) {
@@ -55,7 +68,10 @@ class EcoCounterPopup extends React.Component {
     } else if (step === STEPS.MONTH) {
       endMoment.subtract(1, 'Y');
     } else {
-      endMoment.subtract(1, 'd');
+      endMoment
+        .hours(7)
+        .minutes(0)
+        .seconds(0);
     }
     return endMoment.utc().format('YYYY-MM-DDTHH:mm:ss');
   };
@@ -107,9 +123,9 @@ class EcoCounterPopup extends React.Component {
                 outId,
                 inId,
                 domain: this.props.channels[0].domain,
-                begin: this.getBeginTime(),
+                begin: this.getBeginTimestamp(),
                 step: this.state.step,
-                end: moment.utc().format('YYYY-MM-DDTHH:mm:ss'),
+                end: this.getEndTimestamp(),
               })
             }
             environment={Relay.Store}

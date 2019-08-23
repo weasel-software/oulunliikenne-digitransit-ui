@@ -12,13 +12,18 @@
       border-radius: 3px;
       font-size: 1rem;
       margin-right: 0.8rem;
+      background-color: $light-gray;
+      color: $black;
+      outline: none;
 
       &:last-child {
         margin-right: 0;
       }
 
-      &:disabled {
-        background-color: $gray;
+      &.ecocounter-button--active {
+        background-color: $primary-color;
+        color: $white;
+        pointer-events: none;
       }
 
       &.ecocounter-button--small {
