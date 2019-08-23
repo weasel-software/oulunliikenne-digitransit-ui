@@ -184,4 +184,8 @@ const ConnectedComponent = Relay.createContainer(EcoCounterContent, {
   },
 });
 
-export { ConnectedComponent as default, EcoCounterContent as Component };
+export {
+  ConnectedComponent as default,
+  EcoCounterContent as Component,
+  EcoCounterButton,
+};

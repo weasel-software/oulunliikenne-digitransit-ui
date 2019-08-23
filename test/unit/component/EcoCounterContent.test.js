@@ -2,7 +2,10 @@ import React from 'react';
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { shallow } from 'enzyme';
-import { Component as EcoCounterContent } from '../../../app/component/EcoCounterContent';
+import {
+  Component as EcoCounterContent,
+  EcoCounterButton,
+} from '../../../app/component/EcoCounterContent';
 
 describe('<EcoCounterContent />', () => {
   it('should only show cycling button if only cycling data is available', () => {
@@ -55,6 +58,6 @@ describe('<EcoCounterContent />', () => {
       <EcoCounterContent directionAvailable {...props} />,
     );
     expect(wrapper.find('.button-row')).to.have.lengthOf(2);
-    expect(wrapper.find('.ecocounter-button')).to.have.lengthOf(6);
+    expect(wrapper.find(EcoCounterButton)).to.have.lengthOf(6);
   });
 });
