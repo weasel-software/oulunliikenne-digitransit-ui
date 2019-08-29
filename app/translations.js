@@ -1523,7 +1523,7 @@ const translations = {
     'elevation-gained-total': 'Nousua yhteensä',
     'elevation-lost-total': 'Laskua yhteensä',
     explanations: 'Selitykset',
-    'external-modes': 'Muu liikenne',
+    'external-modes': 'Muut kulkumuodot',
     'extra-info': 'Lisätiedot',
     'favourite-target': 'Suosikkikohde',
     ferry: 'Lautta',
