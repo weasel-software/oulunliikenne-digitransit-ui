@@ -59,10 +59,10 @@ class StopMarkerPopup extends React.PureComponent {
   }
 
   toggleRealtimeMap = update => {
-    this.setState({
-      showRealtimeVehicles: !this.state.showRealtimeVehicles,
+    this.setState(prevState => ({
+      showRealtimeVehicles: !prevState.showRealtimeVehicles,
       updateRealtimeVehicles: update !== false,
-    });
+    }));
   };
 
   hasRealtimeVehicles = () => {

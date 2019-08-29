@@ -28,15 +28,15 @@ export default {
     },
     STOP_MAP: `${MAP_URL}/map/v1/finland-stop-map/`,
     CITYBIKE_MAP: `${MAP_URL}/map/v1/hsl-citybike-map/`,
-    MQTT: 'wss://mqtt.hsl.fi',
     ALERTS: process.env.ALERTS_URL || `${API_URL}/realtime/service-alerts/v1`,
     FONT:
       'https://fonts.googleapis.com/css?family=Lato:300,400,900%7CPT+Sans+Narrow:400,700',
-    REALTIME:
-      process.env.VEHICLE_URL || `${API_URL}/realtime/vehicle-positions/v1`,
     PELIAS: `${process.env.GEOCODING_BASE_URL || GEOCODING_BASE_URL}/search`,
     PELIAS_REVERSE_GEOCODER: `${process.env.GEOCODING_BASE_URL ||
       GEOCODING_BASE_URL}/reverse`,
+    ROUTE_TIMETABLES: {
+      HSL: `${API_URL}/timetables/v1/hsl/routes/`,
+    },
   },
 
   APP_PATH: `${APP_PATH}`,
@@ -58,6 +58,17 @@ export default {
 
   searchParams: {},
   feedIds: [],
+
+  realTime: {
+    /* sources per feed Id */
+    HSL: {
+      mqtt: 'wss://mqtt.hsl.fi',
+      routeSelector: function selectRoute(routePageProps) {
+        const route = routePageProps.route.gtfsId.split(':');
+        return route[1];
+      },
+    },
+  },
 
   /*
  * by default search endpoints from all but gtfs sources, correct gtfs source
@@ -173,6 +184,8 @@ export default {
     timeNavigation: {
       enableButtonArrows: false,
     },
+
+    showZoneLimits: false,
   },
 
   nearestStopDistance: {
@@ -228,6 +241,7 @@ export default {
       showDescription: true,
       showStopCode: true,
       showDistance: true,
+      showZone: false,
     },
   },
 
@@ -366,6 +380,7 @@ export default {
 
   // Ticket information feature toggle
   showTicketInformation: false,
+  useTicketIcons: false,
   showRouteInformation: false,
 
   modeToOTP: {
@@ -614,6 +629,10 @@ export default {
     },
   ],
 
+  availableRouteTimetables: {},
+
+  routeTimetableUrlResolver: {},
+
   aboutThisService: {
     fi: [
       {
@@ -743,4 +762,6 @@ export default {
   tosterMessage: {
     autoClose: 5000,
   },
+
+  routeTimetables: {},
 };

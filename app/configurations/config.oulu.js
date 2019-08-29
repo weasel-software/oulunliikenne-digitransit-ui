@@ -55,6 +55,24 @@ export default configMerger(walttiConfig, {
   useAltRealtimeClient: true,
   routePrefix: 'OULU',
 
+  realTime: {
+    /* sources per feed Id */
+    HSL: {
+      mqtt: 'wss://mqtt.hsl.fi',
+      routeSelector: function selectRoute(routePageProps) {
+        const route = routePageProps.route.gtfsId.split(':');
+        return route[1];
+      },
+    },
+    OULU: {
+      mqtt: `wss://${MQTT_URL}`,
+      routeSelector: function selectRoute(routePageProps) {
+        const route = routePageProps.route.gtfsId.split(':');
+        return route[1];
+      },
+    },
+  },
+
   stopsMinZoom: 11,
   stopsShowRealtimeTracking: true,
   stopsShowRealtimeTrackingDefault: true,

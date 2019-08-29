@@ -21,7 +21,7 @@ import provideContext from 'fluxible-addons-react/provideContext';
 // Libraries
 import serialize from 'serialize-javascript';
 import { IntlProvider } from 'react-intl';
-import polyfillLibrary from 'polyfill-library';
+import PolyfillLibrary from 'polyfill-library';
 import fs from 'fs';
 import path from 'path';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
@@ -44,6 +44,7 @@ const appRoot = `${process.cwd()}/`;
 
 // cached assets
 const polyfillls = LRU(200);
+const polyfillLibrary = new PolyfillLibrary();
 
 // Disable relay query cache in order tonot leak memory, see facebook/relay#754
 RelayQueryCaching.disable();
@@ -249,9 +250,11 @@ export default function(req, res, next) {
         301,
         redirectLocation.pathname + redirectLocation.search,
       );
-    } else if (error) {
+    }
+    if (error) {
       return next(error);
-    } else if (!renderProps) {
+    }
+    if (!renderProps) {
       return res.status(404).send('Not found');
     }
 
@@ -288,7 +291,7 @@ export default function(req, res, next) {
           crossorigin: true,
         },
         ...mainAssets.map(asset => ({
-          as: 'script',
+          as: asset.endsWith('.css') ? 'style' : 'script',
           href: `${ASSET_URL}/${asset}`,
           crossorigin: true,
         })),
@@ -317,6 +320,13 @@ export default function(req, res, next) {
           assets[`${config.CONFIG}_theme.css`]
         }"/>\n`,
       );
+      mainAssets
+        .filter(asset => asset.endsWith('.css'))
+        .forEach(asset =>
+          res.write(
+            `<link rel="stylesheet" type="text/css" crossorigin href="${ASSET_URL}/${asset}"/>\n`,
+          ),
+        );
     }
 
     res.write(
@@ -404,11 +414,13 @@ export default function(req, res, next) {
       );
       res.write('\n</script>\n');
       res.write(`<script>window.ASSET_URL="${ASSET_URL}/"</script>\n`);
-      mainAssets.forEach(asset =>
-        res.write(
-          `<script src="${ASSET_URL}/${asset}" crossorigin defer></script>\n`,
-        ),
-      );
+      mainAssets
+        .filter(asset => !asset.endsWith('.css'))
+        .forEach(asset =>
+          res.write(
+            `<script src="${ASSET_URL}/${asset}" crossorigin defer></script>\n`,
+          ),
+        );
     }
     res.write('</body>\n');
     res.write('</html>\n');

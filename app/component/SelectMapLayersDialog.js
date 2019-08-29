@@ -122,6 +122,14 @@ class SelectMapLayersDialog extends React.Component {
     this.updateSetting({ ticketSales });
   };
 
+  updateGeoJsonSetting = newSetting => {
+    const geoJson = {
+      ...this.props.mapLayers.geoJson,
+      ...newSetting,
+    };
+    this.updateSetting({ geoJson });
+  };
+
   renderContents = () => {
     const {
       citybike,
@@ -138,8 +146,9 @@ class SelectMapLayersDialog extends React.Component {
       roadConditions,
       fluencies,
       ecoCounters,
+      geoJson,
     } = this.props.mapLayers;
-    const { config } = this.props;
+    const { config, lang } = this.props;
 
     const isTransportModeEnabled = transportMode =>
       transportMode && transportMode.availableForSelection;
@@ -386,6 +395,23 @@ class SelectMapLayersDialog extends React.Component {
               )}
             </div>
           )}
+        {config.geoJson &&
+          Array.isArray(config.geoJson.layers) && (
+            <div className="checkbox-grouping">
+              {config.geoJson.layers.map(gj => (
+                <Checkbox
+                  checked={geoJson[gj.url] !== false}
+                  defaultMessage={gj.name[lang]}
+                  key={gj.url}
+                  onChange={e => {
+                    const newSetting = {};
+                    newSetting[gj.url] = e.target.checked;
+                    this.updateGeoJsonSetting(newSetting);
+                  }}
+                />
+              ))}
+            </div>
+          )}
         <button
           className="standalone-btn dialog-clear-button"
           onClick={this.props.clearMapLayers}
@@ -436,6 +462,18 @@ const mapLayersConfigShape = PropTypes.shape({
   cityBike: PropTypes.shape({
     showCityBikes: PropTypes.bool,
   }),
+  geoJson: PropTypes.shape({
+    layers: PropTypes.arrayOf(
+      PropTypes.shape({
+        url: PropTypes.string.isRequired,
+        name: PropTypes.shape({
+          en: PropTypes.string,
+          fi: PropTypes.string.isRequired,
+          sv: PropTypes.string,
+        }),
+      }),
+    ),
+  }),
   parkAndRide: PropTypes.shape({
     showParkAndRide: PropTypes.bool,
   }),
@@ -485,12 +523,14 @@ SelectMapLayersDialog.propTypes = {
   clearMapLayers: PropTypes.func.isRequired,
   breakpoint: PropTypes.string,
   executeAction: PropTypes.func,
+  lang: PropTypes.string,
 };
 
 SelectMapLayersDialog.defaultProps = {
   config: {},
   location: null,
   isOpen: false,
+  lang: 'fi',
   breakpoint: 'large',
   executeAction: null,
 };
@@ -543,7 +583,7 @@ const SelectMapLayersDialogWithBreakpoint = withBreakpoint(
 
 const connectedComponent = connectToStores(
   SelectMapLayersDialogWithBreakpoint,
-  [MapLayerStore],
+  [MapLayerStore, 'PreferencesStore'],
   context => ({
     config: context.config,
     location: context.location,
@@ -552,6 +592,7 @@ const connectedComponent = connectToStores(
       context.executeAction(updateMapLayers, { ...mapLayers }),
     clearMapLayers: () => context.executeAction(clearMapLayers),
     executeAction: context.executeAction,
+    lang: context.getStore('PreferencesStore').getLanguage(),
   }),
   {
     config: mapLayersConfigShape,

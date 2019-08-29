@@ -15,13 +15,8 @@ import withBreakpoint from '../util/withBreakpoint';
 import {
   startRealTimeClient,
   stopRealTimeClient,
-  updateTopic,
+  changeRealTimeClientTopics,
 } from '../action/realTimeClientAction';
-import {
-  startRealTimeClient as altStartRealTimeClient,
-  stopRealTimeClient as altStopRealTimeClient,
-  updateTopic as altUpdateTopic,
-} from '../action/altRealTimeClientAction';
 import { clearDepartures } from '../action/RealtimeDeparturesActions';
 import VehicleMarkerContainer from './map/VehicleMarkerContainer';
 
@@ -68,52 +63,61 @@ const fullscreenMapToggle = (fullscreenMap, params, router) => (
   </div>
 );
 /* eslint-enable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
-
 class StopPageMap extends React.Component {
-  componentWillReceiveProps(newProps) {
-    if (newProps.realtimeDepartures !== this.props.realtimeDepartures) {
-      this.setRealtimeClient(newProps.realtimeDepartures);
+  componentDidUpdate(prevProps) {
+    const { realtimeDepartures } = this.props;
+    if (Array.isArray(realtimeDepartures) && realtimeDepartures.length > 0) {
+      if (
+        prevProps.realtimeDepartures === null &&
+        realtimeDepartures.length > 0
+      ) {
+        this.startClient(realtimeDepartures);
+      } else if (prevProps.realtimeDepartures !== realtimeDepartures) {
+        this.updateClient(realtimeDepartures);
+      }
     }
   }
 
   componentWillUnmount() {
+    const { client } = this.props.getStore('RealTimeInformationStore');
+    if (client) {
+      this.props.executeAction(stopRealTimeClient, client);
+    }
     this.deactivateRealtimeVehicles();
   }
 
-  setRealtimeClient = departures => {
-    const { client, subscriptions } = this.props.getStore(
-      'RealTimeInformationStore',
-    );
+  startClient = departures => {
+    const { config, executeAction } = this.props;
+    const { useAltRealtimeClient, feedIds } = config;
+    const agency = feedIds[0];
+    const options = departures.map(departure => ({
+      route: departure.pattern.route.gtfsId.split(':')[1],
+    }));
 
-    if (Array.isArray(departures) && departures.length) {
-      if (client) {
-        this.props.executeAction(
-          this.props.config.useAltRealtimeClient ? altUpdateTopic : updateTopic,
-          {
-            client,
-            oldTopics: subscriptions,
-            newTopic: departures.map(departure => ({
-              route: departure.pattern.route.gtfsId.split(':')[1],
-            })),
-          },
-        );
-      } else {
-        this.props.executeAction(
-          this.props.config.useAltRealtimeClient
-            ? altStartRealTimeClient
-            : startRealTimeClient,
-          departures.map(departure => ({
-            route: departure.pattern.route.gtfsId.split(':')[1],
-          })),
-        );
-      }
-    } else if (client) {
-      this.props.executeAction(
-        this.props.config.useAltRealtimeClient
-          ? stopRealTimeClient
-          : altStopRealTimeClient,
+    executeAction(startRealTimeClient, {
+      useAltRealtimeClient,
+      agency,
+      options,
+    });
+  };
+
+  updateClient = departures => {
+    const { config, getStore, executeAction } = this.props;
+    const { client, topics } = getStore('RealTimeInformationStore');
+    const { useAltRealtimeClient, feedIds } = config;
+    if (client) {
+      const agency = feedIds[0];
+      const options = departures.map(departure => ({
+        route: departure.pattern.route.gtfsId.split(':')[1],
+      }));
+
+      executeAction(changeRealTimeClientTopics, {
+        useAltRealtimeClient,
+        agency,
+        options,
         client,
-      );
+        topics,
+      });
     }
   };
 

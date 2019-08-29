@@ -29,6 +29,7 @@ class MapLayerStore extends Store {
       servicePoint: true,
       ticketMachine: true,
     },
+    geoJson: {},
     parkingStations: true,
     disorders: true,
     roadworks: true,
@@ -193,6 +194,7 @@ export const mapLayerShape = PropTypes.shape({
   tmsStations: PropTypes.bool,
   roadConditions: PropTypes.bool,
   fluencies: PropTypes.bool,
+  geoJson: PropTypes.object,
 });
 
 export default MapLayerStore;

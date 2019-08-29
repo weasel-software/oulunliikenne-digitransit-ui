@@ -48,6 +48,7 @@ class TripStopListContainer extends React.PureComponent {
       relay.forceFetch();
     }
   }
+
   componentDidUpdate() {
     if (this.props.breakpoint === 'large' && !this.state.hasScrolled) {
       this.scrollToSelectedTailIcon();

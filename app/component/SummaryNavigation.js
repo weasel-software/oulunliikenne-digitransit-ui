@@ -41,6 +41,11 @@ class SummaryNavigation extends React.Component {
     executeAction: PropTypes.func.isRequired,
   };
 
+  customizeSearchModules = {
+    Drawer: () => importLazy(import('material-ui/Drawer')),
+    CustomizeSearch: () => importLazy(import('./CustomizeSearchNew')),
+  };
+
   componentDidMount() {
     this.unlisten = this.context.router.listen(location => {
       if (
@@ -77,11 +82,6 @@ class SummaryNavigation extends React.Component {
     (this.context.location.state &&
       this.context.location.state.customizeSearchOffcanvas) ||
     false;
-
-  customizeSearchModules = {
-    Drawer: () => importLazy(import('material-ui/Drawer')),
-    CustomizeSearch: () => importLazy(import('./CustomizeSearchNew')),
-  };
 
   toggleCustomizeSearchOffcanvas = () => {
     this.internalSetOffcanvas(!this.getOffcanvasState());

@@ -31,6 +31,7 @@ class TopLevel extends React.Component {
     params: PropTypes.shape({
       from: PropTypes.string,
       to: PropTypes.string,
+      stopId: PropTypes.string,
     }).isRequired,
     origin: dtLocationShape,
   };

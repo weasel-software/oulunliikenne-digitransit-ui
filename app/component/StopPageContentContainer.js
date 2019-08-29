@@ -4,10 +4,12 @@ import Relay from 'react-relay/classic';
 import get from 'lodash/get';
 import connectToStores from 'fluxible-addons-react/connectToStores';
 import { routerShape } from 'react-router';
+import { FormattedMessage } from 'react-intl';
 
 import DepartureListHeader from './DepartureListHeader';
 import DepartureListContainer from './DepartureListContainer';
 import Error404 from './404';
+import Icon from './Icon';
 
 class StopPageContent extends React.Component {
   static propTypes = {
@@ -66,10 +68,10 @@ class StopPageContent extends React.Component {
   }
 
   toggleRealtimeMap = update => {
-    this.setState({
-      showRealtimeVehicles: !this.state.showRealtimeVehicles,
+    this.setState(prevState => ({
+      showRealtimeVehicles: !prevState.showRealtimeVehicles,
       updateRealtimeVehicles: update !== false,
-    });
+    }));
   };
 
   render() {
@@ -79,12 +81,22 @@ class StopPageContent extends React.Component {
       return <Error404 />;
     }
 
+    const { stoptimes } = this.props.stop;
+    if (!stoptimes || stoptimes.length === 0) {
+      return (
+        <div className="stop-no-departures-container">
+          <Icon img="icon-icon_station" />
+          <FormattedMessage id="no-departures" defaultMessage="No departures" />
+        </div>
+      );
+    }
+
     return (
       <React.Fragment>
         <DepartureListHeader />
         <div className="stop-scroll-container momentum-scroll">
           <DepartureListContainer
-            stoptimes={this.props.stop.stoptimes}
+            stoptimes={stoptimes}
             key="departures"
             className="stop-page momentum-scroll"
             routeLinks
@@ -102,7 +114,7 @@ class StopPageContent extends React.Component {
   }
 }
 
-export default Relay.createContainer(
+const connectedComponent = Relay.createContainer(
   connectToStores(StopPageContent, ['TimeStore'], ({ getStore }) => ({
     currentTime: getStore('TimeStore')
       .getCurrentTime()
@@ -113,7 +125,12 @@ export default Relay.createContainer(
       stop: () => Relay.QL`
       fragment on Stop {
         url
-        stoptimes: stoptimesWithoutPatterns(startTime: $startTime, timeRange: $timeRange, numberOfDepartures: $numberOfDepartures) {
+        stoptimes: stoptimesWithoutPatterns(
+          startTime: $startTime, 
+          timeRange: $timeRange, 
+          numberOfDepartures: $numberOfDepartures, 
+          omitCanceled: false
+        ) {
           ${DepartureListContainer.getFragment('stoptimes')}
         }
       }
@@ -127,3 +144,5 @@ export default Relay.createContainer(
     },
   },
 );
+
+export { connectedComponent as default, StopPageContent as Component };

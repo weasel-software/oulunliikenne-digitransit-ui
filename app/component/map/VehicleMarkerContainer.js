@@ -52,7 +52,7 @@ function getVehicleIcon(mode, heading, shortName, className) {
 
 if (isBrowser) {
   /* eslint-disable global-require */
-  Popup = require('./Popup').default;
+  Popup = require('react-leaflet/es/Popup').default;
   /* eslint-enable global-require */
 }
 
@@ -82,13 +82,11 @@ function shouldShowVehicle(message, pattern, tripStart, config) {
 
 function shouldShowVehicleAlt(message, departures, tripStart, config) {
   const departure = findDeparture(departures, message);
-
   if (!departure) {
     return false;
   }
 
   const { direction, stops } = departure.pattern;
-
   return (
     message.lat &&
     message.long &&
@@ -102,70 +100,71 @@ function shouldShowVehicleAlt(message, departures, tripStart, config) {
 }
 
 function VehicleMarkerContainer(props, { config }) {
-  return Object.entries(props.vehicles)
-    .filter(([, message]) => message.lat && message.long)
-    .filter(([, message]) => {
+  const filteredVehicles = Object.values(props.vehicles)
+    .filter(({ message }) => message.lat && message.long)
+    .filter(({ message }) => {
       if (props.departures) {
-        return shouldShowVehicleAlt(
+        const showVehicle = shouldShowVehicleAlt(
           message,
           props.departures,
           props.tripStart,
           config,
         );
+        return showVehicle;
       }
 
       return shouldShowVehicle(message, props.pattern, props.tripStart, config);
-    })
-    .map(([id, message]) => {
-      const departure = findDeparture(props.departures, message);
-      const shortName = departure ? departure.shortName : props.shortName;
-
-      return (
-        <IconMarker
-          key={id}
-          position={{
-            lat: message.lat,
-            lon: message.long,
-          }}
-          icon={getVehicleIcon(
-            message.mode,
-            message.heading,
-            shortName,
-            props.className,
-          )}
-        >
-          <Popup
-            offset={[106, 16]}
-            maxWidth={250}
-            minWidth={250}
-            className="popup"
-          >
-            <Relay.RootContainer
-              Component={RouteMarkerPopup}
-              route={
-                new FuzzyTripRoute({
-                  tripId: message.tripId,
-                  route: message.route,
-                  direction: message.direction,
-                  date: message.operatingDay,
-                  time:
-                    message.tripStartTime.substring(0, 2) * 60 * 60 +
-                    message.tripStartTime.substring(2, 4) * 60,
-                })
-              }
-              renderLoading={() => (
-                <div className="card" style={{ height: '12rem' }}>
-                  <Loading />
-                </div>
-              )}
-              renderFetched={data => (
-                <RouteMarkerPopup {...data} message={message} />
-              )}
-            />
-          </Popup>
-        </IconMarker>
-      );
     });
+  return filteredVehicles.map(({ id, message }) => {
+    const departure = findDeparture(props.departures, message);
+    const shortName = departure ? departure.shortName : props.shortName;
+
+    return (
+      <IconMarker
+        key={id}
+        position={{
+          lat: message.lat,
+          lon: message.long,
+        }}
+        icon={getVehicleIcon(
+          message.mode,
+          message.heading,
+          shortName,
+          props.className,
+        )}
+      >
+        <Popup
+          offset={[106, 16]}
+          maxWidth={250}
+          minWidth={250}
+          className="popup"
+        >
+          <Relay.RootContainer
+            Component={RouteMarkerPopup}
+            route={
+              new FuzzyTripRoute({
+                tripId: message.tripId,
+                route: message.route,
+                direction: message.direction,
+                date: message.operatingDay,
+                time:
+                  message.tripStartTime.substring(0, 2) * 60 * 60 +
+                  message.tripStartTime.substring(2, 4) * 60,
+              })
+            }
+            renderLoading={() => (
+              <div className="card" style={{ height: '12rem' }}>
+                <Loading />
+              </div>
+            )}
+            renderFetched={data => (
+              <RouteMarkerPopup {...data} message={message} />
+            )}
+          />
+        </Popup>
+      </IconMarker>
+    );
+  });
 }
 
 VehicleMarkerContainer.contextTypes = {

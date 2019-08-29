@@ -234,11 +234,7 @@ class DepartureListContainer extends Component {
       const id = `${departure.pattern.code}:${departure.stoptime}`;
 
       const classes = {
-        disruption: hasActiveDisruption(
-          departure.stoptime,
-          departure.pattern.route.alerts,
-        ),
-        canceled: departure.canceled,
+        disruption: hasActiveDisruption(departure.stoptime, departure.alerts),
       };
 
       const departureObj = (
@@ -312,6 +308,10 @@ export default Relay.createContainer(
                 id
                 code
                 gtfsId
+              }
+              alerts {
+                effectiveStartDate
+                effectiveEndDate
               }
               pattern {
                 route {

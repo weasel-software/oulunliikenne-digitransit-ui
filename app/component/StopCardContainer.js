@@ -41,7 +41,8 @@ export default Relay.createContainer(StopCardContainer, {
         stoptimes: stoptimesWithoutPatterns(
           startTime: $startTime,
           timeRange: $timeRange,
-          numberOfDepartures: $numberOfDepartures
+          numberOfDepartures: $numberOfDepartures,
+          omitCanceled: false
         ) {
           ${DepartureListContainer.getFragment('stoptimes')}
         }

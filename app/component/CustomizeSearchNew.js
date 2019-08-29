@@ -49,6 +49,8 @@ class CustomizeSearch extends React.Component {
     isOpen: false,
   };
 
+  defaultSettings = getDefaultSettings(this.context.config);
+
   onRouteSelected = (val, preferType) => {
     const routeToAdd = val.properties.gtfsId.replace(':', '__');
     if (preferType === 'preferred') {
@@ -57,8 +59,6 @@ class CustomizeSearch extends React.Component {
       addUnpreferredRoute(this.context.router, routeToAdd);
     }
   };
-
-  defaultSettings = getDefaultSettings(this.context.config);
 
   removeRoute = (routeToRemove, preferType) => {
     if (preferType === 'preferred') {

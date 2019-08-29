@@ -36,9 +36,9 @@ class ContentToggle extends React.Component {
       this.props.onToggle(!this.state.show);
     }
     this.toggleClickListener();
-    this.setState({
-      show: !this.state.show,
-    });
+    this.setState(prevState => ({
+      show: !prevState.show,
+    }));
   };
 
   checkClickLocation = e => {

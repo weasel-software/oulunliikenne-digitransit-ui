@@ -42,6 +42,8 @@ const skip = browsers => suite => {
 };
 
 // tests//
+// testVariation('IndexPage', 'normal', 1, [], actions => actions.wait(5000));
+
 testVariation(
   'Departure',
   'normal',
@@ -75,9 +77,6 @@ testVariation('Departure', 'added-padding', 2);
 testVariation('Departure', 'with-stop', 3);
 testVariation('Departure', 'isArrival', 4);
 
-testVariation('DepartureTime', 'normal', 2);
-testVariation('DepartureTime', 'canceled', 3);
-
 testVariation('RouteNumber', 'normal');
 testVariation('RouteNumber', 'with-disruption', 2);
 testVariation('RouteNumber', 'vertical', 4);
@@ -86,10 +85,6 @@ testVariation('RouteNumber', 'vertical-with-disruption', 5);
 testVariation('RouteDestination', 'normal');
 testVariation('RouteDestination', 'drop-off', 2);
 testVariation('RouteDestination', 'last-stop', 3);
-
-testVariation('Distance', 'zero');
-testVariation('Distance', 'meters', 2);
-testVariation('Distance', 'km', 3);
 
 testVariation('PlatformNumber');
 
@@ -204,7 +199,6 @@ testVariation('BicycleRentalStationRow', 'few-bikes', 2);
 testVariation('BicycleRentalStationRow', 'no-bikes', 3);
 
 testVariation('StopPageHeader');
-testVariation('StopCardHeader');
 testVariation('Timetable');
 testVariation('SplitBars');
 testVariation('Labeled');
@@ -218,24 +212,8 @@ testVariation('PageFooter');
 testVariation('FooterItem', 'basic');
 testVariation('FooterItem', 'with-icon', 2);
 
-testVariation('SummaryRow', 'passive-small-today');
-testVariation('SummaryRow', 'active-small-today', 2);
-testVariation('SummaryRow', 'passive-large-today', 3);
-testVariation('SummaryRow', 'active-large-today', 4);
-testVariation('SummaryRow', 'passive-small-tomorrow', 5);
-testVariation('SummaryRow', 'active-small-tomorrow', 6);
-testVariation('SummaryRow', 'passive-large-tomorrow', 7);
-testVariation('SummaryRow', 'active-large-tomorrow', 8);
-testVariation('SummaryRow', 'open-large-today', 9);
-testVariation('SummaryRow', 'open-large-tomorrow', 10);
-testVariation('SummaryRow', 'passive-small-via', 11);
-testVariation('SummaryRow', 'active-large-via', 12);
-testVariation('SummaryRow', 'passive-small-call-agency', 13);
-testVariation('SummaryRow', 'active-large-call-agency', 14);
-testVariation('SummaryRow', 'passive-large-biking', 15);
-testVariation('SummaryRow', 'passive-small-biking', 16);
-testVariation('SummaryRow', 'citybike-large-passive', 17);
-testVariation('SummaryRow', 'citybike-small-passive', 18);
+testVariation('SummaryRow', 'large', 1);
+testVariation('SummaryRow', 'small', 2);
 
 testVariation('CallAgencyWarning');
 
@@ -257,15 +235,14 @@ testVariation('DateWarning', 'tomorrow-show-warning', 2);
 testVariation('Error404');
 
 testVariation('StopMarkerPopup', 'empty', 1);
-testVariation('StopMarkerPopup', 'basic', 2);
-testVariation('StopMarkerPopup', 'real-time', 3, [
-  'div.departure-list > p:nth-child(1) > span.realtime svg.realtime',
+testVariation('StopMarkerPopup', 'basic', 2, [
   'div.departure-list > p:nth-child(2) > span.realtime svg.realtime',
-  'div.departure-list > p:nth-child(4) > span.realtime svg.realtime',
+  'p:nth-child(2) > span.route-destination > span > span.last-stop-icon',
+  'p:nth-child(4) > span.route-destination > span > span.last-stop-icon',
 ]).then(skip('ie11'));
-testVariation('StopMarkerPopup', 'tomorrow', 4);
-testVariation('StopMarkerPopup', 'missing-platform', 5);
 
 testVariation('SelectStreetModeDialog');
 testVariation('SelectMapLayersDialog');
 testVariation('MainMenuContainer');
+
+testVariation('OriginDestinationBar', 'with-viapoint', 2);

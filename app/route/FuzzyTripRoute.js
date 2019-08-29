@@ -16,6 +16,7 @@ export default class FuzzyTripRoute extends Relay.Route {
       }
     `,
   };
+
   static paramDefinitions = {
     tripId: { required: true },
     route: { required: true },
@@ -23,5 +24,6 @@ export default class FuzzyTripRoute extends Relay.Route {
     time: { required: true },
     date: { required: true },
   };
+
   static routeName = 'FuzzyTripRoute';
 }

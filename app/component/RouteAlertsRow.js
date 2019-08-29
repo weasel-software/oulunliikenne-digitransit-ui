@@ -3,13 +3,10 @@ import React from 'react';
 import cx from 'classnames';
 import RouteNumber from './RouteNumber';
 import ComponentUsageExample from './ComponentUsageExample';
-import Icon from './Icon';
 
 export default function RouteAlertsRow({
   header,
   description,
-  startTime,
-  endTime,
   routeMode,
   routeLine,
   expired,
@@ -17,12 +14,14 @@ export default function RouteAlertsRow({
 }) {
   return (
     <div className={cx('route-alert-row', { expired })}>
-      <RouteNumber color={color} mode={routeMode} text={routeLine} vertical />
-      <Icon img="icon-icon_caution" className="caution" />
+      <RouteNumber
+        color={color}
+        hasDisruption
+        mode={routeMode}
+        text={routeLine}
+        vertical
+      />
       <div className="route-alert-contents">
-        <div className="route-alert-duration">
-          {startTime} – {endTime}
-        </div>
         <div className={cx('route-alert-header', routeMode)}>{header}</div>
         <div className="route-alert-body">{description}</div>
       </div>
@@ -31,14 +30,12 @@ export default function RouteAlertsRow({
 }
 
 RouteAlertsRow.propTypes = {
-  header: PropTypes.string,
-  description: PropTypes.string.isRequired,
-  startTime: PropTypes.string.isRequired,
-  endTime: PropTypes.string.isRequired,
+  header: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+  description: PropTypes.string,
   routeMode: PropTypes.string.isRequired,
   routeLine: PropTypes.string.isRequired,
   expired: PropTypes.bool.isRequired,
-  color: PropTypes.string.isRequired,
+  color: PropTypes.string,
 };
 
 RouteAlertsRow.description = () => (
@@ -53,11 +50,8 @@ RouteAlertsRow.description = () => (
             'suuntaan, myöhästyy. Syy: tekninen vika. Paikka: Kauppatori, Hakaniemi. ' +
             'Arvioitu kesto: 14:29 - 15:20.'
           }
-          startTime="11:32"
-          endTime="12:20"
           routeMode="tram"
           routeLine="2"
-          day="Today"
           expired={false}
         />
       </ComponentUsageExample>
@@ -69,11 +63,8 @@ RouteAlertsRow.description = () => (
             'suuntaan, myöhästyy. Syy: tekninen vika. Paikka: Kauppatori, Hakaniemi. ' +
             'Arvioitu kesto: 14:29 - 15:20.'
           }
-          startTime="11:32"
-          endTime="12:20"
           routeMode="tram"
           routeLine="2"
-          day="Yesterday"
           expired
         />
       </ComponentUsageExample>

@@ -1,0 +1,106 @@
+import ceil from 'lodash/ceil';
+import chunk from 'lodash/chunk';
+import moment from 'moment';
+
+const AWS = require('aws-sdk');
+const iot = require('aws-iot-device-sdk');
+
+const modeTranslate = {
+  train: 'rail',
+};
+// getTopic
+// Returns MQTT topic to be subscribed
+// Input: options - route, direction, tripStartTime are used to generate the topic
+function getTopic(options) {
+  const routeId = options.route ? options.route : '+';
+
+  // MQTT topic cannot have more than 7 forward slashes in AWS IoT, so for oulunliikenne we use a shorter version than HSL.
+  // Also, we don't have any other data anyways, so we don't lose anything.
+  // /hfp/<version>/journey/<temporal_type>/<transport_mode>/<vehicle_number>/<route_id>
+  return `/hfp/v1/journey/+/+/+/${routeId}`;
+}
+
+export function parseMessage(topic, message, actionContext) {
+  let parsedMessage;
+  const [, , , , , transportMode, vehicleNumber, routeId] = topic.split('/');
+
+  if (message instanceof Uint8Array) {
+    parsedMessage = JSON.parse(message).VP;
+  } else {
+    parsedMessage = message.VP;
+  }
+
+  const messageContents = {
+    id: vehicleNumber,
+    route: `${actionContext.config.routePrefix}:${routeId}`,
+    tripId: `${actionContext.config.routePrefix}:${parsedMessage.line}`,
+    tripStartTime: '', // we don't have this data
+    operatingDay:
+      parsedMessage.oday && parsedMessage.oday !== 'XXX'
+        ? parsedMessage.oday
+        : moment().format('YYYY-MM-DD'),
+    mode: modeTranslate[transportMode]
+      ? modeTranslate[transportMode]
+      : transportMode,
+    next_stop: parsedMessage.nxt,
+    stop_index: parsedMessage.stop_index,
+    timestamp: parsedMessage.tsi,
+    lat: parsedMessage.lat && ceil(parsedMessage.lat, 5),
+    long: parsedMessage.long && ceil(parsedMessage.long, 5),
+    heading: parsedMessage.hdg,
+  };
+
+  actionContext.dispatch('RealTimeClientMessage', {
+    id: vehicleNumber,
+    message: messageContents,
+  });
+}
+
+export function changeTopics(settings, actionContext) {
+  const { client, oldTopics } = settings;
+
+  if (Array.isArray(oldTopics) && oldTopics.length > 0) {
+    client.unsubscribe(oldTopics);
+  }
+  // remove existing vehicles/topics
+  actionContext.dispatch('RealTimeClientReset');
+  const topics = settings.options.map(option => getTopic(option, settings));
+  // set new topic to store
+  actionContext.dispatch('RealTimeClientNewTopics', topics);
+  client.subscribe(topics);
+}
+
+export function startRealTimeClient(settings, actionContext) {
+  const topics = settings.options.map(option => getTopic(option));
+
+  // Initialize the Amazon Cognito credentials provider with an unauthenticated user to get access to MQTT broker.
+  // The unauthenticated user role is given access to `connect` to the MQTT broker and `subscribe` to topics.
+  AWS.config.region = actionContext.config.AWS.region;
+  AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+    IdentityPoolId: actionContext.config.AWS.iot.identityPoolId,
+  });
+  AWS.config.credentials.clearCachedId();
+  return AWS.config.credentials.refreshPromise().then(() => {
+    // Each MQTT client needs a unique ID. Any duplicate ID will cause clients to disconnect.
+    const rand = Math.floor(Math.random() * 100000 + 1);
+    const client = iot.device({
+      protocol: 'wss',
+      accessKeyId: AWS.config.credentials.accessKeyId,
+      secretKey: AWS.config.credentials.secretAccessKey,
+      sessionToken: AWS.config.credentials.sessionToken,
+      clientId: `mqtt-${rand}`,
+      host: actionContext.config.URL.MQTT,
+    });
+
+    client.on('connect', () => {
+      // A single SUBSCRIBE request is limited a maximum of eight subscriptions. So we need to subscribe in chunks of max 8
+      const topicsChunkList = chunk(topics, 8);
+      topicsChunkList.forEach(topicsChunk => client.subscribe(topicsChunk));
+    });
+
+    client.on('error', e => console.log(e));
+    client.on('close', () => console.log('Client connection closed'));
+    client.on('message', (t, m) => parseMessage(t, m, actionContext));
+    return { client, topics };
+  });
+}

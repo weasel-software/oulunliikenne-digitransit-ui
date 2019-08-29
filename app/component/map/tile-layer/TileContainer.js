@@ -260,11 +260,9 @@ class TileContainer {
           this.timer = null;
         }
         return false;
-      } else if (e.type === 'contextmenu') {
+      } else if (e.type === 'contextmenu' && nearest.length === 0) {
         // no need to check double clicks
-        if (nearest.length === 0) {
-          return this.onSelectableTargetClicked([], e.latlng);
-        }
+        return this.onSelectableTargetClicked([], e.latlng);
       }
 
       L.DomEvent.stopPropagation(e);

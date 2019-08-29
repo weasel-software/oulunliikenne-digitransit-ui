@@ -13,7 +13,7 @@ import ModeSelect from './ModeSelect';
 import ExternalModes from './ExternalModes';
 import SelectMapLayersDialog from './SelectMapLayersDialog';
 import MessageBar from './MessageBar';
-import { isBrowser } from '../util/browser';
+import LogoSmall from './LogoSmall';
 import {
   getStreetMode,
   setStreetMode,
@@ -47,21 +47,14 @@ const AppBarLarge = (
   };
 
   let logoElement;
-
   if (config.textLogo) {
     logoElement = (
       <section className="title">
-        <span className="title">{config.title}</span>
+        <LogoSmall className="navi-logo" title={config.title} />
       </section>
     );
-  } else if (isBrowser && logo) {
-    logoElement = (
-      <div className="navi-logo" style={{ backgroundImage: `url(${logo})` }} />
-    );
   } else {
-    logoElement = (
-      <div className="navi-logo" style={{ backgroundImage: 'none' }} />
-    );
+    logoElement = <LogoSmall className="navi-logo" logo={logo} showLogo />;
   }
 
   /* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions, jsx-a11y/anchor-is-valid */

@@ -15,7 +15,7 @@ import {
 import storeOrigin from '../action/originActions';
 import FrontPagePanelLarge from './FrontPagePanelLarge';
 import FrontPagePanelSmall from './FrontPagePanelSmall';
-import MapWithTracking from '../component/map/MapWithTracking';
+import MapWithTracking from './map/MapWithTracking';
 import PageFooter from './PageFooter';
 import DTAutosuggestPanel from './DTAutosuggestPanel';
 import { isBrowser } from '../util/browser';
@@ -36,6 +36,7 @@ import SelectStreetModeDialog from './SelectStreetModeDialog';
 import events from '../util/events';
 import * as ModeUtils from '../util/modeUtils';
 import withBreakpoint from '../util/withBreakpoint';
+import ComponentUsageExample from './ComponentUsageExample';
 import ContentToggle from './ContentToggle';
 import { updateMapLayersMode } from '../action/MapLayerActions';
 import { clearDepartures } from '../action/RealtimeDeparturesActions';
@@ -54,6 +55,7 @@ class IndexPage extends React.Component {
   };
 
   static propTypes = {
+    autoSetOrigin: PropTypes.bool,
     breakpoint: PropTypes.string.isRequired,
     origin: dtLocationShape.isRequired,
     destination: dtLocationShape.isRequired,
@@ -71,6 +73,8 @@ class IndexPage extends React.Component {
 
   static defaultProps = {
     realtimeDepartures: undefined,
+    autoSetOrigin: true,
+    tab: TAB_NEARBY,
   };
 
   constructor(props, context) {
@@ -78,7 +82,9 @@ class IndexPage extends React.Component {
     this.state = {
       mapExpanded: context.config.map.mobileDefaultExpanded, // Show right-now as default
     };
-    context.executeAction(storeOrigin, props.origin);
+    if (this.props.autoSetOrigin) {
+      context.executeAction(storeOrigin, props.origin);
+    }
   }
 
   componentDidMount() {
@@ -401,6 +407,24 @@ const Index = shouldUpdate(
 
 const IndexPageWithBreakpoint = withBreakpoint(Index);
 
+IndexPageWithBreakpoint.description = (
+  <ComponentUsageExample isFullscreen>
+    <IndexPageWithBreakpoint
+      autoSetOrigin={false}
+      destination={{
+        ready: false,
+        set: false,
+      }}
+      origin={{
+        ready: false,
+        set: false,
+      }}
+      routes={[]}
+      showSpinner={false}
+    />
+  </ComponentUsageExample>
+);
+
 /* eslint-disable no-param-reassign */
 const processLocation = (locationString, locationState, intl) => {
   let location;
@@ -539,4 +563,7 @@ IndexPageWithPosition.contextTypes = {
   intl: intlShape,
 };
 
-export default IndexPageWithPosition;
+export {
+  IndexPageWithPosition as default,
+  IndexPageWithBreakpoint as Component,
+};

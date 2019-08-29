@@ -9,9 +9,9 @@ import lodashFilter from 'lodash/filter';
 import isEqual from 'lodash/isEqual';
 import uniqBy from 'lodash/uniqBy';
 import get from 'lodash/get';
-import L from 'leaflet';
+import Popup from 'react-leaflet/es/Popup';
+import { withLeaflet } from 'react-leaflet/es/context';
 
-import Popup from '../Popup';
 import StopRoute from '../../../route/StopRoute';
 import TerminalRoute from '../../../route/TerminalRoute';
 import CityBikeRoute from '../../../route/CityBikeRoute';
@@ -63,6 +63,13 @@ class TileLayerContainer extends GridLayer {
     zoomOffset: PropTypes.number.isRequired,
     disableMapTracking: PropTypes.func,
     mapLayers: mapLayerShape.isRequired,
+    leaflet: PropTypes.shape({
+      map: PropTypes.shape({
+        addLayer: PropTypes.func.isRequired,
+        addEventParent: PropTypes.func.isRequired,
+        removeEventParent: PropTypes.func.isRequired,
+      }).isRequired,
+    }).isRequired,
     highlightedStop: PropTypes.string,
     highlightedFluency: PropTypes.string,
   };
@@ -75,57 +82,52 @@ class TileLayerContainer extends GridLayer {
   static contextTypes = {
     getStore: PropTypes.func.isRequired,
     intl: intlShape.isRequired,
-    map: PropTypes.object.isRequired,
     config: PropTypes.object.isRequired,
   };
 
-  state = {
-    ...initialState,
-    currentTime: this.context
-      .getStore('TimeStore')
-      .getCurrentTime()
-      .unix(),
+  PopupOptions = {
+    offset: [110, 16],
+    minWidth: 260,
+    maxWidth: 260,
+    autoPanPaddingTopLeft: [5, 125],
+    className: 'popup',
+    ref: 'popup',
+    onClose: () => this.setState(initialState),
+    autoPan: false,
   };
 
-  componentWillMount() {
-    super.componentWillMount();
+  merc = new SphericalMercator({
+    size: this.props.tileSize || 256,
+  });
+
+  constructor(props, context) {
+    super(props, context);
+
+    // Required as it is not passed upwards through the whole inherittance chain
+    this.context = context;
+    this.state = {
+      ...initialState,
+      currentTime: context
+        .getStore('TimeStore')
+        .getCurrentTime()
+        .unix(),
+    };
+    this.leafletElement.createTile = this.createTile;
+  }
+
+  componentDidMount() {
+    super.componentDidMount();
     this.context.getStore('TimeStore').addChangeListener(this.onTimeChange);
+    this.props.leaflet.map.addEventParent(this.leafletElement);
+    this.leafletElement.on('click contextmenu', this.onClick);
   }
 
   componentDidUpdate(prevProps) {
     if (this.context.popupContainer != null) {
       this.context.popupContainer.openPopup();
     }
-
-    if (
-      !isEqual(prevProps.mapLayers, this.props.mapLayers) ||
-      !isEqual(prevProps.hilightedStops, this.props.hilightedStops)
-    ) {
-      this.context.map.removeEventParent(this.leafletElement);
-      this.leafletElement.remove();
-      this.leafletElement = this.createLeafletElement(this.props);
-      this.context.map.addLayer(this.leafletElement);
-
-      if (this.leafletElementHighlighted) {
-        this.leafletElementHighlighted.remove();
-      }
-    }
-
-    if (
-      !isEqual(prevProps.highlightedStop, this.props.highlightedStop) ||
-      !isEqual(prevProps.highlightedFluency, this.props.highlightedFluency)
-    ) {
-      if (this.leafletElementHighlighted) {
-        this.leafletElementHighlighted.remove();
-      }
-
-      if (this.props.highlightedStop || this.props.highlightedFluency) {
-        this.leafletElementHighlighted = this.createLeafletElement(
-          this.props,
-          false,
-        );
-        this.context.map.addLayer(this.leafletElementHighlighted);
-      }
+    if (!isEqual(prevProps.mapLayers, this.props.mapLayers)) {
+      this.leafletElement.redraw();
     }
   }
 
@@ -175,57 +177,11 @@ class TileLayerContainer extends GridLayer {
     /* eslint-enable no-underscore-dangle */
   };
 
-  onPopupclose = () => this.setState(initialState);
-
-  PopupOptions = {
-    offset: [110, 16],
-    minWidth: 260,
-    maxWidth: 260,
-    autoPanPaddingTopLeft: [5, 125],
-    className: 'popup',
-    ref: 'popup',
-    onClose: this.onPopupclose,
-    autoPan: false,
-  };
-
-  createLeafletElement(props, withEventParent = true) {
-    const Layer = L.GridLayer.extend({
-      createTile: withEventParent ? this.createTile : this.createTileAlt,
-    });
-    const leafletElement = new Layer(this.getOptions(props));
-
-    if (withEventParent) {
-      this.context.map.addEventParent(leafletElement);
-      leafletElement.on('click contextmenu', this.onClick);
-    }
-
-    return leafletElement;
-  }
-
-  merc = new SphericalMercator({
-    size: this.props.tileSize || 256,
-  });
-
-  createTile = (tileCoords, done) =>
-    this.createTileExt(tileCoords, done, this.props);
-
-  createTileAlt = (tileCoords, done) => {
-    const props = { ...this.props };
-    props.layers = props.layers.filter(layer =>
-      ['Stops', 'Fluencies'].includes(layer.name),
-    );
-
-    return this.createTileExt(tileCoords, done, {
-      ...props,
-      isHighlight: true,
-    });
-  };
-
-  createTileExt = (tileCoords, done, props) => {
+  createTile = (tileCoords, done) => {
     const tile = new TileContainer(
       tileCoords,
       done,
-      props,
+      this.props,
       this.context.config,
     );
 
@@ -275,11 +231,13 @@ class TileLayerContainer extends GridLayer {
   render() {
     let popup = null;
     let contents;
+
     const loadingPopup = () => (
       <div className="card" style={{ height: '12rem' }}>
         <Loading />
       </div>
     );
+
     if (typeof this.state.selectableTargets !== 'undefined') {
       if (
         this.state.selectableTargets.length >= 1 &&
@@ -534,12 +492,10 @@ class TileLayerContainer extends GridLayer {
   }
 }
 
-export default connectToStores(
-  TileLayerContainer,
-  [MapLayerStore],
-  context => ({
+export default withLeaflet(
+  connectToStores(TileLayerContainer, [MapLayerStore], context => ({
     mapLayers: context.getStore(MapLayerStore).getMapLayers(),
     highlightedStop: context.getStore(MapLayerStore).getHighlightedStop(),
     highlightedFluency: context.getStore(MapLayerStore).getHighlightedFluency(),
-  }),
+  })),
 );

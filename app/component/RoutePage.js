@@ -15,13 +15,29 @@ import {
   startRealTimeClient,
   stopRealTimeClient,
 } from '../action/realTimeClientAction';
-import {
-  startRealTimeClient as altStartRealTimeClient,
-  stopRealTimeClient as altStopRealTimeClient,
-} from '../action/altRealTimeClientAction';
 
+import { routeHasServiceAlert } from '../util/alertUtils';
 import { PREFIX_ROUTES } from '../util/path';
 import withBreakpoint from '../util/withBreakpoint';
+
+const Tab = {
+  Disruptions: 'hairiot',
+  Stops: 'pysakit',
+  Timetable: 'aikataulu',
+};
+
+const getActiveTab = pathname => {
+  if (pathname.indexOf(`/${Tab.Disruptions}`) > -1) {
+    return Tab.Disruptions;
+  }
+  if (pathname.indexOf(`/${Tab.Stops}`) > -1) {
+    return Tab.Stops;
+  }
+  if (pathname.indexOf(`/${Tab.Timetable}`) > -1) {
+    return Tab.Timetable;
+  }
+  return undefined;
+};
 
 class RoutePage extends React.Component {
   static contextTypes = {
@@ -44,31 +60,37 @@ class RoutePage extends React.Component {
   };
 
   componentDidMount() {
-    if (this.props.route == null) {
+    const { realTime, useAltRealtimeClient } = this.context.config;
+    if (!realTime || this.props.route == null) {
       return;
     }
     const route = this.props.route.gtfsId.split(':');
+    const agency = route[0];
+    const source = realTime[agency];
+    if (source) {
+      const id = source.routeSelector(this.props);
 
-    this.context.executeAction(
-      this.context.config.useAltRealtimeClient
-        ? altStartRealTimeClient
-        : startRealTimeClient,
-      {
-        route: route[1],
-      },
-    );
+      this.context.executeAction(startRealTimeClient, {
+        ...source,
+        agency,
+        useAltRealtimeClient,
+        options: [
+          {
+            route: id,
+            // add some information from the context
+            // to compensate potentially missing feed data
+            mode: this.props.route.mode.toLowerCase(),
+            gtfsId: route[1],
+          },
+        ],
+      });
+    }
   }
 
   componentWillUnmount() {
     const { client } = this.context.getStore('RealTimeInformationStore');
-
     if (client) {
-      this.context.executeAction(
-        this.context.config.useAltRealtimeClient
-          ? stopRealTimeClient
-          : altStopRealTimeClient,
-        client,
-      );
+      this.context.executeAction(stopRealTimeClient, client);
     }
   }
 
@@ -81,27 +103,35 @@ class RoutePage extends React.Component {
     );
   };
 
-  changeTab = path => {
+  changeTab = tab => {
+    const path = `/${PREFIX_ROUTES}/${this.props.route.gtfsId}/${tab}/${this
+      .props.params.patternId || ''}`;
     this.context.router.replace(path);
   };
 
   /* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions, jsx-a11y/anchor-is-valid */
   render() {
-    if (this.props.route == null) {
+    const { route } = this.props;
+    if (route == null) {
       /* In this case there is little we can do
        * There is no point continuing rendering as it can only
        * confuse user. Therefore redirect to Routes page */
       this.context.router.replace(`/${PREFIX_ROUTES}`);
       return null;
     }
-    let activeTab;
-    if (this.props.location.pathname.indexOf('/pysakit/') > -1) {
-      activeTab = 'pysakit';
-    } else if (this.props.location.pathname.indexOf('/aikataulu/') > -1) {
-      activeTab = 'aikataulu';
-    } else if (this.props.location.pathname.indexOf('/hairiot') > -1) {
-      activeTab = 'hairiot';
-    }
+
+    const activeTab = getActiveTab(this.props.location.pathname);
+    const { patternId } = this.props.params;
+    const hasActiveAlert =
+      routeHasServiceAlert(route) &&
+      (route.alerts.some(alert => alert.trip)
+        ? route.alerts.some(
+            alert =>
+              alert.trip &&
+              alert.trip.pattern &&
+              alert.trip.pattern.code === patternId,
+          )
+        : true);
 
     return (
       <div>
@@ -115,9 +145,7 @@ class RoutePage extends React.Component {
             <FormattedMessage id="route-guide" defaultMessage="Route guide" />
           </h1>
         </div>
-        {this.props.route.type === 715 && (
-          <CallAgencyWarning route={this.props.route} />
-        )}
+        {route.type === 715 && <CallAgencyWarning route={route} />}
         <div className="tabs route-tabs">
           <nav
             className={cx('tabs-navigation', {
@@ -126,20 +154,15 @@ class RoutePage extends React.Component {
           >
             {this.props.breakpoint === 'large' && (
               <RouteNumber
-                color={
-                  this.props.route.color ? `#${this.props.route.color}` : null
-                }
-                mode={this.props.route.mode}
-                text={this.props.route.shortName}
+                color={route.color ? `#${route.color}` : null}
+                mode={route.mode}
+                text={route.shortName}
               />
             )}
             <a
-              className={cx({ 'is-active': activeTab === 'pysakit' })}
+              className={cx({ 'is-active': activeTab === Tab.Stops })}
               onClick={() => {
-                this.changeTab(
-                  `/${PREFIX_ROUTES}/${this.props.route.gtfsId}/pysakit/${this
-                    .props.params.patternId || ''}`,
-                );
+                this.changeTab(Tab.Stops);
               }}
             >
               <div>
@@ -148,12 +171,9 @@ class RoutePage extends React.Component {
               </div>
             </a>
             <a
-              className={cx({ 'is-active': activeTab === 'aikataulu' })}
+              className={cx({ 'is-active': activeTab === Tab.Timetable })}
               onClick={() => {
-                this.changeTab(
-                  `/${PREFIX_ROUTES}/${this.props.route.gtfsId}/aikataulu/${this
-                    .props.params.patternId || ''}`,
-                );
+                this.changeTab(Tab.Timetable);
               }}
             >
               <div>
@@ -163,14 +183,11 @@ class RoutePage extends React.Component {
             </a>
             <a
               className={cx({
-                activeAlert:
-                  this.props.route.alerts && this.props.route.alerts.length > 0,
-                'is-active': activeTab === 'hairiot',
+                activeAlert: hasActiveAlert,
+                'is-active': activeTab === Tab.Disruptions,
               })}
               onClick={() => {
-                this.changeTab(
-                  `/${PREFIX_ROUTES}/${this.props.route.gtfsId}/hairiot`,
-                );
+                this.changeTab(Tab.Disruptions);
               }}
             >
               <div>
@@ -183,29 +200,29 @@ class RoutePage extends React.Component {
             </a>
             <FavouriteRouteContainer
               className="route-page-header"
-              gtfsId={this.props.route.gtfsId}
+              gtfsId={route.gtfsId}
             />
           </nav>
-          {this.props.params.patternId && (
+          {patternId && (
             <RoutePatternSelect
               params={this.props.params}
-              route={this.props.route}
+              route={route}
               onSelectChange={this.onPatternChange}
-              gtfsId={this.props.route.gtfsId}
+              gtfsId={route.gtfsId}
               activeTab={activeTab}
               className={cx({
                 'bp-large': this.props.breakpoint === 'large',
               })}
             />
           )}
-          <RouteAgencyInfo route={this.props.route} />
+          <RouteAgencyInfo route={route} />
         </div>
       </div>
     );
   }
 }
 
-export default Relay.createContainer(withBreakpoint(RoutePage), {
+const containerComponent = Relay.createContainer(withBreakpoint(RoutePage), {
   fragments: {
     route: () =>
       Relay.QL`
@@ -218,7 +235,13 @@ export default Relay.createContainer(withBreakpoint(RoutePage), {
         type
         ${RouteAgencyInfo.getFragment('route')}
         ${RoutePatternSelect.getFragment('route')}
-        alerts
+        alerts {
+          trip {
+            pattern {
+              code
+            }
+          }
+        }
         agency {
           phone
         }
@@ -226,3 +249,5 @@ export default Relay.createContainer(withBreakpoint(RoutePage), {
     `,
   },
 });
+
+export { containerComponent as default, RoutePage as Component };

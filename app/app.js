@@ -14,6 +14,7 @@ import TimeStore from './store/TimeStore';
 import FavouriteCityBikeStationStore from './store/FavouriteCityBikeStationStore';
 import MapLayerStore from './store/MapLayerStore';
 import RealtimeDeparturesStore from './store/RealtimeDeparturesStore';
+import GeoJsonStore from './store/GeoJsonStore';
 
 export default config => {
   const app = new Fluxible({
@@ -32,6 +33,7 @@ export default config => {
   app.registerStore(TimeStore);
   app.registerStore(FavouriteCityBikeStationStore);
   app.registerStore(MapLayerStore);
+  app.registerStore(GeoJsonStore);
   app.registerStore(RealtimeDeparturesStore);
 
   app.plug({
