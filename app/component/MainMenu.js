@@ -59,18 +59,6 @@ function MainMenu(props, { config, intl, router, location }) {
       <div className="offcanvas-section">
         <button
           className="noborder button cursor-pointer"
-          onClick={openNavbarLinks}
-          aria-label={intl.formatMessage({
-            id: 'links',
-            defaultMessage: 'Links',
-          })}
-        >
-          <FormattedMessage id="links" defaultMessage="Links" />
-        </button>
-      </div>
-      <div className="offcanvas-section">
-        <button
-          className="noborder button cursor-pointer"
           onClick={openExternalModes}
           aria-label={intl.formatMessage({
             id: 'external-modes',
@@ -81,6 +69,18 @@ function MainMenu(props, { config, intl, router, location }) {
             id="external-modes"
             defaultMessage="Other transportation"
           />
+        </button>
+      </div>
+      <div className="offcanvas-section">
+        <button
+          className="noborder button cursor-pointer"
+          onClick={openNavbarLinks}
+          aria-label={intl.formatMessage({
+            id: 'links',
+            defaultMessage: 'Links',
+          })}
+        >
+          <FormattedMessage id="links" defaultMessage="Links" />
         </button>
       </div>
       <MainMenuLinks
