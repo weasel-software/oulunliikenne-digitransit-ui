@@ -4,6 +4,7 @@ import { describe, it } from 'mocha';
 
 import { shallowWithIntl } from '../helpers/mock-intl-enzyme';
 import { Component as StopPageContentContainer } from '../../../app/component/StopPageContentContainer';
+import { mockContext } from '../helpers/mock-context';
 
 describe('<StopPageContentContainer />', () => {
   it("should show a 'no departures' indicator", () => {
@@ -20,7 +21,9 @@ describe('<StopPageContentContainer />', () => {
       },
       stop: {},
     };
-    const wrapper = shallowWithIntl(<StopPageContentContainer {...props} />);
+    const wrapper = shallowWithIntl(<StopPageContentContainer {...props} />, {
+      context: { ...mockContext },
+    });
     expect(wrapper.find('.stop-no-departures-container')).to.have.lengthOf(1);
   });
 });

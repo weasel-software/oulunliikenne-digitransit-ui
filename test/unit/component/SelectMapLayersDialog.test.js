@@ -7,7 +7,6 @@ import { mockContext, mockChildContextTypes } from '../helpers/mock-context';
 
 import { Component as SelectMapLayersDialog } from '../../../app/component/SelectMapLayersDialog';
 
-// TODO: Fix mountWithIntl rendering issues.
 describe('<SelectMapLayersDialog />', () => {
   it('should render', () => {
     const props = {
@@ -401,6 +400,8 @@ describe('<SelectMapLayersDialog />', () => {
       updateMapLayers: layers => {
         mapLayers = { ...layers };
       },
+      clearMapLayers: () => {},
+      executeAction: () => {},
     };
     const wrapper = mountWithIntl(<SelectMapLayersDialog isOpen {...props} />, {
       context: { ...mockContext },
