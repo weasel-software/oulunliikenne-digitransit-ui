@@ -6,6 +6,7 @@ import cx from 'classnames';
 import getContext from 'recompose/getContext';
 import Relay from 'react-relay/classic';
 import some from 'lodash/some';
+import isEqual from 'lodash/isEqual';
 import { routerShape } from 'react-router';
 import MapContainer from './map/MapContainer';
 import SelectedStopPopup from './map/popups/SelectedStopPopup';
@@ -65,14 +66,14 @@ const fullscreenMapToggle = (fullscreenMap, params, router) => (
 /* eslint-enable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
 class StopPageMap extends React.Component {
   componentDidUpdate(prevProps) {
-    const { realtimeDepartures } = this.props;
+    const { realtimeDepartures, getStore } = this.props;
+    const { client } = getStore('RealTimeInformationStore');
     if (Array.isArray(realtimeDepartures) && realtimeDepartures.length > 0) {
-      if (
-        prevProps.realtimeDepartures === null &&
-        realtimeDepartures.length > 0
-      ) {
+      if (!client) {
         this.startClient(realtimeDepartures);
-      } else if (prevProps.realtimeDepartures !== realtimeDepartures) {
+      } else if (
+        !isEqual(prevProps.realtimeDepartures !== realtimeDepartures)
+      ) {
         this.updateClient(realtimeDepartures);
       }
     }

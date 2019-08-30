@@ -47,7 +47,6 @@ export default class RoadConditions {
 
         this.features = [];
         const featureList = [];
-
         if (vt.layers.roadconditions != null) {
           for (
             let i = 0, ref = vt.layers.roadconditions.length - 1;
