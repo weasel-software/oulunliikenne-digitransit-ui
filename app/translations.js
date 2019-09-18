@@ -1593,6 +1593,7 @@ const translations = {
     'main-menu-label-open': 'Avaa päävalikko',
     'main-mode': 'Kulkumuoto',
     maintenance: 'Kunnossapito',
+    'maintenance-vehicles': 'Kunnossapidon reaaliaikaseuranta',
     map: 'Kartta',
     'map-layer-citybike': 'Kaupunkipyöräasemat',
     'map-layer-park-and-ride': 'Liityntäpysäköintipaikat',

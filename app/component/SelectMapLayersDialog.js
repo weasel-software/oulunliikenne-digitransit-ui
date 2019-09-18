@@ -138,6 +138,7 @@ class SelectMapLayersDialog extends React.Component {
       roadConditions,
       fluencies,
       ecoCounters,
+      maintenanceVehicles,
     } = this.props.mapLayers;
     const { config } = this.props;
 
@@ -386,6 +387,18 @@ class SelectMapLayersDialog extends React.Component {
               )}
             </div>
           )}
+        {config.maintenanceVehicles &&
+          config.maintenanceVehicles.showMaintenanceVehicles &&
+          isMapLayerEnabled('maintenanceVehicles') && (
+            <InputField
+              checked={maintenanceVehicles}
+              labelId="maintenance"
+              defaultMessage="Maintenance"
+              onChange={e =>
+                this.updateSetting({ maintenanceVehicles: e.target.checked })
+              }
+            />
+          )}
         <button
           className="standalone-btn dialog-clear-button"
           onClick={this.props.clearMapLayers}
@@ -465,6 +478,9 @@ const mapLayersConfigShape = PropTypes.shape({
   }),
   ticketSales: PropTypes.shape({
     showTicketSales: PropTypes.bool,
+  }),
+  maintenanceVehicles: PropTypes.shape({
+    showMaintenanceVehicles: PropTypes.bool,
   }),
   transportModes: PropTypes.shape({
     bus: transportModeConfigShape,

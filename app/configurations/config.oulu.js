@@ -182,6 +182,10 @@ export default configMerger(walttiConfig, {
     ecoCounterMinZoom: 11,
   },
 
+  maintenanceVehicles: {
+    showMaintenanceVehicles: true,
+  },
+
   feedIds: ['OULU'],
 
   sprites: 'svg-sprite.oulu.svg',
@@ -455,6 +459,7 @@ export default configMerger(walttiConfig, {
       tmsStations: false,
       roadConditions: false,
       fluencies: true,
+      maintenanceVehicles: false,
     },
     BICYCLE: {
       disorders: true,
@@ -463,12 +468,14 @@ export default configMerger(walttiConfig, {
       // tmsStations: false,
       // citybike: true, NOTE: taken from transportModes.citybike.availableForSelection
       ecoCounters: true,
+      maintenanceVehicles: false,
     },
     WALK: {
       disorders: true,
       weatherStations: false,
       cameraStations: false,
       ecoCounters: true,
+      maintenanceVehicles: false,
       // tmsStations: false,
       // citybike: true, NOTE: taken from transportModes.citybike.availableForSelection
     },

@@ -631,7 +631,8 @@ div.map-click-prevent-overlay {
   }
 }
 
-div.leaflet-marker-icon.vehicle-realtime-icon {
+div.leaflet-marker-icon.vehicle-realtime-icon,
+div.leaflet-marker-icon.maintenance-vehicle-realtime-icon {
   border: none;
   background: none;
 
