@@ -97,7 +97,10 @@ class MapWithTrackingStateHandler extends React.Component {
   componentDidMount() {
     const { mapLayers, location, config } = this.props;
 
-    if (mapLayers.maintenanceVehicles) {
+    if (
+      mapLayers.maintenanceVehicles &&
+      mapLayers.realtimeMaintenanceVehicles
+    ) {
       const mode = getStreetMode(location, config);
       this.setMaintenanceRealtimeClient(true, mode);
     }
@@ -133,10 +136,13 @@ class MapWithTrackingStateHandler extends React.Component {
     if (
       newProps.mapLayers.maintenanceVehicles !==
         this.props.mapLayers.maintenanceVehicles ||
+      newProps.mapLayers.realtimeMaintenanceVehicles !==
+        this.props.mapLayers.realtimeMaintenanceVehicles ||
       newMode !== mode
     ) {
       this.setMaintenanceRealtimeClient(
-        newProps.mapLayers.maintenanceVehicles,
+        newProps.mapLayers.maintenanceVehicles &&
+          newProps.mapLayers.realtimeMaintenanceVehicles,
         newMode,
       );
     }
@@ -204,6 +210,8 @@ class MapWithTrackingStateHandler extends React.Component {
       mode === StreetMode.CAR
         ? ROUTE_TYPE_MOTORISED_TRAFFIC
         : ROUTE_TYPE_NON_MOTORISED_TRAFFIC;
+
+    console.warn(isLayerEnabled);
 
     if (isLayerEnabled) {
       if (client) {
@@ -313,7 +321,10 @@ class MapWithTrackingStateHandler extends React.Component {
       );
     }
 
-    if (mapLayers.maintenanceVehicles) {
+    if (
+      mapLayers.maintenanceVehicles &&
+      mapLayers.realtimeMaintenanceVehicles
+    ) {
       leafletObjs.push(
         <MaintenanceVehicleMarkerContainer
           key="maintenanceVehicleMarkers"

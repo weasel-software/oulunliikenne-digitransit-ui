@@ -139,6 +139,7 @@ class SelectMapLayersDialog extends React.Component {
       fluencies,
       ecoCounters,
       maintenanceVehicles,
+      realtimeMaintenanceVehicles,
     } = this.props.mapLayers;
     const { config } = this.props;
 
@@ -390,14 +391,34 @@ class SelectMapLayersDialog extends React.Component {
         {config.maintenanceVehicles &&
           config.maintenanceVehicles.showMaintenanceVehicles &&
           isMapLayerEnabled('maintenanceVehicles') && (
-            <InputField
-              checked={maintenanceVehicles}
-              labelId="maintenance"
-              defaultMessage="Maintenance"
-              onChange={e =>
-                this.updateSetting({ maintenanceVehicles: e.target.checked })
-              }
-            />
+            <React.Fragment>
+              <InputField
+                checked={maintenanceVehicles}
+                labelId="maintenance"
+                defaultMessage="Maintenance"
+                onChange={e =>
+                  this.updateSetting({ maintenanceVehicles: e.target.checked })
+                }
+              />
+              {maintenanceVehicles &&
+                config.realtimeMaintenanceVehicles &&
+                config.realtimeMaintenanceVehicles
+                  .showRealtimeMaintenanceVehicles &&
+                isMapLayerEnabled('realtimeMaintenanceVehicles') && (
+                  <div className="maintenance-vehicles-container">
+                    <InputField
+                      checked={realtimeMaintenanceVehicles}
+                      labelId="realtime-maintenance-vehicles"
+                      defaultMessage="Realtime maintenance vehicles"
+                      onChange={e =>
+                        this.updateSetting({
+                          realtimeMaintenanceVehicles: e.target.checked,
+                        })
+                      }
+                    />
+                  </div>
+                )}
+            </React.Fragment>
           )}
         <button
           className="standalone-btn dialog-clear-button"

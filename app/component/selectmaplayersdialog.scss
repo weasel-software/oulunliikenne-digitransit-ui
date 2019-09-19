@@ -34,4 +34,16 @@
       margin: 1em 0 0 0;
     }
   }
+
+  &.bubble-dialog-content .maintenance-vehicles-container {
+    background: #EEF1F3;
+    border-top: 1px solid #D8D8D8;
+    border-bottom: 1px solid #D8D8D8;
+    padding: 0.8em 1.5em 0;
+    margin: 0 -1.5em 0.8em;
+
+    > .toggle-item label {
+      color: #3B3B3B !important;
+    }
+  }
 }

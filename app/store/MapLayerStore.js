@@ -38,6 +38,7 @@ class MapLayerStore extends Store {
     roadConditions: true,
     fluencies: true,
     maintenanceVehicles: true,
+    realtimeMaintenanceVehicles: true,
   };
 
   static handlers = {
@@ -195,6 +196,7 @@ export const mapLayerShape = PropTypes.shape({
   roadConditions: PropTypes.bool,
   fluencies: PropTypes.bool,
   maintenanceVehicles: PropTypes.bool,
+  realtimeMaintenanceVehicles: PropTypes.bool,
 });
 
 export default MapLayerStore;
