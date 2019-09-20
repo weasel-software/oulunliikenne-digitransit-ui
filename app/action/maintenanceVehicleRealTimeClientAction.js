@@ -24,7 +24,7 @@ export function parseMessage(topic, message, actionContext) {
 
   const messageContents = {
     id: parsedMessage.vid,
-    jobId: parsedMessage.jid,
+    jobIds: parsedMessage.jid,
     timestamp: parsedMessage.tsi,
     lat: parsedMessage.lat && ceil(parsedMessage.lat, 5),
     long: parsedMessage.lon && ceil(parsedMessage.lon, 5),
@@ -62,7 +62,6 @@ export function startRealTimeClient(actionContext, originalOptions, done) {
         sessionToken: AWS.config.credentials.sessionToken,
         clientId: `mqtt-${rand}`,
         host: actionContext.config.URL.MQTT,
-        debug: true,
       });
 
       client.on('connect', () => {

@@ -1079,6 +1079,60 @@
                                     }
                                 },
                                 "defaultValue": null
+                            },
+                            {
+                                "name": "severityLevel",
+                                "description": "Only return alerts with these severity levels",
+                                "type": {
+                                    "kind": "LIST",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "NON_NULL",
+                                        "name": null,
+                                        "ofType": {
+                                            "kind": "ENUM",
+                                            "name": "AlertSeverityLevelType",
+                                            "ofType": null
+                                        }
+                                    }
+                                },
+                                "defaultValue": null
+                            },
+                            {
+                                "name": "effect",
+                                "description": "Only return alerts with these effects",
+                                "type": {
+                                    "kind": "LIST",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "NON_NULL",
+                                        "name": null,
+                                        "ofType": {
+                                            "kind": "ENUM",
+                                            "name": "AlertEffectType",
+                                            "ofType": null
+                                        }
+                                    }
+                                },
+                                "defaultValue": null
+                            },
+                            {
+                                "name": "cause",
+                                "description": "Only return alerts with these causes",
+                                "type": {
+                                    "kind": "LIST",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "NON_NULL",
+                                        "name": null,
+                                        "ofType": {
+                                            "kind": "ENUM",
+                                            "name": "AlertCauseType",
+                                            "ofType": null
+                                        }
+                                    }
+                                },
+                                "defaultValue": null
                             }
                         ],
                         "type": {
@@ -2522,6 +2576,37 @@
                             "ofType": {
                                 "kind": "OBJECT",
                                 "name": "EcoCounterSiteData",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "latestMaintenanceVehicleObservations",
+                        "description": "Get latest maintenance vehicle observations by a vehicleNumber",
+                        "args": [
+                            {
+                                "name": "vehicleNumber",
+                                "description": "",
+                                "type": {
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "SCALAR",
+                                        "name": "Int",
+                                        "ofType": null
+                                    }
+                                },
+                                "defaultValue": null
+                            }
+                        ],
+                        "type": {
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "OBJECT",
+                                "name": "MaintenanceVehicleObservation",
                                 "ofType": null
                             }
                         },
@@ -11829,7 +11914,7 @@
                     },
                     {
                         "name": "sens",
-                        "description": "Eco-counter site sensor",
+                        "description": "Eco-counter site direction detection information; 1 = IN direction, 2 = OUT direction, 5 = No direction distinction",
                         "args": [],
                         "type": {
                             "kind": "SCALAR",
@@ -12024,6 +12109,121 @@
                         "type": {
                             "kind": "SCALAR",
                             "name": "Int",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "MaintenanceVehicleObservation",
+                "description": "Maintenance vehicle observations represent coordinates of maintenance vehicles as they carry out jobs.",
+                "fields": [
+                    {
+                        "name": "vehicleNumber",
+                        "description": "ID of the maintenance vehicle",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "Int",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "vehicleType",
+                        "description": "Type of the maintenance vehicle",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "timestamp",
+                        "description": "The timestamp of the maintenance vehicle observation time in ISO-8601 format",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "GraphQLDateTime",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "contractId",
+                        "description": "The contract ID  of the maintenance vehicle observation",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Int",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "direction",
+                        "description": "The direction of the maintenance vehicle",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Int",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "jobIds",
+                        "description": "List of job IDs the maintenance vehicle is carrying out",
+                        "args": [],
+                        "type": {
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "Int",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "lat",
+                        "description": "Latitude of the maintenance vehicle (WGS 84)",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Float",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "lon",
+                        "description": "Longitude of the maintenance vehicle (WGS 84)",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Float",
                             "ofType": null
                         },
                         "isDeprecated": false,

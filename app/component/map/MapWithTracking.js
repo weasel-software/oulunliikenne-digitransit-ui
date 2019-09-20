@@ -211,8 +211,6 @@ class MapWithTrackingStateHandler extends React.Component {
         ? ROUTE_TYPE_MOTORISED_TRAFFIC
         : ROUTE_TYPE_NON_MOTORISED_TRAFFIC;
 
-    console.warn(isLayerEnabled);
-
     if (isLayerEnabled) {
       if (client) {
         this.props.executeAction(maintenanceVehicleUpdateTopic, {

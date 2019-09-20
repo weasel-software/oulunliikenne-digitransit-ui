@@ -68,3 +68,25 @@ export const QuickOptionSetType = {
   PreferWalkingRoutes: 'prefer-walking-routes',
   SavedSettings: 'saved-settings',
 };
+
+export const MaintenanceJobColors = {
+  1370: '#582403',
+  1367: '#FF6A00',
+  1368: '#FF6A00',
+  1369: '#FF6A00',
+  1366: '#F78D47',
+  2864: '#F78D47',
+  1357: '#9073ac',
+  0: '#CCFD0B',
+};
+
+export const MaintenanceJobPriorities = {
+  1370: 1,
+  1367: 2,
+  1368: 3,
+  1369: 4,
+  1366: 5,
+  2864: 6,
+  1357: 7,
+  0: 8,
+};
