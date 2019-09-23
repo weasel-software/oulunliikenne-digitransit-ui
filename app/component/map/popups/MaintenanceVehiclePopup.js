@@ -35,7 +35,7 @@ const MaintenanceVehiclePopup = ({ maintenanceVehicle }, { intl }) => (
       <FormattedMessage id="last-updated" defaultMessage="Last updated">
         {(...content) => `${content} `}
       </FormattedMessage>
-      {moment(maintenanceVehicle.timestamp).format('HH:mm:ss') || ''}
+      {moment.unix(maintenanceVehicle.timestamp).format('HH:mm:ss') || ''}
     </Card>
   </div>
 );
