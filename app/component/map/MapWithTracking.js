@@ -224,7 +224,7 @@ class MapWithTrackingStateHandler extends React.Component {
           routeType,
         );
       }
-    } else {
+    } else if (client) {
       this.props.executeAction(maintenanceVehicleStopRealTimeClient, client);
     }
   };
