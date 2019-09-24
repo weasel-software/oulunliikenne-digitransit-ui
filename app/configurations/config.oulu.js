@@ -46,6 +46,8 @@ export default configMerger(walttiConfig, {
     ROAD_CONDITIONS_MAP: `${AWS_MAP_URL}/map/roadconditions/`,
     FLUENCY_MAP: `${AWS_MAP_URL}/map/fluency/`,
     ECO_COUNTERS_MAP: `${AWS_MAP_URL}/map/ecocounters/`,
+    MAINTENANCE_VEHICLE_NON_MOTORISED_MAP: `${AWS_MAP_URL}/map/maintenanceroutesnonmotorised/`,
+    MAINTENANCE_VEHICLE_MOTORISED_MAP: `${AWS_MAP_URL}/map/maintenanceroutesmotorised/`,
   },
 
   map: {
@@ -183,7 +185,9 @@ export default configMerger(walttiConfig, {
   },
 
   maintenanceVehicles: {
+    showLines: true,
     showMaintenanceVehicles: true,
+    maintenanceVehiclesMinZoom: 7,
   },
 
   realtimeMaintenanceVehicles: {

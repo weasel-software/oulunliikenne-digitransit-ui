@@ -9,7 +9,7 @@ import { isBrowser } from '../../../util/browser';
 import { isLayerEnabled } from '../../../util/mapLayerUtils';
 
 class TileContainer {
-  constructor(coords, done, props, config) {
+  constructor(coords, done, props, config, location) {
     const markersMinZoom = Math.min(
       config.cityBike.cityBikeMinZoom,
       config.stopsMinZoom,
@@ -25,6 +25,7 @@ class TileContainer {
       config.roadConditions.roadConditionsMinZoom,
       config.fluencies.fluenciesMinZoom,
       config.ecoCounters.ecoCounterMinZoom,
+      config.maintenanceVehicles.maintenanceVehiclesMinZoom,
     );
 
     this.coords = coords;
@@ -47,6 +48,7 @@ class TileContainer {
       .filter(Layer => {
         const layerName = Layer.getName();
         const isEnabled = isLayerEnabled(layerName, this.props.mapLayers);
+
         if (
           layerName === 'stop' &&
           (this.coords.z >= config.stopsMinZoom ||
@@ -104,6 +106,11 @@ class TileContainer {
         ) {
           return isEnabled;
         } else if (
+          layerName === 'maintenanceVehicles' &&
+          this.coords.z >= config.maintenanceVehicles.maintenanceVehiclesMinZoom
+        ) {
+          return isEnabled;
+        } else if (
           layerName === 'fluencies' &&
           this.coords.z >= config.fluencies.fluenciesMinZoom
         ) {
@@ -116,7 +123,7 @@ class TileContainer {
         }
         return false;
       })
-      .map(Layer => new Layer(this, config, this.props.mapLayers));
+      .map(Layer => new Layer(this, config, this.props.mapLayers, location));
 
     this.el.layers = this.layers.map(layer => omit(layer, 'tile'));
 

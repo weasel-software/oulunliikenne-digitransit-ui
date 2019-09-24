@@ -2,6 +2,7 @@ import connectToStores from 'fluxible-addons-react/connectToStores';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Relay from 'react-relay/classic';
+import { locationShape } from 'react-router';
 import { intlShape } from 'react-intl';
 import GridLayer from 'react-leaflet/es/GridLayer';
 import SphericalMercator from '@mapbox/sphericalmercator';
@@ -77,6 +78,7 @@ class TileLayerContainer extends GridLayer {
     intl: intlShape.isRequired,
     map: PropTypes.object.isRequired,
     config: PropTypes.object.isRequired,
+    location: locationShape.isRequired,
   };
 
   state = {
@@ -227,6 +229,7 @@ class TileLayerContainer extends GridLayer {
       done,
       props,
       this.context.config,
+      this.context.location,
     );
 
     tile.onSelectableTargetClicked = (selectableTargets, coords) => {
@@ -541,5 +544,6 @@ export default connectToStores(
     mapLayers: context.getStore(MapLayerStore).getMapLayers(),
     highlightedStop: context.getStore(MapLayerStore).getHighlightedStop(),
     highlightedFluency: context.getStore(MapLayerStore).getHighlightedFluency(),
+    location: context.location,
   }),
 );
