@@ -12,6 +12,7 @@ const MaintenanceVehiclePopup = ({ maintenanceVehicle }, { intl }) => (
   <div className="card">
     <Card className="padding-small">
       <CardHeader
+        icon="icon-icon_maintenance-vehicle"
         name={intl.formatMessage({
           id: 'maintenance',
           defaultMessage: 'Maintenance',
