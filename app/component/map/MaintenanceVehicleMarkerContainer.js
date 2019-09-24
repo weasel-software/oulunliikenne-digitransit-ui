@@ -19,13 +19,7 @@ function getMaintenanceVehicleIcon(className) {
   }
 
   return {
-    element: (
-      <IconWithTail img="icon-icon_bus_text-live">
-        <text x="50%" y="50%" dy=".3em" className="icon-text medium">
-          MV
-        </text>
-      </IconWithTail>
-    ),
+    element: <IconWithTail img="icon-icon_maintenance-vehicle" />,
     className: `${className || 'vehicle-icon'}`,
     iconSize: [20, 20],
     iconAnchor: [10, 10],
