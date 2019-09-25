@@ -188,6 +188,14 @@ export default configMerger(walttiConfig, {
     showLines: true,
     showMaintenanceVehicles: true,
     maintenanceVehiclesMinZoom: 7,
+    timeRanges: {
+      60: 'maintenance-vehicle-time-range-1h',
+      120: 'maintenance-vehicle-time-range-3h',
+      240: 'maintenance-vehicle-time-range-6h',
+      720: 'maintenance-vehicle-time-range-12h',
+      1440: 'maintenance-vehicle-time-range-1d',
+      4320: 'maintenance-vehicle-time-range-3d',
+    },
   },
 
   realtimeMaintenanceVehicles: {

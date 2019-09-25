@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, intlShape } from 'react-intl';
 import { locationShape } from 'react-router';
-
 import get from 'lodash/get';
+import classNames from 'classnames';
 import Toggle from 'material-ui/Toggle';
 import BubbleDialog from './BubbleDialog';
 import Checkbox from './Checkbox';
@@ -13,7 +13,11 @@ import {
   updateMapLayers,
   updateMapLayersMode,
 } from '../action/MapLayerActions';
+import { updateMapLayerOptions } from '../action/MapLayerOptionsActions';
 import MapLayerStore, { mapLayerShape } from '../store/MapLayerStore';
+import MapLayerOptionsStore, {
+  mapLayerOptionsShape,
+} from '../store/MapLayerOptionsStore';
 import withBreakpoint from '../util/withBreakpoint';
 import { getStreetMode } from '../util/modeUtils';
 
@@ -85,6 +89,13 @@ class SelectMapLayersDialog extends React.Component {
     });
   };
 
+  updateMapLayerOptions = newOptions => {
+    this.props.updateMapLayerOptions({
+      ...this.props.mapLayerOptions,
+      ...newOptions,
+    });
+  };
+
   updateStopAndTerminalSetting = newSetting => {
     const { mapLayers } = this.props;
     const stop = {
@@ -141,7 +152,7 @@ class SelectMapLayersDialog extends React.Component {
       maintenanceVehicles,
       realtimeMaintenanceVehicles,
     } = this.props.mapLayers;
-    const { config } = this.props;
+    const { config, mapLayerOptions } = this.props;
 
     const isTransportModeEnabled = transportMode =>
       transportMode && transportMode.availableForSelection;
@@ -406,6 +417,51 @@ class SelectMapLayersDialog extends React.Component {
                   .showRealtimeMaintenanceVehicles &&
                 isMapLayerEnabled('realtimeMaintenanceVehicles') && (
                   <div className="maintenance-vehicles-container">
+                    <div className="maintenance-vehicles-time-range">
+                      <p className="maintenance-vehicles-time-range-label">
+                        <FormattedMessage id="maintenance-vehicle-time-range" />
+                      </p>
+                      <ul className="maintenance-vehicles-time-range-buttons">
+                        {Object.keys(config.maintenanceVehicles.timeRanges).map(
+                          timeRangeMinutes => {
+                            const isActive =
+                              get(
+                                mapLayerOptions,
+                                'maintenanceVehicles.timeRange',
+                                null,
+                              ) === Number(timeRangeMinutes);
+
+                            return (
+                              <li key={timeRangeMinutes}>
+                                <button
+                                  className={classNames(
+                                    'standalone-btn maintenance-vehicles-time-range-btn',
+                                    {
+                                      'maintenance-vehicles-time-range-btn--active': isActive,
+                                    },
+                                  )}
+                                  onClick={() =>
+                                    this.updateMapLayerOptions({
+                                      maintenanceVehicles: {
+                                        timeRange: Number(timeRangeMinutes),
+                                      },
+                                    })
+                                  }
+                                >
+                                  <FormattedMessage
+                                    id={
+                                      config.maintenanceVehicles.timeRanges[
+                                        timeRangeMinutes
+                                      ]
+                                    }
+                                  />
+                                </button>
+                              </li>
+                            );
+                          },
+                        )}
+                      </ul>
+                    </div>
                     <InputField
                       checked={realtimeMaintenanceVehicles}
                       labelId="realtime-maintenance-vehicles"
@@ -518,7 +574,9 @@ SelectMapLayersDialog.propTypes = {
   location: locationShape,
   isOpen: PropTypes.bool,
   mapLayers: mapLayerShape.isRequired,
+  mapLayerOptions: mapLayerOptionsShape.isRequired,
   updateMapLayers: PropTypes.func.isRequired,
+  updateMapLayerOptions: PropTypes.func.isRequired,
   clearMapLayers: PropTypes.func.isRequired,
   breakpoint: PropTypes.string,
   executeAction: PropTypes.func,
@@ -567,8 +625,14 @@ SelectMapLayersDialog.description = (
           terminal: { subway: true },
           ticketSales: { ticketMachine: true },
         }}
+        mapLayerOptions={{
+          maintenanceVehicles: {
+            timeRange: 1440,
+          },
+        }}
         updateMapLayers={() => {}}
         clearMapLayers={() => {}}
+        updateMapLayerOptions={() => {}}
       />
     </div>
   </ComponentUsageExample>
@@ -580,7 +644,7 @@ const SelectMapLayersDialogWithBreakpoint = withBreakpoint(
 
 const connectedComponent = connectToStores(
   SelectMapLayersDialogWithBreakpoint,
-  [MapLayerStore],
+  [MapLayerStore, MapLayerOptionsStore],
   context => ({
     config: context.config,
     location: context.location,
@@ -588,6 +652,11 @@ const connectedComponent = connectToStores(
     updateMapLayers: mapLayers =>
       context.executeAction(updateMapLayers, { ...mapLayers }),
     clearMapLayers: () => context.executeAction(clearMapLayers),
+    mapLayerOptions: context
+      .getStore(MapLayerOptionsStore)
+      .getMapLayerOptions(),
+    updateMapLayerOptions: mapLayerOptions =>
+      context.executeAction(updateMapLayerOptions, { ...mapLayerOptions }),
     executeAction: context.executeAction,
   }),
   {

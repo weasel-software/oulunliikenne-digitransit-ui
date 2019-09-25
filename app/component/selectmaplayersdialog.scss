@@ -3,6 +3,7 @@
   flex-direction: column;
   margin-top: 0.25em;
   position: relative;
+  outline: none;
 
   &.bubble-dialog-content--large {
     white-space: nowrap;
@@ -44,6 +45,54 @@
 
     > .toggle-item label {
       color: #3B3B3B !important;
+      font-size: 11px;
+      line-height: 11px;
+    }
+  }
+
+
+  .maintenance-vehicles-time-range {
+    border-bottom: 0.5px solid #D8D8D8;
+    padding: 0 1.5em 0.8em;
+    margin: 0 -1.5em 0.8em;
+
+    &-label {
+      width: 100%;
+      margin: 0 0 11px;
+      font-size: 11px;
+      line-height: 11px;
+      color: #3B3B3B;
+      letter-spacing: 0;
+      text-align: left;
+    }
+
+    &-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0 -4px;
+      list-style: none;
+      padding: 0;
+
+      li {
+        display: inline-block;
+        width: 33.33%;
+        padding: 4px;
+      }
+    }
+
+    &-btn {
+      display: block;
+      border-radius: 22px;
+      border: none;
+      width: 100%;
+      margin: 0;
+      background-color: #fff;
+      color: #9C9C9C;
+
+      &--active {
+        background-color: $primary-color;
+        color: #fff;
+      }
     }
   }
 }

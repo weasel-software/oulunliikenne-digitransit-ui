@@ -14,6 +14,7 @@ import MaintenanceVehicleRealTimeInformationStore from './store/MaintenanceVehic
 import TimeStore from './store/TimeStore';
 import FavouriteCityBikeStationStore from './store/FavouriteCityBikeStationStore';
 import MapLayerStore from './store/MapLayerStore';
+import MapLayerOptionsStore from './store/MapLayerOptionsStore';
 import RealtimeDeparturesStore from './store/RealtimeDeparturesStore';
 
 export default config => {
@@ -34,6 +35,7 @@ export default config => {
   app.registerStore(TimeStore);
   app.registerStore(FavouriteCityBikeStationStore);
   app.registerStore(MapLayerStore);
+  app.registerStore(MapLayerOptionsStore);
   app.registerStore(RealtimeDeparturesStore);
 
   app.plug({
