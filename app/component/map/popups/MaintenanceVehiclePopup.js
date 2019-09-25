@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import Relay from 'react-relay/classic';
 import { FormattedMessage, intlShape } from 'react-intl';
 import moment from 'moment';
 import Card from '../../Card';
@@ -61,44 +60,10 @@ MaintenanceVehiclePopup.propTypes = {
     long: PropTypes.number,
     dir: PropTypes.number,
   }),
-  observations: PropTypes.shape({
-    latestMaintenanceVehicleObservations: PropTypes.arrayOf(
-      PropTypes.shape({
-        vehicleNumber: PropTypes.number,
-        vehicleType: PropTypes.string,
-        timestamp: PropTypes.string,
-        direction: PropTypes.number,
-        contractId: PropTypes.number,
-        jobIds: PropTypes.arrayOf(PropTypes.number),
-        lat: PropTypes.number,
-        lon: PropTypes.number,
-      }),
-    ),
-  }),
 };
 
 MaintenanceVehiclePopup.contextTypes = {
   intl: intlShape.isRequired,
 };
 
-export default Relay.createContainer(MaintenanceVehiclePopup, {
-  fragments: {
-    observations: () => Relay.QL`
-      fragment on Query {
-        latestMaintenanceVehicleObservations(vehicleNumber: $vehicleNumber) {
-          vehicleNumber
-          vehicleType
-          timestamp
-          direction
-          contractId
-          jobIds
-          lat
-          lon
-        }
-      }
-    `,
-  },
-  initialVariables: {
-    vehicleNumber: null,
-  },
-});
+export default MaintenanceVehiclePopup;

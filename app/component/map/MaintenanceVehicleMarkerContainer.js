@@ -1,13 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import Relay from 'react-relay/classic';
 import connectToStores from 'fluxible-addons-react/connectToStores';
 
 import IconWithTail from '../IconWithTail';
 import IconMarker from './IconMarker';
 import MaintenanceVehiclePopup from './popups/MaintenanceVehiclePopup';
-import LatestMaintenanceVehicleObservationsRoute from '../../route/LatestMaintenanceVehicleObservationsRoute';
-import Loading from '../Loading';
 
 import { isBrowser } from '../../util/browser';
 
@@ -50,23 +47,7 @@ function MaintenanceVehicleMarkerContainer({ className, maintenanceVehicles }) {
           minWidth={250}
           className="popup"
         >
-          <Relay.RootContainer
-            Component={MaintenanceVehiclePopup}
-            forceFetch
-            route={
-              new LatestMaintenanceVehicleObservationsRoute({
-                vehicleNumber: message.id,
-              })
-            }
-            renderLoading={() => (
-              <div className="card" style={{ height: '12rem' }}>
-                <Loading />
-              </div>
-            )}
-            renderFetched={data => (
-              <MaintenanceVehiclePopup {...data} maintenanceVehicle={message} />
-            )}
-          />
+          <MaintenanceVehiclePopup maintenanceVehicle={message} />
         </Popup>
       </IconMarker>
     ));
