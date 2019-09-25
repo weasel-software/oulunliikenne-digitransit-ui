@@ -16,7 +16,13 @@ describe('<SelectMapLayersDialog />', () => {
         terminal: {},
         ticketSales: {},
       },
+      mapLayerOptions: {
+        maintenanceVehicles: {
+          timeRange: 1440,
+        },
+      },
       updateMapLayers: () => {},
+      updateMapLayerOptions: () => {},
       clearMapLayers: () => {},
       executeAction: () => {},
     };
@@ -46,9 +52,15 @@ describe('<SelectMapLayersDialog />', () => {
         },
       },
       mapLayers,
+      mapLayerOptions: {
+        maintenanceVehicles: {
+          timeRange: 1440,
+        },
+      },
       updateMapLayers: layers => {
         mapLayers = { ...layers };
       },
+      updateMapLayerOptions: () => {},
       clearMapLayers: () => {},
       executeAction: () => {},
     };
@@ -82,9 +94,15 @@ describe('<SelectMapLayersDialog />', () => {
         },
       },
       mapLayers,
+      mapLayerOptions: {
+        maintenanceVehicles: {
+          timeRange: 1440,
+        },
+      },
       updateMapLayers: layers => {
         mapLayers = { ...layers };
       },
+      updateMapLayerOptions: () => {},
       clearMapLayers: () => {},
       executeAction: () => {},
     };
@@ -118,9 +136,15 @@ describe('<SelectMapLayersDialog />', () => {
         },
       },
       mapLayers,
+      mapLayerOptions: {
+        maintenanceVehicles: {
+          timeRange: 1440,
+        },
+      },
       updateMapLayers: layers => {
         mapLayers = { ...layers };
       },
+      updateMapLayerOptions: () => {},
       clearMapLayers: () => {},
       executeAction: () => {},
     };
@@ -156,9 +180,15 @@ describe('<SelectMapLayersDialog />', () => {
         },
       },
       mapLayers,
+      mapLayerOptions: {
+        maintenanceVehicles: {
+          timeRange: 1440,
+        },
+      },
       updateMapLayers: layers => {
         mapLayers = { ...layers };
       },
+      updateMapLayerOptions: () => {},
       clearMapLayers: () => {},
       executeAction: () => {},
     };
@@ -195,9 +225,15 @@ describe('<SelectMapLayersDialog />', () => {
         },
       },
       mapLayers,
+      mapLayerOptions: {
+        maintenanceVehicles: {
+          timeRange: 1440,
+        },
+      },
       updateMapLayers: layers => {
         mapLayers = { ...layers };
       },
+      updateMapLayerOptions: () => {},
       clearMapLayers: () => {},
       executeAction: () => {},
     };
@@ -232,9 +268,15 @@ describe('<SelectMapLayersDialog />', () => {
         },
       },
       mapLayers,
+      mapLayerOptions: {
+        maintenanceVehicles: {
+          timeRange: 1440,
+        },
+      },
       updateMapLayers: layers => {
         mapLayers = { ...layers };
       },
+      updateMapLayerOptions: () => {},
       clearMapLayers: () => {},
       executeAction: () => {},
     };
@@ -270,9 +312,15 @@ describe('<SelectMapLayersDialog />', () => {
         },
       },
       mapLayers,
+      mapLayerOptions: {
+        maintenanceVehicles: {
+          timeRange: 1440,
+        },
+      },
       updateMapLayers: layers => {
         mapLayers = { ...layers };
       },
+      updateMapLayerOptions: () => {},
       clearMapLayers: () => {},
       executeAction: () => {},
     };
@@ -303,9 +351,15 @@ describe('<SelectMapLayersDialog />', () => {
         },
       },
       mapLayers,
+      mapLayerOptions: {
+        maintenanceVehicles: {
+          timeRange: 1440,
+        },
+      },
       updateMapLayers: layers => {
         mapLayers = { ...layers };
       },
+      updateMapLayerOptions: () => {},
       clearMapLayers: () => {},
       executeAction: () => {},
     };
@@ -339,9 +393,15 @@ describe('<SelectMapLayersDialog />', () => {
         },
       },
       mapLayers,
+      mapLayerOptions: {
+        maintenanceVehicles: {
+          timeRange: 1440,
+        },
+      },
       updateMapLayers: layers => {
         mapLayers = { ...layers };
       },
+      updateMapLayerOptions: () => {},
       clearMapLayers: () => {},
       executeAction: () => {},
     };
