@@ -1,4 +1,5 @@
 import { VectorTile } from '@mapbox/vector-tile';
+import get from 'lodash/get';
 import Protobuf from 'pbf';
 import { drawMaintenanceVehicleRoutePath } from '../../../util/mapIconUtils';
 import { isBrowser } from '../../../util/browser';
@@ -6,22 +7,24 @@ import { MaintenanceJobColors, StreetMode } from '../../../constants';
 import { getStreetMode } from '../../../util/modeUtils';
 
 class MaintenanceVehicleRoutes {
-  constructor(tile, config, layers, location) {
+  constructor(tile, config, layers, layerOptions, location) {
     this.tile = tile;
     this.config = config;
+    this.timeRange = get(layerOptions, 'maintenanceVehicles.timeRange');
     const scaleRatio = (isBrowser && window.devicePixelRatio) || 1;
     this.imageSize = 20 * scaleRatio;
-    this.promise = this.fetchWithAction(this.fetchAndDrawStatus);
     this.streetMode = getStreetMode(location, config);
+    this.promise = this.getPromise();
   }
 
   static getName = () => 'maintenanceVehicles';
 
-  fetchWithAction = actionFn => {
+  getPromise = () => {
     const url =
       this.streetMode === StreetMode.CAR
         ? this.config.URL.MAINTENANCE_VEHICLE_MOTORISED_MAP
         : this.config.URL.MAINTENANCE_VEHICLE_NON_MOTORISED_MAP;
+
     return fetch(
       `${url}${this.tile.coords.z + (this.tile.props.zoomOffset || 0)}` +
         `/${this.tile.coords.x}/${this.tile.coords.y}.pbf`,
@@ -44,9 +47,7 @@ class MaintenanceVehicleRoutes {
       )
       .then(buf => {
         const vt = new VectorTile(new Protobuf(buf));
-
         this.features = [];
-        const featureList = [];
 
         const layerKey = StreetMode.CAR
           ? 'maintenanceroutesmotorised'
@@ -55,42 +56,32 @@ class MaintenanceVehicleRoutes {
         if (vt.layers[layerKey] != null) {
           for (let i = 0, ref = vt.layers[layerKey].length - 1; i <= ref; i++) {
             const feature = vt.layers[layerKey].feature(i);
-            const geometryList = feature.loadGeometry();
-            featureList.push({ geometryList, feature });
+            const { jobId, timestamp } = feature.properties;
+
+            if (timestamp >= Date.now() / 1000 - this.timeRange * 60) {
+              const color =
+                MaintenanceJobColors[jobId] || MaintenanceJobColors[0];
+              const geometryList = feature.loadGeometry();
+
+              geometryList.forEach(geom => {
+                if (
+                  this.config.maintenanceVehicles &&
+                  this.config.maintenanceVehicles.showLines &&
+                  geom.length > 1
+                ) {
+                  drawMaintenanceVehicleRoutePath(this.tile, geom, color);
+
+                  this.features.push({
+                    lineString: geom,
+                    geom: null,
+                    properties: feature.properties,
+                  });
+                }
+              });
+            }
           }
         }
-        featureList.forEach(actionFn);
       });
-  };
-
-  fetchAndDrawStatus = ({ geometryList, feature }) => {
-    const { jobId } = feature.properties;
-    const color = MaintenanceJobColors[jobId] || MaintenanceJobColors[0];
-
-    geometryList.forEach(geom => {
-      if (
-        this.config.maintenanceVehicles &&
-        this.config.maintenanceVehicles.showLines &&
-        geom.length > 1
-      ) {
-        drawMaintenanceVehicleRoutePath(this.tile, geom, color);
-
-        this.features.push({
-          lineString: geom,
-          geom: null,
-          properties: feature.properties,
-        });
-      }
-    });
-  };
-
-  onTimeChange = () => {
-    if (
-      this.tile.coords.z >
-      this.config.maintenanceVehicles.maintenanceVehiclesMinZoom
-    ) {
-      this.fetchWithAction(this.fetchAndDrawStatus);
-    }
   };
 }
 

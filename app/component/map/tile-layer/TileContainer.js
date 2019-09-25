@@ -123,7 +123,16 @@ class TileContainer {
         }
         return false;
       })
-      .map(Layer => new Layer(this, config, this.props.mapLayers, location));
+      .map(
+        Layer =>
+          new Layer(
+            this,
+            config,
+            this.props.mapLayers,
+            this.props.mapLayerOptions,
+            location,
+          ),
+      );
 
     this.el.layers = this.layers.map(layer => omit(layer, 'tile'));
 

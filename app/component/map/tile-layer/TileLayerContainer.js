@@ -46,6 +46,9 @@ import TileContainer from './TileContainer';
 import Loading from '../../Loading';
 import { isFeatureLayerEnabled } from '../../../util/mapLayerUtils';
 import MapLayerStore, { mapLayerShape } from '../../../store/MapLayerStore';
+import MapLayerOptionsStore, {
+  mapLayerOptionsShape,
+} from '../../../store/MapLayerOptionsStore';
 import EcoCounterPopup from '../popups/EcoCounterPopup';
 import { isBrowser } from '../../../util/browser';
 
@@ -64,6 +67,7 @@ class TileLayerContainer extends GridLayer {
     zoomOffset: PropTypes.number.isRequired,
     disableMapTracking: PropTypes.func,
     mapLayers: mapLayerShape.isRequired,
+    mapLayerOptions: mapLayerOptionsShape.isRequired,
     highlightedStop: PropTypes.string,
     highlightedFluency: PropTypes.string,
   };
@@ -101,6 +105,7 @@ class TileLayerContainer extends GridLayer {
 
     if (
       !isEqual(prevProps.mapLayers, this.props.mapLayers) ||
+      !isEqual(prevProps.mapLayerOptions, this.props.mapLayerOptions) ||
       !isEqual(prevProps.hilightedStops, this.props.hilightedStops)
     ) {
       this.context.map.removeEventParent(this.leafletElement);
@@ -539,9 +544,12 @@ class TileLayerContainer extends GridLayer {
 
 export default connectToStores(
   TileLayerContainer,
-  [MapLayerStore],
+  [MapLayerStore, MapLayerOptionsStore],
   context => ({
     mapLayers: context.getStore(MapLayerStore).getMapLayers(),
+    mapLayerOptions: context
+      .getStore(MapLayerOptionsStore)
+      .getMapLayerOptions(),
     highlightedStop: context.getStore(MapLayerStore).getHighlightedStop(),
     highlightedFluency: context.getStore(MapLayerStore).getHighlightedFluency(),
     location: context.location,
