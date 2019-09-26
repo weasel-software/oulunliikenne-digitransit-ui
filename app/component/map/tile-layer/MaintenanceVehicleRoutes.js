@@ -21,7 +21,7 @@ class MaintenanceVehicleRoutes {
 
   getPromise = () => {
     const url =
-      this.streetMode === StreetMode.CAR
+      this.streetMode === StreetMode.Car
         ? this.config.URL.MAINTENANCE_VEHICLE_MOTORISED_MAP
         : this.config.URL.MAINTENANCE_VEHICLE_NON_MOTORISED_MAP;
 
@@ -49,9 +49,10 @@ class MaintenanceVehicleRoutes {
         const vt = new VectorTile(new Protobuf(buf));
         this.features = [];
 
-        const layerKey = StreetMode.CAR
-          ? 'maintenanceroutesmotorised'
-          : 'maintenanceroutesnonmotorised';
+        const layerKey =
+          this.streetMode === StreetMode.Car
+            ? 'maintenanceroutesmotorised'
+            : 'maintenanceroutesnonmotorised';
 
         if (vt.layers[layerKey] != null) {
           for (let i = 0, ref = vt.layers[layerKey].length - 1; i <= ref; i++) {

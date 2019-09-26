@@ -207,7 +207,7 @@ class MapWithTrackingStateHandler extends React.Component {
     );
 
     const routeType =
-      mode === StreetMode.CAR
+      mode === StreetMode.Car
         ? ROUTE_TYPE_MOTORISED_TRAFFIC
         : ROUTE_TYPE_NON_MOTORISED_TRAFFIC;
 
