@@ -24,6 +24,7 @@ import TrafficAnnouncementRoute from '../../../route/TrafficAnnouncementRoute';
 import WeatherStationRoute from '../../../route/WeatherStationRoute';
 import TmsStationRoute from '../../../route/TmsStationRoute';
 import RoadConditionRoute from '../../../route/RoadConditionRoute';
+import MaintenanceVehicleRouteRoute from '../../../route/MaintenanceVehicleRouteRoute';
 import StopMarkerPopup from '../popups/StopMarkerPopup';
 import MarkerSelectPopup from './MarkerSelectPopup';
 import CityBikePopup from '../popups/CityBikePopup';
@@ -41,6 +42,7 @@ import RoadworkPopup from '../popups/RoadworkPopup';
 import DisorderPopup from '../popups/DisorderPopup';
 import TrafficAnnouncementPopup from '../popups/TrafficAnnouncementPopup';
 import RoadConditionPopup from '../popups/RoadConditionPopup';
+import MaintenanceVehicleRoutePopup from '../popups/MaintenanceVehicleRoutePopup';
 import LocationPopup from '../popups/LocationPopup';
 import TileContainer from './TileContainer';
 import Loading from '../../Loading';
@@ -288,6 +290,7 @@ class TileLayerContainer extends GridLayer {
         <Loading />
       </div>
     );
+
     if (typeof this.state.selectableTargets !== 'undefined') {
       if (
         this.state.selectableTargets.length >= 1 &&
@@ -491,6 +494,19 @@ class TileLayerContainer extends GridLayer {
               route={new RoadConditionRoute({ id })}
               renderLoading={loadingPopup}
               renderFetched={data => <RoadConditionPopup {...data} />}
+            />
+          );
+        } else if (
+          this.state.selectableTargets[0].layer === 'maintenanceVehicles'
+        ) {
+          ({ id } = this.state.selectableTargets[0].feature.properties);
+          contents = (
+            <Relay.RootContainer
+              Component={MaintenanceVehicleRoutePopup}
+              forceFetch
+              route={new MaintenanceVehicleRouteRoute({ id })}
+              renderLoading={loadingPopup}
+              renderFetched={data => <MaintenanceVehicleRoutePopup {...data} />}
             />
           );
         } else if (this.state.selectableTargets[0].layer === 'fluencies') {
