@@ -51,7 +51,9 @@ import MapLayerStore, { mapLayerShape } from '../../../store/MapLayerStore';
 import MapLayerOptionsStore, {
   mapLayerOptionsShape,
 } from '../../../store/MapLayerOptionsStore';
-import MaintenanceVehicleTailStore from '../../../store/MaintenanceVehicleTailStore';
+import MaintenanceVehicleTailStore, {
+  maintenanceVehicleTailShape,
+} from '../../../store/MaintenanceVehicleTailStore';
 import EcoCounterPopup from '../popups/EcoCounterPopup';
 import { isBrowser } from '../../../util/browser';
 
@@ -73,6 +75,7 @@ class TileLayerContainer extends GridLayer {
     mapLayerOptions: mapLayerOptionsShape.isRequired,
     highlightedStop: PropTypes.string,
     highlightedFluency: PropTypes.string,
+    maintenanceVehicleTail: maintenanceVehicleTailShape.isRequired,
   };
 
   static defaultProps = {

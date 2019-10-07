@@ -1,4 +1,5 @@
 import Store from 'fluxible/addons/BaseStore';
+import PropTypes from 'prop-types';
 
 class MaintenanceVehicleRealTimeInformationStore extends Store {
   static storeName = 'MaintenanceVehicleRealTimeInformationStore';
@@ -33,7 +34,7 @@ class MaintenanceVehicleRealTimeInformationStore extends Store {
 
   handleMessage(message) {
     this.maintenanceVehicles[message.id] = message.message;
-    this.emitChange(message.id);
+    this.emitChange();
   }
 
   static handlers = {
@@ -43,5 +44,14 @@ class MaintenanceVehicleRealTimeInformationStore extends Store {
     MaintenanceVehicleRealTimeClientTopicChanged: 'updateSubscriptions',
   };
 }
+
+export const maintenanceVehicleShape = PropTypes.shape({
+  id: PropTypes.number,
+  jobIds: PropTypes.arrayOf(PropTypes.number),
+  timestamp: PropTypes.number,
+  lat: PropTypes.number,
+  long: PropTypes.number,
+  dir: PropTypes.number,
+});
 
 export default MaintenanceVehicleRealTimeInformationStore;

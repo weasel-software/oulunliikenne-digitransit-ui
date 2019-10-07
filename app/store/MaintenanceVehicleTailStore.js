@@ -1,4 +1,7 @@
 import Store from 'fluxible/addons/BaseStore';
+import PropTypes from 'prop-types';
+
+import { maintenanceVehicleShape } from './MaintenanceVehicleRealTimeInformationStore';
 
 class MaintenanceVehicleTailStore extends Store {
   static storeName = 'MaintenanceVehicleTailStore';
@@ -12,7 +15,6 @@ class MaintenanceVehicleTailStore extends Store {
   constructor(dispatcher) {
     super(dispatcher);
     this.vehicleId = null;
-    this.jobId = null;
     this.tail = [];
   }
 
@@ -36,8 +38,12 @@ class MaintenanceVehicleTailStore extends Store {
     }
   };
 
-  getTail = () => this.tail;
+  getTail = () => [...this.tail];
   getVehicleId = () => this.vehicleId;
 }
+
+export const maintenanceVehicleTailShape = PropTypes.arrayOf(
+  maintenanceVehicleShape,
+);
 
 export default MaintenanceVehicleTailStore;
