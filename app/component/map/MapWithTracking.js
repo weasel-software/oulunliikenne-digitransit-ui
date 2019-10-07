@@ -11,7 +11,7 @@ import ToggleMapTracking from '../ToggleMapTracking';
 import { dtLocationShape } from '../../util/shapes';
 import withBreakpoint from '../../util/withBreakpoint';
 import VehicleMarkerContainer from '../map/VehicleMarkerContainer';
-import MaintenanceVehicleMarkerContainer from '../map/MaintenanceVehicleMarkerContainer';
+import MaintenanceVehicleMarkerContainer from './tile-layer/MaintenanceVehicleMarkerContainer';
 import {
   startRealTimeClient,
   stopRealTimeClient,

@@ -14,6 +14,7 @@ import WeatherStations from './WeatherStations';
 import TmsStations from './TmsStations';
 import RoadConditions from './RoadConditions';
 import MaintenanceVehicleRoutes from './MaintenanceVehicleRoutes';
+import MaintenanceVehicleTail from './MaintenanceVehicleTail';
 import Fluencies from './Fluencies';
 import EcoCounters from './EcoCounters';
 
@@ -38,6 +39,13 @@ class VectorTileLayerContainer extends React.Component {
         config.maintenanceVehicles.showMaintenanceVehicles
       ) {
         layers.push(MaintenanceVehicleRoutes);
+      }
+
+      if (
+        config.realtimeMaintenanceVehicles &&
+        config.realtimeMaintenanceVehicles.showRealtimeMaintenanceVehicles
+      ) {
+        layers.push(MaintenanceVehicleTail);
       }
 
       if (config.fluencies && config.fluencies.showFluencies) {

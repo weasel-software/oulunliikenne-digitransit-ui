@@ -35,6 +35,8 @@ export function parseMessage(topic, message, actionContext) {
     id: messageContents.id,
     message: messageContents,
   });
+
+  actionContext.dispatch('MaintenanceVehicleTailAdd', messageContents);
 }
 
 export function startRealTimeClient(actionContext, originalOptions, done) {

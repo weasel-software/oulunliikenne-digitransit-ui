@@ -406,6 +406,32 @@ export function drawMaintenanceVehicleRoutePath(
   tile.ctx.lineCap = lineCap;
   tile.ctx.lineJoin = lineJoin;
   tile.ctx.globalCompositeOperation = 'source-over';
+  tile.ctx.closePath();
+}
+
+export function drawMaintenanceVehicleTail(tile, points, color = '#999999') {
+  const { lineCap, lineJoin } = tile.ctx;
+  tile.ctx.lineCap = 'round';
+  tile.ctx.lineJoin = 'round';
+  tile.ctx.globalCompositeOperation = 'destination-over';
+
+  tile.ctx.beginPath();
+  for (let i = 0, ref = points.length; i < ref; i++) {
+    if (i === 0) {
+      tile.ctx.moveTo(points[i].x, points[i].y);
+    } else {
+      tile.ctx.lineTo(points[i].x, points[i].y);
+    }
+  }
+
+  tile.ctx.strokeStyle = color;
+  tile.ctx.lineWidth = 10;
+  tile.ctx.stroke();
+
+  tile.ctx.lineCap = lineCap;
+  tile.ctx.lineJoin = lineJoin;
+  tile.ctx.globalCompositeOperation = 'source-over';
+  tile.ctx.closePath();
 }
 
 export function drawFluencyIcon(tile, geom, imageSize) {

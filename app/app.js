@@ -11,6 +11,7 @@ import OriginStore from './store/OriginStore';
 import PreferencesStore from './store/PreferencesStore';
 import RealTimeInformationStore from './store/RealTimeInformationStore';
 import MaintenanceVehicleRealTimeInformationStore from './store/MaintenanceVehicleRealTimeInformationStore';
+import MaintenanceVehicleTailStore from './store/MaintenanceVehicleTailStore';
 import TimeStore from './store/TimeStore';
 import FavouriteCityBikeStationStore from './store/FavouriteCityBikeStationStore';
 import MapLayerStore from './store/MapLayerStore';
@@ -32,6 +33,7 @@ export default config => {
   app.registerStore(PreferencesStore);
   app.registerStore(RealTimeInformationStore);
   app.registerStore(MaintenanceVehicleRealTimeInformationStore);
+  app.registerStore(MaintenanceVehicleTailStore);
   app.registerStore(TimeStore);
   app.registerStore(FavouriteCityBikeStationStore);
   app.registerStore(MapLayerStore);

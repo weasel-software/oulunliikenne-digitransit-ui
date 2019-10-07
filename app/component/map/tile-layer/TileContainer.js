@@ -9,7 +9,7 @@ import { isBrowser } from '../../../util/browser';
 import { isLayerEnabled } from '../../../util/mapLayerUtils';
 
 class TileContainer {
-  constructor(coords, done, props, config, location) {
+  constructor(coords, done, props, config, location, map) {
     const markersMinZoom = Math.min(
       config.cityBike.cityBikeMinZoom,
       config.stopsMinZoom,
@@ -36,6 +36,7 @@ class TileContainer {
     this.ratio = this.extent / this.tileSize;
     this.el = this.createElement();
     this.clickCount = 0;
+    this.map = map;
 
     if (this.coords.z < markersMinZoom || !this.el.getContext) {
       setTimeout(() => done(null, this.el), 0);
@@ -107,6 +108,11 @@ class TileContainer {
           return isEnabled;
         } else if (
           layerName === 'maintenanceVehicles' &&
+          this.coords.z >= config.maintenanceVehicles.maintenanceVehiclesMinZoom
+        ) {
+          return isEnabled;
+        } else if (
+          layerName === 'realtimeMaintenanceVehicles' &&
           this.coords.z >= config.maintenanceVehicles.maintenanceVehiclesMinZoom
         ) {
           return isEnabled;

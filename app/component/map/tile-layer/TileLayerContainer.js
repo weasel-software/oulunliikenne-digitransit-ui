@@ -51,6 +51,7 @@ import MapLayerStore, { mapLayerShape } from '../../../store/MapLayerStore';
 import MapLayerOptionsStore, {
   mapLayerOptionsShape,
 } from '../../../store/MapLayerOptionsStore';
+import MaintenanceVehicleTailStore from '../../../store/MaintenanceVehicleTailStore';
 import EcoCounterPopup from '../popups/EcoCounterPopup';
 import { isBrowser } from '../../../util/browser';
 
@@ -108,7 +109,11 @@ class TileLayerContainer extends GridLayer {
     if (
       !isEqual(prevProps.mapLayers, this.props.mapLayers) ||
       !isEqual(prevProps.mapLayerOptions, this.props.mapLayerOptions) ||
-      !isEqual(prevProps.hilightedStops, this.props.hilightedStops)
+      !isEqual(prevProps.hilightedStops, this.props.hilightedStops) ||
+      !isEqual(
+        prevProps.maintenanceVehicleTail,
+        this.props.maintenanceVehicleTail,
+      )
     ) {
       this.context.map.removeEventParent(this.leafletElement);
       this.leafletElement.remove();
@@ -237,6 +242,7 @@ class TileLayerContainer extends GridLayer {
       props,
       this.context.config,
       this.context.location,
+      this.context.map,
     );
 
     tile.onSelectableTargetClicked = (selectableTargets, coords) => {
@@ -560,7 +566,7 @@ class TileLayerContainer extends GridLayer {
 
 export default connectToStores(
   TileLayerContainer,
-  [MapLayerStore, MapLayerOptionsStore],
+  [MapLayerStore, MapLayerOptionsStore, MaintenanceVehicleTailStore],
   context => ({
     mapLayers: context.getStore(MapLayerStore).getMapLayers(),
     mapLayerOptions: context
@@ -568,6 +574,9 @@ export default connectToStores(
       .getMapLayerOptions(),
     highlightedStop: context.getStore(MapLayerStore).getHighlightedStop(),
     highlightedFluency: context.getStore(MapLayerStore).getHighlightedFluency(),
+    maintenanceVehicleTail: context
+      .getStore(MaintenanceVehicleTailStore)
+      .getTail(),
     location: context.location,
   }),
 );

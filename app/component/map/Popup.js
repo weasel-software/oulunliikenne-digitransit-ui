@@ -103,8 +103,9 @@ export default class Popup extends MapComponent {
   }
 
   onPopupOpen = ({ popup }) => {
-    events.emit('popupOpened');
     if (popup === this.leafletElement) {
+      events.emit('popupOpened');
+
       this.setState({ isPopupOpen: true }, () => {
         if (this.props.onOpen) {
           this.props.onOpen();

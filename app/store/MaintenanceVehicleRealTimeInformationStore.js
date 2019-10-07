@@ -12,17 +12,23 @@ class MaintenanceVehicleRealTimeInformationStore extends Store {
   storeClient(data) {
     this.client = data.client;
     this.subscriptions = data.topics;
+
+    this.emitChange();
   }
 
   clearClient() {
     this.client = undefined;
     this.maintenanceVehicles = {};
     this.subscriptions = [];
+
+    this.emitChange();
   }
 
   updateSubscriptions(topics) {
     this.subscriptions = topics;
     this.maintenanceVehicles = {};
+
+    this.emitChange();
   }
 
   handleMessage(message) {
