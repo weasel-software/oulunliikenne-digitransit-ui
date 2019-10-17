@@ -180,10 +180,10 @@ function getNetworkLayer(config, agent) {
       retryDelays: [],
     }),
     urlMiddleware({
-      url: `${config.URL.OTP}index/graphql`,
+      url: `${config.URL.OTP}/graphql`,
     }),
     batchMiddleware({
-      batchUrl: `${config.URL.OTP}index/graphql/batch`,
+      batchUrl: `${config.URL.OTP}/graphql/batch`,
     }),
     gqErrorsMiddleware(),
   ]);
