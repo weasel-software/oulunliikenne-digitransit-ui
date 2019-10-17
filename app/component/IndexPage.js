@@ -40,6 +40,7 @@ import ContentToggle from './ContentToggle';
 import { updateMapLayersMode } from '../action/MapLayerActions';
 import { clearDepartures } from '../action/RealtimeDeparturesActions';
 import IntroPopup from './IntroPopup';
+import MaintenanceVehicleLegend from './MaintenanceVehicleLegend';
 
 const debug = d('IndexPage.js');
 
@@ -288,6 +289,7 @@ class IndexPage extends React.Component {
             </React.Fragment>
           )}
         />
+        <MaintenanceVehicleLegend />
         {(this.props.showSpinner && <OverlayWithSpinner />) || null}
         {!footerOptions.hidden && (
           <div id="page-footer-container">
@@ -395,7 +397,8 @@ const Index = shouldUpdate(
       isEqual(nextProps.lang, props.lang) &&
       isEqual(nextProps.locationState, props.locationState) &&
       isEqual(nextProps.showSpinner, props.showSpinner) &&
-      isEqual(nextProps.realtimeDepartures, props.realtimeDepartures)
+      isEqual(nextProps.realtimeDepartures, props.realtimeDepartures) &&
+      isEqual(nextProps.mapLayers, props.mapLayers)
     ),
 )(IndexPage);
 
@@ -437,7 +440,7 @@ const tabs = [TAB_FAVOURITES, TAB_NEARBY];
 
 const IndexPageWithPosition = connectToStores(
   IndexPageWithBreakpoint,
-  ['PositionStore', 'RealtimeDeparturesStore'],
+  ['PositionStore', 'RealtimeDeparturesStore', 'MapLayerStore'],
   (context, props) => {
     const realtimeDepartures = context
       .getStore('RealtimeDeparturesStore')
