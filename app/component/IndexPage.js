@@ -397,8 +397,7 @@ const Index = shouldUpdate(
       isEqual(nextProps.lang, props.lang) &&
       isEqual(nextProps.locationState, props.locationState) &&
       isEqual(nextProps.showSpinner, props.showSpinner) &&
-      isEqual(nextProps.realtimeDepartures, props.realtimeDepartures) &&
-      isEqual(nextProps.mapLayers, props.mapLayers)
+      isEqual(nextProps.realtimeDepartures, props.realtimeDepartures)
     ),
 )(IndexPage);
 
