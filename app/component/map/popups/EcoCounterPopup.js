@@ -69,7 +69,7 @@ class EcoCounterPopup extends React.Component {
       endMoment.subtract(1, 'Y');
     } else {
       endMoment
-        .hours(7)
+        .hours(0)
         .minutes(0)
         .seconds(0);
     }

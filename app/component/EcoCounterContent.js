@@ -16,6 +16,28 @@ const STEPS = {
   YEAR: 'year',
 };
 
+const getTitle = (step, formatMessage) => {
+  switch (step) {
+    case STEPS.HOUR:
+      return formatMessage(
+        {
+          id: 'hourly-with-date',
+        },
+        {
+          date: moment().format('d.M.Y'),
+        },
+      );
+    case STEPS.DAY:
+      return formatMessage({ id: 'daily' });
+    case STEPS.WEEK:
+      return formatMessage({ id: 'weekly' });
+    case STEPS.MONTH:
+      return formatMessage({ id: 'monthly' });
+    default:
+      return '';
+  }
+};
+
 const formatDateByStep = (date, step) => {
   const m = moment(date);
   if (step === STEPS.HOUR) {
@@ -57,6 +79,7 @@ const EcoCounterContent = ({
   ];
   return (
     <div className="ecocounter-content">
+      <h5>{getTitle(step, formatMessage)}</h5>
       <LineChart datasets={datasets} labels={labels} title="Test" />
       <div className="button-row">
         {availableUserTypes.includes(WALKING) && (
