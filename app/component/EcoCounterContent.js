@@ -24,7 +24,7 @@ const getTitle = (step, formatMessage) => {
           id: 'hourly-with-date',
         },
         {
-          date: moment().format('d.M.Y'),
+          date: moment().format('D.M.Y'),
         },
       );
     case STEPS.DAY:
