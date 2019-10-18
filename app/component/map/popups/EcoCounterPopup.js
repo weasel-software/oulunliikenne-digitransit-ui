@@ -48,10 +48,9 @@ class EcoCounterPopup extends React.Component {
   // TODO: Use current time and and date, once the api returns counts for current date.
   getEndMoment = () =>
     moment()
-      .subtract(1, 'd')
-      .hours(23)
-      .minutes(59)
-      .seconds(59);
+      .hours(0)
+      .minutes(0)
+      .seconds(0);
 
   getEndTimestamp = () =>
     this.getEndMoment()
@@ -69,6 +68,7 @@ class EcoCounterPopup extends React.Component {
       endMoment.subtract(1, 'Y');
     } else {
       endMoment
+        .subtract(1, 'day')
         .hours(0)
         .minutes(0)
         .seconds(0);
