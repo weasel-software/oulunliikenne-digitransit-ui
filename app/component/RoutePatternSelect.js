@@ -21,7 +21,6 @@ class RoutePatternSelect extends Component {
     serviceDay: PropTypes.string.isRequired,
     activeTab: PropTypes.string.isRequired,
     relay: PropTypes.object.isRequired,
-    gtfsId: PropTypes.string.isRequired,
   };
 
   static contextTypes = {

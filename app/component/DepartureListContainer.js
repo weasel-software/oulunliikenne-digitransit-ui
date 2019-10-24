@@ -58,26 +58,20 @@ const asDepartures = stoptimes =>
 class DepartureListContainer extends Component {
   static propTypes = {
     rowClasses: PropTypes.string.isRequired,
-    stoptimes: PropTypes.array.isRequired,
     currentTime: PropTypes.number.isRequired,
-    limit: PropTypes.number,
     infiniteScroll: PropTypes.bool,
     showStops: PropTypes.bool,
     routeLinks: PropTypes.bool,
     className: PropTypes.string,
-    isTerminal: PropTypes.bool,
     showPlatformCodes: PropTypes.bool,
     showRealtimeVehicles: PropTypes.bool,
     hasRealtimeVehicles: PropTypes.func,
-    updateRealtimeVehicles: PropTypes.bool,
-    router: routerShape.isRequired,
   };
 
   static defaultProps = {
     showPlatformCodes: false,
     showRealtimeVehicles: false,
     hasRealtimeVehicles: undefined,
-    updateRealtimeVehicles: true,
   };
 
   static contextTypes = {

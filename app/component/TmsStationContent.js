@@ -8,7 +8,9 @@ import { lang as exampleLang } from './ExampleData';
 const TmsStationContent = ({
   sensors,
   measuredTime,
+  // eslint-disable-next-line react/prop-types
   direction1,
+  // eslint-disable-next-line react/prop-types
   direction2,
 }) => {
   const speedSensor1 = sensors.find(

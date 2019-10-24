@@ -58,9 +58,7 @@ MoreInfoModal.defaultProps = {
 
 MoreInfoModal.description = () => (
   <div>
-    <p>
-      Modal that shows more info about a specific roadwork.
-    </p>
+    <p>Modal that shows more info about a specific roadwork.</p>
     <ComponentUsageExample>
       <MoreInfoModal />
     </ComponentUsageExample>

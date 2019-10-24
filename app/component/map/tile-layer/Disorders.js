@@ -27,8 +27,8 @@ export default class Disorders {
 
   static getName = () => 'disorders';
 
-  getPromise = () => {
-    return fetch(
+  getPromise = () =>
+    fetch(
       `${this.config.URL.DISORDERS_MAP}${this.tile.coords.z +
         (this.tile.props.zoomOffset || 0)}` +
         `/${this.tile.coords.x}/${this.tile.coords.y}.pbf`,
@@ -72,7 +72,6 @@ export default class Disorders {
           }
         }
       });
-  };
 
   fetchItem = (geometryList, feature) => {
     const { id } = feature.properties;

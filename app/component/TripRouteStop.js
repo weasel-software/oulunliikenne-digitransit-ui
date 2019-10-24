@@ -114,8 +114,6 @@ TripRouteStop.propTypes = {
     .isRequired,
   stoptime: PropTypes.object.isRequired,
   currentTime: PropTypes.number.isRequired,
-  pattern: PropTypes.string.isRequired,
-  route: PropTypes.string.isRequired,
   className: PropTypes.string,
   selectedVehicle: PropTypes.oneOfType([
     PropTypes.object,

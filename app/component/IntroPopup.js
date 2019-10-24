@@ -48,6 +48,7 @@ class IntroPopup extends React.Component {
         toggleVisibility={this.toggleVisibility}
       >
         {(data.paragraphs || []).map((paragraph, key) => (
+          // eslint-disable-next-line react/no-array-index-key
           <p key={key}>{paragraph}</p>
         ))}
       </Modal>

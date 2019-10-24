@@ -78,6 +78,7 @@ function changeImageColor(image, hex) {
     .replace(/fill="#[A-Za-z0-9]+"/, `fill="${hex}"`);
   const newBase64 = window.btoa(xml);
   const newSrc = `data:image/svg+xml;base64,${newBase64}`;
+  // eslint-disable-next-line no-param-reassign
   image.src = newSrc;
 }
 
