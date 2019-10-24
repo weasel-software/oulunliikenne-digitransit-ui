@@ -72,7 +72,7 @@
                     },
                     {
                         "name": "ticketTypes",
-                        "description": "**This API is experimental and might change without further notice**  \n Return list of available ticket types.",
+                        "description": "Return list of available ticket types",
                         "args": [],
                         "type": {
                             "kind": "LIST",
@@ -1079,6 +1079,60 @@
                                     }
                                 },
                                 "defaultValue": null
+                            },
+                            {
+                                "name": "severityLevel",
+                                "description": "Only return alerts with these severity levels",
+                                "type": {
+                                    "kind": "LIST",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "NON_NULL",
+                                        "name": null,
+                                        "ofType": {
+                                            "kind": "ENUM",
+                                            "name": "AlertSeverityLevelType",
+                                            "ofType": null
+                                        }
+                                    }
+                                },
+                                "defaultValue": null
+                            },
+                            {
+                                "name": "effect",
+                                "description": "Only return alerts with these effects",
+                                "type": {
+                                    "kind": "LIST",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "NON_NULL",
+                                        "name": null,
+                                        "ofType": {
+                                            "kind": "ENUM",
+                                            "name": "AlertEffectType",
+                                            "ofType": null
+                                        }
+                                    }
+                                },
+                                "defaultValue": null
+                            },
+                            {
+                                "name": "cause",
+                                "description": "Only return alerts with these causes",
+                                "type": {
+                                    "kind": "LIST",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "NON_NULL",
+                                        "name": null,
+                                        "ofType": {
+                                            "kind": "ENUM",
+                                            "name": "AlertCauseType",
+                                            "ofType": null
+                                        }
+                                    }
+                                },
+                                "defaultValue": null
                             }
                         ],
                         "type": {
@@ -1770,11 +1824,25 @@
                             },
                             {
                                 "name": "ticketTypes",
-                                "description": "A comma-separated list of allowed ticket types.",
+                                "description": "**Deprecated:** Use `allowedTicketTypes` instead.  \nA comma-separated list of allowed ticket types.",
                                 "type": {
                                     "kind": "SCALAR",
                                     "name": "String",
                                     "ofType": null
+                                },
+                                "defaultValue": null
+                            },
+                            {
+                                "name": "allowedTicketTypes",
+                                "description": "List of ticket types that are allowed to be used in itineraries.  \nSee `ticketTypes` query for list of possible ticket types.",
+                                "type": {
+                                    "kind": "LIST",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "SCALAR",
+                                        "name": "String",
+                                        "ofType": null
+                                    }
                                 },
                                 "defaultValue": null
                             },
@@ -2513,6 +2581,33 @@
                         },
                         "isDeprecated": false,
                         "deprecationReason": null
+                    },
+                    {
+                        "name": "maintenanceVehicleRouteEvent",
+                        "description": "Get a single route event based on its ID, i.e. values of field 'routeEventId'",
+                        "args": [
+                            {
+                                "name": "id",
+                                "description": "",
+                                "type": {
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "SCALAR",
+                                        "name": "String",
+                                        "ofType": null
+                                    }
+                                },
+                                "defaultValue": null
+                            }
+                        ],
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "MaintenanceVehicleRouteEvent",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
                     }
                 ],
                 "inputFields": null,
@@ -2679,6 +2774,11 @@
                     {
                         "kind": "OBJECT",
                         "name": "EcoCounterSite",
+                        "ofType": null
+                    },
+                    {
+                        "kind": "OBJECT",
+                        "name": "MaintenanceVehicleRouteEvent",
                         "ofType": null
                     }
                 ]
@@ -4107,7 +4207,7 @@
                     },
                     {
                         "name": "zoneId",
-                        "description": "",
+                        "description": "ID of the zone where this stop is located",
                         "args": [],
                         "type": {
                             "kind": "SCALAR",
@@ -4635,7 +4735,7 @@
             {
                 "kind": "SCALAR",
                 "name": "Float",
-                "description": "The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point). ",
+                "description": "The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](https://en.wikipedia.org/wiki/IEEE_floating_point). ",
                 "fields": null,
                 "inputFields": null,
                 "interfaces": null,
@@ -5783,7 +5883,7 @@
             {
                 "kind": "OBJECT",
                 "name": "TicketType",
-                "description": "**This API is experimental and might change without further notice**  \n Describes ticket type",
+                "description": "Describes ticket type",
                 "fields": [
                     {
                         "name": "id",
@@ -5803,7 +5903,7 @@
                     },
                     {
                         "name": "fareId",
-                        "description": "",
+                        "description": "Ticket type ID in format `FeedId:TicketTypeId`. Ticket type IDs are usually\ncombination of ticket zones where the ticket is valid.",
                         "args": [],
                         "type": {
                             "kind": "NON_NULL",
@@ -5819,12 +5919,44 @@
                     },
                     {
                         "name": "price",
-                        "description": "",
+                        "description": "Price of the ticket in currency that is specified in `currency` field",
                         "args": [],
                         "type": {
                             "kind": "SCALAR",
                             "name": "Float",
                             "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "currency",
+                        "description": "ISO 4217 currency code",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "zones",
+                        "description": "List of zones where this ticket is valid.\n  Corresponds to field `zoneId` in **Stop** type.",
+                        "args": [],
+                        "type": {
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "NON_NULL",
+                                "name": null,
+                                "ofType": {
+                                    "kind": "SCALAR",
+                                    "name": "String",
+                                    "ofType": null
+                                }
+                            }
                         },
                         "isDeprecated": false,
                         "deprecationReason": null
@@ -8339,7 +8471,7 @@
                 "fields": [
                     {
                         "name": "fareId",
-                        "description": "",
+                        "description": "ID of the ticket type. Corresponds to `fareId` in **TicketType**.",
                         "args": [],
                         "type": {
                             "kind": "SCALAR",
@@ -9878,6 +10010,18 @@
                         "type": {
                             "kind": "SCALAR",
                             "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "trafficDirectionFreeText",
+                        "description": "The traffic direction in free text form that is affected by the traffic announcement",
+                        "args": [],
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "LocalizedString",
                             "ofType": null
                         },
                         "isDeprecated": false,
@@ -11783,7 +11927,7 @@
                     },
                     {
                         "name": "sens",
-                        "description": "Eco-counter site sensor",
+                        "description": "Eco-counter site direction detection information; 1 = IN direction, 2 = OUT direction, 5 = No direction distinction",
                         "args": [],
                         "type": {
                             "kind": "SCALAR",
@@ -11986,6 +12130,154 @@
                 ],
                 "inputFields": null,
                 "interfaces": [],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "MaintenanceVehicleRouteEvent",
+                "description": "",
+                "fields": [
+                    {
+                        "name": "id",
+                        "description": "Global object ID provided by Relay. This value can be used to refetch this object using **node** query.",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "ID",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "routeEventId",
+                        "description": "ID of the route event",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "routeType",
+                        "description": "The route event type",
+                        "args": [],
+                        "type": {
+                            "kind": "ENUM",
+                            "name": "MaintenanceVehicleRouteEventType",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "measuredTime",
+                        "description": "The route event measured time",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "GraphQLDateTime",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "contractId",
+                        "description": "The route event contract ID, either 1250 or 1255",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Int",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "jobIds",
+                        "description": "The route event job IDs",
+                        "args": [],
+                        "type": {
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "Int",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "geojson",
+                        "description": "The route event mapped geojson",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "FeatureObject",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [
+                    {
+                        "kind": "INTERFACE",
+                        "name": "Node",
+                        "ofType": null
+                    }
+                ],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "ENUM",
+                "name": "MaintenanceVehicleRouteEventType",
+                "description": "",
+                "fields": null,
+                "inputFields": null,
+                "interfaces": null,
+                "enumValues": [
+                    {
+                        "name": "UNKNOWN",
+                        "description": "Route type for unmapped route events",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "MOTORISED",
+                        "description": "Route type for motorised traffic route events",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "NON_MOTORISED",
+                        "description": "Route type for non-motorised traffic route events",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "possibleTypes": null
+            },
+            {
+                "kind": "SCALAR",
+                "name": "FeatureObject",
+                "description": null,
+                "fields": null,
+                "inputFields": null,
+                "interfaces": null,
                 "enumValues": null,
                 "possibleTypes": null
             },
@@ -12931,6 +13223,121 @@
                         "deprecationReason": null
                     }
                 ],
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "MaintenanceVehicleObservation",
+                "description": "Maintenance vehicle observations represent coordinates of maintenance vehicles as they carry out jobs.",
+                "fields": [
+                    {
+                        "name": "vehicleNumber",
+                        "description": "ID of the maintenance vehicle",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "Int",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "vehicleType",
+                        "description": "Type of the maintenance vehicle",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "timestamp",
+                        "description": "The timestamp of the maintenance vehicle observation time in ISO-8601 format",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "GraphQLDateTime",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "contractId",
+                        "description": "The contract ID  of the maintenance vehicle observation",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Int",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "direction",
+                        "description": "The direction of the maintenance vehicle",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Int",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "jobIds",
+                        "description": "List of job IDs the maintenance vehicle is carrying out",
+                        "args": [],
+                        "type": {
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "Int",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "lat",
+                        "description": "Latitude of the maintenance vehicle (WGS 84)",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Float",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "lon",
+                        "description": "Longitude of the maintenance vehicle (WGS 84)",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Float",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [],
+                "enumValues": null,
                 "possibleTypes": null
             }
         ],
