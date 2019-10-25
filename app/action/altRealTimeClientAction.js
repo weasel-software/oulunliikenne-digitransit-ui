@@ -89,7 +89,6 @@ export function startRealTimeClient(actionContext, originalOptions, done) {
         const topicsChunkList = chunk(topics, 8);
         topicsChunkList.forEach(topicsChunk => client.subscribe(topicsChunk));
       });
-
       // client.on('error', e => console.log(e));
       // client.on('close', () => console.log('Client connection closed'));
       client.on('message', (t, m) => parseMessage(t, m, actionContext));

@@ -2608,37 +2608,6 @@
                         },
                         "isDeprecated": false,
                         "deprecationReason": null
-                    },
-                    {
-                        "name": "latestMaintenanceVehicleObservations",
-                        "description": "Get latest maintenance vehicle observations by a vehicleNumber",
-                        "args": [
-                            {
-                                "name": "vehicleNumber",
-                                "description": "",
-                                "type": {
-                                    "kind": "NON_NULL",
-                                    "name": null,
-                                    "ofType": {
-                                        "kind": "SCALAR",
-                                        "name": "Int",
-                                        "ofType": null
-                                    }
-                                },
-                                "defaultValue": null
-                            }
-                        ],
-                        "type": {
-                            "kind": "LIST",
-                            "name": null,
-                            "ofType": {
-                                "kind": "OBJECT",
-                                "name": "MaintenanceVehicleObservation",
-                                "ofType": null
-                            }
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
                     }
                 ],
                 "inputFields": null,
@@ -10047,6 +10016,18 @@
                         "deprecationReason": null
                     },
                     {
+                        "name": "trafficDirectionFreeText",
+                        "description": "The traffic direction in free text form that is affected by the traffic announcement",
+                        "args": [],
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "LocalizedString",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
                         "name": "temporarySpeedLimit",
                         "description": "The temporary speed limit while the work is ongoing",
                         "args": [],
@@ -12302,121 +12283,6 @@
             },
             {
                 "kind": "OBJECT",
-                "name": "MaintenanceVehicleObservation",
-                "description": "Maintenance vehicle observations represent coordinates of maintenance vehicles as they carry out jobs.",
-                "fields": [
-                    {
-                        "name": "vehicleNumber",
-                        "description": "ID of the maintenance vehicle",
-                        "args": [],
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": null,
-                            "ofType": {
-                                "kind": "SCALAR",
-                                "name": "Int",
-                                "ofType": null
-                            }
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
-                        "name": "vehicleType",
-                        "description": "Type of the maintenance vehicle",
-                        "args": [],
-                        "type": {
-                            "kind": "SCALAR",
-                            "name": "String",
-                            "ofType": null
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
-                        "name": "timestamp",
-                        "description": "The timestamp of the maintenance vehicle observation time in ISO-8601 format",
-                        "args": [],
-                        "type": {
-                            "kind": "SCALAR",
-                            "name": "GraphQLDateTime",
-                            "ofType": null
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
-                        "name": "contractId",
-                        "description": "The contract ID  of the maintenance vehicle observation",
-                        "args": [],
-                        "type": {
-                            "kind": "SCALAR",
-                            "name": "Int",
-                            "ofType": null
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
-                        "name": "direction",
-                        "description": "The direction of the maintenance vehicle",
-                        "args": [],
-                        "type": {
-                            "kind": "SCALAR",
-                            "name": "Int",
-                            "ofType": null
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
-                        "name": "jobIds",
-                        "description": "List of job IDs the maintenance vehicle is carrying out",
-                        "args": [],
-                        "type": {
-                            "kind": "LIST",
-                            "name": null,
-                            "ofType": {
-                                "kind": "SCALAR",
-                                "name": "Int",
-                                "ofType": null
-                            }
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
-                        "name": "lat",
-                        "description": "Latitude of the maintenance vehicle (WGS 84)",
-                        "args": [],
-                        "type": {
-                            "kind": "SCALAR",
-                            "name": "Float",
-                            "ofType": null
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
-                        "name": "lon",
-                        "description": "Longitude of the maintenance vehicle (WGS 84)",
-                        "args": [],
-                        "type": {
-                            "kind": "SCALAR",
-                            "name": "Float",
-                            "ofType": null
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    }
-                ],
-                "inputFields": null,
-                "interfaces": [],
-                "enumValues": null,
-                "possibleTypes": null
-            },
-            {
-                "kind": "OBJECT",
                 "name": "__Schema",
                 "description": "A GraphQL Schema defines the capabilities of a GraphQL server. It exposes all available types and directives on the server, as well as the entry points for query, mutation, and subscription operations.",
                 "fields": [
@@ -13357,6 +13223,121 @@
                         "deprecationReason": null
                     }
                 ],
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "MaintenanceVehicleObservation",
+                "description": "Maintenance vehicle observations represent coordinates of maintenance vehicles as they carry out jobs.",
+                "fields": [
+                    {
+                        "name": "vehicleNumber",
+                        "description": "ID of the maintenance vehicle",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "Int",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "vehicleType",
+                        "description": "Type of the maintenance vehicle",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "timestamp",
+                        "description": "The timestamp of the maintenance vehicle observation time in ISO-8601 format",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "GraphQLDateTime",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "contractId",
+                        "description": "The contract ID  of the maintenance vehicle observation",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Int",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "direction",
+                        "description": "The direction of the maintenance vehicle",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Int",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "jobIds",
+                        "description": "List of job IDs the maintenance vehicle is carrying out",
+                        "args": [],
+                        "type": {
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "Int",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "lat",
+                        "description": "Latitude of the maintenance vehicle (WGS 84)",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Float",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "lon",
+                        "description": "Longitude of the maintenance vehicle (WGS 84)",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Float",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [],
+                "enumValues": null,
                 "possibleTypes": null
             }
         ],

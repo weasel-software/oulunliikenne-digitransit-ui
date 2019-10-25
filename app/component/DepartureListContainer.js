@@ -82,7 +82,6 @@ class DepartureListContainer extends Component {
     showPlatformCodes: false,
     showRealtimeVehicles: false,
     hasRealtimeVehicles: undefined,
-    updateRealtimeVehicles: true,
   };
 
   static contextTypes = {
