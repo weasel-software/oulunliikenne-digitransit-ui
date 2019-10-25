@@ -1539,7 +1539,7 @@ const translations = {
     'distance-under': 'Etäisyys alle {distance} m',
     'driving-conditions': 'Ajokeli',
     earlier: 'Aiemmin',
-    'eco-counter': 'Kevytliikenneseuranta',
+    'eco-counter': 'Laskentapisteet',
     'edit-favourites': 'Muokkaa paikkaa Suosikkisi-välilehdellä',
     'elevation-gained-total': 'Nousua yhteensä',
     'elevation-lost-total': 'Laskua yhteensä',

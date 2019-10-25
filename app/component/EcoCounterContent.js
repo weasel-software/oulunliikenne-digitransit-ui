@@ -6,8 +6,8 @@ import moment from 'moment';
 import LineChart from './LineChart';
 import Icon from './Icon';
 
-const WALKING = 1;
-const CYCLING = 2;
+export const WALKING = 1;
+export const CYCLING = 2;
 const STEPS = {
   HOUR: 'hour',
   DAY: 'day',

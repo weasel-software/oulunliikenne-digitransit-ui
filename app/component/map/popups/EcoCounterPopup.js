@@ -7,7 +7,7 @@ import { intlShape } from 'react-intl';
 import Card from '../../Card';
 import CardHeader from '../../CardHeader';
 import ComponentUsageExample from '../../ComponentUsageExample';
-import EcoCounterContent from '../../EcoCounterContent';
+import EcoCounterContent, { CYCLING } from '../../EcoCounterContent';
 import EcoCounterDataRoute from '../../../route/EcoCounterDataRoute';
 import LoadingPage from '../../LoadingPage';
 import NetworkError from '../../NetworkError';
@@ -41,7 +41,9 @@ class EcoCounterPopup extends React.Component {
   availableUserTypes = _uniq(this.props.channels.map(c => c.userType));
 
   state = {
-    userType: this.availableUserTypes[0],
+    userType: this.availableUserTypes.includes(CYCLING)
+      ? CYCLING
+      : this.availableUserTypes[0],
     step: STEPS.HOUR,
   };
 
