@@ -506,7 +506,10 @@ class TileLayerContainer extends GridLayer {
             />
           );
         } else if (
-          this.state.selectableTargets[0].layer === 'maintenanceVehicles'
+          this.state.selectableTargets[0].layer === 'maintenanceVehicles' &&
+          this.state.selectableTargets[0].feature &&
+          this.state.selectableTargets[0].feature.properties &&
+          this.state.selectableTargets[0].feature.properties.id
         ) {
           ({ id } = this.state.selectableTargets[0].feature.properties);
           contents = (
