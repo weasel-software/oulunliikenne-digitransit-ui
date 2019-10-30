@@ -70,7 +70,7 @@ class MaintenanceVehicleRoutes {
 
           // Sort the features by their ID first and those without will be put last.
           // Then filter only unique features by their hash value, removing any features
-          // without an ID if there is one with that same ID.
+          // without an ID if there is one with that same hash.
           const sortedFeatures = sortBy(tileLayerFeatures, 'properties.id');
           const uniqueFeatures = uniqBy(sortedFeatures, 'properties.hash');
 
