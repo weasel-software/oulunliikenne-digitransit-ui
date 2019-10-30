@@ -122,7 +122,7 @@ export default configMerger(walttiConfig, {
       MEDIUM: '#FFC107',
       HIGH: '#FFC107',
       CATEGORY: {
-        LOS: '#FFC107',
+        RES: '#FFC107',
         ACT: '#FFC107',
         MHZ: '#FFC107',
         ACC: '#DC3545',
