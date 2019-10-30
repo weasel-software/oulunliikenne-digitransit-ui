@@ -59,7 +59,7 @@ class MaintenanceVehicleRoutes {
         if (vt.layers[layerKey] != null) {
           // Filter out any features that are not within the user selected time range.
           const tileLayerFeatures = [];
-          const selectedTimeRange = ((Date.now() / 1000) - (this.timeRange * 60));
+          const selectedTimeRange = Date.now() / 1000 - this.timeRange * 60;
           for (let j = 0, ll = vt.layers[layerKey].length - 1; j <= ll; j++) {
             const feature = vt.layers[layerKey].feature(j);
             const { timestamp } = feature.properties;
@@ -79,7 +79,8 @@ class MaintenanceVehicleRoutes {
             const feature = uniqueFeatures[i];
             const { jobId } = feature.properties;
 
-            const color = MaintenanceJobColors[jobId] || MaintenanceJobColors[0];
+            const color =
+              MaintenanceJobColors[jobId] || MaintenanceJobColors[0];
             const geometryList = feature.loadGeometry();
 
             geometryList.forEach(geom => {
