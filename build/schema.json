@@ -3332,7 +3332,7 @@
             {
                 "kind": "SCALAR",
                 "name": "Int",
-                "description": "The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. ",
+                "description": "The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.",
                 "fields": null,
                 "inputFields": null,
                 "interfaces": null,
@@ -4735,7 +4735,7 @@
             {
                 "kind": "SCALAR",
                 "name": "Float",
-                "description": "The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](https://en.wikipedia.org/wiki/IEEE_floating_point). ",
+                "description": "The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](https://en.wikipedia.org/wiki/IEEE_floating_point).",
                 "fields": null,
                 "inputFields": null,
                 "interfaces": null,
@@ -12035,6 +12035,12 @@
                         "description": "",
                         "isDeprecated": false,
                         "deprecationReason": null
+                    },
+                    {
+                        "name": "Oulu_TPM",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
                     }
                 ],
                 "possibleTypes": null
@@ -12136,7 +12142,7 @@
             {
                 "kind": "OBJECT",
                 "name": "MaintenanceVehicleRouteEvent",
-                "description": "",
+                "description": "Maintenance route events represent completed jobs for a specific geometry by a maintenance vehicle.",
                 "fields": [
                     {
                         "name": "id",
@@ -12226,6 +12232,22 @@
                             "kind": "SCALAR",
                             "name": "FeatureObject",
                             "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "previousRouteEvents",
+                        "description": "The previous route events for the same geometry, i.e. history of route events.\nThe result is limited to the previous 6 events.",
+                        "args": [],
+                        "type": {
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "OBJECT",
+                                "name": "MaintenanceVehicleRouteEvent",
+                                "ofType": null
+                            }
                         },
                         "isDeprecated": false,
                         "deprecationReason": null
