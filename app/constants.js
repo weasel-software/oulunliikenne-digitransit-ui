@@ -77,7 +77,7 @@ export const MaintenanceJobColors = {
   1366: '#F78D47',
   2864: '#F78D47',
   1357: '#9073ac',
-  0: '#CCFD0B',
+  0: '#28A745',
 };
 
 export const MaintenanceJobPriorities = {
