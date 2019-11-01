@@ -7,10 +7,6 @@ import IconMarker from '../IconMarker';
 import MaintenanceVehiclePopup from '../popups/MaintenanceVehiclePopup';
 
 import { isBrowser } from '../../../util/browser';
-import {
-  startTail,
-  endTail,
-} from '../../../action/maintenanceVehicleTailActions';
 
 let Popup;
 
@@ -33,44 +29,28 @@ if (isBrowser) {
   /* eslint-enable global-require */
 }
 
-function MaintenanceVehicleMarkerContainer({
-  className,
-  maintenanceVehicles,
-  startMaintenanceVehicleTail,
-  endMaintenanceVehicleTail,
-}) {
+function MaintenanceVehicleMarkerContainer({ className, maintenanceVehicles }) {
   return Object.entries(maintenanceVehicles)
     .filter(([, message]) => message.lat && message.long)
-    .map(([id, message]) => {
-      const onPopupOpen = () => {
-        startMaintenanceVehicleTail(message.id);
-      };
-      const onPopupClose = () => {
-        endMaintenanceVehicleTail();
-      };
-
-      return (
-        <IconMarker
-          icon={getMaintenanceVehicleIcon(className)}
-          key={id}
-          position={{
-            lat: message.lat,
-            lon: message.long,
-          }}
+    .map(([id, message]) => (
+      <IconMarker
+        icon={getMaintenanceVehicleIcon(className)}
+        key={id}
+        position={{
+          lat: message.lat,
+          lon: message.long,
+        }}
+      >
+        <Popup
+          offset={[106, 16]}
+          maxWidth={250}
+          minWidth={250}
+          className="popup"
         >
-          <Popup
-            offset={[106, 16]}
-            maxWidth={250}
-            minWidth={250}
-            className="popup"
-            onOpen={onPopupOpen}
-            onClose={onPopupClose}
-          >
-            <MaintenanceVehiclePopup maintenanceVehicle={message} />
-          </Popup>
-        </IconMarker>
-      );
-    });
+          <MaintenanceVehiclePopup maintenanceVehicle={message} />
+        </Popup>
+      </IconMarker>
+    ));
 }
 
 MaintenanceVehicleMarkerContainer.contextTypes = {
@@ -101,8 +81,6 @@ export default connectToStores(
     maintenanceVehicles: context.getStore(
       'MaintenanceVehicleRealTimeInformationStore',
     ).maintenanceVehicles,
-    startMaintenanceVehicleTail: id => context.executeAction(startTail, id),
-    endMaintenanceVehicleTail: () => context.executeAction(endTail),
   }),
   {
     executeAction: PropTypes.func,
