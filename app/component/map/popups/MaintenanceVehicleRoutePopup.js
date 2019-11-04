@@ -3,9 +3,31 @@ import React from 'react';
 import Relay from 'react-relay/classic';
 import { FormattedMessage, intlShape } from 'react-intl';
 import moment from 'moment';
+import get from 'lodash/get';
 import Card from '../../Card';
 import CardHeader from '../../CardHeader';
 import ComponentUsageExample from '../../ComponentUsageExample';
+
+const getJobs = (event, limit = 6) => {
+  const jobs = [
+    ...event.jobIds.map(jobId => ({
+      jobId,
+      date: moment(event.measuredTime),
+    })),
+  ];
+
+  const previousEvents = get(event, 'previousRouteEvents', []);
+  previousEvents.forEach(previousEvent => {
+    previousEvent.jobIds.forEach(jobId => {
+      jobs.push({
+        jobId,
+        date: moment(previousEvent.measuredTime),
+      });
+    });
+  });
+
+  return jobs.length > limit ? jobs.slice(0, limit) : jobs;
+};
 
 function MaintenanceVehicleRoutePopup(
   { maintenanceVehicleRouteEvent },
@@ -29,18 +51,15 @@ function MaintenanceVehicleRoutePopup(
           {(...content) => `${content}:`}
         </FormattedMessage>
         <ul>
-          {maintenanceVehicleRouteEvent.jobIds.map(jobId => (
-            <li key={jobId}>
-              <FormattedMessage id={`maintenance-job-${jobId}`} />
+          {getJobs(maintenanceVehicleRouteEvent).map(job => (
+            <li key={`job-${job.jobId}-${job.date.unix()}`}>
+              <FormattedMessage id={`maintenance-job-${job.jobId}`}>
+                {(...content) => `${content} `}
+              </FormattedMessage>
+              {job.date.format('D.M.Y HH:mm:ss')}
             </li>
           ))}
         </ul>
-        <FormattedMessage id="last-updated" defaultMessage="Last updated">
-          {(...content) => `${content} `}
-        </FormattedMessage>
-        {moment(maintenanceVehicleRouteEvent.measuredTime).format(
-          'D.M.Y HH:mm:ss',
-        ) || ''}
       </Card>
     </div>
   );
@@ -90,6 +109,11 @@ export default Relay.createContainer(MaintenanceVehicleRoutePopup, {
         contractId
         jobIds
         geojson
+        previousRouteEvents {
+          routeEventId
+          measuredTime
+          jobIds
+        }
       }
     `,
   },
