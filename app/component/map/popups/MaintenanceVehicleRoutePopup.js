@@ -60,12 +60,6 @@ function MaintenanceVehicleRoutePopup(
             </li>
           ))}
         </ul>
-        <FormattedMessage id="last-updated" defaultMessage="Last updated">
-          {(...content) => `${content} `}
-        </FormattedMessage>
-        {moment(maintenanceVehicleRouteEvent.measuredTime).format(
-          'D.M.Y HH:mm:ss',
-        ) || ''}
       </Card>
     </div>
   );
