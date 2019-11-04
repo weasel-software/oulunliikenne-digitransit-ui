@@ -325,6 +325,9 @@ class TileLayerContainer extends GridLayer {
         );
       } else if (this.state.selectableTargets.length === 1) {
         let id;
+        const popupOptions = {
+          ...this.PopupOptions,
+        };
         if (this.state.selectableTargets[0].layer === 'stop') {
           id = this.state.selectableTargets[0].feature.properties.gtfsId;
           contents = (
@@ -511,6 +514,8 @@ class TileLayerContainer extends GridLayer {
           this.state.selectableTargets[0].feature.properties &&
           this.state.selectableTargets[0].feature.properties.id
         ) {
+          popupOptions.maxWidth = 360;
+
           ({ id } = this.state.selectableTargets[0].feature.properties);
           contents = (
             <Relay.RootContainer
@@ -530,7 +535,7 @@ class TileLayerContainer extends GridLayer {
           );
         }
         popup = (
-          <Popup {...this.PopupOptions} key={id} position={this.state.coords}>
+          <Popup {...popupOptions} key={id} position={this.state.coords}>
             {contents}
           </Popup>
         );
