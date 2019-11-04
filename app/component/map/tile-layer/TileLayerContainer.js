@@ -274,6 +274,14 @@ class TileLayerContainer extends GridLayer {
         );
       }
 
+      // Filter out all maintenance vehicle route layers that has jobId as 0
+      selectableTargetsFiltered = selectableTargetsFiltered.filter(target => {
+        const layer = get(target, 'layer');
+        const jobId = get(target, 'feature.properties.jobId');
+
+        return layer !== 'maintenanceVehicles' || jobId !== 0;
+      });
+
       this.setState({
         selectableTargets: selectableTargetsFiltered,
         coords,
@@ -509,10 +517,7 @@ class TileLayerContainer extends GridLayer {
             />
           );
         } else if (
-          this.state.selectableTargets[0].layer === 'maintenanceVehicles' &&
-          this.state.selectableTargets[0].feature &&
-          this.state.selectableTargets[0].feature.properties &&
-          this.state.selectableTargets[0].feature.properties.id
+          this.state.selectableTargets[0].layer === 'maintenanceVehicles'
         ) {
           popupOptions.maxWidth = 360;
 

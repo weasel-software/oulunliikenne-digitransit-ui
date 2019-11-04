@@ -9,7 +9,7 @@ function SelectEcoCounterRow(props) {
     <div className="no-margin">
       <div className="cursor-pointer select-row" onClick={props.selectRow}>
         <div className="padding-vertical-normal select-row-icon">
-          <Icon img="icon-icon_maintenance-vehicle" />
+          <Icon img="icon-icon_eco-counter" />
         </div>
         <div className="padding-vertical-normal select-row-text">
           <span className="header-primary no-margin link-color">

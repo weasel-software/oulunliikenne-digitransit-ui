@@ -15,6 +15,8 @@ import SelectTmsStationRow from './SelectTmsStationRow';
 import SelectWeatherStationRow from './SelectWeatherStationRow';
 import SelectRoadConditionRow from './SelectRoadConditionRow';
 import SelectFluencyRow from './SelectFluencyRow';
+import SelectMaintenanceVehicleRow from './SelectMaintenanceVehicleRow';
+import SelectMaintenanceVehicleRouteRow from './SelectMaintenanceVehicleRouteRow';
 import ComponentUsageExample from '../../ComponentUsageExample';
 import { options } from '../../ExampleData';
 import SelectEcoCounterRow from './SelectEcoCounterRow';
@@ -139,6 +141,22 @@ function MarkerSelectPopup(props) {
           {...option.feature.properties}
           key={option.feature.properties.id}
           selectRow={() => props.selectRow(ecoCounters)}
+        />
+      );
+    } else if (option.layer === 'maintenanceVehicles') {
+      return (
+        <SelectMaintenanceVehicleRouteRow
+          {...option.feature.properties}
+          key={option.feature.properties.id}
+          selectRow={() => props.selectRow([option])}
+        />
+      );
+    } else if (option.layer === 'realtimeMaintenanceVehicles') {
+      return (
+        <SelectMaintenanceVehicleRow
+          {...option.feature.properties}
+          key={option.feature.properties.id}
+          selectRow={() => props.selectRow([option])}
         />
       );
     }

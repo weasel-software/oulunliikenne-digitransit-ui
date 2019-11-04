@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import Icon from '../../Icon';
 import ComponentUsageExample from '../../ComponentUsageExample';
 
-const SelectMaintenanceVehicleRouteRow = props => (
+const SelectMaintenanceVehicleRow = props => (
   <div className="no-margin">
     {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
     <div className="cursor-pointer select-row" onClick={props.selectRow}>
@@ -13,7 +13,7 @@ const SelectMaintenanceVehicleRouteRow = props => (
       </div>
       <div className="padding-vertical-normal select-row-text">
         <span className="header-primary no-margin link-color">
-          <FormattedMessage id="maintenance-job">
+          <FormattedMessage id="maintenance">
             {(...content) => `${content} ›`}
           </FormattedMessage>
         </span>
@@ -24,20 +24,19 @@ const SelectMaintenanceVehicleRouteRow = props => (
   </div>
 );
 
-SelectMaintenanceVehicleRouteRow.displayName =
-  'SelectMaintenanceVehicleRouteRow';
+SelectMaintenanceVehicleRow.displayName = 'SelectMaintenanceVehicleRow';
 
-SelectMaintenanceVehicleRouteRow.description = (
+SelectMaintenanceVehicleRow.description = (
   <div>
     <p>Renders a select maintenance vehicle route row</p>
     <ComponentUsageExample description="">
-      <SelectMaintenanceVehicleRouteRow selectRow={() => {}} />
+      <SelectMaintenanceVehicleRow selectRow={() => {}} />
     </ComponentUsageExample>
   </div>
 );
 
-SelectMaintenanceVehicleRouteRow.propTypes = {
+SelectMaintenanceVehicleRow.propTypes = {
   selectRow: PropTypes.func.isRequired,
 };
 
-export default SelectMaintenanceVehicleRouteRow;
+export default SelectMaintenanceVehicleRow;
