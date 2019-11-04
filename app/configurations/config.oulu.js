@@ -488,7 +488,7 @@ export default configMerger(walttiConfig, {
       // tmsStations: false,
       // citybike: true, NOTE: taken from transportModes.citybike.availableForSelection
       ecoCounters: true,
-      maintenanceVehicles: false,
+      maintenanceVehicles: true,
       realtimeMaintenanceVehicles: true,
     },
     WALK: {
@@ -496,7 +496,7 @@ export default configMerger(walttiConfig, {
       weatherStations: false,
       cameraStations: false,
       ecoCounters: true,
-      maintenanceVehicles: false,
+      maintenanceVehicles: true,
       realtimeMaintenanceVehicles: true,
       // tmsStations: false,
       // citybike: true, NOTE: taken from transportModes.citybike.availableForSelection
