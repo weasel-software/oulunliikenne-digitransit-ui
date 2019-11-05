@@ -306,6 +306,30 @@ class SelectMapLayersDialog extends React.Component {
                 }
               />
             )}
+          {config.tmsStations &&
+            config.tmsStations.showTmsStations &&
+            isMapLayerEnabled('tmsStations') && (
+              <InputField
+                checked={tmsStations}
+                labelId="traffic-monitoring"
+                defaultMessage="Traffic monitoring"
+                onChange={e =>
+                  this.updateSetting({ tmsStations: e.target.checked })
+                }
+              />
+            )}
+          {config.ecoCounters &&
+            config.ecoCounters.showEcoCounters &&
+            isMapLayerEnabled('ecoCounters') && (
+              <InputField
+                checked={ecoCounters}
+                labelId="eco-counter"
+                defaultMessage="Eco Counters"
+                onChange={e =>
+                  this.updateSetting({ ecoCounters: e.target.checked })
+                }
+              />
+            )}
           {config.cameraStations &&
             config.cameraStations.showCameraStations &&
             isMapLayerEnabled('cameraStations') && (
@@ -339,30 +363,6 @@ class SelectMapLayersDialog extends React.Component {
                 defaultMessage="Road condition"
                 onChange={e =>
                   this.updateSetting({ roadConditions: e.target.checked })
-                }
-              />
-            )}
-          {config.tmsStations &&
-            config.tmsStations.showTmsStations &&
-            isMapLayerEnabled('tmsStations') && (
-              <InputField
-                checked={tmsStations}
-                labelId="traffic-monitoring"
-                defaultMessage="Traffic monitoring"
-                onChange={e =>
-                  this.updateSetting({ tmsStations: e.target.checked })
-                }
-              />
-            )}
-          {config.ecoCounters &&
-            config.ecoCounters.showEcoCounters &&
-            isMapLayerEnabled('ecoCounters') && (
-              <InputField
-                checked={ecoCounters}
-                labelId="eco-counter"
-                defaultMessage="Eco Counters"
-                onChange={e =>
-                  this.updateSetting({ ecoCounters: e.target.checked })
                 }
               />
             )}

@@ -5,6 +5,7 @@ import connectToStores from 'fluxible-addons-react/connectToStores';
 import getContext from 'recompose/getContext';
 import PropTypes from 'prop-types';
 
+import { sortByPriority } from '../util/maintenanceUtils';
 import { MaintenanceJobColors } from '../constants';
 
 const getItems = () => {
@@ -16,7 +17,7 @@ const getItems = () => {
     }
   });
 
-  return Object.values(items);
+  return sortByPriority(Object.values(items));
 };
 
 const MaintenanceVehicleLegend = ({ mapLayers }) => {

@@ -71,11 +71,11 @@ export const QuickOptionSetType = {
 
 export const MaintenanceJobColors = {
   1370: '#582403',
-  1367: '#FF6A00',
-  1368: '#FF6A00',
-  1369: '#FF6A00',
-  1366: '#F78D47',
-  2864: '#F78D47',
+  1367: '#ff5600',
+  1368: '#ff5600',
+  1369: '#ff5600',
+  1366: '#FFC107',
+  2864: '#FFC107',
   1357: '#9073ac',
   0: '#28A745',
 };
