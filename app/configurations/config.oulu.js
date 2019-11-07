@@ -169,7 +169,7 @@ export default configMerger(walttiConfig, {
   cityBike: {
     // Config for map features. NOTE: availability for routing is controlled by
     // transportModes.citybike.availableForSelection
-    showCityBikes: true,
+    showCityBikes: false, // turn on in spring
     showStationId: true,
 
     useUrl: {
@@ -283,7 +283,7 @@ export default configMerger(walttiConfig, {
     },
 
     citybike: {
-      availableForSelection: true,
+      availableForSelection: false, // turn on in spring
       defaultValue: false,
     },
   },
