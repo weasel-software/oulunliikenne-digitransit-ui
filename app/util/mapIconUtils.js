@@ -78,6 +78,7 @@ function changeImageColor(image, hex) {
     .replace(/fill="#[A-Za-z0-9]+"/, `fill="${hex}"`);
   const newBase64 = window.btoa(xml);
   const newSrc = `data:image/svg+xml;base64,${newBase64}`;
+  // eslint-disable-next-line no-param-reassign
   image.src = newSrc;
 }
 
@@ -379,6 +380,60 @@ export function drawRoadConditionPath(tile, points, color = '#999999') {
   tile.ctx.globalCompositeOperation = 'source-over';
 }
 
+export function drawMaintenanceVehicleRoutePath(
+  tile,
+  points,
+  color = '#999999',
+) {
+  const { lineCap, lineJoin } = tile.ctx;
+  tile.ctx.lineCap = 'round';
+  tile.ctx.lineJoin = 'round';
+  tile.ctx.globalCompositeOperation = 'destination-over';
+
+  tile.ctx.beginPath();
+  for (let i = 0, ref = points.length; i < ref; i++) {
+    if (i === 0) {
+      tile.ctx.moveTo(points[i].x / tile.ratio, points[i].y / tile.ratio);
+    } else {
+      tile.ctx.lineTo(points[i].x / tile.ratio, points[i].y / tile.ratio);
+    }
+  }
+
+  tile.ctx.strokeStyle = color;
+  tile.ctx.lineWidth = 5;
+  tile.ctx.stroke();
+
+  tile.ctx.lineCap = lineCap;
+  tile.ctx.lineJoin = lineJoin;
+  tile.ctx.globalCompositeOperation = 'source-over';
+  tile.ctx.closePath();
+}
+
+export function drawMaintenanceVehicleTail(tile, points, color = '#999999') {
+  const { lineCap, lineJoin } = tile.ctx;
+  tile.ctx.lineCap = 'round';
+  tile.ctx.lineJoin = 'round';
+  tile.ctx.globalCompositeOperation = 'destination-over';
+
+  tile.ctx.beginPath();
+  for (let i = 0, ref = points.length; i < ref; i++) {
+    if (i === 0) {
+      tile.ctx.moveTo(points[i].x, points[i].y);
+    } else {
+      tile.ctx.lineTo(points[i].x, points[i].y);
+    }
+  }
+
+  tile.ctx.strokeStyle = color;
+  tile.ctx.lineWidth = 10;
+  tile.ctx.stroke();
+
+  tile.ctx.lineCap = lineCap;
+  tile.ctx.lineJoin = lineJoin;
+  tile.ctx.globalCompositeOperation = 'source-over';
+  tile.ctx.closePath();
+}
+
 export function drawFluencyIcon(tile, geom, imageSize) {
   getImageFromSpriteCache('icon-icon_fluency', imageSize, imageSize).then(
     image => {
@@ -449,6 +504,14 @@ export function drawWeatherStationIcon(tile, geom, imageSize) {
 
 export function drawTmsStationIcon(tile, geom, imageSize) {
   getImageFromSpriteCache('icon-icon_tms-station', imageSize, imageSize).then(
+    image => {
+      drawIconImage(image, tile, geom, imageSize, imageSize);
+    },
+  );
+}
+
+export function drawEcoCounterIcon(tile, geom, imageSize) {
+  getImageFromSpriteCache('icon-icon_eco-counter', imageSize, imageSize).then(
     image => {
       drawIconImage(image, tile, geom, imageSize, imageSize);
     },

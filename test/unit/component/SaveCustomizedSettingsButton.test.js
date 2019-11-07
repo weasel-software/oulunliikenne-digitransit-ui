@@ -41,8 +41,7 @@ describe('<SaveCustomizedSettingsButton />', () => {
   });
 
   it('should not call noSettingsFound if the query is empty and localStorage has settings', () => {
-    setCustomizedSettings({ optimize: OptimizeType.Safe });
-
+    setCustomizedSettings({ optimize: OptimizeType.Safe }, 'PUBLIC_TRANSPORT');
     let wasCalled = false;
     const callback = () => {
       wasCalled = true;
@@ -94,7 +93,7 @@ describe('<SaveCustomizedSettingsButton />', () => {
 
   it('should call noSettingsFound if the query and localStorage contain only default settings', () => {
     const defaultSettings = getDefaultSettings(defaultConfig);
-    setCustomizedSettings({ ...defaultSettings });
+    setCustomizedSettings({ ...defaultSettings }, 'PUBLIC_TRANSPORT');
 
     const context = {
       ...mockContext,
@@ -118,7 +117,7 @@ describe('<SaveCustomizedSettingsButton />', () => {
   });
 
   it('should save the combined settings, not only query settings', () => {
-    setCustomizedSettings({ optimize: OptimizeType.Safe });
+    setCustomizedSettings({ optimize: OptimizeType.Safe }, 'PUBLIC_TRANSPORT');
     const query = { walkBoardCost: 1234 };
 
     const context = {
@@ -148,11 +147,15 @@ describe('<SaveCustomizedSettingsButton />', () => {
     expect(savedSettings).to.deep.equal({
       optimize: OptimizeType.Safe,
       walkBoardCost: 1234,
+      active: true,
     });
   });
 
   it('should not override localStorage settings with empty ones from the query', () => {
-    setCustomizedSettings({ optimize: OptimizeType.Greenways });
+    setCustomizedSettings(
+      { optimize: OptimizeType.Greenways },
+      'PUBLIC_TRANSPORT',
+    );
     const query = {};
 
     const context = {
@@ -181,6 +184,7 @@ describe('<SaveCustomizedSettingsButton />', () => {
     const savedSettings = getCustomizedSettings();
     expect(savedSettings).to.deep.equal({
       optimize: OptimizeType.Greenways,
+      active: true,
     });
   });
 });

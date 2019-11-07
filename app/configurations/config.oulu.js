@@ -45,6 +45,9 @@ export default configMerger(walttiConfig, {
     TMS_STATIONS_MAP: `${AWS_MAP_URL}/map/tmsstations/`,
     ROAD_CONDITIONS_MAP: `${AWS_MAP_URL}/map/roadconditions/`,
     FLUENCY_MAP: `${AWS_MAP_URL}/map/fluency/`,
+    ECO_COUNTERS_MAP: `${AWS_MAP_URL}/map/ecocounters/`,
+    MAINTENANCE_VEHICLE_NON_MOTORISED_MAP: `${AWS_MAP_URL}/map/maintenanceroutesnonmotorised/`,
+    MAINTENANCE_VEHICLE_MOTORISED_MAP: `${AWS_MAP_URL}/map/maintenanceroutesmotorised/`,
   },
 
   map: {
@@ -102,7 +105,6 @@ export default configMerger(walttiConfig, {
       LOW: '#FFC107',
       MEDIUM: '#FFC107',
       HIGH: '#FFC107',
-      ACCIDENT: '#DC3545',
       DETOUR: '#00CC66',
       GEOM_OVERRIDE: '#333',
       UPCOMING: '#999',
@@ -122,7 +124,13 @@ export default configMerger(walttiConfig, {
       LOW: '#FFC107',
       MEDIUM: '#FFC107',
       HIGH: '#FFC107',
-      ACCIDENT: '#DC3545',
+      CATEGORY: {
+        RES: '#FFC107',
+        ACT: '#FFC107',
+        MHZ: '#FFC107',
+        ACC: '#DC3545',
+        DEFAULT: '#0073BF',
+      },
       DETOUR: '#00CC66',
       GEOM_OVERRIDE: '#333',
       UPCOMING: '#999',
@@ -174,6 +182,29 @@ export default configMerger(walttiConfig, {
     cityBikeSmallIconZoom: 14,
     // When should bikeshare availability be rendered in orange rather than green
     fewAvailableCount: 3,
+  },
+
+  ecoCounters: {
+    showEcoCounters: true,
+    ecoCounterMinZoom: 11,
+  },
+
+  maintenanceVehicles: {
+    showLines: true,
+    showMaintenanceVehicles: true,
+    maintenanceVehiclesMinZoom: 7,
+    timeRanges: {
+      60: 'maintenance-vehicle-time-range-1h',
+      120: 'maintenance-vehicle-time-range-3h',
+      240: 'maintenance-vehicle-time-range-6h',
+      720: 'maintenance-vehicle-time-range-12h',
+      1440: 'maintenance-vehicle-time-range-1d',
+      4320: 'maintenance-vehicle-time-range-3d',
+    },
+  },
+
+  realtimeMaintenanceVehicles: {
+    showRealtimeMaintenanceVehicles: true,
   },
 
   feedIds: ['OULU'],
@@ -456,11 +487,17 @@ export default configMerger(walttiConfig, {
       cameraStations: false,
       // tmsStations: false,
       // citybike: true, NOTE: taken from transportModes.citybike.availableForSelection
+      ecoCounters: true,
+      maintenanceVehicles: true,
+      realtimeMaintenanceVehicles: true,
     },
     WALK: {
       disorders: true,
       weatherStations: false,
       cameraStations: false,
+      ecoCounters: true,
+      maintenanceVehicles: true,
+      realtimeMaintenanceVehicles: true,
       // tmsStations: false,
       // citybike: true, NOTE: taken from transportModes.citybike.availableForSelection
     },

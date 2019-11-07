@@ -41,19 +41,19 @@
 
       .bubble-dialog-content {
         color: $gray;
+      }
+    }
 
-        .toggle-item {
-          margin: 0 0 0.8em;
-          label {
-            color: $gray !important;
-            text-align: left;
-          }
+    .toggle-item {
+      margin: 0 0 0.8em;
 
-          &>div>div {
-            margin-left: 30px !important;
-          }
-        }
+      label {
+        color: $gray !important;
+        text-align: left;
+      }
 
+      & > div > div {
+        margin-left: 30px !important;
       }
     }
   }

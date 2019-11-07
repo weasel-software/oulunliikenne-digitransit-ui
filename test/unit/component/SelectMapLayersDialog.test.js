@@ -7,6 +7,7 @@ import { mockContext, mockChildContextTypes } from '../helpers/mock-context';
 
 import { Component as SelectMapLayersDialog } from '../../../app/component/SelectMapLayersDialog';
 
+// TODO: Fix mountWithIntl rendering issues.
 describe('<SelectMapLayersDialog />', () => {
   it('should render', () => {
     const props = {
@@ -15,13 +16,20 @@ describe('<SelectMapLayersDialog />', () => {
         terminal: {},
         ticketSales: {},
       },
+      mapLayerOptions: {
+        maintenanceVehicles: {
+          timeRange: 1440,
+        },
+      },
       updateMapLayers: () => {},
+      updateMapLayerOptions: () => {},
+      clearMapLayers: () => {},
+      executeAction: () => {},
     };
     const wrapper = mountWithIntl(<SelectMapLayersDialog isOpen {...props} />, {
       context: { ...mockContext },
       childContextTypes: { ...mockChildContextTypes },
     });
-
     expect(wrapper.find('.select-map-layers-dialog-content')).to.have.lengthOf(
       1,
     );
@@ -44,9 +52,17 @@ describe('<SelectMapLayersDialog />', () => {
         },
       },
       mapLayers,
+      mapLayerOptions: {
+        maintenanceVehicles: {
+          timeRange: 1440,
+        },
+      },
       updateMapLayers: layers => {
         mapLayers = { ...layers };
       },
+      updateMapLayerOptions: () => {},
+      clearMapLayers: () => {},
+      executeAction: () => {},
     };
     const wrapper = mountWithIntl(<SelectMapLayersDialog isOpen {...props} />, {
       context: { ...mockContext },
@@ -78,9 +94,17 @@ describe('<SelectMapLayersDialog />', () => {
         },
       },
       mapLayers,
+      mapLayerOptions: {
+        maintenanceVehicles: {
+          timeRange: 1440,
+        },
+      },
       updateMapLayers: layers => {
         mapLayers = { ...layers };
       },
+      updateMapLayerOptions: () => {},
+      clearMapLayers: () => {},
+      executeAction: () => {},
     };
     const wrapper = mountWithIntl(<SelectMapLayersDialog isOpen {...props} />, {
       context: { ...mockContext },
@@ -89,7 +113,7 @@ describe('<SelectMapLayersDialog />', () => {
 
     wrapper
       .find('.option-checkbox input')
-      .at(1)
+      .at(0)
       .simulate('change', { target: { checked: true } });
 
     expect(mapLayers.terminal.bus).to.equal(true);
@@ -112,9 +136,17 @@ describe('<SelectMapLayersDialog />', () => {
         },
       },
       mapLayers,
+      mapLayerOptions: {
+        maintenanceVehicles: {
+          timeRange: 1440,
+        },
+      },
       updateMapLayers: layers => {
         mapLayers = { ...layers };
       },
+      updateMapLayerOptions: () => {},
+      clearMapLayers: () => {},
+      executeAction: () => {},
     };
     const wrapper = mountWithIntl(<SelectMapLayersDialog isOpen {...props} />, {
       context: { ...mockContext },
@@ -148,9 +180,17 @@ describe('<SelectMapLayersDialog />', () => {
         },
       },
       mapLayers,
+      mapLayerOptions: {
+        maintenanceVehicles: {
+          timeRange: 1440,
+        },
+      },
       updateMapLayers: layers => {
         mapLayers = { ...layers };
       },
+      updateMapLayerOptions: () => {},
+      clearMapLayers: () => {},
+      executeAction: () => {},
     };
     const wrapper = mountWithIntl(<SelectMapLayersDialog isOpen {...props} />, {
       context: { ...mockContext },
@@ -185,9 +225,17 @@ describe('<SelectMapLayersDialog />', () => {
         },
       },
       mapLayers,
+      mapLayerOptions: {
+        maintenanceVehicles: {
+          timeRange: 1440,
+        },
+      },
       updateMapLayers: layers => {
         mapLayers = { ...layers };
       },
+      updateMapLayerOptions: () => {},
+      clearMapLayers: () => {},
+      executeAction: () => {},
     };
     const wrapper = mountWithIntl(<SelectMapLayersDialog isOpen {...props} />, {
       context: { ...mockContext },
@@ -220,9 +268,17 @@ describe('<SelectMapLayersDialog />', () => {
         },
       },
       mapLayers,
+      mapLayerOptions: {
+        maintenanceVehicles: {
+          timeRange: 1440,
+        },
+      },
       updateMapLayers: layers => {
         mapLayers = { ...layers };
       },
+      updateMapLayerOptions: () => {},
+      clearMapLayers: () => {},
+      executeAction: () => {},
     };
     const wrapper = mountWithIntl(<SelectMapLayersDialog isOpen {...props} />, {
       context: { ...mockContext },
@@ -256,9 +312,17 @@ describe('<SelectMapLayersDialog />', () => {
         },
       },
       mapLayers,
+      mapLayerOptions: {
+        maintenanceVehicles: {
+          timeRange: 1440,
+        },
+      },
       updateMapLayers: layers => {
         mapLayers = { ...layers };
       },
+      updateMapLayerOptions: () => {},
+      clearMapLayers: () => {},
+      executeAction: () => {},
     };
     const wrapper = mountWithIntl(<SelectMapLayersDialog isOpen {...props} />, {
       context: { ...mockContext },
@@ -287,9 +351,17 @@ describe('<SelectMapLayersDialog />', () => {
         },
       },
       mapLayers,
+      mapLayerOptions: {
+        maintenanceVehicles: {
+          timeRange: 1440,
+        },
+      },
       updateMapLayers: layers => {
         mapLayers = { ...layers };
       },
+      updateMapLayerOptions: () => {},
+      clearMapLayers: () => {},
+      executeAction: () => {},
     };
     const wrapper = mountWithIntl(<SelectMapLayersDialog isOpen {...props} />, {
       context: { ...mockContext },
@@ -321,9 +393,17 @@ describe('<SelectMapLayersDialog />', () => {
         },
       },
       mapLayers,
+      mapLayerOptions: {
+        maintenanceVehicles: {
+          timeRange: 1440,
+        },
+      },
       updateMapLayers: layers => {
         mapLayers = { ...layers };
       },
+      updateMapLayerOptions: () => {},
+      clearMapLayers: () => {},
+      executeAction: () => {},
     };
     const wrapper = mountWithIntl(<SelectMapLayersDialog isOpen {...props} />, {
       context: { ...mockContext },

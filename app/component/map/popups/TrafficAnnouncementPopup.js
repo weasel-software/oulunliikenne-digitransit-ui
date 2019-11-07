@@ -122,6 +122,11 @@ export default Relay.createContainer(
           }
           modesOfTransport
           trafficDirection
+          trafficDirectionFreeText {
+            fi
+            sv
+            en
+          }
           temporarySpeedLimit
           duration
           additionalInfo

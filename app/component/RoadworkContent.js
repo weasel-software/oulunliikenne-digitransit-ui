@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
 import moment from 'moment';
 import ComponentUsageExample from './ComponentUsageExample';
 import { lang as exampleLang } from './ExampleData';

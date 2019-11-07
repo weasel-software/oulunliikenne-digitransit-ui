@@ -10,6 +10,10 @@ To keep the branches separate from the remote ones this version is using ol-deve
 - `yarn install`
 - `CONFIG=oulu yarn run dev` to start the Oulu version
 
+**Configure Git Hooks**
+- `ln -s ../../hooks/pre-commit.sh .git/hooks/pre-commit`
+- `ln -s ../../hooks/pre-push.sh .git/hooks/pre-push` 
+
 [development site](https://next-dev.oulunliikenne.fi/)  
 [live site](https://www.oulunliikenne.fi/)
 

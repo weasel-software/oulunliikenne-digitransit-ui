@@ -289,6 +289,14 @@ export default {
     tmsStationsMinZoom: 14,
   },
 
+  maintenanceVehicles: {
+    showMaintenanceVehicles: false,
+  },
+
+  realtimeMaintenanceVehicles: {
+    showRealtimeMaintenanceVehicles: false,
+  },
+
   cityBike: {
     // Config for map features. NOTE: availability for routing is controlled by
     // transportModes.citybike.availableForSelection

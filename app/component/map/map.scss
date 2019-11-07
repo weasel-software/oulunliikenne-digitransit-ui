@@ -236,7 +236,7 @@ div.leaflet-marker-icon.vehicle-icon {
   }
   .leaflet-popup-content {
     margin: 0;
-    width: 18rem !important;
+    width: 18rem;
     &.leaflet-popup-scrolled {
       overflow: inherit;
     }
@@ -252,6 +252,9 @@ div.leaflet-marker-icon.vehicle-icon {
       background: #ddd;
       font-size: 0;
       border: 0;
+    }
+    ul {
+      padding-left: 20px;
     }
 
     .card-row .no-margin:last-child hr {
@@ -631,7 +634,8 @@ div.map-click-prevent-overlay {
   }
 }
 
-div.leaflet-marker-icon.vehicle-realtime-icon {
+div.leaflet-marker-icon.vehicle-realtime-icon,
+div.leaflet-marker-icon.maintenance-vehicle-realtime-icon {
   border: none;
   background: none;
 
@@ -650,11 +654,11 @@ div.leaflet-marker-icon.vehicle-realtime-icon {
     text-anchor: middle;
 
     &.medium {
-      font-size: .85rem;
+      font-size: 0.85rem;
     }
 
     &.long {
-      font-size: .65rem;
+      font-size: 0.65rem;
     }
   }
 }

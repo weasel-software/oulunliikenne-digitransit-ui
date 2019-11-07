@@ -76,8 +76,11 @@ describe('localStorage', () => {
 
   describe('setCustomizedSettings', () => {
     it('should save all default settings', () => {
-      const defaultSettings = { ...defaultConfig.defaultSettings };
-      setCustomizedSettings(defaultSettings);
+      const defaultSettings = {
+        ...defaultConfig.defaultSettings,
+        active: true,
+      };
+      setCustomizedSettings(defaultSettings, 'PUBLIC_TRANSPORT');
       expect(getCustomizedSettings()).to.deep.equal(defaultSettings);
     });
 

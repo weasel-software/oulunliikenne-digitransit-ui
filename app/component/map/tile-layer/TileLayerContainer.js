@@ -2,6 +2,7 @@ import connectToStores from 'fluxible-addons-react/connectToStores';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Relay from 'react-relay/classic';
+import { locationShape } from 'react-router';
 import { intlShape } from 'react-intl';
 import GridLayer from 'react-leaflet/es/GridLayer';
 import SphericalMercator from '@mapbox/sphericalmercator';
@@ -23,6 +24,7 @@ import TrafficAnnouncementRoute from '../../../route/TrafficAnnouncementRoute';
 import WeatherStationRoute from '../../../route/WeatherStationRoute';
 import TmsStationRoute from '../../../route/TmsStationRoute';
 import RoadConditionRoute from '../../../route/RoadConditionRoute';
+import MaintenanceVehicleRouteRoute from '../../../route/MaintenanceVehicleRouteRoute';
 import StopMarkerPopup from '../popups/StopMarkerPopup';
 import MarkerSelectPopup from './MarkerSelectPopup';
 import CityBikePopup from '../popups/CityBikePopup';
@@ -40,11 +42,20 @@ import RoadworkPopup from '../popups/RoadworkPopup';
 import DisorderPopup from '../popups/DisorderPopup';
 import TrafficAnnouncementPopup from '../popups/TrafficAnnouncementPopup';
 import RoadConditionPopup from '../popups/RoadConditionPopup';
+import MaintenanceVehicleRoutePopup from '../popups/MaintenanceVehicleRoutePopup';
 import LocationPopup from '../popups/LocationPopup';
 import TileContainer from './TileContainer';
 import Loading from '../../Loading';
 import { isFeatureLayerEnabled } from '../../../util/mapLayerUtils';
 import MapLayerStore, { mapLayerShape } from '../../../store/MapLayerStore';
+import MapLayerOptionsStore, {
+  mapLayerOptionsShape,
+} from '../../../store/MapLayerOptionsStore';
+import MaintenanceVehicleTailStore, {
+  maintenanceVehicleTailShape,
+} from '../../../store/MaintenanceVehicleTailStore';
+import EcoCounterPopup from '../popups/EcoCounterPopup';
+import { isBrowser } from '../../../util/browser';
 
 const initialState = {
   selectableTargets: undefined,
@@ -61,8 +72,10 @@ class TileLayerContainer extends GridLayer {
     zoomOffset: PropTypes.number.isRequired,
     disableMapTracking: PropTypes.func,
     mapLayers: mapLayerShape.isRequired,
+    mapLayerOptions: mapLayerOptionsShape.isRequired,
     highlightedStop: PropTypes.string,
     highlightedFluency: PropTypes.string,
+    maintenanceVehicleTail: maintenanceVehicleTailShape.isRequired,
   };
 
   static defaultProps = {
@@ -75,6 +88,7 @@ class TileLayerContainer extends GridLayer {
     intl: intlShape.isRequired,
     map: PropTypes.object.isRequired,
     config: PropTypes.object.isRequired,
+    location: locationShape.isRequired,
   };
 
   state = {
@@ -97,7 +111,12 @@ class TileLayerContainer extends GridLayer {
 
     if (
       !isEqual(prevProps.mapLayers, this.props.mapLayers) ||
-      !isEqual(prevProps.hilightedStops, this.props.hilightedStops)
+      !isEqual(prevProps.mapLayerOptions, this.props.mapLayerOptions) ||
+      !isEqual(prevProps.hilightedStops, this.props.hilightedStops) ||
+      !isEqual(
+        prevProps.maintenanceVehicleTail,
+        this.props.maintenanceVehicleTail,
+      )
     ) {
       this.context.map.removeEventParent(this.leafletElement);
       this.leafletElement.remove();
@@ -225,6 +244,8 @@ class TileLayerContainer extends GridLayer {
       done,
       props,
       this.context.config,
+      this.context.location,
+      this.context.map,
     );
 
     tile.onSelectableTargetClicked = (selectableTargets, coords) => {
@@ -253,6 +274,14 @@ class TileLayerContainer extends GridLayer {
         );
       }
 
+      // Filter out all maintenance vehicle route layers that has jobId as 0
+      selectableTargetsFiltered = selectableTargetsFiltered.filter(target => {
+        const layer = get(target, 'layer');
+        const jobId = get(target, 'feature.properties.jobId');
+
+        return layer !== 'maintenanceVehicles' || jobId !== 0;
+      });
+
       this.setState({
         selectableTargets: selectableTargetsFiltered,
         coords,
@@ -263,13 +292,16 @@ class TileLayerContainer extends GridLayer {
     return tile.el;
   };
 
-  selectRow = option =>
-    this.setState({ selectableTargets: [option], showSpinner: true });
+  selectRow = options =>
+    this.setState({ selectableTargets: options, showSpinner: true });
+
+  isAllSameLayers = name =>
+    this.state.selectableTargets.filter(({ layer }) => layer !== name)
+      .length === 0;
 
   render() {
     let popup = null;
     let contents;
-
     const loadingPopup = () => (
       <div className="card" style={{ height: '12rem' }}>
         <Loading />
@@ -277,8 +309,33 @@ class TileLayerContainer extends GridLayer {
     );
 
     if (typeof this.state.selectableTargets !== 'undefined') {
-      if (this.state.selectableTargets.length === 1) {
+      if (
+        this.state.selectableTargets.length >= 1 &&
+        this.isAllSameLayers('ecoCounters')
+      ) {
+        const width =
+          isBrowser && window.innerWidth < 420 ? window.innerWidth - 5 : 420;
+        const options = {
+          maxWidth: width,
+          minWidth: width,
+        };
+        const channels = this.state.selectableTargets.map(({ feature }) => ({
+          ...feature.properties,
+        }));
+        popup = (
+          <Popup
+            {...{ ...this.PopupOptions, ...options }}
+            key={this.state.selectableTargets[0].feature.properties.id}
+            position={this.state.coords}
+          >
+            <EcoCounterPopup channels={channels} />
+          </Popup>
+        );
+      } else if (this.state.selectableTargets.length === 1) {
         let id;
+        const popupOptions = {
+          ...this.PopupOptions,
+        };
         if (this.state.selectableTargets[0].layer === 'stop') {
           id = this.state.selectableTargets[0].feature.properties.gtfsId;
           contents = (
@@ -459,6 +516,21 @@ class TileLayerContainer extends GridLayer {
               renderFetched={data => <RoadConditionPopup {...data} />}
             />
           );
+        } else if (
+          this.state.selectableTargets[0].layer === 'maintenanceVehicles'
+        ) {
+          popupOptions.maxWidth = 360;
+
+          ({ id } = this.state.selectableTargets[0].feature.properties);
+          contents = (
+            <Relay.RootContainer
+              Component={MaintenanceVehicleRoutePopup}
+              forceFetch
+              route={new MaintenanceVehicleRouteRoute({ id })}
+              renderLoading={loadingPopup}
+              renderFetched={data => <MaintenanceVehicleRoutePopup {...data} />}
+            />
+          );
         } else if (this.state.selectableTargets[0].layer === 'fluencies') {
           ({ id } = this.state.selectableTargets[0].feature.properties);
           contents = (
@@ -468,7 +540,7 @@ class TileLayerContainer extends GridLayer {
           );
         }
         popup = (
-          <Popup {...this.PopupOptions} key={id} position={this.state.coords}>
+          <Popup {...popupOptions} key={id} position={this.state.coords}>
             {contents}
           </Popup>
         );
@@ -510,10 +582,17 @@ class TileLayerContainer extends GridLayer {
 
 export default connectToStores(
   TileLayerContainer,
-  [MapLayerStore],
+  [MapLayerStore, MapLayerOptionsStore, MaintenanceVehicleTailStore],
   context => ({
     mapLayers: context.getStore(MapLayerStore).getMapLayers(),
+    mapLayerOptions: context
+      .getStore(MapLayerOptionsStore)
+      .getMapLayerOptions(),
     highlightedStop: context.getStore(MapLayerStore).getHighlightedStop(),
     highlightedFluency: context.getStore(MapLayerStore).getHighlightedFluency(),
+    maintenanceVehicleTail: context
+      .getStore(MaintenanceVehicleTailStore)
+      .getTail(),
+    location: context.location,
   }),
 );

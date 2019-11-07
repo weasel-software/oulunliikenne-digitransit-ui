@@ -1,5 +1,6 @@
 import Store from 'fluxible/addons/BaseStore';
 import moment from 'moment';
+import { isBrowser } from '../util/browser';
 
 class TimeStore extends Store {
   static storeName = 'TimeStore';
@@ -8,7 +9,11 @@ class TimeStore extends Store {
   constructor(dispatcher) {
     super(dispatcher);
     this.updateCurrentTime();
-    setInterval(this.updateCurrentTime, TimeStore.TWICE_PER_MINUTE);
+
+    if (isBrowser) {
+      // This causes a memory leak on server side.
+      setInterval(this.updateCurrentTime, TimeStore.TWICE_PER_MINUTE);
+    }
   }
 
   updateCurrentTime = () => {

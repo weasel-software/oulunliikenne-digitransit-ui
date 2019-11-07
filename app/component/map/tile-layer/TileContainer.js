@@ -9,7 +9,7 @@ import { isBrowser } from '../../../util/browser';
 import { isLayerEnabled } from '../../../util/mapLayerUtils';
 
 class TileContainer {
-  constructor(coords, done, props, config) {
+  constructor(coords, done, props, config, location, map) {
     const markersMinZoom = Math.min(
       config.cityBike.cityBikeMinZoom,
       config.stopsMinZoom,
@@ -24,6 +24,8 @@ class TileContainer {
       config.tmsStations.tmsStationsMinZoom,
       config.roadConditions.roadConditionsMinZoom,
       config.fluencies.fluenciesMinZoom,
+      config.ecoCounters.ecoCounterMinZoom,
+      config.maintenanceVehicles.maintenanceVehiclesMinZoom,
     );
 
     this.coords = coords;
@@ -34,6 +36,7 @@ class TileContainer {
     this.ratio = this.extent / this.tileSize;
     this.el = this.createElement();
     this.clickCount = 0;
+    this.map = map;
 
     if (this.coords.z < markersMinZoom || !this.el.getContext) {
       setTimeout(() => done(null, this.el), 0);
@@ -46,6 +49,7 @@ class TileContainer {
       .filter(Layer => {
         const layerName = Layer.getName();
         const isEnabled = isLayerEnabled(layerName, this.props.mapLayers);
+
         if (
           layerName === 'stop' &&
           (this.coords.z >= config.stopsMinZoom ||
@@ -103,14 +107,38 @@ class TileContainer {
         ) {
           return isEnabled;
         } else if (
+          layerName === 'maintenanceVehicles' &&
+          this.coords.z >= config.maintenanceVehicles.maintenanceVehiclesMinZoom
+        ) {
+          return isEnabled;
+        } else if (
+          layerName === 'realtimeMaintenanceVehicles' &&
+          this.coords.z >= config.maintenanceVehicles.maintenanceVehiclesMinZoom
+        ) {
+          return isEnabled;
+        } else if (
           layerName === 'fluencies' &&
           this.coords.z >= config.fluencies.fluenciesMinZoom
+        ) {
+          return isEnabled;
+        } else if (
+          layerName === 'ecoCounters' &&
+          this.coords.z >= config.ecoCounters.ecoCounterMinZoom
         ) {
           return isEnabled;
         }
         return false;
       })
-      .map(Layer => new Layer(this, config, this.props.mapLayers));
+      .map(
+        Layer =>
+          new Layer(
+            this,
+            config,
+            this.props.mapLayers,
+            this.props.mapLayerOptions,
+            location,
+          ),
+      );
 
     this.el.layers = this.layers.map(layer => omit(layer, 'tile'));
 

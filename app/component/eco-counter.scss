@@ -1,0 +1,41 @@
+.ecocounter-content {
+  display: flex;
+  flex-direction: column;
+
+  h5 {
+    color: $gray;
+    font-size: 12px;
+    margin: 5px 0 0;
+    text-align: center;
+  }
+
+  & .button-row {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+
+    & > .ecocounter-button {
+      padding: 0.3rem 0.5rem;
+      border-radius: 3px;
+      font-size: 1rem;
+      margin-right: 0.8rem;
+      background-color: $light-gray;
+      color: $black;
+      outline: none;
+
+      &:last-child {
+        margin-right: 0;
+      }
+
+      &.ecocounter-button--active {
+        background-color: $primary-color;
+        color: $white;
+        pointer-events: none;
+      }
+
+      &.ecocounter-button--small {
+        font-size: 0.8rem;
+      }
+    }
+  }
+}

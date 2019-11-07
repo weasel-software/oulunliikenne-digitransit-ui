@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { locationShape } from 'react-router';
 import connectToStores from 'fluxible-addons-react/connectToStores';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import getContext from 'recompose/getContext';
@@ -10,6 +11,7 @@ import ToggleMapTracking from '../ToggleMapTracking';
 import { dtLocationShape } from '../../util/shapes';
 import withBreakpoint from '../../util/withBreakpoint';
 import VehicleMarkerContainer from '../map/VehicleMarkerContainer';
+import MaintenanceVehicleMarkerContainer from './tile-layer/MaintenanceVehicleMarkerContainer';
 import {
   startRealTimeClient,
   stopRealTimeClient,
@@ -20,7 +22,16 @@ import {
   stopRealTimeClient as altStopRealTimeClient,
   updateTopic as altUpdateTopic,
 } from '../../action/altRealTimeClientAction';
+import {
+  startRealTimeClient as maintenanceVehicleStartRealTimeClient,
+  stopRealTimeClient as maintenanceVehicleStopRealTimeClient,
+  updateTopic as maintenanceVehicleUpdateTopic,
+  ROUTE_TYPE_MOTORISED_TRAFFIC,
+  ROUTE_TYPE_NON_MOTORISED_TRAFFIC,
+} from '../../action/maintenanceVehicleRealTimeClientAction';
 import { clearDepartures } from '../../action/RealtimeDeparturesActions';
+import { getStreetMode } from '../../util/modeUtils';
+import { StreetMode } from '../../constants';
 
 const DEFAULT_ZOOM = 12;
 const FOCUS_ZOOM = 16;
@@ -60,6 +71,7 @@ class MapWithTrackingStateHandler extends React.Component {
     children: PropTypes.array,
     renderCustomButtons: PropTypes.func,
     breakpoint: PropTypes.string.isRequired,
+    mapLayers: PropTypes.object,
   };
 
   static defaultProps = {
@@ -80,6 +92,18 @@ class MapWithTrackingStateHandler extends React.Component {
       origin: props.origin,
       shouldShowDefaultLocation: !hasOriginorPosition,
     };
+  }
+
+  componentDidMount() {
+    const { mapLayers, location, config } = this.props;
+
+    if (
+      mapLayers.maintenanceVehicles &&
+      mapLayers.realtimeMaintenanceVehicles
+    ) {
+      const mode = getStreetMode(location, config);
+      this.setMaintenanceRealtimeClient(true, mode);
+    }
   }
 
   componentWillReceiveProps(newProps) {
@@ -106,6 +130,22 @@ class MapWithTrackingStateHandler extends React.Component {
     if (newProps.realtimeDepartures !== this.props.realtimeDepartures) {
       this.setRealtimeClient(newProps.realtimeDepartures);
     }
+
+    const mode = getStreetMode(this.props.location, this.props.config);
+    const newMode = getStreetMode(newProps.location, newProps.config);
+    if (
+      newProps.mapLayers.maintenanceVehicles !==
+        this.props.mapLayers.maintenanceVehicles ||
+      newProps.mapLayers.realtimeMaintenanceVehicles !==
+        this.props.mapLayers.realtimeMaintenanceVehicles ||
+      newMode !== mode
+    ) {
+      this.setMaintenanceRealtimeClient(
+        newProps.mapLayers.maintenanceVehicles &&
+          newProps.mapLayers.realtimeMaintenanceVehicles,
+        newMode,
+      );
+    }
   }
 
   componentWillUnmount() {
@@ -120,6 +160,8 @@ class MapWithTrackingStateHandler extends React.Component {
         client,
       );
     }
+
+    this.setMaintenanceRealtimeClient(false);
   }
 
   setRealtimeClient = departures => {
@@ -156,6 +198,34 @@ class MapWithTrackingStateHandler extends React.Component {
           : altStopRealTimeClient,
         client,
       );
+    }
+  };
+
+  setMaintenanceRealtimeClient = (isLayerEnabled, mode) => {
+    const { client, subscriptions } = this.props.getStore(
+      'MaintenanceVehicleRealTimeInformationStore',
+    );
+
+    const routeType =
+      mode === StreetMode.Car
+        ? ROUTE_TYPE_MOTORISED_TRAFFIC
+        : ROUTE_TYPE_NON_MOTORISED_TRAFFIC;
+
+    if (isLayerEnabled) {
+      if (client) {
+        this.props.executeAction(maintenanceVehicleUpdateTopic, {
+          client,
+          oldTopics: subscriptions,
+          newTopic: routeType,
+        });
+      } else {
+        this.props.executeAction(
+          maintenanceVehicleStartRealTimeClient,
+          routeType,
+        );
+      }
+    } else if (client) {
+      this.props.executeAction(maintenanceVehicleStopRealTimeClient, client);
     }
   };
 
@@ -208,6 +278,7 @@ class MapWithTrackingStateHandler extends React.Component {
       renderCustomButtons,
       breakpoint,
       realtimeDepartures,
+      mapLayers,
       ...rest
     } = this.props;
     let location;
@@ -244,6 +315,18 @@ class MapWithTrackingStateHandler extends React.Component {
             shortName: departure.pattern.route.shortName,
           }))}
           className="vehicle-realtime-icon"
+        />,
+      );
+    }
+
+    if (
+      mapLayers.maintenanceVehicles &&
+      mapLayers.realtimeMaintenanceVehicles
+    ) {
+      leafletObjs.push(
+        <MaintenanceVehicleMarkerContainer
+          key="maintenanceVehicleMarkers"
+          className="maintenance-vehicle-realtime-icon"
         />,
       );
     }
@@ -300,11 +383,16 @@ const MapWithTracking = connectToStores(
     executeAction: PropTypes.func.isRequired,
     getStore: PropTypes.func.isRequired,
   })(MapWithTrackingStateHandler),
-  ['PositionStore', 'RealtimeDeparturesStore'],
-  ({ getStore }) => ({
+  ['PositionStore', 'RealtimeDeparturesStore', 'MapLayerStore'],
+  ({ getStore, location }) => ({
+    location,
     position: getStore('PositionStore').getLocationState(),
     realtimeDepartures: getStore('RealtimeDeparturesStore').getDepartures(),
+    mapLayers: getStore('MapLayerStore').getMapLayers(),
   }),
+  {
+    location: locationShape,
+  },
 );
 
 MapWithTracking.description = (

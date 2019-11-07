@@ -13,6 +13,7 @@ const ParkingStationPricing = (
       <table className="pricing-list">
         <tbody>
           {pricing.map((item, key) => (
+            // eslint-disable-next-line react/no-array-index-key
             <tr key={key}>
               <td>
                 {item.title[currentLanguage] || item.title[defaultLanguage]}

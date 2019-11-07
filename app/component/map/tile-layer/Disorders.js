@@ -16,6 +16,20 @@ import { isBrowser } from '../../../util/browser';
 
 const timeOfLastFetch = {};
 
+const getCategoryColor = (data, config) => {
+  const category = get(data, 'class[0].class');
+
+  if (!category) {
+    return config.colors.CATEGORY.DEFAULT;
+  }
+
+  return get(
+    config,
+    `colors.CATEGORY[${category}]`,
+    config.colors.CATEGORY.DEFAULT,
+  );
+};
+
 export default class Disorders {
   constructor(tile, config) {
     this.tile = tile;
@@ -27,8 +41,8 @@ export default class Disorders {
 
   static getName = () => 'disorders';
 
-  getPromise = () => {
-    return fetch(
+  getPromise = () =>
+    fetch(
       `${this.config.URL.DISORDERS_MAP}${this.tile.coords.z +
         (this.tile.props.zoomOffset || 0)}` +
         `/${this.tile.coords.x}/${this.tile.coords.y}.pbf`,
@@ -72,7 +86,6 @@ export default class Disorders {
           }
         }
       });
-  };
 
   fetchItem = (geometryList, feature) => {
     const { id } = feature.properties;
@@ -158,13 +171,14 @@ export default class Disorders {
     );
 
     const type = get(geojson, 'geometry.type');
-    const isAccident = get(result, 'class', []).filter(
-      item => item.class === 'ACC',
-    ).length;
     const isDetour = get(feature, 'properties.detour', false);
 
     // Default color according to severity, changes if detour or accident
     let color = get(currentConfig, `colors.${result.severity}`);
+
+    if (feature.properties.type === 'TrafficAnnouncement') {
+      color = getCategoryColor(result, currentConfig);
+    }
 
     if (moment().isBefore(result.startTime) && currentConfig.showUpcoming) {
       color = get(currentConfig, 'colors.UPCOMING') || color;
@@ -176,8 +190,6 @@ export default class Disorders {
         return;
       }
       color = get(currentConfig, 'colors.DETOUR') || color;
-    } else if (isAccident) {
-      color = isAccident ? get(currentConfig, 'colors.ACCIDENT') : color;
     }
 
     const geomColor = get(currentConfig, 'colors.GEOM_OVERRIDE', color);

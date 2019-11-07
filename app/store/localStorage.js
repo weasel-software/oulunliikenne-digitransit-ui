@@ -361,6 +361,13 @@ export const setMapLayerModeSpecificSettings = (mode, settings) => {
 export const getMapLayerModeSpecificSettings = mode =>
   getItemAsJson(`map-layers-${mode}`, '{}');
 
+export const setMapLayerOptions = options => {
+  setItem('map-layer-options', options);
+};
+
+export const getMapLayerOptions = () =>
+  getItemAsJson('map-layer-options', '{}');
+
 export const removeMapLayerModeSpecificSettings = mode => {
   const localStorage = getLocalStorage(isBrowser);
   if (localStorage) {

@@ -114,6 +114,7 @@ export default class Map extends React.Component {
         keyboard={false}
         ref={el => {
           this.map = el;
+
           if (this.props.mapRef) {
             this.props.mapRef(el);
           }

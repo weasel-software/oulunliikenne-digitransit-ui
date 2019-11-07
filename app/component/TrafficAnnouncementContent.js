@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import get from 'lodash/get';
 import { intlShape, FormattedMessage } from 'react-intl';
 import connectToStores from 'fluxible-addons-react/connectToStores';
 import moment from 'moment';
@@ -11,8 +12,9 @@ const ExtendedContent = ({ trafficAnnouncement }, { intl }) => {
   const {
     severity,
     modesOfTransport,
-    trafficDirection,
     temporarySpeedLimit,
+    trafficDirection,
+    trafficDirectionFreeText,
     duration,
     additionalInfo,
     oversizeLoad,
@@ -20,6 +22,14 @@ const ExtendedContent = ({ trafficAnnouncement }, { intl }) => {
     url,
     imageUrls,
   } = trafficAnnouncement;
+
+  let trafficDirectionText = get(trafficDirectionFreeText, intl.locale);
+  if (!trafficDirectionText && trafficDirection) {
+    trafficDirectionText = intl.formatMessage({
+      id: `traffic-announcement-traffic-direction-${trafficDirection.toLowerCase()}`,
+      defaultMessage: trafficDirection,
+    });
+  }
 
   return (
     <ul className="extended-content">
@@ -70,7 +80,7 @@ const ExtendedContent = ({ trafficAnnouncement }, { intl }) => {
           })}
         </li>
       )}
-      {trafficDirection && (
+      {trafficDirectionText && (
         <li>
           <FormattedMessage
             id="traffic-announcement-traffic-direction"
@@ -78,10 +88,7 @@ const ExtendedContent = ({ trafficAnnouncement }, { intl }) => {
           >
             {(...content) => <span>{`${content}:`}</span>}
           </FormattedMessage>
-          {intl.formatMessage({
-            id: `traffic-announcement-traffic-direction-${trafficDirection.toLowerCase()}`,
-            defaultMessage: trafficDirection,
-          })}
+          {trafficDirectionText}
         </li>
       )}
       {temporarySpeedLimit && (
@@ -162,6 +169,7 @@ const ExtendedContent = ({ trafficAnnouncement }, { intl }) => {
       )}
       {imageUrls &&
         imageUrls.map((imageUrl, key) => (
+          // eslint-disable-next-line react/no-array-index-key
           <li key={`image_${key}`}>
             <img
               src={imageUrl}

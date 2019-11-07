@@ -72,6 +72,7 @@
     "babel-plugin-dynamic-import-node": "1.2.0",
     "babel-plugin-relay": "1.6.0",
     "body-parser": "1.18.3",
+    "chart.js": "2.8.0",
     "classnames": "2.2.6",
     "cookie-parser": "1.4.3",
     "debug": "3.1.0",
