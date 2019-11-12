@@ -28,7 +28,13 @@ class FluencyPopup extends React.Component {
   }
 
   render() {
-    const { name, averageSpeed, trafficFlow, measuredTime } = this.props;
+    const {
+      name,
+      averageSpeed,
+      trafficFlow,
+      trafficDirectionName,
+      measuredTime,
+    } = this.props;
     const { intl } = this.context;
     return (
       <div className="card">
@@ -45,6 +51,7 @@ class FluencyPopup extends React.Component {
           <FluencyContent
             averageSpeed={averageSpeed}
             trafficFlow={trafficFlow}
+            trafficDirectionName={trafficDirectionName}
             measuredTime={measuredTime}
           />
         </Card>
@@ -66,6 +73,7 @@ FluencyPopup.propTypes = {
   name: PropTypes.string.isRequired,
   detName: PropTypes.string,
   trafficDirection: PropTypes.number,
+  trafficDirectionName: PropTypes.string,
   trafficFlow: PropTypes.string,
   averageSpeed: PropTypes.number,
   measuredTime: PropTypes.string,
@@ -74,6 +82,7 @@ FluencyPopup.propTypes = {
 FluencyPopup.defaultProps = {
   detName: undefined,
   trafficDirection: undefined,
+  trafficDirectionName: null,
   trafficFlow: null,
   averageSpeed: null,
   measuredTime: null,

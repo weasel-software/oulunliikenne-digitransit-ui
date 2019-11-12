@@ -28,7 +28,12 @@ const getFlowTranslation = trafficFlow => {
   }
 };
 
-const FluencyContent = ({ trafficFlow, averageSpeed, measuredTime }) => (
+const FluencyContent = ({
+  trafficFlow,
+  trafficDirectionName,
+  averageSpeed,
+  measuredTime,
+}) => (
   <table className="component-list">
     <tbody>
       {trafficFlow && (
@@ -39,6 +44,19 @@ const FluencyContent = ({ trafficFlow, averageSpeed, measuredTime }) => (
             </FormattedMessage>
           </td>
           <td>{getFlowTranslation(trafficFlow)}</td>
+        </tr>
+      )}
+      {trafficDirectionName && (
+        <tr>
+          <td>
+            <FormattedMessage
+              id="traffic-direction"
+              defaultMessage="Traffic direction"
+            >
+              {(...content) => `${content}:`}
+            </FormattedMessage>
+          </td>
+          <td>{trafficDirectionName}</td>
         </tr>
       )}
       {averageSpeed && (
@@ -69,7 +87,7 @@ FluencyContent.displayName = 'FluencyContent';
 
 FluencyContent.description = (
   <div>
-    <p>RendTimeers content of a fluency popup or modal</p>
+    <p>Content of a fluency popup or modal</p>
     <ComponentUsageExample description="">
       <FluencyContent comment={exampleLang} />
     </ComponentUsageExample>
@@ -78,12 +96,14 @@ FluencyContent.description = (
 
 FluencyContent.propTypes = {
   trafficFlow: PropTypes.string,
+  trafficDirectionName: PropTypes.string,
   averageSpeed: PropTypes.number,
   measuredTime: PropTypes.string,
 };
 
 FluencyContent.defaultProps = {
   trafficFlow: null,
+  trafficDirectionName: null,
   averageSpeed: null,
   measuredTime: null,
 };
