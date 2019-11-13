@@ -7,8 +7,8 @@ const iot = require('aws-iot-device-sdk');
 export const ROUTE_TYPE_MOTORISED_TRAFFIC = 'motorised-traffic';
 export const ROUTE_TYPE_NON_MOTORISED_TRAFFIC = 'non-motorised-traffic';
 
-function getTopic(options) {
-  const routeType = options.type ? options.route : '+';
+function getTopic(type) {
+  const routeType = type || '+';
 
   return `/hfp/v1/harja/${routeType}/+`;
 }
