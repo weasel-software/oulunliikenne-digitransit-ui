@@ -169,7 +169,7 @@ export default configMerger(walttiConfig, {
   cityBike: {
     // Config for map features. NOTE: availability for routing is controlled by
     // transportModes.citybike.availableForSelection
-    showCityBikes: true,
+    showCityBikes: false, // turn on in spring
     showStationId: true,
 
     useUrl: {
@@ -283,7 +283,7 @@ export default configMerger(walttiConfig, {
     },
 
     citybike: {
-      availableForSelection: true,
+      availableForSelection: false, // turn on in spring
       defaultValue: false,
     },
   },
@@ -391,7 +391,7 @@ export default configMerger(walttiConfig, {
         name: 'footer-feedback',
         nameEn: 'Submit feedback',
         href:
-          'mailto:palaute.oulunliikenne@ouka.fi?subject=Oulunliikenne BETA palaute',
+          'mailto:palaute.oulunliikenne@ouka.fi?subject=Oulunliikenne palaute',
         icon: 'icon-icon_speech-bubble',
       },
       {
@@ -433,7 +433,20 @@ export default configMerger(walttiConfig, {
       {
         header: 'Om tjänsten',
         paragraphs: [
-          'Den här tjänsten erbjuds av Oulun joukkoliikenne för reseplanering inom Oulu, Ii, Kempele, Liminka, Lumijoki, Muhos och Tyrnävä region. Reseplaneraren täcker med vissa begränsningar kollektivtrafik, promenad, cykling samt privatbilism. Tjänsten baserar sig på Digitransit-plattformen.',
+          'Den här tjänsten omfattar reseplaneraren för kollektivtrafik, promenad, cykling och privat bilanvändning i Uleåborgsregionen. Tjänsten inkluderar passagerarinformation i realtid och information om vägförhållanden och rusningar. Tjänsten erbjuds av Uleåborgs stad och NTM-centralen i Norra Österbotten. Serviceproducenten är Digia Finland Ab. Tjänsten baserar sig på Digitransit-plattformen.',
+        ],
+      },
+      {
+        header: 'Digitransit-plattformen',
+        paragraphs: [
+          'Digitransit-plattformen är en öppen programvara utvecklad av Helsingforsregionens trafik (HRT) och Trafikverket.',
+        ],
+      },
+      {
+        header: 'Datakällor',
+        paragraphs: [
+          'Kartor och informationen om gator, byggnader, hållplatser och så vidare erbjuds av © OpenStreetMap contributors. Addressinformation hämtas från BRC:s byggnadsinformationsregister. Kollektivtrafikens rutter och tidtabeller hämtas från Uleåborgs stads kollektivtrafiksdatabas.',
+          'Källan till många trafikinformation som publiceras i tjänsten är Traffic Management Finland / digitraffic.fi, lisence CC 4.0 BY.',
         ],
       },
     ],
@@ -442,7 +455,20 @@ export default configMerger(walttiConfig, {
       {
         header: 'About this service',
         paragraphs: [
-          'This service is provided by Oulun joukkoliikenne for route planning in Oulu, Ii, Kempele, Liminka, Lumijoki, Muhos and Tyrnävä region. The service covers public transport, walking, cycling, and some private car use. Service is built on Digitransit platform.',
+          'The service covers route planners for public transport, walking, cycling and private car use in Oulu region. The service includes real-time passenger information and information of road conditions and traffic congestions. This service is provided by City of Oulu and ELY Center of North Ostrobothnia. The service producer is Digia Finland Ltd. The service is built on Digitransit platform.',
+        ],
+      },
+      {
+        header: 'Digitransit platform',
+        paragraphs: [
+          'The Digitransit platform is an open source routing platform developed by Helsinki Region Transport (HSL) and Finnish Transport Agency.',
+        ],
+      },
+      {
+        header: 'Data sources',
+        paragraphs: [
+          'The maps and the information of streets, buildings, bus stops etc. are provided by © OpenStreetMap contributors. Address data is retrieved from the Building and Dwelling Register of the Finnish Population Register Center. Public transport routes and timetables are downloaded from the database of Oulu Public Transport Authority.',
+          'The source of many traffic information published in the service is Traffic Management Finland / digitraffic.fi, lisence CC 4.0 BY.',
         ],
       },
     ],
