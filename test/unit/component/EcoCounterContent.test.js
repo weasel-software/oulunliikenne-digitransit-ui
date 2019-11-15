@@ -10,7 +10,11 @@ import {
 describe('<EcoCounterContent />', () => {
   it('should only show cycling button if only cycling data is available', () => {
     const props = {
-      data: { inData: [], outData: [] },
+      channel1: { siteData: [] },
+      channel2: { siteData: [] },
+      channel1Id: '1',
+      channel2Id: '2',
+      channels: [],
       changeUserType: () => {},
       userType: 2,
       changeStep: () => {},
@@ -29,7 +33,11 @@ describe('<EcoCounterContent />', () => {
 
   it('should only show walking button if only walking data is available', () => {
     const props = {
-      data: { inData: [], outData: [] },
+      channel1: { siteData: [] },
+      channel2: { siteData: [] },
+      channel1Id: '1',
+      channel2Id: '2',
+      channels: [],
       changeUserType: () => {},
       userType: 1,
       changeStep: () => {},
@@ -46,7 +54,11 @@ describe('<EcoCounterContent />', () => {
 
   it('should render all buttons', () => {
     const props = {
-      data: { inData: [], outData: [] },
+      channel1: { siteData: [] },
+      channel2: { siteData: [] },
+      channel1Id: '1',
+      channel2Id: '2',
+      channels: [],
       changeUserType: () => {},
       userType: 1,
       changeStep: () => {},
