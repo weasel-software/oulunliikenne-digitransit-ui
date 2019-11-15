@@ -7,6 +7,7 @@ import { intlShape } from 'react-intl';
 import GridLayer from 'react-leaflet/es/GridLayer';
 import SphericalMercator from '@mapbox/sphericalmercator';
 import lodashFilter from 'lodash/filter';
+import isEmpty from 'lodash/isEmpty';
 import isEqual from 'lodash/isEqual';
 import uniqBy from 'lodash/uniqBy';
 import get from 'lodash/get';
@@ -55,7 +56,6 @@ import MaintenanceVehicleTailStore, {
   maintenanceVehicleTailShape,
 } from '../../../store/MaintenanceVehicleTailStore';
 import EcoCounterPopup from '../popups/EcoCounterPopup';
-import { isBrowser } from '../../../util/browser';
 
 const initialState = {
   selectableTargets: undefined,
@@ -253,15 +253,17 @@ class TileLayerContainer extends GridLayer {
         this.props.disableMapTracking(); // disable now that popup opens
       }
 
-      let selectableTargetsFiltered = uniqBy(
-        selectableTargets.filter(target =>
-          isFeatureLayerEnabled(
-            target.feature,
-            target.layer,
-            this.props.mapLayers,
-            this.context.config,
-          ),
+      let selectableTargetsFiltered = selectableTargets.filter(target =>
+        isFeatureLayerEnabled(
+          target.feature,
+          target.layer,
+          this.props.mapLayers,
+          this.context.config,
         ),
+      );
+
+      selectableTargetsFiltered = uniqBy(
+        selectableTargetsFiltered,
         item =>
           `${get(item, 'feature.properties.id') ||
             get(item, 'feature.properties.code')}_${get(item, 'layer')}`,
@@ -299,102 +301,150 @@ class TileLayerContainer extends GridLayer {
     this.state.selectableTargets.filter(({ layer }) => layer !== name)
       .length === 0;
 
-  render() {
-    let popup = null;
-    let contents;
-    const loadingPopup = () => (
-      <div className="card" style={{ height: '12rem' }}>
-        <Loading />
-      </div>
-    );
+  renderLoadingPopup = () => (
+    <div className="card" style={{ height: '12rem' }}>
+      <Loading />
+    </div>
+  );
 
-    if (typeof this.state.selectableTargets !== 'undefined') {
-      if (
-        this.state.selectableTargets.length >= 1 &&
-        this.isAllSameLayers('ecoCounters')
-      ) {
-        const width =
-          isBrowser && window.innerWidth < 420 ? window.innerWidth - 5 : 420;
-        const options = {
-          maxWidth: width,
-          minWidth: width,
-        };
-        const channels = this.state.selectableTargets.map(({ feature }) => ({
-          ...feature.properties,
-        }));
-        popup = (
-          <Popup
-            {...{ ...this.PopupOptions, ...options }}
-            key={this.state.selectableTargets[0].feature.properties.id}
-            position={this.state.coords}
-          >
-            <EcoCounterPopup channels={channels} />
-          </Popup>
+  renderLocationPopup = () => {
+    const { coords } = this.state;
+
+    return (
+      <Popup
+        key={coords.toString()}
+        {...this.PopupOptions}
+        maxHeight={220}
+        position={coords}
+      >
+        <LocationPopup
+          name="" // TODO: fill in name from reverse geocoding, possibly in a container.
+          lat={coords.lat}
+          lon={coords.lng}
+        />
+      </Popup>
+    );
+  };
+
+  renderMarkerSelectPopup = () => {
+    const { selectableTargets, coords } = this.state;
+
+    return (
+      <Popup
+        key={coords.toString()}
+        {...this.PopupOptions}
+        maxHeight={220}
+        position={coords}
+      >
+        <MarkerSelectPopup
+          selectRow={this.selectRow}
+          options={selectableTargets}
+        />
+      </Popup>
+    );
+  };
+
+  render() {
+    const { selectableTargets, coords, showSpinner } = this.state;
+
+    // There is nothing to show.
+    if (isEmpty(selectableTargets) && !coords) {
+      return null;
+    }
+
+    // Show location popup if there's no selectable targets to show.
+    if (isEmpty(selectableTargets)) {
+      return this.renderLocationPopup();
+    }
+
+    // Show marker select popup if there's more than one selectable targets.
+    if (selectableTargets.length > 1) {
+      return this.renderMarkerSelectPopup();
+    }
+
+    let contents;
+    let id;
+    const popupOptions = {
+      ...this.PopupOptions,
+    };
+
+    const selectableTarget = selectableTargets[0];
+
+    // eslint-disable-next-line default-case
+    switch (selectableTarget.layer) {
+      case 'ecoCounters':
+        popupOptions.maxWidth = 420;
+        popupOptions.minWidth = 420;
+        id = get(selectableTarget, 'feature.properties.id');
+
+        contents = (
+          <EcoCounterPopup
+            domain={get(selectableTarget, 'feature.properties.domain')}
+            name={get(selectableTarget, 'feature.properties.name')}
+            channels={JSON.parse(
+              get(selectableTarget, 'feature.properties.channels', '[]'),
+            )}
+          />
         );
-      } else if (this.state.selectableTargets.length === 1) {
-        let id;
-        const popupOptions = {
-          ...this.PopupOptions,
-        };
-        if (this.state.selectableTargets[0].layer === 'stop') {
-          id = this.state.selectableTargets[0].feature.properties.gtfsId;
-          contents = (
-            <Relay.RootContainer
-              Component={StopMarkerPopup}
-              route={
-                this.state.selectableTargets[0].feature.properties.stops
-                  ? new TerminalRoute({
-                      terminalId: id,
-                      currentTime: this.state.currentTime,
-                    })
-                  : new StopRoute({
-                      stopId: id,
-                      currentTime: this.state.currentTime,
-                    })
-              }
-              renderLoading={this.state.showSpinner ? loadingPopup : undefined}
-              renderFetched={data => <StopMarkerPopup {...data} />}
-            />
-          );
-        } else if (this.state.selectableTargets[0].layer === 'citybike') {
-          ({ id } = this.state.selectableTargets[0].feature.properties);
-          contents = (
-            <Relay.RootContainer
-              Component={CityBikePopup}
-              forceFetch
-              route={
-                new CityBikeRoute({
-                  stationId: id,
-                })
-              }
-              renderLoading={loadingPopup}
-              renderFetched={data => <CityBikePopup {...data} />}
-            />
-          );
-        } else if (
-          this.state.selectableTargets[0].layer === 'parkingStations'
-        ) {
-          ({ id } = this.state.selectableTargets[0].feature.properties);
-          contents = (
-            <Relay.RootContainer
-              Component={ParkingStationPopup}
-              forceFetch
-              route={new ParkingStationRoute({ id })}
-              renderLoading={loadingPopup}
-              renderFetched={data => <ParkingStationPopup {...data} />}
-            />
-          );
-        } else if (
-          this.state.selectableTargets[0].layer === 'parkAndRide' &&
-          this.state.selectableTargets[0].feature.properties.facilityIds
-        ) {
-          id = this.state.selectableTargets[0].feature.properties.facilityIds;
+        break;
+      case 'stop':
+        id = get(selectableTarget, 'feature.properties.gtfsId');
+        contents = (
+          <Relay.RootContainer
+            Component={StopMarkerPopup}
+            route={
+              selectableTarget.feature.properties.stops
+                ? new TerminalRoute({
+                    terminalId: id,
+                    currentTime: this.state.currentTime,
+                  })
+                : new StopRoute({
+                    stopId: id,
+                    currentTime: this.state.currentTime,
+                  })
+            }
+            renderLoading={showSpinner ? this.renderLoadingPopup : undefined}
+            renderFetched={data => <StopMarkerPopup {...data} />}
+          />
+        );
+        break;
+      case 'citybike':
+        id = get(selectableTarget, 'feature.properties.id');
+        contents = (
+          <Relay.RootContainer
+            Component={CityBikePopup}
+            forceFetch
+            route={
+              new CityBikeRoute({
+                stationId: id,
+              })
+            }
+            renderLoading={this.renderLoadingPopup}
+            renderFetched={data => <CityBikePopup {...data} />}
+          />
+        );
+        break;
+      case 'parkingStations':
+        id = get(selectableTarget, 'feature.properties.id');
+        contents = (
+          <Relay.RootContainer
+            Component={ParkingStationPopup}
+            forceFetch
+            route={new ParkingStationRoute({ id })}
+            renderLoading={this.renderLoadingPopup}
+            renderFetched={data => <ParkingStationPopup {...data} />}
+          />
+        );
+        break;
+      case 'parkAndRide':
+        id = get(selectableTarget, 'feature.properties.facilityIds');
+        if (id) {
           contents = (
             <Relay.RootContainer
               Component={ParkAndRideHubPopup}
               forceFetch
               route={new ParkAndRideHubRoute({ stationIds: JSON.parse(id) })}
-              renderLoading={loadingPopup}
+              renderLoading={this.renderLoadingPopup}
               renderFetched={data => (
                 <ParkAndRideHubPopup
                   name={
@@ -409,14 +459,14 @@ class TileLayerContainer extends GridLayer {
               )}
             />
           );
-        } else if (this.state.selectableTargets[0].layer === 'parkAndRide') {
-          ({ id } = this.state.selectableTargets[0].feature);
+        } else {
+          id = get(selectableTarget, 'feature.id');
           contents = (
             <Relay.RootContainer
               Component={ParkAndRideFacilityPopup}
               forceFetch
               route={new ParkAndRideFacilityRoute({ id })}
-              renderLoading={loadingPopup}
+              renderLoading={this.renderLoadingPopup}
               renderFetched={data => (
                 <ParkAndRideFacilityPopup
                   name={
@@ -431,152 +481,133 @@ class TileLayerContainer extends GridLayer {
               )}
             />
           );
-        } else if (
-          this.state.selectableTargets[0].layer === 'weatherStations'
-        ) {
-          ({ id } = this.state.selectableTargets[0].feature.properties);
-          contents = (
-            <Relay.RootContainer
-              Component={WeatherStationPopup}
-              forceFetch
-              route={new WeatherStationRoute({ id })}
-              renderLoading={loadingPopup}
-              renderFetched={data => <WeatherStationPopup {...data} />}
-            />
-          );
-        } else if (this.state.selectableTargets[0].layer === 'tmsStations') {
-          ({ id } = this.state.selectableTargets[0].feature.properties);
-          contents = (
-            <Relay.RootContainer
-              Component={TmsStationPopup}
-              forceFetch
-              route={new TmsStationRoute({ id })}
-              renderLoading={loadingPopup}
-              renderFetched={data => <TmsStationPopup {...data} />}
-            />
-          );
-        } else if (this.state.selectableTargets[0].layer === 'ticketSales') {
-          id = this.state.selectableTargets[0].feature.properties.FID;
-          contents = (
-            <TicketSalesPopup
-              {...this.state.selectableTargets[0].feature.properties}
-            />
-          );
-        } else if (this.state.selectableTargets[0].layer === 'cameraStations') {
-          ({ id } = this.state.selectableTargets[0].feature.properties);
-          contents = (
-            <Relay.RootContainer
-              Component={CameraStationPopup}
-              forceFetch
-              route={new CameraStationRoute({ id })}
-              renderLoading={loadingPopup}
-              renderFetched={data => <CameraStationPopup {...data} />}
-            />
-          );
-        } else if (this.state.selectableTargets[0].layer === 'roadworks') {
-          ({ id } = this.state.selectableTargets[0].feature.properties);
-          contents = (
-            <Relay.RootContainer
-              Component={RoadworkPopup}
-              forceFetch
-              route={new RoadworkRoute({ id })}
-              renderLoading={loadingPopup}
-              renderFetched={data => <RoadworkPopup {...data} />}
-            />
-          );
-        } else if (this.state.selectableTargets[0].layer === 'disorders') {
-          ({ id } = this.state.selectableTargets[0].feature.properties);
-          contents =
-            get(this.state.selectableTargets[0], 'feature.properties.type') ===
-            'TrafficAnnouncement' ? (
-              <Relay.RootContainer
-                Component={TrafficAnnouncementPopup}
-                forceFetch
-                route={new TrafficAnnouncementRoute({ id })}
-                renderLoading={loadingPopup}
-                renderFetched={data => <TrafficAnnouncementPopup {...data} />}
-              />
-            ) : (
-              <Relay.RootContainer
-                Component={DisorderPopup}
-                forceFetch
-                route={new DisorderRoute({ id })}
-                renderLoading={loadingPopup}
-                renderFetched={data => <DisorderPopup {...data} />}
-              />
-            );
-        } else if (this.state.selectableTargets[0].layer === 'roadConditions') {
-          ({ id } = this.state.selectableTargets[0].feature.properties);
-          contents = (
-            <Relay.RootContainer
-              Component={RoadConditionPopup}
-              forceFetch
-              route={new RoadConditionRoute({ id })}
-              renderLoading={loadingPopup}
-              renderFetched={data => <RoadConditionPopup {...data} />}
-            />
-          );
-        } else if (
-          this.state.selectableTargets[0].layer === 'maintenanceVehicles'
-        ) {
-          popupOptions.maxWidth = 360;
+        }
+        break;
+      case 'weatherStations':
+        id = get(selectableTarget, 'feature.properties.id');
+        contents = (
+          <Relay.RootContainer
+            Component={WeatherStationPopup}
+            forceFetch
+            route={new WeatherStationRoute({ id })}
+            renderLoading={this.renderLoadingPopup}
+            renderFetched={data => <WeatherStationPopup {...data} />}
+          />
+        );
+        break;
+      case 'tmsStations':
+        id = get(selectableTarget, 'feature.properties.id');
 
-          ({ id } = this.state.selectableTargets[0].feature.properties);
+        contents = (
+          <Relay.RootContainer
+            Component={TmsStationPopup}
+            forceFetch
+            route={new TmsStationRoute({ id })}
+            renderLoading={this.renderLoadingPopup}
+            renderFetched={data => <TmsStationPopup {...data} />}
+          />
+        );
+        break;
+      case 'ticketSales':
+        id = get(selectableTarget, 'feature.properties.FID');
+        contents = (
+          <TicketSalesPopup
+            {...this.state.selectableTargets[0].feature.properties}
+          />
+        );
+        break;
+      case 'cameraStations':
+        id = get(selectableTarget, 'feature.properties.id');
+        contents = (
+          <Relay.RootContainer
+            Component={CameraStationPopup}
+            forceFetch
+            route={new CameraStationRoute({ id })}
+            renderLoading={this.renderLoadingPopup}
+            renderFetched={data => <CameraStationPopup {...data} />}
+          />
+        );
+        break;
+      case 'roadworks':
+        id = get(selectableTarget, 'feature.properties.id');
+        contents = (
+          <Relay.RootContainer
+            Component={RoadworkPopup}
+            forceFetch
+            route={new RoadworkRoute({ id })}
+            renderLoading={this.renderLoadingPopup}
+            renderFetched={data => <RoadworkPopup {...data} />}
+          />
+        );
+        break;
+      case 'disorders':
+        id = get(selectableTarget, 'feature.properties.id');
+        if (
+          get(selectableTarget, 'feature.properties.type') ===
+          'TrafficAnnouncement'
+        ) {
           contents = (
             <Relay.RootContainer
-              Component={MaintenanceVehicleRoutePopup}
+              Component={TrafficAnnouncementPopup}
               forceFetch
-              route={new MaintenanceVehicleRouteRoute({ id })}
-              renderLoading={loadingPopup}
-              renderFetched={data => <MaintenanceVehicleRoutePopup {...data} />}
+              route={new TrafficAnnouncementRoute({ id })}
+              renderLoading={this.renderLoadingPopup}
+              renderFetched={data => <TrafficAnnouncementPopup {...data} />}
             />
           );
-        } else if (this.state.selectableTargets[0].layer === 'fluencies') {
-          ({ id } = this.state.selectableTargets[0].feature.properties);
+        } else {
           contents = (
-            <FluencyPopup
-              {...this.state.selectableTargets[0].feature.properties}
+            <Relay.RootContainer
+              Component={DisorderPopup}
+              forceFetch
+              route={new DisorderRoute({ id })}
+              renderLoading={this.renderLoadingPopup}
+              renderFetched={data => <DisorderPopup {...data} />}
             />
           );
         }
-        popup = (
-          <Popup {...popupOptions} key={id} position={this.state.coords}>
-            {contents}
-          </Popup>
+        break;
+      case 'roadConditions':
+        id = get(selectableTarget, 'feature.properties.id');
+        contents = (
+          <Relay.RootContainer
+            Component={RoadConditionPopup}
+            forceFetch
+            route={new RoadConditionRoute({ id })}
+            renderLoading={this.renderLoadingPopup}
+            renderFetched={data => <RoadConditionPopup {...data} />}
+          />
         );
-      } else if (this.state.selectableTargets.length > 1) {
-        popup = (
-          <Popup
-            key={this.state.coords.toString()}
-            {...this.PopupOptions}
-            maxHeight={220}
-            position={this.state.coords}
-          >
-            <MarkerSelectPopup
-              selectRow={this.selectRow}
-              options={this.state.selectableTargets}
-            />
-          </Popup>
+        break;
+      case 'maintenanceVehicles':
+        popupOptions.maxWidth = 360;
+
+        id = get(selectableTarget, 'feature.properties.id');
+        contents = (
+          <Relay.RootContainer
+            Component={MaintenanceVehicleRoutePopup}
+            forceFetch
+            route={new MaintenanceVehicleRouteRoute({ id })}
+            renderLoading={this.renderLoadingPopup}
+            renderFetched={data => <MaintenanceVehicleRoutePopup {...data} />}
+          />
         );
-      } else if (this.state.selectableTargets.length === 0) {
-        popup = (
-          <Popup
-            key={this.state.coords.toString()}
-            {...this.PopupOptions}
-            maxHeight={220}
-            position={this.state.coords}
-          >
-            <LocationPopup
-              name="" // TODO: fill in name from reverse geocoding, possibly in a container.
-              lat={this.state.coords.lat}
-              lon={this.state.coords.lng}
-            />
-          </Popup>
-        );
-      }
+        break;
+      case 'fluencies':
+        id = get(selectableTarget, 'feature.properties.id');
+        contents = <FluencyPopup {...selectableTarget.feature.properties} />;
+        break;
     }
 
-    return popup;
+    if (!contents) {
+      return this.renderLocationPopup();
+    }
+
+    return (
+      <Popup {...popupOptions} key={id} position={this.state.coords}>
+        {contents}
+      </Popup>
+    );
   }
 }
 

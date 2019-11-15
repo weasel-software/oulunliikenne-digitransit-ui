@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Relay from 'react-relay/classic';
 import cx from 'classnames';
 import moment from 'moment';
+import get from 'lodash/get';
 import LineChart from './LineChart';
 import Icon from './Icon';
 
@@ -52,35 +53,69 @@ const formatDateByStep = (date, step) => {
   return m.format('MMM');
 };
 
+const getChannelDirection = (id, channels = []) => {
+  const channel = channels.find(c => c.id === id);
+
+  if (!channel) {
+    return 5;
+  }
+
+  return get(channel, 'direction', 5);
+};
+
 const EcoCounterContent = ({
-  data: { outData, inData },
+  channel1,
+  channel2,
+  channel1Id,
+  channel2Id,
+  channels,
   changeUserType,
   userType,
   step,
   changeStep,
   formatMessage,
   availableUserTypes,
-  directionAvailable,
 }) => {
-  const labels = inData.map(({ date }) => formatDateByStep(date, step));
-  const outDataCounts = outData.map(({ counts }) => (!counts ? 0 : counts));
-  const inDataCounts = inData.map(({ counts }) => (!counts ? 0 : counts));
+  const labels = get(channel1, 'siteData', []).map(({ date }) =>
+    formatDateByStep(date, step),
+  );
+  const channel1Counts = get(channel1, 'siteData', []).map(
+    ({ counts }) => (!counts ? 0 : counts),
+  );
+
   const datasets = [
     {
-      label: directionAvailable ? formatMessage({ id: 'from-city' }) : '',
-      data: outDataCounts,
+      label: formatMessage({
+        id: `eco-counter-direction-${getChannelDirection(
+          channel1Id,
+          channels,
+        )}`,
+      }),
+      data: channel1Counts,
       borderColor: '#dc3545',
       backgroundColor: 'rgba(0,0,0,0)',
     },
-    {
-      label: directionAvailable ? formatMessage({ id: 'to-city' }) : '',
-      data: inDataCounts,
+  ];
+
+  if (channel2) {
+    const channel2Counts = get(channel2, 'siteData', []).map(
+      ({ counts }) => (!counts ? 0 : counts),
+    );
+
+    datasets.push({
+      label: formatMessage({
+        id: `eco-counter-direction-${getChannelDirection(
+          channel2Id,
+          channels,
+        )}`,
+      }),
+      data: channel2Counts,
       borderColor: '#00AFFF',
       backgroundColor: 'rgba(0,0,0,0)',
-    },
-  ];
+    });
+  }
   return (
-    <div className="ecocounter-content">
+    <div className="eco-counter-content">
       <h5>{getTitle(step, formatMessage)}</h5>
       <LineChart datasets={datasets} labels={labels} title="Test" />
       <div className="button-row">
@@ -135,16 +170,11 @@ const EcoCounterContent = ({
   );
 };
 
-const EcoCounterButton = ({
-  condition,
-  isSmall = false,
-  children,
-  onClick,
-}) => (
+const EcoCounterButton = ({ condition, isSmall, children, onClick }) => (
   <button
-    className={cx('ecocounter-button', {
-      'ecocounter-button--small': isSmall,
-      'ecocounter-button--active': condition,
+    className={cx('eco-counter-button', {
+      'eco-counter-button--small': isSmall,
+      'eco-counter-button--active': condition,
     })}
     onClick={onClick}
   >
@@ -159,31 +189,53 @@ EcoCounterButton.propTypes = {
   isSmall: PropTypes.bool,
 };
 
+EcoCounterButton.defaultProps = {
+  isSmall: false,
+};
+
+const siteDataShape = PropTypes.shape({
+  date: PropTypes.string,
+  counts: PropTypes.number,
+  status: PropTypes.number,
+});
+
+const channelShape = PropTypes.shape({
+  siteData: PropTypes.arrayOf(siteDataShape),
+});
+
 EcoCounterContent.propTypes = {
-  data: PropTypes.object.isRequired,
+  channel1: channelShape.isRequired,
+  channel2: channelShape,
+  channel1Id: PropTypes.string.isRequired,
+  channel2Id: PropTypes.string,
+  channels: PropTypes.array.isRequired,
   changeUserType: PropTypes.func.isRequired,
   userType: PropTypes.number.isRequired,
   changeStep: PropTypes.func.isRequired,
   step: PropTypes.string.isRequired,
   formatMessage: PropTypes.func.isRequired,
   availableUserTypes: PropTypes.array.isRequired,
-  directionAvailable: PropTypes.bool.isRequired,
+};
+
+EcoCounterContent.defaultProps = {
+  channel2: null,
+  channel2Id: null,
 };
 
 const ConnectedComponent = Relay.createContainer(EcoCounterContent, {
   initialVariables: {
-    outId: null,
-    inId: null,
+    channel1Id: null,
+    channel2Id: null,
     domain: null,
     step: null,
     begin: null,
     end: null,
   },
   fragments: {
-    data: () => Relay.QL`
+    channel1: () => Relay.QL`
       fragment on Query {
-        outData: ecoCounterSiteData(
-          id: $outId, 
+        siteData: ecoCounterSiteData(
+          id: $channel1Id, 
           domain: $domain, 
           step: $step, 
           begin: $begin, 
@@ -193,8 +245,12 @@ const ConnectedComponent = Relay.createContainer(EcoCounterContent, {
           counts
           status
         }
-        inData: ecoCounterSiteData(
-          id: $inId, 
+      }
+    `,
+    channel2: () => Relay.QL`
+      fragment on Query {
+        siteData: ecoCounterSiteData(
+          id: $channel2Id, 
           domain: $domain, 
           step: $step, 
           begin: $begin, 
@@ -204,7 +260,7 @@ const ConnectedComponent = Relay.createContainer(EcoCounterContent, {
           counts
           status
         }
-      }  
+      }
     `,
   },
 });

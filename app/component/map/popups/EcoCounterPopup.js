@@ -3,12 +3,15 @@ import React from 'react';
 import Relay from 'react-relay/classic';
 import _uniq from 'lodash/uniq';
 import moment from 'moment';
+import get from 'lodash/get';
 import { intlShape } from 'react-intl';
+
 import Card from '../../Card';
 import CardHeader from '../../CardHeader';
 import ComponentUsageExample from '../../ComponentUsageExample';
 import EcoCounterContent, { CYCLING } from '../../EcoCounterContent';
-import EcoCounterDataRoute from '../../../route/EcoCounterDataRoute';
+import EcoCounterDualChannelRoute from '../../../route/EcoCounterDualChannelRoute';
+import EcoCounterSingleChannelRoute from '../../../route/EcoCounterSingleChannelRoute';
 import LoadingPage from '../../LoadingPage';
 import NetworkError from '../../NetworkError';
 
@@ -23,6 +26,8 @@ const STEPS = {
 class EcoCounterPopup extends React.Component {
   static displayName = 'EcoCounterPopup';
   static propTypes = {
+    domain: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
     channels: PropTypes.array.isRequired,
   };
   static contextTypes = {
@@ -32,7 +37,12 @@ class EcoCounterPopup extends React.Component {
     <div>
       <p>Renders an eco counter popup.</p>
       <ComponentUsageExample description="">
-        <EcoCounterPopup channels={[]} context="context object here" />
+        <EcoCounterPopup
+          domain=""
+          name=""
+          channels={[]}
+          context="context object here"
+        />
       </ComponentUsageExample>
     </div>
   );
@@ -80,10 +90,7 @@ class EcoCounterPopup extends React.Component {
 
   getChannelsByUserType = () => {
     const channels = this.props.channels || [];
-    const filtered = channels.filter(
-      channel => channel.userType === this.state.userType,
-    );
-    return filtered;
+    return channels.filter(channel => channel.userType === this.state.userType);
   };
 
   changeStep = step => {
@@ -96,16 +103,7 @@ class EcoCounterPopup extends React.Component {
 
   render() {
     const selectedChannels = this.getChannelsByUserType();
-    const inChannel = selectedChannels.find(c => c.direction === 1);
-    const outChannel = selectedChannels.find(c => c.direction === 2);
-    let inId = inChannel ? inChannel.id : null;
-    let outId = outChannel ? outChannel.id : null;
-    let directionAvailable = true;
-    if (!inId && !outId && selectedChannels.length > 0) {
-      inId = selectedChannels[0].id || null;
-      outId = selectedChannels[1].id || null;
-      directionAvailable = false;
-    }
+
     return (
       <div className="card">
         <Card className="padding-small">
@@ -114,21 +112,29 @@ class EcoCounterPopup extends React.Component {
               id: 'eco-counter',
               defaultMessage: 'Eco counter',
             })}
-            description={this.props.channels[0].name}
+            description={this.props.name}
             icon="icon-icon_eco-counter"
             unlinked
           />
           <Relay.Renderer
             Container={EcoCounterContent}
             queryConfig={
-              new EcoCounterDataRoute({
-                outId,
-                inId,
-                domain: this.props.channels[0].domain,
-                begin: this.getBeginTimestamp(),
-                step: this.state.step,
-                end: this.getEndTimestamp(),
-              })
+              selectedChannels.length > 1
+                ? new EcoCounterDualChannelRoute({
+                    channel1Id: get(selectedChannels, '[0].id'),
+                    channel2Id: get(selectedChannels, '[1].id'),
+                    domain: this.props.domain,
+                    begin: this.getBeginTimestamp(),
+                    step: this.state.step,
+                    end: this.getEndTimestamp(),
+                  })
+                : new EcoCounterSingleChannelRoute({
+                    channel1Id: get(selectedChannels, '[0].id'),
+                    domain: this.props.domain,
+                    begin: this.getBeginTimestamp(),
+                    step: this.state.step,
+                    end: this.getEndTimestamp(),
+                  })
             }
             environment={Relay.Store}
             render={({ done, error, loading, retry, props }) => {
@@ -136,13 +142,13 @@ class EcoCounterPopup extends React.Component {
                 return (
                   <EcoCounterContent
                     {...props}
+                    channels={selectedChannels}
                     changeUserType={this.changeUserType}
                     changeStep={this.changeStep}
                     userType={this.state.userType}
                     step={this.state.step}
                     formatMessage={this.context.intl.formatMessage}
                     availableUserTypes={this.availableUserTypes}
-                    directionAvailable={directionAvailable}
                   />
                 );
               } else if (loading) {
