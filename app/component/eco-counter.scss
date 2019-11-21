@@ -2,12 +2,27 @@
   display: flex;
   flex-direction: column;
 
-  h5 {
-    color: $gray;
-    font-size: 12px;
-    margin: 5px 0 0;
-    text-align: center;
+  &__title {
+    position: relative;
+    margin: 5px 0 20px;
+
+    h5 {
+      color: $gray;
+      font-size: 12px;
+      text-align: center;
+      text-transform: capitalize;
+      margin: 0;
+    }
+
+    button {
+      border-radius: 3px;
+      padding: 0.3rem 0.5rem;
+      text-transform: capitalize;
+      margin: 0;
+    }
   }
+
+
 
   & .button-row {
     display: flex;
@@ -36,6 +51,18 @@
       &.eco-counter-button--small {
         font-size: 0.8rem;
       }
+    }
+  }
+
+  &__date-picker {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #fff;
+    z-index: 1000;
+
+    .DayPickerKeyboardShortcuts_buttonReset {
+      display: none;
     }
   }
 }

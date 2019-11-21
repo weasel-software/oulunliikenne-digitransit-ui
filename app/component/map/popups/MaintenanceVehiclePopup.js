@@ -25,7 +25,7 @@ const MaintenanceVehiclePopup = ({ maintenanceVehicle }, { intl }) => (
       <FormattedMessage id="maintenance-job" defaultMessage="Maintenance job">
         {(...content) => `${content}:`}
       </FormattedMessage>
-      <ul>
+      <ul className="maintenance-vehicle-job-list">
         {sortByPriority(maintenanceVehicle.jobIds).map(jobId => (
           <li key={jobId}>
             <FormattedMessage id={`maintenance-job-${jobId}`} />

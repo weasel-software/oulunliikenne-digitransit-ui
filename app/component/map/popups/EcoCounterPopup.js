@@ -15,6 +15,8 @@ import EcoCounterSingleChannelRoute from '../../../route/EcoCounterSingleChannel
 import LoadingPage from '../../LoadingPage';
 import NetworkError from '../../NetworkError';
 
+const DATE_FORMAT = 'YYYY-MM-DDTHH:mm:ss';
+
 const STEPS = {
   HOUR: 'hour',
   DAY: 'day',
@@ -51,41 +53,55 @@ class EcoCounterPopup extends React.Component {
   availableUserTypes = _uniq(this.props.channels.map(c => c.userType));
 
   state = {
+    date: moment().subtract(1, 'day'),
     userType: this.availableUserTypes.includes(CYCLING)
       ? CYCLING
       : this.availableUserTypes[0],
     step: STEPS.HOUR,
   };
 
-  // TODO: Use current time and and date, once the api returns counts for current date.
-  getEndMoment = () =>
-    moment()
-      .hours(0)
-      .minutes(0)
-      .seconds(0);
-
-  getEndTimestamp = () =>
-    this.getEndMoment()
-      .utc()
-      .format('YYYY-MM-DDTHH:mm:ss');
-
-  getBeginTimestamp = () => {
+  getBegin = () => {
     const { step } = this.state;
-    const endMoment = this.getEndMoment();
-    if (step === STEPS.DAY) {
-      endMoment.subtract(1, 'w');
-    } else if (step === STEPS.WEEK) {
-      endMoment.subtract(1, 'M');
-    } else if (step === STEPS.MONTH) {
-      endMoment.subtract(1, 'Y');
-    } else {
-      endMoment
-        .subtract(1, 'day')
-        .hours(0)
-        .minutes(0)
-        .seconds(0);
+    const date = this.state.date.clone();
+
+    switch (step) {
+      case STEPS.MONTH:
+        return date.startOf('year');
+      case STEPS.WEEK:
+        return date.startOf('month');
+      case STEPS.DAY:
+        return date.startOf('week');
+      case STEPS.HOUR:
+      default:
+        return date.startOf('day');
     }
-    return endMoment.utc().format('YYYY-MM-DDTHH:mm:ss');
+  };
+
+  getEnd = () => {
+    const { step } = this.state;
+    const date = this.state.date.clone();
+
+    switch (step) {
+      case STEPS.MONTH:
+        return date.endOf('year');
+      case STEPS.WEEK:
+        return date.endOf('month');
+      case STEPS.DAY:
+        return date.endOf('week');
+      case STEPS.HOUR:
+      default:
+        return date.add(1, 'day').startOf('day');
+    }
+  };
+
+  formatDate = date => {
+    const { step } = this.state;
+
+    if (step === STEPS.HOUR) {
+      return date.utc().format(DATE_FORMAT);
+    }
+
+    return date.format(DATE_FORMAT);
   };
 
   getChannelsByUserType = () => {
@@ -101,8 +117,14 @@ class EcoCounterPopup extends React.Component {
     this.setState({ userType });
   };
 
+  changeDate = date => {
+    this.setState({ date });
+  };
+
   render() {
     const selectedChannels = this.getChannelsByUserType();
+    const begin = this.formatDate(this.getBegin());
+    const end = this.formatDate(this.getEnd());
 
     return (
       <div className="card">
@@ -124,16 +146,16 @@ class EcoCounterPopup extends React.Component {
                     channel1Id: get(selectedChannels, '[0].id'),
                     channel2Id: get(selectedChannels, '[1].id'),
                     domain: this.props.domain,
-                    begin: this.getBeginTimestamp(),
+                    begin,
                     step: this.state.step,
-                    end: this.getEndTimestamp(),
+                    end,
                   })
                 : new EcoCounterSingleChannelRoute({
                     channel1Id: get(selectedChannels, '[0].id'),
                     domain: this.props.domain,
-                    begin: this.getBeginTimestamp(),
+                    begin,
                     step: this.state.step,
-                    end: this.getEndTimestamp(),
+                    end,
                   })
             }
             environment={Relay.Store}
@@ -142,9 +164,11 @@ class EcoCounterPopup extends React.Component {
                 return (
                   <EcoCounterContent
                     {...props}
+                    date={this.state.date}
                     channels={selectedChannels}
                     changeUserType={this.changeUserType}
                     changeStep={this.changeStep}
+                    changeDate={this.changeDate}
                     userType={this.state.userType}
                     step={this.state.step}
                     formatMessage={this.context.intl.formatMessage}
