@@ -284,6 +284,42 @@ class TileLayerContainer extends GridLayer {
         return layer !== 'maintenanceVehicles' || jobId !== 0;
       });
 
+      // Get targets with the shortest distance for each layer
+      const closestTargets = selectableTargetsFiltered.reduce(
+        (closestCollection, target) => {
+          const targetLayer = get(target, 'layer');
+          const targetDistance = get(target, 'feature.dist');
+          const closestDistance = get(
+            closestCollection,
+            `${targetLayer}.feature.dist`,
+          );
+
+          // Skip if there's no distance available for the current target
+          if (!targetDistance) {
+            return closestCollection;
+          }
+
+          // If closest target is yet to be found or current target distance is shorter than
+          // previously found shortest distance, set the current target as the closest one
+          if (!closestDistance || targetDistance < closestDistance) {
+            return { ...closestCollection, [targetLayer]: target };
+          }
+          return closestCollection;
+        },
+        {},
+      );
+
+      // Filter out other than the closest targets
+      selectableTargetsFiltered = selectableTargetsFiltered.filter(target => {
+        if (closestTargets[target.layer]) {
+          return (
+            closestTargets[target.layer].feature.properties.id ===
+            target.feature.properties.id
+          );
+        }
+        return true;
+      });
+
       this.setState({
         selectableTargets: selectableTargetsFiltered,
         coords,

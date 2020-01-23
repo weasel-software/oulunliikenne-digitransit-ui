@@ -238,6 +238,7 @@ class TileContainer {
             );
 
             if (pointToLineDist < 20) {
+              currentFeature.feature.dist = pointToLineDist;
               currentFeature.feature.geom = {
                 x: localPoint[0] * this.ratio,
                 y: localPoint[1] * this.ratio,
