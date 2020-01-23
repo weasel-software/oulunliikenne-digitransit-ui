@@ -262,19 +262,13 @@ class TileLayerContainer extends GridLayer {
         ),
       );
 
-      selectableTargetsFiltered = uniqBy(
-        selectableTargetsFiltered,
-        item =>
-          `${get(item, 'feature.properties.id') ||
-            get(item, 'feature.properties.code')}_${get(item, 'layer')}`,
+      selectableTargetsFiltered = uniqBy(selectableTargetsFiltered, item =>
+        [
+          get(item, 'feature.properties.id') || get(item, 'feature.properties.code'),
+          get(item, 'feature.properties.trafficDirection'),
+          get(item, 'layer'),
+        ].join('_'),
       );
-
-      // Prevent some of the items from showing up in select-popup
-      if (selectableTargetsFiltered.length > 1) {
-        selectableTargetsFiltered = selectableTargetsFiltered.filter(
-          target => !['fluencies'].includes(target.layer),
-        );
-      }
 
       // Filter out all maintenance vehicle route layers that has jobId as 0
       selectableTargetsFiltered = selectableTargetsFiltered.filter(target => {
@@ -314,7 +308,8 @@ class TileLayerContainer extends GridLayer {
         if (closestTargets[target.layer]) {
           return (
             closestTargets[target.layer].feature.properties.id ===
-            target.feature.properties.id
+              target.feature.properties.id &&
+            closestTargets[target.layer].feature.dist === target.feature.dist
           );
         }
         return true;
