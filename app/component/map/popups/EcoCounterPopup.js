@@ -10,8 +10,11 @@ import Card from '../../Card';
 import CardHeader from '../../CardHeader';
 import ComponentUsageExample from '../../ComponentUsageExample';
 import EcoCounterContent, { CYCLING } from '../../EcoCounterContent';
+import EcoCounterComparisonContent from '../../EcoCounterComparisonContent';
 import EcoCounterDualChannelRoute from '../../../route/EcoCounterDualChannelRoute';
 import EcoCounterSingleChannelRoute from '../../../route/EcoCounterSingleChannelRoute';
+import EcoCounterComparisonDualChannelRoute from '../../../route/EcoCounterComparisonDualChannelRoute';
+import EcoCounterComparisonSingleChannelRoute from '../../../route/EcoCounterComparisonSingleChannelRoute';
 import LoadingPage from '../../LoadingPage';
 import NetworkError from '../../NetworkError';
 
@@ -23,6 +26,11 @@ const STEPS = {
   WEEK: 'week',
   MONTH: 'month',
   YEAR: 'year',
+};
+
+const VIEW = {
+  SINGLE: 'single',
+  COMPARISON: 'comparison',
 };
 
 class EcoCounterPopup extends React.Component {
@@ -53,15 +61,24 @@ class EcoCounterPopup extends React.Component {
   availableUserTypes = _uniq(this.props.channels.map(c => c.userType));
 
   state = {
+    view: VIEW.SINGLE,
     date: moment().subtract(1, 'day'),
     userType: this.availableUserTypes.includes(CYCLING)
       ? CYCLING
       : this.availableUserTypes[0],
     step: STEPS.HOUR,
+    comparisonRange1: [moment().subtract(1, 'day'), moment()],
+    comparisonRange2: [moment().subtract(1, 'day'), moment()],
   };
+
+  getRange1Begin = () => this.state.comparisonRange1[0];
+  getRange1End = () => this.state.comparisonRange1[1];
+  getRange2Begin = () => this.state.comparisonRange2[0];
+  getRange2End = () => this.state.comparisonRange2[1];
 
   getBegin = () => {
     const { step } = this.state;
+
     const date = this.state.date.clone();
 
     switch (step) {
@@ -79,6 +96,7 @@ class EcoCounterPopup extends React.Component {
 
   getEnd = () => {
     const { step } = this.state;
+
     const date = this.state.date.clone();
 
     switch (step) {
@@ -121,10 +139,62 @@ class EcoCounterPopup extends React.Component {
     this.setState({ date });
   };
 
+  toggleView = () => {
+    this.setState({
+      view: this.state.view === VIEW.SINGLE ? VIEW.COMPARISON : VIEW.SINGLE,
+    });
+  };
+
   render() {
     const selectedChannels = this.getChannelsByUserType();
-    const begin = this.formatDate(this.getBegin());
-    const end = this.formatDate(this.getEnd());
+    const { view, comparisonRange1, comparisonRange2 } = this.state;
+
+    let queryConfig;
+    if (view === VIEW.COMPARISON) {
+      const [range1begin, range1end] = this.state.comparisonRange1;
+      const [range2begin, range2end] = this.state.comparisonRange2;
+      queryConfig =
+        selectedChannels.length > 1
+          ? new EcoCounterComparisonDualChannelRoute({
+              channel1Id: get(selectedChannels, '[0].id'),
+              channel2Id: get(selectedChannels, '[1].id'),
+              domain: this.props.domain,
+              range1begin,
+              range1end,
+              range2begin,
+              range2end,
+              step: this.state.step,
+            })
+          : new EcoCounterComparisonSingleChannelRoute({
+              channel1Id: get(selectedChannels, '[0].id'),
+              domain: this.props.domain,
+              range1begin,
+              range1end,
+              range2begin,
+              range2end,
+              step: this.state.step,
+            });
+    } else {
+      const begin = this.formatDate(this.getBegin());
+      const end = this.formatDate(this.getEnd());
+      queryConfig =
+        selectedChannels.length > 1
+          ? new EcoCounterDualChannelRoute({
+              channel1Id: get(selectedChannels, '[0].id'),
+              channel2Id: get(selectedChannels, '[1].id'),
+              domain: this.props.domain,
+              begin,
+              step: this.state.step,
+              end,
+            })
+          : new EcoCounterSingleChannelRoute({
+              channel1Id: get(selectedChannels, '[0].id'),
+              domain: this.props.domain,
+              begin,
+              step: this.state.step,
+              end,
+            });
+    }
 
     return (
       <div className="card">
@@ -139,29 +209,16 @@ class EcoCounterPopup extends React.Component {
             unlinked
           />
           <Relay.Renderer
-            Container={EcoCounterContent}
-            queryConfig={
-              selectedChannels.length > 1
-                ? new EcoCounterDualChannelRoute({
-                    channel1Id: get(selectedChannels, '[0].id'),
-                    channel2Id: get(selectedChannels, '[1].id'),
-                    domain: this.props.domain,
-                    begin,
-                    step: this.state.step,
-                    end,
-                  })
-                : new EcoCounterSingleChannelRoute({
-                    channel1Id: get(selectedChannels, '[0].id'),
-                    domain: this.props.domain,
-                    begin,
-                    step: this.state.step,
-                    end,
-                  })
+            Container={
+              view === VIEW.SINGLE
+                ? EcoCounterContent
+                : EcoCounterComparisonContent
             }
+            queryConfig={queryConfig}
             environment={Relay.Store}
             render={({ done, error, loading, retry, props }) => {
               if (done) {
-                return (
+                return view === VIEW.SINGLE ? (
                   <EcoCounterContent
                     {...props}
                     date={this.state.date}
@@ -173,6 +230,31 @@ class EcoCounterPopup extends React.Component {
                     step={this.state.step}
                     formatMessage={this.context.intl.formatMessage}
                     availableUserTypes={this.availableUserTypes}
+                    toggleView={this.toggleView}
+                  />
+                ) : (
+                  <EcoCounterComparisonContent
+                    {...props}
+                    channels={selectedChannels}
+                    changeUserType={this.changeUserType}
+                    changeStep={this.changeStep}
+                    userType={this.state.userType}
+                    step={this.state.step}
+                    formatMessage={this.context.intl.formatMessage}
+                    availableUserTypes={this.availableUserTypes}
+                    toggleView={this.toggleView}
+                    range1={comparisonRange1}
+                    range2={comparisonRange2}
+                    changeRange1={newRange => {
+                      this.setState({
+                        comparisonRange1: newRange,
+                      });
+                    }}
+                    changeRange2={newRange => {
+                      this.setState({
+                        comparisonRange2: newRange,
+                      });
+                    }}
                   />
                 );
               } else if (loading) {
