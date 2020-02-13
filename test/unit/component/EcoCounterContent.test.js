@@ -23,6 +23,7 @@ describe('<EcoCounterContent />', () => {
       step: 'day',
       availableUserTypes: [2],
       formatMessage: () => '',
+      toggleView: () => {},
     };
     const wrapper = shallow(
       <EcoCounterContent directionAvailable {...props} />,
@@ -30,7 +31,7 @@ describe('<EcoCounterContent />', () => {
     expect(
       wrapper.find('Icon[img="icon-icon_bicycle-withoutBox"]'),
     ).to.have.lengthOf(1);
-    expect(wrapper.find('Icon')).to.have.lengthOf(1);
+    expect(wrapper.find('Icon')).to.have.lengthOf(2);
   });
 
   it('should only show walking button if only walking data is available', () => {
@@ -48,12 +49,13 @@ describe('<EcoCounterContent />', () => {
       step: 'day',
       availableUserTypes: [1],
       formatMessage: () => '',
+      toggleView: () => {},
     };
     const wrapper = shallow(
       <EcoCounterContent directionAvailable {...props} />,
     );
     expect(wrapper.find('Icon[img="icon-icon_walk"]')).to.have.lengthOf(1);
-    expect(wrapper.find('Icon')).to.have.lengthOf(1);
+    expect(wrapper.find('Icon')).to.have.lengthOf(2);
   });
 
   it('should render all buttons', () => {
@@ -71,6 +73,7 @@ describe('<EcoCounterContent />', () => {
       step: 'day',
       availableUserTypes: [1, 2],
       formatMessage: () => '',
+      toggleView: () => {},
     };
     const wrapper = shallow(
       <EcoCounterContent directionAvailable {...props} />,
