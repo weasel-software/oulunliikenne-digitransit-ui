@@ -79,7 +79,9 @@ export default class EcoCounterComparisonDatesSelector extends React.Component {
     return (
       <div className="eco-counter-content__comparison-dates">
         <div className="date-row">
-          <div className="date-row__label">1. ajankohta</div>
+          <div className="date-row__label">
+            {this.props.formatMessage({ id: '1. time range' })}
+          </div>
           <div className="date-row__input-group">
             <div className="date-row__input-group__input-container">
               <button
@@ -125,7 +127,9 @@ export default class EcoCounterComparisonDatesSelector extends React.Component {
           </div>
         </div>
         <div className="date-row">
-          <div className="date-row__label">2. ajankohta</div>
+          <div className="date-row__label">
+            {this.props.formatMessage({ id: '2. time range' })}
+          </div>
           <div className="date-row__input-group">
             <div className="date-row__input-group__input-container">
               <button

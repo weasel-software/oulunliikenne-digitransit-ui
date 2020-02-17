@@ -491,6 +491,8 @@ const translations = {
     zones: 'Tarifzonen',
   },
   en: {
+    '1. time range': '1. time range',
+    '2. time range': '2. time range',
     'about-this-service': 'About the service',
     accessibility: 'Accessibility',
     'accessibility-limited': 'Wheelchair',
@@ -1456,6 +1458,8 @@ const translations = {
     zones: 'Zonas tarifarias',
   },
   fi: {
+    '1. time range': '1. ajanjakso',
+    '2. time range': '2. ajanjakso',
     'about-this-service': 'Tietoja palvelusta',
     accessibility: 'Esteettömyys',
     'accessibility-limited': 'Liikun pyörätuolilla',
@@ -2720,6 +2724,8 @@ const translations = {
     zones: 'Billettsoner',
   },
   sv: {
+    '1. time range': '1. tidsintervall',
+    '2. time range': '2. tidsintervall',
     'about-this-service': 'Om tjänsten',
     accessibility: 'Tillgänglighet',
     'accessibility-limited': 'Med rullstolen',
