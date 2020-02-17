@@ -152,6 +152,12 @@
       &.eco-counter-button--small {
         font-size: 0.8rem;
       }
+
+      &.eco-counter-button--disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
     }
   }
 

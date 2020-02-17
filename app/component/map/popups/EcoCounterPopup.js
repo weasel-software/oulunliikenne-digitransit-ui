@@ -140,8 +140,53 @@ class EcoCounterPopup extends React.Component {
   };
 
   toggleView = () => {
+    const { view } = this.state;
+    let { step } = this.state;
+    const newView = view === VIEW.SINGLE ? VIEW.COMPARISON : VIEW.SINGLE;
+
+    if (newView === VIEW.COMPARISON) {
+      const allowedSteps = this.getAllowedSteps(
+        this.state.comparisonRange1,
+        this.state.comparisonRange2,
+      );
+      if (allowedSteps.includes(step) === false) {
+        [step] = allowedSteps;
+      }
+    }
+
     this.setState({
-      view: this.state.view === VIEW.SINGLE ? VIEW.COMPARISON : VIEW.SINGLE,
+      step,
+      view: newView,
+    });
+  };
+
+  getAllowedSteps = (range1, range2) => {
+    const [range1start, range1end] = range1;
+    const [range2start, range2end] = range2;
+
+    const rangeLengthInDays = Math.max(
+      range1end.diff(range1start, 'days'),
+      range2end.diff(range2start, 'days'),
+    );
+
+    if (rangeLengthInDays <= 7) {
+      return [STEPS.HOUR, STEPS.DAY];
+    }
+    if (rangeLengthInDays <= 31) {
+      return [STEPS.DAY, STEPS.WEEK];
+    }
+    return [STEPS.WEEK, STEPS.MONTH];
+  };
+
+  changeComparisonRange = (range1, range2) => {
+    const allowedSteps = this.getAllowedSteps(range1, range2);
+
+    this.setState({
+      comparisonRange1: range1,
+      comparisonRange2: range2,
+      step: allowedSteps.includes(this.state.step)
+        ? this.state.step
+        : allowedSteps[0],
     });
   };
 
@@ -246,15 +291,15 @@ class EcoCounterPopup extends React.Component {
                     range1={comparisonRange1}
                     range2={comparisonRange2}
                     changeRange1={newRange => {
-                      this.setState({
-                        comparisonRange1: newRange,
-                      });
+                      this.changeComparisonRange(newRange, comparisonRange2);
                     }}
                     changeRange2={newRange => {
-                      this.setState({
-                        comparisonRange2: newRange,
-                      });
+                      this.changeComparisonRange(comparisonRange1, newRange);
                     }}
+                    allowedSteps={this.getAllowedSteps(
+                      comparisonRange1,
+                      comparisonRange2,
+                    )}
                   />
                 );
               } else if (loading) {

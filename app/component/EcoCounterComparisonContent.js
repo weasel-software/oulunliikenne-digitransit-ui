@@ -50,6 +50,7 @@ class EcoCounterComparisonContent extends React.Component {
     changeRange1: PropTypes.func.isRequired,
     changeRange2: PropTypes.func.isRequired,
     toggleView: PropTypes.func.isRequired,
+    allowedSteps: PropTypes.arrayOf(PropTypes.string),
   };
 
   static defaultProps = {
@@ -106,6 +107,7 @@ class EcoCounterComparisonContent extends React.Component {
       range2,
       changeRange1,
       changeRange2,
+      allowedSteps,
     } = this.props;
 
     const range1labels = get(range1channel1, 'siteData', []).map(data =>
@@ -215,6 +217,7 @@ class EcoCounterComparisonContent extends React.Component {
           <EcoCounterButton
             condition={step === STEPS.HOUR}
             onClick={() => changeStep(STEPS.HOUR)}
+            disabled={!allowedSteps.includes(STEPS.HOUR)}
             isSmall
           >
             {formatMessage({ id: 'hourly' })}
@@ -222,6 +225,7 @@ class EcoCounterComparisonContent extends React.Component {
           <EcoCounterButton
             condition={step === STEPS.DAY}
             onClick={() => changeStep(STEPS.DAY)}
+            disabled={!allowedSteps.includes(STEPS.DAY)}
             isSmall
           >
             {formatMessage({ id: 'daily' })}
@@ -229,6 +233,7 @@ class EcoCounterComparisonContent extends React.Component {
           <EcoCounterButton
             condition={step === STEPS.WEEK}
             onClick={() => changeStep(STEPS.WEEK)}
+            disabled={!allowedSteps.includes(STEPS.WEEK)}
             isSmall
           >
             {formatMessage({ id: 'weekly' })}
@@ -236,6 +241,7 @@ class EcoCounterComparisonContent extends React.Component {
           <EcoCounterButton
             condition={step === STEPS.MONTH}
             onClick={() => changeStep(STEPS.MONTH)}
+            disabled={!allowedSteps.includes(STEPS.MONTH)}
             isSmall
           >
             {formatMessage({ id: 'monthly' })}
@@ -246,11 +252,18 @@ class EcoCounterComparisonContent extends React.Component {
   }
 }
 
-const EcoCounterButton = ({ condition, isSmall, children, onClick }) => (
+const EcoCounterButton = ({
+  condition,
+  isSmall,
+  children,
+  onClick,
+  disabled,
+}) => (
   <button
     className={cx('eco-counter-button', {
       'eco-counter-button--small': isSmall,
       'eco-counter-button--active': condition,
+      'eco-counter-button--disabled': disabled,
     })}
     onClick={onClick}
   >
@@ -263,10 +276,12 @@ EcoCounterButton.propTypes = {
   children: PropTypes.node.isRequired,
   onClick: PropTypes.func.isRequired,
   isSmall: PropTypes.bool,
+  disabled: PropTypes.bool,
 };
 
 EcoCounterButton.defaultProps = {
   isSmall: false,
+  disabled: false,
 };
 
 const ConnectedComponent = Relay.createContainer(EcoCounterComparisonContent, {
