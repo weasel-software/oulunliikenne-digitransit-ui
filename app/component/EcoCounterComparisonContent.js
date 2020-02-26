@@ -8,6 +8,7 @@ import { DayPickerSingleDateController } from 'react-dates';
 
 import LineChart from './LineChart';
 import Icon from './Icon';
+import EcoCounterComparisonDatesSelector from './EcoCounterComparisonDatesSelector';
 
 export const WALKING = 1;
 export const CYCLING = 2;
@@ -29,31 +30,33 @@ const channelShape = PropTypes.shape({
   siteData: PropTypes.arrayOf(siteDataShape),
 });
 
-class EcoCounterContent extends React.Component {
+class EcoCounterComparisonContent extends React.Component {
   static propTypes = {
-    date: PropTypes.object.isRequired,
-    channel1: channelShape.isRequired,
-    channel2: channelShape,
+    range1: PropTypes.arrayOf(PropTypes.object).isRequired,
+    range2: PropTypes.arrayOf(PropTypes.object).isRequired,
+    range1channel1: channelShape.isRequired,
+    range1channel2: channelShape,
+    range2channel1: channelShape.isRequired,
+    range2channel2: channelShape,
     channel1Id: PropTypes.string.isRequired,
     channel2Id: PropTypes.string,
     channels: PropTypes.array.isRequired,
-    changeDate: PropTypes.func.isRequired,
     changeUserType: PropTypes.func.isRequired,
     changeStep: PropTypes.func.isRequired,
     userType: PropTypes.number.isRequired,
     step: PropTypes.string.isRequired,
     formatMessage: PropTypes.func.isRequired,
     availableUserTypes: PropTypes.array.isRequired,
+    changeRange1: PropTypes.func.isRequired,
+    changeRange2: PropTypes.func.isRequired,
     toggleView: PropTypes.func.isRequired,
+    allowedSteps: PropTypes.arrayOf(PropTypes.string),
   };
 
   static defaultProps = {
-    channel2: null,
+    range1channel2: null,
+    range2channel2: null,
     channel2Id: null,
-  };
-
-  state = {
-    isDatePickerOpen: false,
   };
 
   onTitleClick = () => {
@@ -73,30 +76,6 @@ class EcoCounterContent extends React.Component {
     return get(channel, 'direction', 5);
   };
 
-  getTitle = () => {
-    const { step, date, formatMessage } = this.props;
-
-    switch (step) {
-      case STEPS.HOUR:
-        return date.format('D.M.Y');
-      case STEPS.DAY:
-        return formatMessage(
-          {
-            id: 'eco-counter-week-title',
-          },
-          {
-            date: date.format('GG, YYYY'),
-          },
-        );
-      case STEPS.WEEK:
-        return date.format('MMMM, YYYY');
-      case STEPS.MONTH:
-        return date.format('YYYY');
-      default:
-        return '';
-    }
-  };
-
   formatDateByStep = date => {
     const { step } = this.props;
     const m = moment(date);
@@ -112,79 +91,110 @@ class EcoCounterContent extends React.Component {
 
   render() {
     const {
-      channel1,
-      channel2,
+      range1channel1,
+      range1channel2,
+      range2channel1,
+      range2channel2,
       channel1Id,
       channel2Id,
-      changeDate,
       changeUserType,
       changeStep,
-      date,
       userType,
       step,
       formatMessage,
       availableUserTypes,
-      toggleView,
+      range1,
+      range2,
+      changeRange1,
+      changeRange2,
+      allowedSteps,
     } = this.props;
-    const { isDatePickerOpen } = this.state;
 
-    const labels = get(channel1, 'siteData', []).map(data =>
+    const range1labels = get(range1channel1, 'siteData', []).map(data =>
       this.formatDateByStep(data.date),
     );
-
-    const channel1Counts = get(channel1, 'siteData', []).map(
+    const range2labels = get(range2channel1, 'siteData', []).map(data =>
+      this.formatDateByStep(data.date),
+    );
+    const range1channel1Counts = get(range1channel1, 'siteData', []).map(
       ({ counts }) => (!counts ? 0 : counts),
     );
-
-    const datasets = [
+    const range2channel1Counts = get(range2channel1, 'siteData', []).map(
+      ({ counts }) => (!counts ? 0 : counts),
+    );
+    const range1datasets = [
       {
         label: formatMessage({
           id: `eco-counter-direction-${this.getChannelDirection(channel1Id)}`,
         }),
-        data: channel1Counts,
+        data: range1channel1Counts,
+        borderColor: '#dc3545',
+        backgroundColor: 'rgba(0,0,0,0)',
+      },
+    ];
+    const range2datasets = [
+      {
+        label: formatMessage({
+          id: `eco-counter-direction-${this.getChannelDirection(channel1Id)}`,
+        }),
+        data: range2channel1Counts,
         borderColor: '#dc3545',
         backgroundColor: 'rgba(0,0,0,0)',
       },
     ];
 
-    if (channel2) {
-      const channel2Counts = get(channel2, 'siteData', []).map(
+    if (range1channel2) {
+      const range1channel2Counts = get(range1channel2, 'siteData', []).map(
         ({ counts }) => (!counts ? 0 : counts),
       );
-
-      datasets.push({
+      const range2channel2Counts = get(range2channel2, 'siteData', []).map(
+        ({ counts }) => (!counts ? 0 : counts),
+      );
+      range1datasets.push({
         label: formatMessage({
           id: `eco-counter-direction-${this.getChannelDirection(channel2Id)}`,
         }),
-        data: channel2Counts,
+        data: range1channel2Counts,
+        borderColor: '#00AFFF',
+        backgroundColor: 'rgba(0,0,0,0)',
+      });
+      range2datasets.push({
+        label: formatMessage({
+          id: `eco-counter-direction-${this.getChannelDirection(channel2Id)}`,
+        }),
+        data: range2channel2Counts,
         borderColor: '#00AFFF',
         backgroundColor: 'rgba(0,0,0,0)',
       });
     }
+
     return (
       <div className="eco-counter-content">
-        <div className="eco-counter-content__title">
-          <h5>
-            <button onClick={this.onTitleClick}>{this.getTitle()}</button>
-            <button onClick={toggleView}>
-              {formatMessage({ id: 'compare' })}
-              <Icon img="icon-icon_arrow-collapse--right" viewBox="0 0 25 25" />
-            </button>
-          </h5>
-          {isDatePickerOpen && (
-            <div className="eco-counter-content__date-picker">
-              <DayPickerSingleDateController
-                date={date}
-                onDateChange={newDate => {
-                  changeDate(newDate);
-                  this.setState({ isDatePickerOpen: false });
-                }}
-                numberOfMonths={1}
-              />
-            </div>
-          )}
-        </div>
-        <LineChart datasets={datasets} labels={labels} title="Test" />
+        <EcoCounterComparisonDatesSelector
+          range1={range1}
+          range2={range2}
+          onRange1Change={newRange => {
+            this.props.changeRange1(newRange);
+          }}
+          onRange2Change={newRange => {
+            this.props.changeRange2(newRange);
+          }}
+          onComparisonToggleClick={() => {
+            console.log('comparison toggle clicked');
+          }}
+          formatMessage={formatMessage}
+          toggleView={this.props.toggleView}
+        />
+        <LineChart
+          datasets={range1datasets}
+          labels={range1labels}
+          title="Test"
+        />
+        <LineChart
+          datasets={range2datasets}
+          labels={range2labels}
+          title="Test"
+        />
         <div className="button-row">
           {availableUserTypes.includes(WALKING) && (
             <EcoCounterButton
@@ -207,6 +217,7 @@ class EcoCounterContent extends React.Component {
           <EcoCounterButton
             condition={step === STEPS.HOUR}
             onClick={() => changeStep(STEPS.HOUR)}
+            disabled={!allowedSteps.includes(STEPS.HOUR)}
             isSmall
           >
             {formatMessage({ id: 'hourly' })}
@@ -214,6 +225,7 @@ class EcoCounterContent extends React.Component {
           <EcoCounterButton
             condition={step === STEPS.DAY}
             onClick={() => changeStep(STEPS.DAY)}
+            disabled={!allowedSteps.includes(STEPS.DAY)}
             isSmall
           >
             {formatMessage({ id: 'daily' })}
@@ -221,6 +233,7 @@ class EcoCounterContent extends React.Component {
           <EcoCounterButton
             condition={step === STEPS.WEEK}
             onClick={() => changeStep(STEPS.WEEK)}
+            disabled={!allowedSteps.includes(STEPS.WEEK)}
             isSmall
           >
             {formatMessage({ id: 'weekly' })}
@@ -228,6 +241,7 @@ class EcoCounterContent extends React.Component {
           <EcoCounterButton
             condition={step === STEPS.MONTH}
             onClick={() => changeStep(STEPS.MONTH)}
+            disabled={!allowedSteps.includes(STEPS.MONTH)}
             isSmall
           >
             {formatMessage({ id: 'monthly' })}
@@ -238,11 +252,18 @@ class EcoCounterContent extends React.Component {
   }
 }
 
-const EcoCounterButton = ({ condition, isSmall, children, onClick }) => (
+const EcoCounterButton = ({
+  condition,
+  isSmall,
+  children,
+  onClick,
+  disabled,
+}) => (
   <button
     className={cx('eco-counter-button', {
       'eco-counter-button--small': isSmall,
       'eco-counter-button--active': condition,
+      'eco-counter-button--disabled': disabled,
     })}
     onClick={onClick}
   >
@@ -255,30 +276,34 @@ EcoCounterButton.propTypes = {
   children: PropTypes.node.isRequired,
   onClick: PropTypes.func.isRequired,
   isSmall: PropTypes.bool,
+  disabled: PropTypes.bool,
 };
 
 EcoCounterButton.defaultProps = {
   isSmall: false,
+  disabled: false,
 };
 
-const ConnectedComponent = Relay.createContainer(EcoCounterContent, {
+const ConnectedComponent = Relay.createContainer(EcoCounterComparisonContent, {
   initialVariables: {
     channel1Id: null,
     channel2Id: null,
     domain: null,
     step: null,
-    begin: null,
-    end: null,
+    range1begin: null,
+    range1end: null,
+    range2begin: null,
+    range2end: null,
   },
   fragments: {
-    channel1: () => Relay.QL`
+    range1channel1: () => Relay.QL`
       fragment on Query {
         siteData: ecoCounterSiteData(
           id: $channel1Id, 
           domain: $domain, 
           step: $step, 
-          begin: $begin, 
-          end: $end
+          begin: $range1begin, 
+          end: $range1end
         ) {        
           date
           counts
@@ -286,14 +311,44 @@ const ConnectedComponent = Relay.createContainer(EcoCounterContent, {
         }
       }
     `,
-    channel2: () => Relay.QL`
+    range1channel2: () => Relay.QL`
       fragment on Query {
         siteData: ecoCounterSiteData(
           id: $channel2Id, 
           domain: $domain, 
           step: $step, 
-          begin: $begin, 
-          end: $end
+          begin: $range1begin, 
+          end: $range1end
+        ) {        
+          date
+          counts
+          status
+        }
+      }
+    `,
+    range2channel1: () => Relay.QL`
+      fragment on Query {
+        siteData: ecoCounterSiteData(
+          id: $channel1Id, 
+          domain: $domain, 
+          step: $step, 
+          begin: $range2begin, 
+          end: $range2end
+        ) {        
+          date
+          counts
+          status
+        }
+      }
+    `,
+    range2channel2: () => Relay.QL`
+      fragment on Query {
+        siteData: ecoCounterSiteData(
+          id: $channel2Id, 
+          domain: $domain, 
+          step: $step, 
+          begin: $range2begin, 
+          end: $range2end
         ) {        
           date
           counts
@@ -306,6 +361,6 @@ const ConnectedComponent = Relay.createContainer(EcoCounterContent, {
 
 export {
   ConnectedComponent as default,
-  EcoCounterContent as Component,
+  EcoCounterComparisonContent as Component,
   EcoCounterButton,
 };

@@ -1,3 +1,4 @@
+import 'react-dates/initialize';
 import Fluxible from 'fluxible';
 
 import routes from './routes';

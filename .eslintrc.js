@@ -10,7 +10,7 @@ module.exports = {
     // Require custom extension
     'react/jsx-filename-extension': ['error', { "extensions": [".js"] }],
     'react/jsx-key': 'error',
-    'react/forbid-prop-types': ['warn', { forbid: ['any', 'array', 'object'] }],
+    'react/forbid-prop-types': 'off',
     'react/require-default-props': 'warn',
     'jsx-a11y/anchor-is-valid': [ 'error', {
         'components': [ 'Link' ],

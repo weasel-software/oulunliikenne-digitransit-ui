@@ -1,20 +1,136 @@
-.ecocounter-content {
+.eco-counter-content {
   display: flex;
   flex-direction: column;
 
-  h5 {
-    color: $gray;
-    font-size: 12px;
-    margin: 5px 0 0;
-    text-align: center;
+  &__title {
+    position: relative;
+    margin: 5px 0 20px;
+
+    h5 {
+      color: $gray;
+      font-size: 12px;
+      text-align: center;
+      text-transform: capitalize;
+      margin: 0;
+    }
+
+    button {
+      display: inline-flex;
+      flex-direction: row;
+      align-items: center;
+      border-radius: 3px;
+      text-transform: capitalize;
+      margin: 0 5px;
+      padding: 0.3rem 0.5rem;
+
+      .icon-container {
+        font-size: 10px;
+        margin-left: 5px;
+        margin-top: 3px;
+      }
+    }
   }
+
+  &__comparison-dates {
+    position: relative;
+    .date-row {
+      display: flex;
+      flex-direction: column;
+      margin: 10px 0;
+
+      &__label {
+        margin-bottom: 5px;
+      }
+
+      &__input-group {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        position: relative;
+
+        &__separator {
+          margin: 0 5px;
+        }
+
+        &__input-container {
+          position: relative;
+        }
+
+        .datepicker-container {
+          position: absolute;
+          top: 100%;
+          left: 0;
+          background: #fff;
+          z-index: 200;
+          visibility: hidden;
+
+          &.is-visible {
+            visibility: visible;
+          }
+        }
+
+        &__input {
+          position: relative;
+          border: 2px solid #ddd;
+          background: transparent;
+          border-radius: 5px;
+          margin: 0;
+          padding: 0 25px 0 5px;
+          font-weight: bold;
+          cursor: pointer;
+          font-size: 14px;
+
+          > .value {
+            display: inline-block;
+            padding: 7px 5px;
+            color: $black;
+          }
+
+          > .icon-container {
+            position: absolute;
+            top: 0;
+            right: 5px;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: $primary-color;
+            font-size: 1.2em;
+            z-index: 1;
+          }
+        }
+      }
+    }
+
+    .toggleViewButton {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      display: inline-flex;
+      flex-direction: row;
+      align-items: center;
+      border-radius: 3px;
+      text-transform: none;
+      margin: 0 5px 13px 5px;
+      padding: 0.3rem 0.5rem;
+
+      .icon-container {
+        font-size: 10px;
+        margin-left: 5px;
+        margin-top: 3px;
+      }
+    }
+  }
+
+
 
   & .button-row {
     display: flex;
     justify-content: flex-start;
     flex-wrap: wrap;
 
-    & > .ecocounter-button {
+    & > .eco-counter-button {
       padding: 0.3rem 0.5rem;
       border-radius: 3px;
       font-size: 1rem;
@@ -27,15 +143,33 @@
         margin-right: 0;
       }
 
-      &.ecocounter-button--active {
+      &.eco-counter-button--active {
         background-color: $primary-color;
         color: $white;
         pointer-events: none;
       }
 
-      &.ecocounter-button--small {
+      &.eco-counter-button--small {
         font-size: 0.8rem;
       }
+
+      &.eco-counter-button--disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+    }
+  }
+
+  &__date-picker {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #fff;
+    z-index: 1000;
+
+    .DayPickerKeyboardShortcuts_buttonReset {
+      display: none;
     }
   }
 }

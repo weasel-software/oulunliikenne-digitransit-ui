@@ -453,6 +453,8 @@
     "zones": "Tarifzonen"
   },
   "en": {
+    "1. time range": "1. time range",
+    "2. time range": "2. time range",
     "about-this-service": "About the service",
     "accessibility": "Accessibility",
     "accessibility-limited": "Wheelchair",
@@ -508,6 +510,8 @@
     "citybike_off": "Closed",
     "clear-selected-options": "Clear options",
     "close": "Close",
+    "close-comparison": "Close comparison",
+    "compare": "Compare",
     "condition": "Condition",
     "contact-information": "{contactName} contact details",
     "create-account": "Create {contactName} account",
@@ -1308,6 +1312,8 @@
     "zones": "Zonas tarifarias"
   },
   "fi": {
+    "1. time range": "1. ajanjakso",
+    "2. time range": "2. ajanjakso",
     "about-this-service": "Tietoja palvelusta",
     "accessibility": "Esteettömyys",
     "accessibility-limited": "Liikun pyörätuolilla",
@@ -1363,6 +1369,8 @@
     "citybike_off": "Suljettu",
     "clear-selected-options": "Tyhjennä valinnat",
     "close": "Sulje",
+    "close-comparison": "Sulje vertailu",
+    "compare": "Vertaile",
     "condition": "Keli",
     "contact-information": "{contactName}:n yhteystiedot",
     "create-account": "Luo {contactName} tunnus",
@@ -2441,6 +2449,8 @@
     "zones": "Billettsoner"
   },
   "sv": {
+    "1. time range": "1. tidsintervall",
+    "2. time range": "2. tidsintervall",
     "about-this-service": "Om tjänsten",
     "accessibility": "Tillgänglighet",
     "accessibility-limited": "Med rullstolen",
@@ -2496,6 +2506,8 @@
     "citybike_off": "Stängd",
     "clear-selected-options": "Töm dina val",
     "close": "Stäng",
+    "close-comparison": "Avslut",
+    "compare": "Jämför",
     "condition": "Förhållande",
     "contact-information": "{contactName} Kontaktuppgifter",
     "create-account": "Skapa {contactName} konto",

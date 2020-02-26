@@ -50,7 +50,7 @@ function MaintenanceVehicleRoutePopup(
         <FormattedMessage id="maintenance-job" defaultMessage="Maintenance job">
           {(...content) => `${content}:`}
         </FormattedMessage>
-        <ul>
+        <ul className="maintenance-vehicle-job-list">
           {getJobs(maintenanceVehicleRouteEvent).map(job => (
             <li key={`job-${job.jobId}-${job.date.unix()}`}>
               <FormattedMessage id={`maintenance-job-${job.jobId}`}>
