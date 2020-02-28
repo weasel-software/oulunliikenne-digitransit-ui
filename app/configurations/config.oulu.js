@@ -506,8 +506,8 @@ export default configMerger(walttiConfig, {
       tmsStations: false,
       roadConditions: false,
       fluencies: true,
-      maintenanceVehicles: true,
-      realtimeMaintenanceVehicles: true,
+      maintenanceVehicles: false,
+      realtimeMaintenanceVehicles: false,
     },
     BICYCLE: {
       disorders: true,
