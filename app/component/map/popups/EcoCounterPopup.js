@@ -190,10 +190,10 @@ class EcoCounterPopup extends React.Component {
     });
   };
 
-  getYears = (range = 10) => {
+  getYears = () => {
     const years = [];
 
-    for (let i = moment().year() - range; i <= moment().year(); i++) {
+    for (let i = moment().year(); i >= 2010; i--) {
       years.push(
         <option key={`_${i}`} value={i}>
           {i}
@@ -339,6 +339,7 @@ class EcoCounterPopup extends React.Component {
                       comparisonRange1,
                       comparisonRange2,
                     )}
+                    renderMonthElement={this.renderMonthElement}
                   />
                 );
               } else if (loading) {
