@@ -45,11 +45,13 @@ class EcoCounterContent extends React.Component {
     formatMessage: PropTypes.func.isRequired,
     availableUserTypes: PropTypes.array.isRequired,
     toggleView: PropTypes.func.isRequired,
+    renderMonthElement: PropTypes.func,
   };
 
   static defaultProps = {
     channel2: null,
     channel2Id: null,
+    renderMonthElement: null,
   };
 
   state = {
@@ -125,6 +127,7 @@ class EcoCounterContent extends React.Component {
       formatMessage,
       availableUserTypes,
       toggleView,
+      renderMonthElement,
     } = this.props;
     const { isDatePickerOpen } = this.state;
 
@@ -180,6 +183,7 @@ class EcoCounterContent extends React.Component {
                   this.setState({ isDatePickerOpen: false });
                 }}
                 numberOfMonths={1}
+                renderMonthElement={renderMonthElement}
               />
             </div>
           )}
