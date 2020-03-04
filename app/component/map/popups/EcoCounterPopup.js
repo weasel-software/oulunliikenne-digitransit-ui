@@ -190,6 +190,44 @@ class EcoCounterPopup extends React.Component {
     });
   };
 
+  getYears = (range = 10) => {
+    const years = [];
+
+    for (let i = moment().year() - range; i <= moment().year(); i++) {
+      years.push(
+        <option key={`_${i}`} value={i}>
+          {i}
+        </option>,
+      );
+    }
+
+    return years;
+  };
+
+  getMonths = () =>
+    moment.months().map((month, i) => (
+      <option key={month} value={i}>
+        {month}
+      </option>
+    ));
+
+  renderMonthElement = ({ month, onYearSelect, onMonthSelect }) => (
+    <div className="eco-counter-popup-month-element">
+      <select
+        value={month.month()}
+        onChange={e => onMonthSelect(month, parseInt(e.target.value, 10))}
+      >
+        {this.getMonths()}
+      </select>
+      <select
+        value={month.year()}
+        onChange={e => onYearSelect(month, e.target.value)}
+      >
+        {this.getYears()}
+      </select>
+    </div>
+  );
+
   render() {
     const selectedChannels = this.getChannelsByUserType();
     const { view, comparisonRange1, comparisonRange2 } = this.state;
@@ -276,6 +314,7 @@ class EcoCounterPopup extends React.Component {
                     formatMessage={this.context.intl.formatMessage}
                     availableUserTypes={this.availableUserTypes}
                     toggleView={this.toggleView}
+                    renderMonthElement={this.renderMonthElement}
                   />
                 ) : (
                   <EcoCounterComparisonContent
