@@ -8,6 +8,7 @@ import get from 'lodash/get';
 import LineChart from './LineChart';
 import Icon from './Icon';
 import EcoCounterComparisonDatesSelector from './EcoCounterComparisonDatesSelector';
+import combineEcoCounterCounts from '../util/combineEcoCounterCounts';
 
 export const WALKING = 1;
 export const CYCLING = 2;
@@ -168,6 +169,40 @@ class EcoCounterComparisonContent extends React.Component {
         borderColor: '#00AFFF',
         backgroundColor: 'rgba(0,0,0,0)',
       });
+
+      const range1ChannelTotals = combineEcoCounterCounts([
+        range1channel1Counts,
+        range1channel2Counts,
+      ]);
+
+      const range2ChannelTotals = combineEcoCounterCounts([
+        range2channel1Counts,
+        range2channel2Counts,
+      ]);
+
+      if (range1ChannelTotals && range1ChannelTotals.length > 0) {
+        range1datasets.push({
+          label: formatMessage({
+            id: 'eco-counter-total',
+          }),
+          data: range1ChannelTotals,
+          borderColor: '#FFC107',
+          backgroundColor: 'rgba(0,0,0,0)',
+          hidden: true,
+        });
+      }
+
+      if (range2ChannelTotals && range2ChannelTotals.length > 0) {
+        range2datasets.push({
+          label: formatMessage({
+            id: 'eco-counter-total',
+          }),
+          data: range2ChannelTotals,
+          borderColor: '#FFC107',
+          backgroundColor: 'rgba(0,0,0,0)',
+          hidden: true,
+        });
+      }
     }
 
     return (
