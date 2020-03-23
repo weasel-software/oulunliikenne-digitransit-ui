@@ -17,6 +17,11 @@ export default class EcoCounterComparisonDatesSelector extends React.Component {
     onRange2Change: PropTypes.func.isRequired,
     formatMessage: PropTypes.func.isRequired,
     toggleView: PropTypes.func.isRequired,
+    renderMonthElement: PropTypes.func,
+  };
+
+  static defaultProps = {
+    renderMonthElement: null,
   };
 
   state = {
@@ -65,7 +70,7 @@ export default class EcoCounterComparisonDatesSelector extends React.Component {
   };
 
   render() {
-    const { range1, range2 } = this.props;
+    const { range1, range2, renderMonthElement } = this.props;
     const { isDatePickerOpen, openDatePicker } = this.state;
     const [range1start, range1end] = range1;
     const [range2start, range2end] = range2;
@@ -111,6 +116,8 @@ export default class EcoCounterComparisonDatesSelector extends React.Component {
               <DayPickerSingleDateController
                 date={range1start}
                 onDateChange={this.onDateChange(RANGE1_START)}
+                numberOfMonths={1}
+                renderMonthElement={renderMonthElement}
               />
             </div>
             <div
@@ -119,9 +126,10 @@ export default class EcoCounterComparisonDatesSelector extends React.Component {
               })}
             >
               <DayPickerSingleDateController
-                key={range1end}
                 date={range1end}
                 onDateChange={this.onDateChange(RANGE1_END)}
+                numberOfMonths={1}
+                renderMonthElement={renderMonthElement}
               />
             </div>
           </div>
@@ -160,6 +168,7 @@ export default class EcoCounterComparisonDatesSelector extends React.Component {
                 date={range2start}
                 onDateChange={this.onDateChange(RANGE2_START)}
                 numberOfMonths={1}
+                renderMonthElement={renderMonthElement}
               />
             </div>
             <div
@@ -171,6 +180,7 @@ export default class EcoCounterComparisonDatesSelector extends React.Component {
                 date={range2end}
                 onDateChange={this.onDateChange(RANGE2_END)}
                 numberOfMonths={1}
+                renderMonthElement={renderMonthElement}
               />
             </div>
           </div>

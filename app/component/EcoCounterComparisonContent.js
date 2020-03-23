@@ -4,11 +4,11 @@ import Relay from 'react-relay/classic';
 import cx from 'classnames';
 import moment from 'moment';
 import get from 'lodash/get';
-import { DayPickerSingleDateController } from 'react-dates';
 
 import LineChart from './LineChart';
 import Icon from './Icon';
 import EcoCounterComparisonDatesSelector from './EcoCounterComparisonDatesSelector';
+import combineEcoCounterCounts from '../util/combineEcoCounterCounts';
 
 export const WALKING = 1;
 export const CYCLING = 2;
@@ -51,12 +51,14 @@ class EcoCounterComparisonContent extends React.Component {
     changeRange2: PropTypes.func.isRequired,
     toggleView: PropTypes.func.isRequired,
     allowedSteps: PropTypes.arrayOf(PropTypes.string),
+    renderMonthElement: PropTypes.func,
   };
 
   static defaultProps = {
     range1channel2: null,
     range2channel2: null,
     channel2Id: null,
+    renderMonthElement: null,
   };
 
   onTitleClick = () => {
@@ -108,6 +110,7 @@ class EcoCounterComparisonContent extends React.Component {
       changeRange1,
       changeRange2,
       allowedSteps,
+      renderMonthElement,
     } = this.props;
 
     const range1labels = get(range1channel1, 'siteData', []).map(data =>
@@ -166,6 +169,40 @@ class EcoCounterComparisonContent extends React.Component {
         borderColor: '#00AFFF',
         backgroundColor: 'rgba(0,0,0,0)',
       });
+
+      const range1ChannelTotals = combineEcoCounterCounts([
+        range1channel1Counts,
+        range1channel2Counts,
+      ]);
+
+      const range2ChannelTotals = combineEcoCounterCounts([
+        range2channel1Counts,
+        range2channel2Counts,
+      ]);
+
+      if (range1ChannelTotals && range1ChannelTotals.length > 0) {
+        range1datasets.push({
+          label: formatMessage({
+            id: 'eco-counter-total',
+          }),
+          data: range1ChannelTotals,
+          borderColor: '#FFC107',
+          backgroundColor: 'rgba(0,0,0,0)',
+          hidden: true,
+        });
+      }
+
+      if (range2ChannelTotals && range2ChannelTotals.length > 0) {
+        range2datasets.push({
+          label: formatMessage({
+            id: 'eco-counter-total',
+          }),
+          data: range2ChannelTotals,
+          borderColor: '#FFC107',
+          backgroundColor: 'rgba(0,0,0,0)',
+          hidden: true,
+        });
+      }
     }
 
     return (
@@ -174,16 +211,17 @@ class EcoCounterComparisonContent extends React.Component {
           range1={range1}
           range2={range2}
           onRange1Change={newRange => {
-            this.props.changeRange1(newRange);
+            changeRange1(newRange);
           }}
           onRange2Change={newRange => {
-            this.props.changeRange2(newRange);
+            changeRange2(newRange);
           }}
           onComparisonToggleClick={() => {
             console.log('comparison toggle clicked');
           }}
           formatMessage={formatMessage}
           toggleView={this.props.toggleView}
+          renderMonthElement={renderMonthElement}
         />
         <LineChart
           datasets={range1datasets}

@@ -9,6 +9,8 @@ import { DayPickerSingleDateController } from 'react-dates';
 import LineChart from './LineChart';
 import Icon from './Icon';
 
+import combineEcoCounterCounts from '../util/combineEcoCounterCounts';
+
 export const WALKING = 1;
 export const CYCLING = 2;
 const STEPS = {
@@ -45,11 +47,13 @@ class EcoCounterContent extends React.Component {
     formatMessage: PropTypes.func.isRequired,
     availableUserTypes: PropTypes.array.isRequired,
     toggleView: PropTypes.func.isRequired,
+    renderMonthElement: PropTypes.func,
   };
 
   static defaultProps = {
     channel2: null,
     channel2Id: null,
+    renderMonthElement: null,
   };
 
   state = {
@@ -125,6 +129,7 @@ class EcoCounterContent extends React.Component {
       formatMessage,
       availableUserTypes,
       toggleView,
+      renderMonthElement,
     } = this.props;
     const { isDatePickerOpen } = this.state;
 
@@ -147,8 +152,10 @@ class EcoCounterContent extends React.Component {
       },
     ];
 
+    let channel2Counts = [];
+
     if (channel2) {
-      const channel2Counts = get(channel2, 'siteData', []).map(
+      channel2Counts = get(channel2, 'siteData', []).map(
         ({ counts }) => (!counts ? 0 : counts),
       );
 
@@ -161,6 +168,24 @@ class EcoCounterContent extends React.Component {
         backgroundColor: 'rgba(0,0,0,0)',
       });
     }
+
+    const channelTotals = combineEcoCounterCounts([
+      channel1Counts,
+      channel2Counts,
+    ]);
+
+    if (channelTotals && channelTotals.length > 0) {
+      datasets.push({
+        label: formatMessage({
+          id: 'eco-counter-total',
+        }),
+        data: channelTotals,
+        borderColor: '#FFC107',
+        backgroundColor: 'rgba(0,0,0,0)',
+        hidden: true,
+      });
+    }
+
     return (
       <div className="eco-counter-content">
         <div className="eco-counter-content__title">
@@ -180,6 +205,7 @@ class EcoCounterContent extends React.Component {
                   this.setState({ isDatePickerOpen: false });
                 }}
                 numberOfMonths={1}
+                renderMonthElement={renderMonthElement}
               />
             </div>
           )}
