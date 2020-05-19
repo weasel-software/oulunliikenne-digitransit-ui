@@ -133,6 +133,7 @@ class EcoCounterComparisonContent extends React.Component {
         data: range1channel1Counts,
         borderColor: '#dc3545',
         backgroundColor: 'rgba(0,0,0,0)',
+        hidden: true,
       },
     ];
     const range2datasets = [
@@ -143,6 +144,7 @@ class EcoCounterComparisonContent extends React.Component {
         data: range2channel1Counts,
         borderColor: '#dc3545',
         backgroundColor: 'rgba(0,0,0,0)',
+        hidden: true,
       },
     ];
 
@@ -160,6 +162,7 @@ class EcoCounterComparisonContent extends React.Component {
         data: range1channel2Counts,
         borderColor: '#00AFFF',
         backgroundColor: 'rgba(0,0,0,0)',
+        hidden: true,
       });
       range2datasets.push({
         label: formatMessage({
@@ -168,6 +171,7 @@ class EcoCounterComparisonContent extends React.Component {
         data: range2channel2Counts,
         borderColor: '#00AFFF',
         backgroundColor: 'rgba(0,0,0,0)',
+        hidden: true,
       });
 
       const range1ChannelTotals = combineEcoCounterCounts([
@@ -188,7 +192,7 @@ class EcoCounterComparisonContent extends React.Component {
           data: range1ChannelTotals,
           borderColor: '#FFC107',
           backgroundColor: 'rgba(0,0,0,0)',
-          hidden: true,
+          hidden: false,
         });
       }
 
@@ -200,7 +204,7 @@ class EcoCounterComparisonContent extends React.Component {
           data: range2ChannelTotals,
           borderColor: '#FFC107',
           backgroundColor: 'rgba(0,0,0,0)',
-          hidden: true,
+          hidden: false,
         });
       }
     }
