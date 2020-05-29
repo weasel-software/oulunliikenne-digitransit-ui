@@ -8,7 +8,7 @@ import get from 'lodash/get';
 import LineChart from './LineChart';
 import Icon from './Icon';
 import EcoCounterComparisonDatesSelector from './EcoCounterComparisonDatesSelector';
-import combineEcoCounterCounts from '../util/combineEcoCounterCounts';
+import { combineEcoCounterCounts, csvExport } from '../util/ecoCounterUtils';
 
 export const WALKING = 1;
 export const CYCLING = 2;
@@ -78,6 +78,11 @@ class EcoCounterComparisonContent extends React.Component {
     return get(channel, 'direction', 5);
   };
 
+  getExportLabels = channel =>
+    get(channel, 'siteData', []).map(data =>
+      this.formatExportDateByStep(data.date),
+    );
+
   formatDateByStep = date => {
     const { step } = this.props;
     const m = moment(date);
@@ -89,6 +94,19 @@ class EcoCounterComparisonContent extends React.Component {
       return m.format('DD.MM.');
     }
     return m.format('MMM');
+  };
+
+  formatExportDateByStep = date => {
+    const { step } = this.props;
+    const m = moment(date);
+    if (step === STEPS.HOUR) {
+      return m.format('DD.MM.YYYY HH:mm');
+    } else if (step === STEPS.DAY) {
+      return m.format('DD.MM.YYYY');
+    } else if (step === STEPS.WEEK) {
+      return m.format('DD.MM.YYYY');
+    }
+    return m.format('MMM YYYY');
   };
 
   render() {
@@ -237,57 +255,87 @@ class EcoCounterComparisonContent extends React.Component {
           labels={range2labels}
           title="Test"
         />
-        <div className="button-row">
-          {availableUserTypes.includes(WALKING) && (
-            <EcoCounterButton
-              condition={userType === WALKING}
-              onClick={() => changeUserType(WALKING)}
-            >
-              <Icon img="icon-icon_walk" viewBox="0 0 25 25" />
-            </EcoCounterButton>
-          )}
-          {availableUserTypes.includes(CYCLING) && (
-            <EcoCounterButton
-              condition={userType === CYCLING}
-              onClick={() => changeUserType(CYCLING)}
-            >
-              <Icon img="icon-icon_bicycle-withoutBox" viewBox="0 0 25 25" />
-            </EcoCounterButton>
-          )}
-        </div>
-        <div className="button-row">
-          <EcoCounterButton
-            condition={step === STEPS.HOUR}
-            onClick={() => changeStep(STEPS.HOUR)}
-            disabled={!allowedSteps.includes(STEPS.HOUR)}
-            isSmall
-          >
-            {formatMessage({ id: 'hourly' })}
-          </EcoCounterButton>
-          <EcoCounterButton
-            condition={step === STEPS.DAY}
-            onClick={() => changeStep(STEPS.DAY)}
-            disabled={!allowedSteps.includes(STEPS.DAY)}
-            isSmall
-          >
-            {formatMessage({ id: 'daily' })}
-          </EcoCounterButton>
-          <EcoCounterButton
-            condition={step === STEPS.WEEK}
-            onClick={() => changeStep(STEPS.WEEK)}
-            disabled={!allowedSteps.includes(STEPS.WEEK)}
-            isSmall
-          >
-            {formatMessage({ id: 'weekly' })}
-          </EcoCounterButton>
-          <EcoCounterButton
-            condition={step === STEPS.MONTH}
-            onClick={() => changeStep(STEPS.MONTH)}
-            disabled={!allowedSteps.includes(STEPS.MONTH)}
-            isSmall
-          >
-            {formatMessage({ id: 'monthly' })}
-          </EcoCounterButton>
+        <div className="ecocounter-bottom">
+          <div className="button-rows">
+            <div className="button-row">
+              {availableUserTypes.includes(WALKING) && (
+                <EcoCounterButton
+                  condition={userType === WALKING}
+                  onClick={() => changeUserType(WALKING)}
+                >
+                  <Icon img="icon-icon_walk" viewBox="0 0 25 25" />
+                </EcoCounterButton>
+              )}
+              {availableUserTypes.includes(CYCLING) && (
+                <EcoCounterButton
+                  condition={userType === CYCLING}
+                  onClick={() => changeUserType(CYCLING)}
+                >
+                  <Icon img="icon-icon_bicycle-withoutBox" viewBox="0 0 25 25" />
+                </EcoCounterButton>
+              )}
+            </div>
+            <div className="button-row">
+              <EcoCounterButton
+                condition={step === STEPS.HOUR}
+                onClick={() => changeStep(STEPS.HOUR)}
+                disabled={!allowedSteps.includes(STEPS.HOUR)}
+                isSmall
+              >
+                {formatMessage({ id: 'hourly' })}
+              </EcoCounterButton>
+              <EcoCounterButton
+                condition={step === STEPS.DAY}
+                onClick={() => changeStep(STEPS.DAY)}
+                disabled={!allowedSteps.includes(STEPS.DAY)}
+                isSmall
+              >
+                {formatMessage({ id: 'daily' })}
+              </EcoCounterButton>
+              <EcoCounterButton
+                condition={step === STEPS.WEEK}
+                onClick={() => changeStep(STEPS.WEEK)}
+                disabled={!allowedSteps.includes(STEPS.WEEK)}
+                isSmall
+              >
+                {formatMessage({ id: 'weekly' })}
+              </EcoCounterButton>
+              <EcoCounterButton
+                condition={step === STEPS.MONTH}
+                onClick={() => changeStep(STEPS.MONTH)}
+                disabled={!allowedSteps.includes(STEPS.MONTH)}
+                isSmall
+              >
+                {formatMessage({ id: 'monthly' })}
+              </EcoCounterButton>
+            </div>
+            <div className="button-row">
+              <button
+                onClick={() =>
+                  csvExport(
+                    range1datasets,
+                    this.getExportLabels(range1channel1),
+                  )
+                }
+                className="eco-counter-button eco-counter-button--small export-button"
+              >
+                <Icon img="icon-icon_export" viewBox="0 0 384 512" />
+                {formatMessage({ id: 'export-time-range-1' })}
+              </button>
+              <button
+                onClick={() =>
+                  csvExport(
+                    range2datasets,
+                    this.getExportLabels(range2channel1),
+                  )
+                }
+                className="eco-counter-button eco-counter-button--small export-button"
+              >
+                <Icon img="icon-icon_export" viewBox="0 0 384 512" />
+                {formatMessage({ id: 'export-time-range-2' })}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     );

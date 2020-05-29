@@ -10,7 +10,7 @@ import { routerShape, locationShape } from 'react-router';
 import LineChart from './LineChart';
 import Icon from './Icon';
 
-import combineEcoCounterCounts from '../util/combineEcoCounterCounts';
+import { combineEcoCounterCounts } from '../util/ecoCounterUtils';
 
 export const WALKING = 1;
 export const CYCLING = 2;

@@ -1,9 +1,10 @@
 import React from 'react';
 import { routerShape, locationShape } from 'react-router';
+import { intlShape } from 'react-intl';
 import Modal from './Modal';
 import EcoCounterPopup from './map/popups/EcoCounterPopup';
 
-const EcoCounterComparisonModal = (props, { router, location }) => {
+const EcoCounterComparisonModal = (props, { router, location, intl }) => {
   const isOpen = location.state
     ? location.state.ecoCounterComparisonOpen
     : false;
@@ -16,7 +17,7 @@ const EcoCounterComparisonModal = (props, { router, location }) => {
     <Modal
       className="EcoCounterModal"
       open={isOpen}
-      title="Vertailu"
+      title={intl.formatMessage({ id: 'compare' })}
       toggleVisibility={toggleModal}
     >
       {isOpen && (
@@ -29,6 +30,7 @@ const EcoCounterComparisonModal = (props, { router, location }) => {
 EcoCounterComparisonModal.contextTypes = {
   router: routerShape.isRequired,
   location: locationShape.isRequired,
+  intl: intlShape.isRequired,
 };
 
 export default EcoCounterComparisonModal;
