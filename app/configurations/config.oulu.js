@@ -48,6 +48,7 @@ export default configMerger(walttiConfig, {
     ECO_COUNTERS_MAP: `${AWS_MAP_URL}/map/ecocounters/`,
     MAINTENANCE_VEHICLE_NON_MOTORISED_MAP: `${AWS_MAP_URL}/map/maintenanceroutesnonmotorised/`,
     MAINTENANCE_VEHICLE_MOTORISED_MAP: `${AWS_MAP_URL}/map/maintenanceroutesmotorised/`,
+    ROAD_SIGNS_MAP: `${AWS_MAP_URL}/map/roadsigns/`,
   },
 
   map: {
@@ -205,6 +206,11 @@ export default configMerger(walttiConfig, {
 
   realtimeMaintenanceVehicles: {
     showRealtimeMaintenanceVehicles: true,
+  },
+
+  roadSigns: {
+    showRoadSigns: true,
+    roadSignsMinZoom: 11,
   },
 
   feedIds: ['OULU'],
@@ -508,6 +514,7 @@ export default configMerger(walttiConfig, {
       fluencies: true,
       maintenanceVehicles: false,
       realtimeMaintenanceVehicles: false,
+      roadSigns: true,
     },
     BICYCLE: {
       disorders: true,

@@ -151,6 +151,7 @@ class SelectMapLayersDialog extends React.Component {
       ecoCounters,
       maintenanceVehicles,
       realtimeMaintenanceVehicles,
+      roadSigns,
     } = this.props.mapLayers;
     const { config, mapLayerOptions } = this.props;
 
@@ -303,6 +304,18 @@ class SelectMapLayersDialog extends React.Component {
                 defaultMessage="Disruptions"
                 onChange={e =>
                   this.updateSetting({ disorders: e.target.checked })
+                }
+              />
+            )}
+          {config.roadSigns &&
+            config.roadSigns.showRoadSigns &&
+            isMapLayerEnabled('roadSigns') && (
+              <InputField
+                checked={roadSigns}
+                labelId="road-signs"
+                defaultMessage="Road signs"
+                onChange={e =>
+                  this.updateSetting({ roadSigns: e.target.checked })
                 }
               />
             )}

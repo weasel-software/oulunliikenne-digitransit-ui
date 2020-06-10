@@ -47,7 +47,8 @@ export const isFeatureLayerEnabled = (
     featureType &&
     layerName !== 'disorders' &&
     layerName !== 'cameraStations' &&
-    layerName !== 'fluencies'
+    layerName !== 'fluencies' &&
+    layerName !== 'roadSigns'
   ) {
     if (layerName === 'stop' && feature.properties.stops) {
       return isFeatureLayerEnabled(feature, 'terminal', mapLayers, config);

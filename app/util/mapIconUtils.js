@@ -518,6 +518,32 @@ export function drawEcoCounterIcon(tile, geom, imageSize) {
   );
 }
 
+export function getRoadSignIconId(type, value) {
+  if (type === 'SPEEDLIMIT') {
+    const speedLimit = value;
+    return `icon-icon_speed-limit-${speedLimit}`;
+  }
+  if (type === 'WARNING') {
+    const warningType = value;
+    return `icon-icon_warning-${warningType}`;
+  }
+  return null;
+}
+
+export function drawSpeedLimitRoadSignIcon(tile, geom, imageSize, speedLimit) {
+  const iconId = getRoadSignIconId('SPEEDLIMIT', speedLimit);
+  getImageFromSpriteCache(iconId, imageSize, imageSize).then(image => {
+    drawIconImage(image, tile, geom, imageSize, imageSize);
+  });
+}
+
+export function drawWarningRoadSignIcon(tile, geom, imageSize, warningType) {
+  const iconId = getRoadSignIconId('WARNING', warningType);
+  getImageFromSpriteCache(iconId, imageSize, imageSize).then(image => {
+    drawIconImage(image, tile, geom, imageSize, imageSize);
+  });
+}
+
 export function drawCitybikeIcon(tile, geom, imageSize) {
   return getImageFromSpriteCache(
     'icon-icon_citybike',

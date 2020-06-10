@@ -17,6 +17,7 @@ import MaintenanceVehicleRoutes from './MaintenanceVehicleRoutes';
 import MaintenanceVehicleTail from './MaintenanceVehicleTail';
 import Fluencies from './Fluencies';
 import EcoCounters from './EcoCounters';
+import RoadSigns from './RoadSigns';
 
 class VectorTileLayerContainer extends React.Component {
   constructor(props, context) {
@@ -98,6 +99,10 @@ class VectorTileLayerContainer extends React.Component {
 
       if (config.ecoCounters && config.ecoCounters.showEcoCounters) {
         layers.push(EcoCounters);
+      }
+
+      if (config.roadSigns && config.roadSigns.showRoadSigns) {
+        layers.push(RoadSigns);
       }
     }
 

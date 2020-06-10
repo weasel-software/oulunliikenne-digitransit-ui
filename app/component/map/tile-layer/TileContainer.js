@@ -126,6 +126,11 @@ class TileContainer {
           this.coords.z >= config.ecoCounters.ecoCounterMinZoom
         ) {
           return isEnabled;
+        } else if (
+          layerName === 'roadSigns' &&
+          this.coords.z >= config.roadSigns.roadSignsMinZoom
+        ) {
+          return isEnabled;
         }
         return false;
       })

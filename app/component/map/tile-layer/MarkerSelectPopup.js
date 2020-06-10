@@ -17,6 +17,7 @@ import SelectRoadConditionRow from './SelectRoadConditionRow';
 import SelectFluencyRow from './SelectFluencyRow';
 import SelectMaintenanceVehicleRow from './SelectMaintenanceVehicleRow';
 import SelectMaintenanceVehicleRouteRow from './SelectMaintenanceVehicleRouteRow';
+import SelectRoadSignRow from './SelectRoadSignRow';
 import ComponentUsageExample from '../../ComponentUsageExample';
 import { options } from '../../ExampleData';
 import SelectEcoCounterRow from './SelectEcoCounterRow';
@@ -146,6 +147,14 @@ function MarkerSelectPopup(props) {
     } else if (option.layer === 'realtimeMaintenanceVehicles') {
       return (
         <SelectMaintenanceVehicleRow
+          {...option.feature.properties}
+          key={option.feature.properties.id}
+          selectRow={() => props.selectRow([option])}
+        />
+      );
+    } else if (option.layer === 'roadSigns') {
+      return (
+        <SelectRoadSignRow
           {...option.feature.properties}
           key={option.feature.properties.id}
           selectRow={() => props.selectRow([option])}

@@ -89,3 +89,23 @@
     color: lighten($gray, 20%);
   }
 }
+
+
+.roadsign-row {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 5px;
+  font-family: $font-family;
+  font-weight: $font-weight-book;
+  font-size: $font-size-small;
+  color: $gray;
+}
+.roadsign-row-label {
+  width: 100px;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+.roadsign-row-value {
+  flex-grow: 1;
+  flex-shrink: 1;
+}

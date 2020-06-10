@@ -658,6 +658,20 @@
                                 "defaultValue": null
                             },
                             {
+                                "name": "feeds",
+                                "description": "Only return routes with these feedIds",
+                                "type": {
+                                    "kind": "LIST",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "SCALAR",
+                                        "name": "String",
+                                        "ofType": null
+                                    }
+                                },
+                                "defaultValue": null
+                            },
+                            {
                                 "name": "name",
                                 "description": "Query routes by this name",
                                 "type": {
@@ -734,7 +748,22 @@
                     {
                         "name": "trips",
                         "description": "Get all trips",
-                        "args": [],
+                        "args": [
+                            {
+                                "name": "feeds",
+                                "description": "Only return trips with these feedIds",
+                                "type": {
+                                    "kind": "LIST",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "SCALAR",
+                                        "name": "String",
+                                        "ofType": null
+                                    }
+                                },
+                                "defaultValue": null
+                            }
+                        ],
                         "type": {
                             "kind": "LIST",
                             "name": null,
@@ -1133,6 +1162,42 @@
                                     }
                                 },
                                 "defaultValue": null
+                            },
+                            {
+                                "name": "route",
+                                "description": "Only return alerts affecting these routes",
+                                "type": {
+                                    "kind": "LIST",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "NON_NULL",
+                                        "name": null,
+                                        "ofType": {
+                                            "kind": "SCALAR",
+                                            "name": "String",
+                                            "ofType": null
+                                        }
+                                    }
+                                },
+                                "defaultValue": null
+                            },
+                            {
+                                "name": "stop",
+                                "description": "Only return alerts affecting these stops",
+                                "type": {
+                                    "kind": "LIST",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "NON_NULL",
+                                        "name": null,
+                                        "ofType": {
+                                            "kind": "SCALAR",
+                                            "name": "String",
+                                            "ofType": null
+                                        }
+                                    }
+                                },
+                                "defaultValue": null
                             }
                         ],
                         "type": {
@@ -1430,6 +1495,16 @@
                                 "type": {
                                     "kind": "SCALAR",
                                     "name": "Int",
+                                    "ofType": null
+                                },
+                                "defaultValue": null
+                            },
+                            {
+                                "name": "maxSlope",
+                                "description": "The maximum slope, up or downhill, that can be used in wheelchair accessible\nrouting. Value is between 0 and 1, and calculated by dividing change of\nelevation by change of distance. Default value: 0.0833333333333",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "Float",
                                     "ofType": null
                                 },
                                 "defaultValue": null
@@ -2608,6 +2683,247 @@
                         },
                         "isDeprecated": false,
                         "deprecationReason": null
+                    },
+                    {
+                        "name": "maintenanceVehicleRouteEventByGeometryId",
+                        "description": "Get a single route event based on its geometry ID, i.e. value of field 'geometryId'",
+                        "args": [
+                            {
+                                "name": "geometryId",
+                                "description": "",
+                                "type": {
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "SCALAR",
+                                        "name": "String",
+                                        "ofType": null
+                                    }
+                                },
+                                "defaultValue": null
+                            }
+                        ],
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "MaintenanceVehicleRouteEvent",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "maintenanceVehicleRouteEvents",
+                        "description": "Get route events for type from given time range, defaults to 1 day. Max time range 1 week.",
+                        "args": [
+                            {
+                                "name": "routeType",
+                                "description": "",
+                                "type": {
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "ENUM",
+                                        "name": "MaintenanceVehicleRouteEventType",
+                                        "ofType": null
+                                    }
+                                },
+                                "defaultValue": null
+                            },
+                            {
+                                "name": "begin",
+                                "description": "",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "GraphQLDateTime",
+                                    "ofType": null
+                                },
+                                "defaultValue": null
+                            },
+                            {
+                                "name": "end",
+                                "description": "",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "GraphQLDateTime",
+                                    "ofType": null
+                                },
+                                "defaultValue": null
+                            }
+                        ],
+                        "type": {
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "OBJECT",
+                                "name": "MaintenanceVehicleRouteEvent",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "maintenanceVehicleObservations",
+                        "description": "Get vehicle observations for contract ID from given time range, defaults to 1\nday. Max time range 1 week. Contract ID is expected to be either 1250 (ELY) or\n1255 (main bicycle/pedestrian paths in Oulu).",
+                        "args": [
+                            {
+                                "name": "contractId",
+                                "description": "",
+                                "type": {
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "SCALAR",
+                                        "name": "Int",
+                                        "ofType": null
+                                    }
+                                },
+                                "defaultValue": null
+                            },
+                            {
+                                "name": "begin",
+                                "description": "",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "GraphQLDateTime",
+                                    "ofType": null
+                                },
+                                "defaultValue": null
+                            },
+                            {
+                                "name": "end",
+                                "description": "",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "GraphQLDateTime",
+                                    "ofType": null
+                                },
+                                "defaultValue": null
+                            }
+                        ],
+                        "type": {
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "OBJECT",
+                                "name": "MaintenanceVehicleObservation",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "trafficFluencyFeature",
+                        "description": "Get a traffic fluency GeoJSON feature by its ID",
+                        "args": [
+                            {
+                                "name": "id",
+                                "description": "",
+                                "type": {
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "SCALAR",
+                                        "name": "String",
+                                        "ofType": null
+                                    }
+                                },
+                                "defaultValue": null
+                            }
+                        ],
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "TrafficFluencyFeature",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "trafficFluencyFeatureCollection",
+                        "description": "Get a collection of all traffic fluency GeoJSON features",
+                        "args": [
+                            {
+                                "name": "ids",
+                                "description": "",
+                                "type": {
+                                    "kind": "LIST",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "SCALAR",
+                                        "name": "String",
+                                        "ofType": null
+                                    }
+                                },
+                                "defaultValue": null
+                            }
+                        ],
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "TrafficFluencyFeatureCollection",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "variableRoadSigns",
+                        "description": "Get all variable road signs",
+                        "args": [
+                            {
+                                "name": "ids",
+                                "description": "",
+                                "type": {
+                                    "kind": "LIST",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "SCALAR",
+                                        "name": "String",
+                                        "ofType": null
+                                    }
+                                },
+                                "defaultValue": null
+                            }
+                        ],
+                        "type": {
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "OBJECT",
+                                "name": "VariableRoadSign",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "variableRoadSign",
+                        "description": "Get a single variable road sign based on its ID, i.e. value of field 'roadSignId'",
+                        "args": [
+                            {
+                                "name": "id",
+                                "description": "",
+                                "type": {
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "SCALAR",
+                                        "name": "String",
+                                        "ofType": null
+                                    }
+                                },
+                                "defaultValue": null
+                            }
+                        ],
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "VariableRoadSign",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
                     }
                 ],
                 "inputFields": null,
@@ -2779,6 +3095,11 @@
                     {
                         "kind": "OBJECT",
                         "name": "MaintenanceVehicleRouteEvent",
+                        "ofType": null
+                    },
+                    {
+                        "kind": "OBJECT",
+                        "name": "VariableRoadSign",
                         "ofType": null
                     }
                 ]
@@ -4728,6 +5049,11 @@
                     {
                         "kind": "OBJECT",
                         "name": "EcoCounterSite",
+                        "ofType": null
+                    },
+                    {
+                        "kind": "OBJECT",
+                        "name": "VariableRoadSign",
                         "ofType": null
                     }
                 ]
@@ -12237,9 +12563,42 @@
                         "deprecationReason": null
                     },
                     {
-                        "name": "previousRouteEvents",
-                        "description": "The previous route events for the same geometry, i.e. history of route events.\nThe result is limited to the previous 6 events.",
+                        "name": "geometryId",
+                        "description": "The route event geometry ID",
                         "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "previousRouteEvents",
+                        "description": "The previous route events for the same geometry, i.e. history of route events.\nDefaults to events during previous month limited to the latest 6.",
+                        "args": [
+                            {
+                                "name": "begin",
+                                "description": "",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "GraphQLDateTime",
+                                    "ofType": null
+                                },
+                                "defaultValue": null
+                            },
+                            {
+                                "name": "limit",
+                                "description": "",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "Int",
+                                    "ofType": null
+                                },
+                                "defaultValue": null
+                            }
+                        ],
                         "type": {
                             "kind": "LIST",
                             "name": null,
@@ -12301,6 +12660,737 @@
                 "inputFields": null,
                 "interfaces": null,
                 "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "MaintenanceVehicleObservation",
+                "description": "Maintenance vehicle observations represent coordinates of maintenance vehicles as they carry out jobs.",
+                "fields": [
+                    {
+                        "name": "vehicleNumber",
+                        "description": "ID of the maintenance vehicle",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "Int",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "vehicleType",
+                        "description": "Type of the maintenance vehicle",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "timestamp",
+                        "description": "The timestamp of the maintenance vehicle observation time in ISO-8601 format",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "GraphQLDateTime",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "contractId",
+                        "description": "The contract ID  of the maintenance vehicle observation",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Int",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "direction",
+                        "description": "The direction of the maintenance vehicle",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Int",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "jobIds",
+                        "description": "List of job IDs the maintenance vehicle is carrying out",
+                        "args": [],
+                        "type": {
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "Int",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "lat",
+                        "description": "Latitude of the maintenance vehicle (WGS 84)",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Float",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "lon",
+                        "description": "Longitude of the maintenance vehicle (WGS 84)",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Float",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "TrafficFluencyFeature",
+                "description": "Traffic fluency feature type",
+                "fields": [
+                    {
+                        "name": "type",
+                        "description": "The type of feature, i.e. Feature",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "geometry",
+                        "description": "The traffic fluency feature geometry as a GeoJSON geometry object",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "GeometryInterface",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "properties",
+                        "description": "The traffic fluency feature properties as a GeoJSON properties object",
+                        "args": [],
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "TrafficFluencyFeatureProperties",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "SCALAR",
+                "name": "GeometryInterface",
+                "description": null,
+                "fields": null,
+                "inputFields": null,
+                "interfaces": null,
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "TrafficFluencyFeatureProperties",
+                "description": "Traffic fluency feature properties type",
+                "fields": [
+                    {
+                        "name": "id",
+                        "description": "The ID of the traffic fluency feature",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "type",
+                        "description": "The type of the traffic fluency feature, either TpmKpi (Traffic Performance\nMonitoring) or TmsStation (Traffic Monitoring System)",
+                        "args": [],
+                        "type": {
+                            "kind": "ENUM",
+                            "name": "TrafficFluencySourceType",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "measuredTime",
+                        "description": "The timestamp when the traffic flow was calculated",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "GraphQLDateTime",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "trafficFlow",
+                        "description": "The current traffic flow",
+                        "args": [],
+                        "type": {
+                            "kind": "ENUM",
+                            "name": "TrafficFlow",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "name",
+                        "description": "The name of the traffic fluency feature",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "trafficDirection",
+                        "description": "The traffic direction, either 1 or 2",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Int",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "trafficDirectionName",
+                        "description": "The traffic direction name, i.e. name of the municipality the road is headed for ",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "speedLimit",
+                        "description": "The speed limit at the TMS station used to calculate traffic flow",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Int",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "averageSpeed",
+                        "description": "The average speed at the TMS station when traffic flow was calculated",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Int",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "detName",
+                        "description": "The detector name of the TPM data collection device",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "giveWayDelay",
+                        "description": "The give way delay registred by the TPM device when traffic flow was calculated",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Float",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "maxWaitCycles",
+                        "description": "The max wait cycles registred by the TPM device when traffic flow was calculated",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Float",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "ENUM",
+                "name": "TrafficFluencySourceType",
+                "description": "",
+                "fields": null,
+                "inputFields": null,
+                "interfaces": null,
+                "enumValues": [
+                    {
+                        "name": "TmsStation",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "TpmKpi",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "possibleTypes": null
+            },
+            {
+                "kind": "ENUM",
+                "name": "TrafficFlow",
+                "description": "",
+                "fields": null,
+                "inputFields": null,
+                "interfaces": null,
+                "enumValues": [
+                    {
+                        "name": "TRAFFIC_FLOW_UNKNOWN",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "TRAFFIC_FLOW_NORMAL",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "TRAFFIC_HEAVIER_THAN_NORMAL",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "TRAFFIC_MUCH_HEAVIER_THAN_NORMAL",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "TrafficFluencyFeatureCollection",
+                "description": "Traffic fluency feature collection type",
+                "fields": [
+                    {
+                        "name": "type",
+                        "description": "The type of collection, i.e. FeatureCollection",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "features",
+                        "description": "The traffic fluency features",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "LIST",
+                                "name": null,
+                                "ofType": {
+                                    "kind": "OBJECT",
+                                    "name": "TrafficFluencyFeature",
+                                    "ofType": null
+                                }
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "VariableRoadSign",
+                "description": "A type for variable road signs like speed limits and warning signs",
+                "fields": [
+                    {
+                        "name": "id",
+                        "description": "Global object ID provided by Relay. This value can be used to refetch this object using **node** query.",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "ID",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "roadSignId",
+                        "description": "ID of the road sign",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "type",
+                        "description": "The type of road sign",
+                        "args": [],
+                        "type": {
+                            "kind": "ENUM",
+                            "name": "VariableRoadSignType",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "direction",
+                        "description": "The road sign direction in relation to the road address",
+                        "args": [],
+                        "type": {
+                            "kind": "ENUM",
+                            "name": "VariableRoadSignDirection",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "carriageway",
+                        "description": "The road sign placement in relation to the carriageway",
+                        "args": [],
+                        "type": {
+                            "kind": "ENUM",
+                            "name": "VariableRoadSignPlacement",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "displayValue",
+                        "description": "The value displayed on the road sign, for SPEEDLIMIT signs it will be the\ncurrent speed limit, for WARNING signs it will be a numeric value representing\nthe type of warning",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "effectDate",
+                        "description": "The road sign information is in effect after this timestamp",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "GraphQLDateTime",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "cause",
+                        "description": "The cause of the road sign information",
+                        "args": [],
+                        "type": {
+                            "kind": "ENUM",
+                            "name": "VariableRoadSignCause",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "reliability",
+                        "description": "The reliability of the road sign display value information",
+                        "args": [],
+                        "type": {
+                            "kind": "ENUM",
+                            "name": "VariableRoadSignReliability",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "roadAddress",
+                        "description": "The road address formatted as 'road segment offset'",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "lat",
+                        "description": "Latitude of the place (WGS 84)",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Float",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "lon",
+                        "description": "Longitude of the place (WGS 84)",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Float",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [
+                    {
+                        "kind": "INTERFACE",
+                        "name": "Node",
+                        "ofType": null
+                    },
+                    {
+                        "kind": "INTERFACE",
+                        "name": "PlaceInterface",
+                        "ofType": null
+                    }
+                ],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "ENUM",
+                "name": "VariableRoadSignType",
+                "description": "",
+                "fields": null,
+                "inputFields": null,
+                "interfaces": null,
+                "enumValues": [
+                    {
+                        "name": "SPEEDLIMIT",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "WARNING",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "possibleTypes": null
+            },
+            {
+                "kind": "ENUM",
+                "name": "VariableRoadSignDirection",
+                "description": "",
+                "fields": null,
+                "inputFields": null,
+                "interfaces": null,
+                "enumValues": [
+                    {
+                        "name": "INCREASING",
+                        "description": "Increasing direction in relation to the road address",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "DECREASING",
+                        "description": "Decreasing direction in relation to the road address",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "possibleTypes": null
+            },
+            {
+                "kind": "ENUM",
+                "name": "VariableRoadSignPlacement",
+                "description": "",
+                "fields": null,
+                "inputFields": null,
+                "interfaces": null,
+                "enumValues": [
+                    {
+                        "name": "SINGLE",
+                        "description": "Single carriageway road",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "RIGHT",
+                        "description": "First carriageway on the right in the direction of the road number",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "LEFT",
+                        "description": "Second carriageway on the left in the direction of the road number",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "BETWEEN",
+                        "description": "Between the carriageways",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "possibleTypes": null
+            },
+            {
+                "kind": "ENUM",
+                "name": "VariableRoadSignCause",
+                "description": "",
+                "fields": null,
+                "inputFields": null,
+                "interfaces": null,
+                "enumValues": [
+                    {
+                        "name": "AUTO",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "MANUAL",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "possibleTypes": null
+            },
+            {
+                "kind": "ENUM",
+                "name": "VariableRoadSignReliability",
+                "description": "",
+                "fields": null,
+                "inputFields": null,
+                "interfaces": null,
+                "enumValues": [
+                    {
+                        "name": "NORMAL",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "DISCONNECTED",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "MALFUNCTION",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
                 "possibleTypes": null
             },
             {
@@ -13245,121 +14335,6 @@
                         "deprecationReason": null
                     }
                 ],
-                "possibleTypes": null
-            },
-            {
-                "kind": "OBJECT",
-                "name": "MaintenanceVehicleObservation",
-                "description": "Maintenance vehicle observations represent coordinates of maintenance vehicles as they carry out jobs.",
-                "fields": [
-                    {
-                        "name": "vehicleNumber",
-                        "description": "ID of the maintenance vehicle",
-                        "args": [],
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": null,
-                            "ofType": {
-                                "kind": "SCALAR",
-                                "name": "Int",
-                                "ofType": null
-                            }
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
-                        "name": "vehicleType",
-                        "description": "Type of the maintenance vehicle",
-                        "args": [],
-                        "type": {
-                            "kind": "SCALAR",
-                            "name": "String",
-                            "ofType": null
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
-                        "name": "timestamp",
-                        "description": "The timestamp of the maintenance vehicle observation time in ISO-8601 format",
-                        "args": [],
-                        "type": {
-                            "kind": "SCALAR",
-                            "name": "GraphQLDateTime",
-                            "ofType": null
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
-                        "name": "contractId",
-                        "description": "The contract ID  of the maintenance vehicle observation",
-                        "args": [],
-                        "type": {
-                            "kind": "SCALAR",
-                            "name": "Int",
-                            "ofType": null
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
-                        "name": "direction",
-                        "description": "The direction of the maintenance vehicle",
-                        "args": [],
-                        "type": {
-                            "kind": "SCALAR",
-                            "name": "Int",
-                            "ofType": null
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
-                        "name": "jobIds",
-                        "description": "List of job IDs the maintenance vehicle is carrying out",
-                        "args": [],
-                        "type": {
-                            "kind": "LIST",
-                            "name": null,
-                            "ofType": {
-                                "kind": "SCALAR",
-                                "name": "Int",
-                                "ofType": null
-                            }
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
-                        "name": "lat",
-                        "description": "Latitude of the maintenance vehicle (WGS 84)",
-                        "args": [],
-                        "type": {
-                            "kind": "SCALAR",
-                            "name": "Float",
-                            "ofType": null
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
-                        "name": "lon",
-                        "description": "Longitude of the maintenance vehicle (WGS 84)",
-                        "args": [],
-                        "type": {
-                            "kind": "SCALAR",
-                            "name": "Float",
-                            "ofType": null
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    }
-                ],
-                "inputFields": null,
-                "interfaces": [],
-                "enumValues": null,
                 "possibleTypes": null
             }
         ],
