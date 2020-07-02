@@ -90,3 +90,86 @@ export const MaintenanceJobPriorities = {
   1357: 7,
   0: 8,
 };
+
+export const BicycleRouteMainRegionalLines = {
+  MAIN: {
+    color: '#FF4B00',
+    dashed: false,
+  },
+  REGIONAL: {
+    color: '#0065FF',
+    dashed: false,
+  },
+  PLANNED_MAIN: {
+    color: '#FF4B00',
+    dashed: true,
+  },
+  PLANNED_REGIONAL: {
+    color: '#0065FF',
+    dashed: true,
+  },
+};
+
+export const BicycleRouteTypeLines = {
+  '2_WAY': {
+    color: '#FF06BE',
+    dashed: false,
+  },
+  SLOW_STREET: {
+    color: '#FFA000',
+    dashed: false,
+  },
+  BICYCLE_LANE: {
+    color: '#9F08E2',
+    dashed: false,
+  },
+  SHARED_SPACE: {
+    color: '#FFFF00',
+    dashed: false,
+  },
+  '4MW_SHARED': {
+    color: '#0065FF',
+    dashed: false,
+  },
+  '35MW_SHARED': {
+    color: '#00BEFF',
+    dashed: false,
+  },
+  ACCESS_ROAD: {
+    color: '#9E3100',
+    dashed: false,
+  },
+  WIDE_SHOULDER: {
+    color: '#42E200',
+    dashed: false,
+  },
+};
+
+export const BicycleRouteBaanaLines = {
+  PLANNED: {
+    color: '#191919',
+    dashed: true,
+  },
+  CURRENT: {
+    color: '#191919',
+    dashed: false,
+  },
+};
+
+export const BicycleRouteBrandLines = {
+  MAIN: {
+    color: '#FF06BE',
+    dashed: false,
+  },
+  PERIMETER: {
+    color: '#FFA000',
+    dashed: false,
+  },
+};
+
+export const BicycleRouteLines = {
+  ...BicycleRouteMainRegionalLines,
+  ...BicycleRouteTypeLines,
+  ...BicycleRouteBaanaLines,
+  ...BicycleRouteBrandLines,
+};

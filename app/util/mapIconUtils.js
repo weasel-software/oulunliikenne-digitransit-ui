@@ -628,3 +628,39 @@ export function drawAvailabilityValue(
   tile.ctx.textBaseline = 'middle';
   tile.ctx.fillText(value, x, y);
 }
+
+export function drawBicycleRoutePath(
+  tile,
+  points,
+  color = '#999999',
+  dashed = false,
+) {
+  const { lineCap, lineJoin } = tile.ctx;
+  tile.ctx.lineCap = dashed ? 'butt' : 'round';
+  tile.ctx.lineJoin = dashed ? 'butt' : 'round';
+  tile.ctx.globalCompositeOperation = 'destination-over';
+
+  tile.ctx.beginPath();
+
+  if (dashed === true) {
+    tile.ctx.setLineDash([10, 5]);
+  }
+
+  for (let i = 0, ref = points.length; i < ref; i++) {
+    if (i === 0) {
+      tile.ctx.moveTo(points[i].x / tile.ratio, points[i].y / tile.ratio);
+    } else {
+      tile.ctx.lineTo(points[i].x / tile.ratio, points[i].y / tile.ratio);
+    }
+  }
+
+  tile.ctx.strokeStyle = color;
+  tile.ctx.lineWidth = 3;
+  tile.ctx.stroke();
+
+  tile.ctx.lineCap = lineCap;
+  tile.ctx.lineJoin = lineJoin;
+  tile.ctx.globalCompositeOperation = 'source-over';
+  tile.ctx.closePath();
+  tile.ctx.setLineDash([]);
+}

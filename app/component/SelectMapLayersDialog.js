@@ -133,6 +133,14 @@ class SelectMapLayersDialog extends React.Component {
     this.updateSetting({ ticketSales });
   };
 
+  updateBicycleRoutesSetting = newSetting => {
+    const bicycleRoutes = {
+      ...this.props.mapLayers.bicycleRoutes,
+      ...newSetting,
+    };
+    this.updateSetting({ bicycleRoutes });
+  };
+
   renderContents = () => {
     const {
       citybike,
@@ -152,6 +160,11 @@ class SelectMapLayersDialog extends React.Component {
       maintenanceVehicles,
       realtimeMaintenanceVehicles,
       roadSigns,
+      bicycleRoutes,
+      bicycleRoutesMainRegional,
+      bicycleRouteTypes,
+      bicycleRoutesBaana,
+      bicycleRoutesBrand,
     } = this.props.mapLayers;
     const { config, mapLayerOptions } = this.props;
 
@@ -489,6 +502,72 @@ class SelectMapLayersDialog extends React.Component {
                 )}
             </React.Fragment>
           )}
+        {config.bicycleRoutes &&
+          config.bicycleRoutes.showBicycleRoutes &&
+          isMapLayerEnabled('bicycleRoutes') && (
+            <React.Fragment>
+              <InputField
+                checked={bicycleRoutes}
+                labelId="bicycleRoutes"
+                defaultMessage="Bicycle routes"
+                onChange={e =>
+                  this.updateSetting({ bicycleRoutes: e.target.checked })
+                }
+              />
+              {bicycleRoutes && (
+                <div className="bicycle-routes-container">
+                  {isMapLayerEnabled('bicycleRoutesBaana') && (
+                    <InputField
+                      checked={bicycleRoutesBaana}
+                      labelId="map-layer-bicycle-routes-baana"
+                      defaultMessage="Baana"
+                      onChange={e =>
+                        this.updateSetting({
+                          bicycleRoutesBaana: e.target.checked,
+                        })
+                      }
+                    />
+                  )}
+                  {isMapLayerEnabled('bicycleRoutesBrand') && (
+                    <InputField
+                      checked={bicycleRoutesBrand}
+                      labelId="map-layer-bicycle-routes-brand"
+                      defaultMessage="Brand routes"
+                      onChange={e =>
+                        this.updateSetting({
+                          bicycleRoutesBrand: e.target.checked,
+                        })
+                      }
+                    />
+                  )}
+                  {isMapLayerEnabled('bicycleRoutesMainRegional') && (
+                    <InputField
+                      checked={bicycleRoutesMainRegional}
+                      labelId="map-layer-bicycle-routes-main-regional"
+                      defaultMessage="Main and regional routes"
+                      onChange={e =>
+                        this.updateSetting({
+                          bicycleRoutesMainRegional: e.target.checked,
+                        })
+                      }
+                    />
+                  )}
+                  {isMapLayerEnabled('bicycleRouteTypes') && (
+                    <InputField
+                      checked={bicycleRouteTypes}
+                      labelId="map-layer-bicycle-route-types"
+                      defaultMessage="Route types"
+                      onChange={e =>
+                        this.updateSetting({
+                          bicycleRouteTypes: e.target.checked,
+                        })
+                      }
+                    />
+                  )}
+                </div>
+              )}
+            </React.Fragment>
+          )}
         <button
           className="standalone-btn dialog-clear-button"
           onClick={this.props.clearMapLayers}
@@ -571,6 +650,9 @@ const mapLayersConfigShape = PropTypes.shape({
   }),
   maintenanceVehicles: PropTypes.shape({
     showMaintenanceVehicles: PropTypes.bool,
+  }),
+  bicycleRoutes: PropTypes.shape({
+    showBicycleRoutes: PropTypes.bool,
   }),
   transportModes: PropTypes.shape({
     bus: transportModeConfigShape,

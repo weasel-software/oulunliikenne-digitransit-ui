@@ -18,6 +18,12 @@ import MaintenanceVehicleTail from './MaintenanceVehicleTail';
 import Fluencies from './Fluencies';
 import EcoCounters from './EcoCounters';
 import RoadSigns from './RoadSigns';
+import {
+  BicycleRoutesBaana,
+  BicycleRoutesBrand,
+  BicycleRoutesMainRegional,
+  BicycleRouteTypes,
+} from './BicycleRoutes';
 
 class VectorTileLayerContainer extends React.Component {
   constructor(props, context) {
@@ -103,6 +109,13 @@ class VectorTileLayerContainer extends React.Component {
 
       if (config.roadSigns && config.roadSigns.showRoadSigns) {
         layers.push(RoadSigns);
+      }
+
+      if (config.bicycleRoutes && config.bicycleRoutes.showBicycleRoutes) {
+        layers.push(BicycleRoutesMainRegional);
+        layers.push(BicycleRouteTypes);
+        layers.push(BicycleRoutesBaana);
+        layers.push(BicycleRoutesBrand);
       }
     }
 

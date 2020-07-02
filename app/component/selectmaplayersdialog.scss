@@ -36,7 +36,8 @@
     }
   }
 
-  &.bubble-dialog-content .maintenance-vehicles-container {
+  &.bubble-dialog-content .maintenance-vehicles-container,
+  &.bubble-dialog-content .bicycle-routes-container {
     background: #EEF1F3;
     border-top: 1px solid #D8D8D8;
     border-bottom: 1px solid #D8D8D8;

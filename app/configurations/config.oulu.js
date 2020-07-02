@@ -49,6 +49,10 @@ export default configMerger(walttiConfig, {
     MAINTENANCE_VEHICLE_NON_MOTORISED_MAP: `${AWS_MAP_URL}/map/maintenanceroutesnonmotorised/`,
     MAINTENANCE_VEHICLE_MOTORISED_MAP: `${AWS_MAP_URL}/map/maintenanceroutesmotorised/`,
     ROAD_SIGNS_MAP: `${AWS_MAP_URL}/map/roadsigns/`,
+    BICYCLE_ROUTES_MAIN_REGIONAL_MAP: `${AWS_MAP_URL}/map/bicycleroutesmainregional/`,
+    BICYCLE_ROUTE_TYPES_MAP: `${AWS_MAP_URL}/map/bicycleroutetypes/`,
+    BICYCLE_ROUTES_BAANA_MAP: `${AWS_MAP_URL}/map/bicycleroutesbaana/`,
+    BICYCLE_ROUTES_BRAND_MAP: `${AWS_MAP_URL}/map/bicycleroutesbrand/`,
   },
 
   map: {
@@ -211,6 +215,12 @@ export default configMerger(walttiConfig, {
   roadSigns: {
     showRoadSigns: true,
     roadSignsMinZoom: 11,
+  },
+
+  bicycleRoutes: {
+    showLines: true,
+    showBicycleRoutes: true,
+    bicycleRoutesMinZoom: 11,
   },
 
   feedIds: ['OULU'],
@@ -525,6 +535,11 @@ export default configMerger(walttiConfig, {
       ecoCounters: true,
       maintenanceVehicles: true,
       realtimeMaintenanceVehicles: true,
+      bicycleRoutes: true,
+      bicycleRoutesMainRegional: true,
+      bicycleRouteTypes: true,
+      bicycleRoutesBaana: true,
+      bicycleRoutesBrand: true,
     },
     WALK: {
       disorders: true,
