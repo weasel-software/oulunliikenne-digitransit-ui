@@ -508,7 +508,7 @@ class SelectMapLayersDialog extends React.Component {
             <React.Fragment>
               <InputField
                 checked={bicycleRoutes}
-                labelId="bicycleRoutes"
+                labelId="bicycle-routes"
                 defaultMessage="Bicycle routes"
                 onChange={e =>
                   this.updateSetting({ bicycleRoutes: e.target.checked })
@@ -519,7 +519,7 @@ class SelectMapLayersDialog extends React.Component {
                   {isMapLayerEnabled('bicycleRoutesBaana') && (
                     <InputField
                       checked={bicycleRoutesBaana}
-                      labelId="map-layer-bicycle-routes-baana"
+                      labelId="bicycle-routes-BAANA"
                       defaultMessage="Baana"
                       onChange={e =>
                         this.updateSetting({
@@ -531,7 +531,7 @@ class SelectMapLayersDialog extends React.Component {
                   {isMapLayerEnabled('bicycleRoutesBrand') && (
                     <InputField
                       checked={bicycleRoutesBrand}
-                      labelId="map-layer-bicycle-routes-brand"
+                      labelId="bicycle-routes-BRAND"
                       defaultMessage="Brand routes"
                       onChange={e =>
                         this.updateSetting({
@@ -543,7 +543,7 @@ class SelectMapLayersDialog extends React.Component {
                   {isMapLayerEnabled('bicycleRoutesMainRegional') && (
                     <InputField
                       checked={bicycleRoutesMainRegional}
-                      labelId="map-layer-bicycle-routes-main-regional"
+                      labelId="bicycle-routes-MAIN_REGIONAL"
                       defaultMessage="Main and regional routes"
                       onChange={e =>
                         this.updateSetting({
@@ -555,7 +555,7 @@ class SelectMapLayersDialog extends React.Component {
                   {isMapLayerEnabled('bicycleRouteTypes') && (
                     <InputField
                       checked={bicycleRouteTypes}
-                      labelId="map-layer-bicycle-route-types"
+                      labelId="bicycle-routes-TYPES"
                       defaultMessage="Route types"
                       onChange={e =>
                         this.updateSetting({

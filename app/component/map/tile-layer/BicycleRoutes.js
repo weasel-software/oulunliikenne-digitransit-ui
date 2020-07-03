@@ -13,6 +13,7 @@ class BicycleRoutes {
     this.imageSize = 20 * scaleRatio;
     this.mapURL = this.config.URL.BICYCLE_ROUTES_BRAND_MAP;
     this.layerKey = 'bicycleroutes';
+    this.typePrefix = '';
   }
 
   static getName = () => 'bicycleRoutes';
@@ -60,7 +61,10 @@ class BicycleRoutes {
           for (let i = 0, ref = sortedFeatures.length - 1; i <= ref; i++) {
             const feature = sortedFeatures[i];
             const geometryList = feature.loadGeometry();
-            const lineConfig = BicycleRouteLines[feature.properties.type];
+            const lineConfig =
+              BicycleRouteLines[
+                `${this.typePrefix}-${feature.properties.type}`
+              ];
 
             if (lineConfig) {
               geometryList.forEach(geom => {
@@ -94,6 +98,7 @@ export class BicycleRoutesBaana extends BicycleRoutes {
     super(tile, config);
     this.mapURL = this.config.URL.BICYCLE_ROUTES_BAANA_MAP;
     this.layerKey = 'bicycleroutesbaana';
+    this.typePrefix = 'BAANA';
     this.promise = this.getPromise();
   }
   static getName = () => 'bicycleRoutesBaana';
@@ -104,6 +109,7 @@ export class BicycleRoutesBrand extends BicycleRoutes {
     super(tile, config);
     this.mapURL = this.config.URL.BICYCLE_ROUTES_BRAND_MAP;
     this.layerKey = 'bicycleroutesbrand';
+    this.typePrefix = 'BRAND';
     this.promise = this.getPromise();
   }
   static getName = () => 'bicycleRoutesBrand';
@@ -114,6 +120,7 @@ export class BicycleRoutesMainRegional extends BicycleRoutes {
     super(tile, config);
     this.mapURL = this.config.URL.BICYCLE_ROUTES_MAIN_REGIONAL_MAP;
     this.layerKey = 'bicycleroutesmainregional';
+    this.typePrefix = 'MAIN_REGIONAL';
     this.promise = this.getPromise();
   }
   static getName = () => 'bicycleRoutesMainRegional';
@@ -124,6 +131,7 @@ export class BicycleRouteTypes extends BicycleRoutes {
     super(tile, config);
     this.mapURL = this.config.URL.BICYCLE_ROUTE_TYPES_MAP;
     this.layerKey = 'bicycleroutetypes';
+    this.typePrefix = 'TYPES';
     this.promise = this.getPromise();
   }
   static getName = () => 'bicycleRouteTypes';
