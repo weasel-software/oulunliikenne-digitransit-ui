@@ -48,7 +48,8 @@ export const isFeatureLayerEnabled = (
     layerName !== 'disorders' &&
     layerName !== 'cameraStations' &&
     layerName !== 'fluencies' &&
-    layerName !== 'roadSigns'
+    layerName !== 'roadSigns' &&
+    layerName.indexOf('bicycleRoute') === -1
   ) {
     if (layerName === 'stop' && feature.properties.stops) {
       return isFeatureLayerEnabled(feature, 'terminal', mapLayers, config);

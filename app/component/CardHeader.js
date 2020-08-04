@@ -16,6 +16,7 @@ const CardHeader = ({
   icon,
   icons,
   unlinked,
+  iconColor,
 }) => (
   <div className={cx('card-header', className)}>
     {children}
@@ -24,7 +25,7 @@ const CardHeader = ({
         className="left"
         style={{ fontSize: 32, paddingRight: 10, height: 32 }}
       >
-        <Icon img={icon} />
+        <Icon img={icon} color={iconColor} />
       </div>
     ) : null}
     {className === 'stop-page header' && (
@@ -83,6 +84,7 @@ CardHeader.propTypes = {
   icons: PropTypes.arrayOf(PropTypes.node),
   children: PropTypes.node,
   unlinked: PropTypes.bool,
+  iconColor: PropTypes.string,
 };
 
 export default CardHeader;

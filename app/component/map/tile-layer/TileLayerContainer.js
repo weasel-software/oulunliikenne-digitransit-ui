@@ -58,6 +58,7 @@ import MaintenanceVehicleTailStore, {
 import EcoCounterPopup from '../popups/EcoCounterPopup';
 import RoadSignPopup from '../popups/RoadSignPopup';
 import RoadSignRoute from '../../../route/RoadSignRoute';
+import BicycleRoutePopup from '../popups/BicycleRoutePopup';
 
 const initialState = {
   selectableTargets: undefined,
@@ -651,6 +652,17 @@ class TileLayerContainer extends GridLayer {
             route={new RoadSignRoute({ id })}
             renderLoading={this.renderLoadingPopup}
             renderFetched={data => <RoadSignPopup {...data} />}
+          />
+        );
+        break;
+      case 'bicycleRoutesBaana':
+      case 'bicycleRoutesBrand':
+      case 'bicycleRoutesMainRegional':
+      case 'bicycleRouteTypes':
+        contents = (
+          <BicycleRoutePopup
+            layer={selectableTarget.layer}
+            {...selectableTarget.feature.properties}
           />
         );
         break;
