@@ -1,26 +1,16 @@
 import * as React from 'react';
-import forEach from 'lodash/forEach';
 import { FormattedMessage } from 'react-intl';
 import connectToStores from 'fluxible-addons-react/connectToStores';
 import getContext from 'recompose/getContext';
 import PropTypes from 'prop-types';
 
-import { sortByPriority } from '../util/maintenanceUtils';
 import {
   BicycleRouteBaanaLines,
   BicycleRouteBrandLines,
   BicycleRouteMainRegionalLines,
   BicycleRouteTypeLines,
 } from '../constants';
-
-const getItems = (items) => {
-  return Object.keys(items).map(key => {
-    return {
-      type: key,
-      ...items[key],
-    };
-  });
-};
+import { getSortedItems } from '../util/bicycleRouteUtils';
 
 const BicycleRoutesLegend = ({ mapLayers }) => {
   if (!mapLayers || !mapLayers.bicycleRoutes) {
@@ -28,7 +18,7 @@ const BicycleRoutesLegend = ({ mapLayers }) => {
   }
 
   const renderItems = items =>
-    getItems(items).map(item => (
+    getSortedItems(items).map(item => (
       <li key={item.type}>
         <div
           className="bicycle-routes-legend__color"
@@ -41,24 +31,29 @@ const BicycleRoutesLegend = ({ mapLayers }) => {
       </li>
     ));
 
+  const renderSelectedLines = () => {
+    let allSelectedLines = {};
+    if (mapLayers.bicycleRoutesBaana) {
+      allSelectedLines = { ...allSelectedLines, ...BicycleRouteBaanaLines };
+    }
+    if (mapLayers.bicycleRoutesBrand) {
+      allSelectedLines = { ...allSelectedLines, ...BicycleRouteBrandLines };
+    }
+    if (mapLayers.bicycleRoutesMainRegional) {
+      allSelectedLines = {
+        ...allSelectedLines,
+        ...BicycleRouteMainRegionalLines,
+      };
+    }
+    if (mapLayers.bicycleRouteTypes) {
+      allSelectedLines = { ...allSelectedLines, ...BicycleRouteTypeLines };
+    }
+    return renderItems(allSelectedLines);
+  };
+
   return (
     <div className="bicycle-routes-legend">
-      <ul>
-        {[
-          ...(mapLayers.bicycleRoutesBaana
-            ? renderItems(BicycleRouteBaanaLines)
-            : []),
-          ...(mapLayers.bicycleRoutesBrand
-            ? renderItems(BicycleRouteBrandLines)
-            : []),
-          ...(mapLayers.bicycleRoutesMainRegional
-            ? renderItems(BicycleRouteMainRegionalLines)
-            : []),
-          ...(mapLayers.bicycleRouteTypes
-            ? renderItems(BicycleRouteTypeLines)
-            : []),
-        ]}
-      </ul>
+      <ul>{renderSelectedLines()}</ul>
     </div>
   );
 };
