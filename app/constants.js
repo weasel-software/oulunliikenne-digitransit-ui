@@ -173,3 +173,22 @@ export const BicycleRouteLines = {
   ...BicycleRouteBaanaLines,
   ...BicycleRouteBrandLines,
 };
+
+export const BicycleRouteLinePriorities = {
+  'BAANA-CURRENT': 1,
+  'BAANA-PLANNED': 2,
+  'MAIN_REGIONAL-MAIN': 3,
+  'MAIN_REGIONAL-PLANNED_MAIN': 4,
+  'MAIN_REGIONAL-REGIONAL': 5,
+  'MAIN_REGIONAL-PLANNED_REGIONAL': 6,
+  'BRAND-MAIN': 7,
+  'BRAND-PERIMETER': 8,
+  'TYPES-2_WAY': 9,
+  'TYPES-4MW_SHARED': 10,
+  'TYPES-35MW_SHARED': 11,
+  'TYPES-SLOW_STREET': 12,
+  'TYPES-BICYCLE_LANE': 13,
+  'TYPES-SHARED_SPACE': 14,
+  'TYPES-ACCESS_ROAD': 15,
+  'TYPES-WIDE_SHOULDER': 16,
+};
