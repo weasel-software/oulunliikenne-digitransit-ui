@@ -36,7 +36,7 @@ const MaintenanceVehicleLegend = ({ mapLayers }) => {
                 backgroundColor: MaintenanceJobColors[jobId],
               }}
             />
-            <FormattedMessage id={`maintenance-job-${jobId}`} />
+            <FormattedMessage id={`maintenance-job-legend-${jobId}`} />
           </li>
         ))}
       </ul>
