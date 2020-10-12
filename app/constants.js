@@ -77,6 +77,7 @@ export const MaintenanceJobColors = {
   1366: '#F347E8',
   2864: '#F347E8',
   1357: '#9073ac',
+  99901: '#9073ac',
   0: '#1C95F2',
 };
 
@@ -88,7 +89,8 @@ export const MaintenanceJobPriorities = {
   1366: 5,
   2864: 6,
   1357: 7,
-  0: 8,
+  99901: 8,
+  0: 9,
 };
 
 export const BicycleRouteMainRegionalLines = {
