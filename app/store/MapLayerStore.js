@@ -39,6 +39,12 @@ class MapLayerStore extends Store {
     fluencies: true,
     maintenanceVehicles: true,
     realtimeMaintenanceVehicles: true,
+    roadSigns: true,
+    bicycleRoutes: true,
+    bicycleRoutesMainRegional: true,
+    bicycleRouteTypes: true,
+    bicycleRoutesBaana: true,
+    bicycleRoutesBrand: true,
   };
 
   static handlers = {
@@ -197,6 +203,12 @@ export const mapLayerShape = PropTypes.shape({
   fluencies: PropTypes.bool,
   maintenanceVehicles: PropTypes.bool,
   realtimeMaintenanceVehicles: PropTypes.bool,
+  roadSigns: PropTypes.bool,
+  bicycleRoutes: PropTypes.bool,
+  bicycleRoutesMainRegional: PropTypes.bool,
+  bicycleRouteTypes: PropTypes.bool,
+  bicycleRoutesBaana: PropTypes.bool,
+  bicycleRoutesBrand: PropTypes.bool,
 });
 
 export default MapLayerStore;

@@ -2,6 +2,7 @@ import React from 'react';
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { shallow } from 'enzyme';
+import mockRouter from '../helpers/mock-router';
 import {
   Component as EcoCounterContent,
   EcoCounterButton,
@@ -27,6 +28,16 @@ describe('<EcoCounterContent />', () => {
     };
     const wrapper = shallow(
       <EcoCounterContent directionAvailable {...props} />,
+      {
+        context: {
+          router: mockRouter,
+          location: {
+            pathname: '',
+            search: '',
+            action: '',
+          },
+        },
+      },
     );
     expect(
       wrapper.find('Icon[img="icon-icon_bicycle-withoutBox"]'),
@@ -53,6 +64,16 @@ describe('<EcoCounterContent />', () => {
     };
     const wrapper = shallow(
       <EcoCounterContent directionAvailable {...props} />,
+      {
+        context: {
+          router: mockRouter,
+          location: {
+            pathname: '',
+            search: '',
+            action: '',
+          },
+        },
+      },
     );
     expect(wrapper.find('Icon[img="icon-icon_walk"]')).to.have.lengthOf(1);
     expect(wrapper.find('Icon')).to.have.lengthOf(2);
@@ -77,6 +98,16 @@ describe('<EcoCounterContent />', () => {
     };
     const wrapper = shallow(
       <EcoCounterContent directionAvailable {...props} />,
+      {
+        context: {
+          router: mockRouter,
+          location: {
+            pathname: '',
+            search: '',
+            action: '',
+          },
+        },
+      },
     );
     expect(wrapper.find('.button-row')).to.have.lengthOf(2);
     expect(wrapper.find(EcoCounterButton)).to.have.lengthOf(6);

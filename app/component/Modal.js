@@ -10,6 +10,11 @@ class Modal extends React.Component {
     open: PropTypes.bool,
     title: PropTypes.node,
     toggleVisibility: PropTypes.func.isRequired,
+    className: PropTypes.string,
+  };
+
+  static defaultProps = {
+    className: '',
   };
 
   stopClickPropagation = e => {
@@ -37,7 +42,12 @@ class Modal extends React.Component {
     /* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions, jsx-a11y/anchor-is-valid */
     return (
       <div
-        className={cx('modal-overlay', 'cursor-pointer', isActive)}
+        className={cx(
+          'modal-overlay',
+          'cursor-pointer',
+          isActive,
+          this.props.className,
+        )}
         style={overlayStyle}
         onClick={this.props.toggleVisibility}
       >

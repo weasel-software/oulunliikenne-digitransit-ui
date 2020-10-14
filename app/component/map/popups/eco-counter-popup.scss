@@ -3,3 +3,14 @@
   width: 90px;
   margin: 0 5px;
 }
+
+.card {
+  &.comparison {
+    border: 0;
+
+    .card {
+      padding: 0;
+      border: 0;
+    }
+  }
+}

@@ -5,6 +5,7 @@ import _uniq from 'lodash/uniq';
 import moment from 'moment';
 import get from 'lodash/get';
 import { intlShape } from 'react-intl';
+import { routerShape, locationShape } from 'react-router';
 
 import Card from '../../Card';
 import CardHeader from '../../CardHeader';
@@ -39,9 +40,21 @@ class EcoCounterPopup extends React.Component {
     domain: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     channels: PropTypes.array.isRequired,
+    isComparison: PropTypes.bool,
+    initialBegin: PropTypes.object,
+    initialEnd: PropTypes.object,
+    initialStep: PropTypes.string,
+  };
+  static defaultProps = {
+    isComparison: false,
+    initialBegin: undefined,
+    initialEnd: undefined,
+    initialStep: undefined,
   };
   static contextTypes = {
     intl: intlShape.isRequired,
+    router: routerShape.isRequired,
+    location: locationShape.isRequired,
   };
   static description = (
     <div>
@@ -60,16 +73,32 @@ class EcoCounterPopup extends React.Component {
   // eslint-disable-next-line react/sort-comp
   availableUserTypes = _uniq(this.props.channels.map(c => c.userType));
 
-  state = {
-    view: VIEW.SINGLE,
-    date: moment().subtract(1, 'day'),
-    userType: this.availableUserTypes.includes(CYCLING)
-      ? CYCLING
-      : this.availableUserTypes[0],
-    step: STEPS.HOUR,
-    comparisonRange1: [moment().subtract(1, 'day'), moment()],
-    comparisonRange2: [moment().subtract(1, 'day'), moment()],
-  };
+  constructor(props, context) {
+    super(props, context);
+
+    // eslint-disable-next-line no-underscore-dangle
+    const hasInitialBegin = props.initialBegin && props.initialBegin._isValid;
+    const initialBegin = hasInitialBegin
+      ? props.initialBegin
+      : moment().subtract(1, 'day');
+
+    // eslint-disable-next-line no-underscore-dangle
+    const hasInitialEnd = props.initialEnd && props.initialEnd._isValid;
+    const initialEnd = hasInitialEnd ? props.initialEnd : moment();
+
+    const initialStep = props.initialStep || STEPS.HOUR;
+
+    this.state = {
+      view: props.isComparison ? VIEW.COMPARISON : VIEW.SINGLE,
+      date: initialBegin,
+      userType: this.availableUserTypes.includes(CYCLING)
+        ? CYCLING
+        : this.availableUserTypes[0],
+      step: initialStep,
+      comparisonRange1: [initialBegin, initialEnd],
+      comparisonRange2: [initialBegin, initialEnd],
+    };
+  }
 
   getRange1Begin = () => this.state.comparisonRange1[0];
   getRange1End = () => this.state.comparisonRange1[1];
@@ -157,6 +186,26 @@ class EcoCounterPopup extends React.Component {
     this.setState({
       step,
       view: newView,
+    });
+  };
+
+  openComparison = event => {
+    event.preventDefault();
+    const { router, location } = this.context;
+    router.push({
+      ...location,
+      state: {
+        ...location.state,
+        ecoCounterComparisonOpen: true,
+        ecoCounterProps: {
+          channels: this.props.channels,
+          domain: this.props.domain,
+          name: this.props.name,
+          initialBegin: this.getBegin(),
+          initialEnd: this.getEnd(),
+          initialStep: this.state.step,
+        },
+      },
     });
   };
 
@@ -280,7 +329,7 @@ class EcoCounterPopup extends React.Component {
     }
 
     return (
-      <div className="card">
+      <div className={`card ${view}`}>
         <Card className="padding-small">
           <CardHeader
             name={this.context.intl.formatMessage({
@@ -315,6 +364,7 @@ class EcoCounterPopup extends React.Component {
                     availableUserTypes={this.availableUserTypes}
                     toggleView={this.toggleView}
                     renderMonthElement={this.renderMonthElement}
+                    openComparison={this.openComparison}
                   />
                 ) : (
                   <EcoCounterComparisonContent

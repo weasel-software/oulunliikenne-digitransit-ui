@@ -74,10 +74,11 @@ export const MaintenanceJobColors = {
   1367: '#ff5600',
   1368: '#ff5600',
   1369: '#ff5600',
-  1366: '#FFC107',
-  2864: '#FFC107',
+  1366: '#F347E8',
+  2864: '#F347E8',
   1357: '#9073ac',
-  0: '#28A745',
+  99901: '#9073ac',
+  0: '#1C95F2',
 };
 
 export const MaintenanceJobPriorities = {
@@ -88,5 +89,108 @@ export const MaintenanceJobPriorities = {
   1366: 5,
   2864: 6,
   1357: 7,
-  0: 8,
+  99901: 8,
+  0: 9,
+};
+
+export const BicycleRouteMainRegionalLines = {
+  'MAIN_REGIONAL-MAIN': {
+    color: '#FF4B00',
+    dashed: false,
+  },
+  'MAIN_REGIONAL-REGIONAL': {
+    color: '#0065FF',
+    dashed: false,
+  },
+  'MAIN_REGIONAL-PLANNED_MAIN': {
+    color: '#FF4B00',
+    dashed: true,
+  },
+  'MAIN_REGIONAL-PLANNED_REGIONAL': {
+    color: '#0065FF',
+    dashed: true,
+  },
+};
+
+export const BicycleRouteTypeLines = {
+  'TYPES-2_WAY': {
+    color: '#FF06BE',
+    dashed: false,
+  },
+  'TYPES-SLOW_STREET': {
+    color: '#FFA000',
+    dashed: false,
+  },
+  'TYPES-BICYCLE_LANE': {
+    color: '#9F08E2',
+    dashed: false,
+  },
+  'TYPES-SHARED_SPACE': {
+    color: '#FFFF00',
+    dashed: false,
+  },
+  'TYPES-4MW_SHARED': {
+    color: '#0065FF',
+    dashed: false,
+  },
+  'TYPES-35MW_SHARED': {
+    color: '#00BEFF',
+    dashed: false,
+  },
+  'TYPES-ACCESS_ROAD': {
+    color: '#9E3100',
+    dashed: false,
+  },
+  'TYPES-WIDE_SHOULDER': {
+    color: '#42E200',
+    dashed: false,
+  },
+};
+
+export const BicycleRouteBaanaLines = {
+  'BAANA-PLANNED': {
+    color: '#191919',
+    dashed: true,
+  },
+  'BAANA-CURRENT': {
+    color: '#191919',
+    dashed: false,
+  },
+};
+
+export const BicycleRouteBrandLines = {
+  'BRAND-MAIN': {
+    color: '#FF06BE',
+    dashed: false,
+  },
+  'BRAND-PERIMETER': {
+    color: '#FFA000',
+    dashed: false,
+  },
+};
+
+export const BicycleRouteLines = {
+  ...BicycleRouteMainRegionalLines,
+  ...BicycleRouteTypeLines,
+  ...BicycleRouteBaanaLines,
+  ...BicycleRouteBrandLines,
+};
+
+export const BicycleRouteLinePriorities = {
+  'BAANA-CURRENT': 1,
+  'BAANA-PLANNED': 2,
+  'BRAND-MAIN': 3,
+  'BRAND-PERIMETER': 4,
+  'MAIN_REGIONAL-MAIN': 5,
+  'MAIN_REGIONAL-PLANNED_MAIN': 6,
+  'MAIN_REGIONAL-REGIONAL': 7,
+  'MAIN_REGIONAL-PLANNED_REGIONAL': 8,
+  'TYPES-2_WAY': 9,
+  'TYPES-4MW_SHARED': 10,
+  'TYPES-35MW_SHARED': 11,
+  'TYPES-SLOW_STREET': 12,
+  'TYPES-BICYCLE_LANE': 13,
+  'TYPES-SHARED_SPACE': 14,
+  'TYPES-ACCESS_ROAD': 15,
+  'TYPES-WIDE_SHOULDER': 16,
 };

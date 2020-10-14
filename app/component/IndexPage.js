@@ -41,6 +41,7 @@ import { updateMapLayersMode } from '../action/MapLayerActions';
 import { clearDepartures } from '../action/RealtimeDeparturesActions';
 import IntroPopup from './IntroPopup';
 import MaintenanceVehicleLegend from './MaintenanceVehicleLegend';
+import BicycleRoutesLegend from './BicycleRoutesLegend';
 
 const debug = d('IndexPage.js');
 
@@ -290,6 +291,7 @@ class IndexPage extends React.Component {
           )}
         />
         <MaintenanceVehicleLegend />
+        <BicycleRoutesLegend />
         {(this.props.showSpinner && <OverlayWithSpinner />) || null}
         {!footerOptions.hidden && (
           <div id="page-footer-container">

@@ -12,6 +12,7 @@ import DesktopView from './DesktopView';
 import HSLAdformTrackingPixel from './HSLAdformTrackingPixel';
 import ErrorBoundary from './ErrorBoundary';
 import { DesktopOrMobile } from '../util/withBreakpoint';
+import EcoCounterComparisonModal from './EcoCounterComparisonModal';
 
 class TopLevel extends React.Component {
   static propTypes = {
@@ -142,6 +143,7 @@ class TopLevel extends React.Component {
         <ToastContainer
           autoClose={get(this, 'context.config.tosterMessage.autoClose', 5000)}
         />
+        <EcoCounterComparisonModal />
         {this.trackingPixel}
       </Fragment>
     );

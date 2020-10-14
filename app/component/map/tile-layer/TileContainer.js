@@ -26,6 +26,7 @@ class TileContainer {
       config.fluencies.fluenciesMinZoom,
       config.ecoCounters.ecoCounterMinZoom,
       config.maintenanceVehicles.maintenanceVehiclesMinZoom,
+      config.bicycleRoutes.bicycleRoutesMinZoon,
     );
 
     this.coords = coords;
@@ -126,6 +127,39 @@ class TileContainer {
           this.coords.z >= config.ecoCounters.ecoCounterMinZoom
         ) {
           return isEnabled;
+        } else if (
+          layerName === 'roadSigns' &&
+          this.coords.z >= config.roadSigns.roadSignsMinZoom
+        ) {
+          return isEnabled;
+        } else if (
+          layerName === 'bicycleRoutesMainRegional' &&
+          this.coords.z >= config.bicycleRoutes.bicycleRoutesMinZoom
+        ) {
+          return (
+            isEnabled && isLayerEnabled('bicycleRoutes', this.props.mapLayers)
+          );
+        } else if (
+          layerName === 'bicycleRouteTypes' &&
+          this.coords.z >= config.bicycleRoutes.bicycleRoutesMinZoom
+        ) {
+          return (
+            isEnabled && isLayerEnabled('bicycleRoutes', this.props.mapLayers)
+          );
+        } else if (
+          layerName === 'bicycleRoutesBaana' &&
+          this.coords.z >= config.bicycleRoutes.bicycleRoutesMinZoom
+        ) {
+          return (
+            isEnabled && isLayerEnabled('bicycleRoutes', this.props.mapLayers)
+          );
+        } else if (
+          layerName === 'bicycleRoutesBrand' &&
+          this.coords.z >= config.bicycleRoutes.bicycleRoutesMinZoom
+        ) {
+          return (
+            isEnabled && isLayerEnabled('bicycleRoutes', this.props.mapLayers)
+          );
         }
         return false;
       })

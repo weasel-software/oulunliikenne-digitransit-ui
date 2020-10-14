@@ -185,10 +185,6 @@ export default class EcoCounterComparisonDatesSelector extends React.Component {
             </div>
           </div>
         </div>
-        <button className="toggleViewButton" onClick={this.props.toggleView}>
-          {this.props.formatMessage({ id: 'close-comparison' })}
-          <Icon img="icon-icon_close" viewBox="0 0 25 25" />
-        </button>
       </div>
     );
   }

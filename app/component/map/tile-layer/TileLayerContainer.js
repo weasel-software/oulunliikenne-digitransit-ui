@@ -56,6 +56,9 @@ import MaintenanceVehicleTailStore, {
   maintenanceVehicleTailShape,
 } from '../../../store/MaintenanceVehicleTailStore';
 import EcoCounterPopup from '../popups/EcoCounterPopup';
+import RoadSignPopup from '../popups/RoadSignPopup';
+import RoadSignRoute from '../../../route/RoadSignRoute';
+import BicycleRoutePopup from '../popups/BicycleRoutePopup';
 
 const initialState = {
   selectableTargets: undefined,
@@ -276,6 +279,18 @@ class TileLayerContainer extends GridLayer {
         const jobId = get(target, 'feature.properties.jobId');
 
         return layer !== 'maintenanceVehicles' || jobId !== 0;
+      });
+
+      // Filter out roadSigns without any display value
+      selectableTargetsFiltered = selectableTargetsFiltered.filter(target => {
+        const layer = get(target, 'layer');
+        const type = get(target, 'feature.properties.type');
+        const value = get(target, 'feature.properties.displayValue');
+        const isValidSpeedLimit =
+          type === 'SPEEDLIMIT' && value !== 'null' && !!value;
+        const isValidWarning =
+          type === 'WARNING' && value !== 'null' && !!value;
+        return layer !== 'roadSigns' || isValidSpeedLimit || isValidWarning;
       });
 
       // Get targets with the shortest distance for each layer
@@ -627,6 +642,29 @@ class TileLayerContainer extends GridLayer {
       case 'fluencies':
         id = get(selectableTarget, 'feature.properties.id');
         contents = <FluencyPopup {...selectableTarget.feature.properties} />;
+        break;
+      case 'roadSigns':
+        id = get(selectableTarget, 'feature.properties.id');
+        contents = (
+          <Relay.RootContainer
+            Component={RoadSignPopup}
+            forceFetch
+            route={new RoadSignRoute({ id })}
+            renderLoading={this.renderLoadingPopup}
+            renderFetched={data => <RoadSignPopup {...data} />}
+          />
+        );
+        break;
+      case 'bicycleRoutesBaana':
+      case 'bicycleRoutesBrand':
+      case 'bicycleRoutesMainRegional':
+      case 'bicycleRouteTypes':
+        contents = (
+          <BicycleRoutePopup
+            layer={selectableTarget.layer}
+            {...selectableTarget.feature.properties}
+          />
+        );
         break;
     }
 

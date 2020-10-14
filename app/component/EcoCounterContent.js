@@ -5,11 +5,12 @@ import cx from 'classnames';
 import moment from 'moment';
 import get from 'lodash/get';
 import { DayPickerSingleDateController } from 'react-dates';
+import { routerShape, locationShape } from 'react-router';
 
 import LineChart from './LineChart';
 import Icon from './Icon';
 
-import combineEcoCounterCounts from '../util/combineEcoCounterCounts';
+import { combineEcoCounterCounts } from '../util/ecoCounterUtils';
 
 export const WALKING = 1;
 export const CYCLING = 2;
@@ -48,6 +49,12 @@ class EcoCounterContent extends React.Component {
     availableUserTypes: PropTypes.array.isRequired,
     toggleView: PropTypes.func.isRequired,
     renderMonthElement: PropTypes.func,
+    openComparison: PropTypes.func,
+  };
+
+  static contextTypes = {
+    router: routerShape.isRequired,
+    location: locationShape.isRequired,
   };
 
   static defaultProps = {
@@ -128,7 +135,7 @@ class EcoCounterContent extends React.Component {
       step,
       formatMessage,
       availableUserTypes,
-      toggleView,
+      openComparison,
       renderMonthElement,
     } = this.props;
     const { isDatePickerOpen } = this.state;
@@ -191,7 +198,7 @@ class EcoCounterContent extends React.Component {
         <div className="eco-counter-content__title">
           <h5>
             <button onClick={this.onTitleClick}>{this.getTitle()}</button>
-            <button onClick={toggleView}>
+            <button onClick={openComparison}>
               {formatMessage({ id: 'compare' })}
               <Icon img="icon-icon_arrow-collapse--right" viewBox="0 0 25 25" />
             </button>

@@ -129,8 +129,10 @@
     display: flex;
     justify-content: flex-start;
     flex-wrap: wrap;
+    position: relative;
 
-    & > .eco-counter-button {
+    & > .eco-counter-button,
+    & > .eco-counter-export-buttons .eco-counter-button {
       padding: 0.3rem 0.5rem;
       border-radius: 3px;
       font-size: 1rem;
@@ -157,6 +159,18 @@
         opacity: 0.4;
         cursor: not-allowed;
         pointer-events: none;
+      }
+    }
+
+    .export-button {
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      margin-bottom: 0;
+
+      .icon-container {
+        display: flex;
+        margin-right: 5px;
       }
     }
   }

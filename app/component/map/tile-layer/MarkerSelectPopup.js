@@ -17,12 +17,14 @@ import SelectRoadConditionRow from './SelectRoadConditionRow';
 import SelectFluencyRow from './SelectFluencyRow';
 import SelectMaintenanceVehicleRow from './SelectMaintenanceVehicleRow';
 import SelectMaintenanceVehicleRouteRow from './SelectMaintenanceVehicleRouteRow';
+import SelectRoadSignRow from './SelectRoadSignRow';
+import SelectBicycleRouteRow from './SelectBicycleRouteRow';
 import ComponentUsageExample from '../../ComponentUsageExample';
 import { options } from '../../ExampleData';
 import SelectEcoCounterRow from './SelectEcoCounterRow';
 
 function MarkerSelectPopup(props) {
-  const rows = props.options.map(option => {
+  const rows = props.options.map((option, index) => {
     if (option.layer === 'stop' && option.feature.properties.stops) {
       return (
         <SelectTerminalRow
@@ -148,6 +150,23 @@ function MarkerSelectPopup(props) {
         <SelectMaintenanceVehicleRow
           {...option.feature.properties}
           key={option.feature.properties.id}
+          selectRow={() => props.selectRow([option])}
+        />
+      );
+    } else if (option.layer === 'roadSigns') {
+      return (
+        <SelectRoadSignRow
+          {...option.feature.properties}
+          key={option.feature.properties.id}
+          selectRow={() => props.selectRow([option])}
+        />
+      );
+    } else if (option.layer.indexOf('bicycleRoute') === 0) {
+      return (
+        <SelectBicycleRouteRow
+          layerName={option.layer}
+          {...option.feature.properties}
+          key={`${option.feature.properties.type}-${index}`} // eslint-disable-line react/no-array-index-key
           selectRow={() => props.selectRow([option])}
         />
       );
