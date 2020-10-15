@@ -1,6 +1,5 @@
 import { VectorTile } from '@mapbox/vector-tile';
 import get from 'lodash/get';
-import sortBy from 'lodash/sortBy';
 import uniqBy from 'lodash/uniqBy';
 import Protobuf from 'pbf';
 import { drawMaintenanceVehicleRoutePath } from '../../../util/mapIconUtils';
@@ -71,7 +70,14 @@ class MaintenanceVehicleRoutes {
           // Sort the features by their ID first and those without will be put last.
           // Then filter only unique features by their hash value, removing any features
           // without an ID if there is one with that same hash.
-          const sortedFeatures = sortBy(tileLayerFeatures, 'properties.id');
+          const sortedFeatures = tileLayerFeatures.sort((feat1, feat2) => {
+            if (feat1.properties.id && !feat2.properties.id) {
+              return -1;
+            } else if (!feat1.properties.id && feat2.properties.id) {
+              return 1;
+            }
+            return 0;
+          });
           const uniqueFeatures = uniqBy(sortedFeatures, 'properties.hash');
 
           // Draw the remaining features onto the map.
