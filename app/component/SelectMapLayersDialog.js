@@ -162,7 +162,6 @@ class SelectMapLayersDialog extends React.Component {
       roadSigns,
       bicycleRoutes,
       bicycleRoutesMainRegional,
-      bicycleRouteTypes,
       bicycleRoutesBaana,
       bicycleRoutesBrand,
     } = this.props.mapLayers;
@@ -552,7 +551,10 @@ class SelectMapLayersDialog extends React.Component {
                       }
                     />
                   )}
-                  {isMapLayerEnabled('bicycleRouteTypes') && (
+                  {/* Bicycle route types currently not needed.
+                  Commented out instead of deleted in case
+                  we need to re-enable them in the future. */}
+                  {/* {isMapLayerEnabled('bicycleRouteTypes') && (
                     <InputField
                       checked={bicycleRouteTypes}
                       labelId="bicycle-routes-TYPES"
@@ -563,7 +565,7 @@ class SelectMapLayersDialog extends React.Component {
                         })
                       }
                     />
-                  )}
+                  )} */}
                 </div>
               )}
             </React.Fragment>

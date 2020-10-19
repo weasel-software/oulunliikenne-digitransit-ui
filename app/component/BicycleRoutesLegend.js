@@ -8,7 +8,6 @@ import {
   BicycleRouteBaanaLines,
   BicycleRouteBrandLines,
   BicycleRouteMainRegionalLines,
-  BicycleRouteTypeLines,
 } from '../constants';
 import { getSortedItems } from '../util/bicycleRouteUtils';
 
@@ -45,9 +44,12 @@ const BicycleRoutesLegend = ({ mapLayers }) => {
         ...BicycleRouteMainRegionalLines,
       };
     }
-    if (mapLayers.bicycleRouteTypes) {
-      allSelectedLines = { ...allSelectedLines, ...BicycleRouteTypeLines };
-    }
+    // Bicycle route types currently not needed.
+    // Commented out instead of deleted in case
+    // we need to re-enable them in the future.
+    // if (mapLayers.bicycleRouteTypes) {
+    //   allSelectedLines = { ...allSelectedLines, ...BicycleRouteTypeLines };
+    // }
     return renderItems(allSelectedLines);
   };
 

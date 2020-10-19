@@ -42,8 +42,25 @@ class LineChart extends React.Component {
     const currData = omitCircularReferences(this.props.datasets);
     const prevData = omitCircularReferences(prevProps.datasets);
 
+    // persist selections between updates based on order of datasets
+    const persistDatasetSelection = (chartInstance, incomingDataset) => {
+      if (chartInstance.data.datasets && chartInstance.data.datasets.length) {
+        for (let i = 0; i < chartInstance.data.datasets.length; i++) {
+          const isVisible = chartInstance.isDatasetVisible(i);
+          const incomingDatasetEntry = incomingDataset[i];
+          if (incomingDatasetEntry) {
+            incomingDatasetEntry.hidden = !isVisible;
+          }
+        }
+      }
+      return incomingDataset;
+    };
+
     if (this.props.datasets && this.chart && !isEqual(currData, prevData)) {
-      this.chart.data.datasets = this.props.datasets;
+      this.chart.data.datasets = persistDatasetSelection(
+        this.chart,
+        this.props.datasets,
+      );
       this.chart.data.labels = this.props.labels;
       this.chart.update();
     }
