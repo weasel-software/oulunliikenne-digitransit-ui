@@ -156,6 +156,7 @@ class EcoCounterContent extends React.Component {
         data: channel1Counts,
         borderColor: '#dc3545',
         backgroundColor: 'rgba(0,0,0,0)',
+        hidden: true,
       },
     ];
 
@@ -173,6 +174,7 @@ class EcoCounterContent extends React.Component {
         data: channel2Counts,
         borderColor: '#00AFFF',
         backgroundColor: 'rgba(0,0,0,0)',
+        hidden: true,
       });
     }
 
@@ -189,7 +191,7 @@ class EcoCounterContent extends React.Component {
         data: channelTotals,
         borderColor: '#FFC107',
         backgroundColor: 'rgba(0,0,0,0)',
-        hidden: true,
+        hidden: false,
       });
     }
 
