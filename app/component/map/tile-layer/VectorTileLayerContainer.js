@@ -22,7 +22,6 @@ import {
   BicycleRoutesBaana,
   BicycleRoutesBrand,
   BicycleRoutesMainRegional,
-  BicycleRouteTypes,
 } from './BicycleRoutes';
 
 class VectorTileLayerContainer extends React.Component {
@@ -113,7 +112,10 @@ class VectorTileLayerContainer extends React.Component {
 
       if (config.bicycleRoutes && config.bicycleRoutes.showBicycleRoutes) {
         layers.push(BicycleRoutesMainRegional);
-        layers.push(BicycleRouteTypes);
+        // Bicycle route types currently not needed.
+        // Commented out instead of deleted in case
+        // we need to re-enable them in the future.
+        // layers.push(BicycleRouteTypes);
         layers.push(BicycleRoutesBaana);
         layers.push(BicycleRoutesBrand);
       }
