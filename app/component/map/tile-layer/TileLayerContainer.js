@@ -273,12 +273,20 @@ class TileLayerContainer extends GridLayer {
         ].join('_'),
       );
 
-      // Filter out all maintenance vehicle route layers that has jobId as 0
+      // Filter out all maintenance vehicle route layers that have jobId 0
       selectableTargetsFiltered = selectableTargetsFiltered.filter(target => {
         const layer = get(target, 'layer');
         const jobId = get(target, 'feature.properties.jobId');
 
         return layer !== 'maintenanceVehicles' || jobId !== 0;
+      });
+
+      // Filter out all road inspection vehicle route layers that have jobId 0
+      selectableTargetsFiltered = selectableTargetsFiltered.filter(target => {
+        const layer = get(target, 'layer');
+        const jobId = get(target, 'feature.properties.jobId');
+
+        return layer !== 'roadInspectionVehicles' || jobId !== 0;
       });
 
       // Filter out roadSigns without any display value
@@ -625,6 +633,7 @@ class TileLayerContainer extends GridLayer {
           />
         );
         break;
+      case 'roadInspectionVehicles':
       case 'maintenanceVehicles':
         popupOptions.maxWidth = 360;
 
