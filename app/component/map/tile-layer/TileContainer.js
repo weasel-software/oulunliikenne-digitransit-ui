@@ -118,6 +118,12 @@ class TileContainer {
         ) {
           return isEnabled;
         } else if (
+          layerName === 'roadInspectionVehicles' &&
+          this.coords.z >=
+            config.roadInspectionVehicles.roadInspectionVehiclesMinZoom
+        ) {
+          return isEnabled;
+        } else if (
           layerName === 'fluencies' &&
           this.coords.z >= config.fluencies.fluenciesMinZoom
         ) {

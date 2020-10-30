@@ -98,7 +98,7 @@ class MapWithTrackingStateHandler extends React.Component {
     const { mapLayers, location, config } = this.props;
 
     if (
-      mapLayers.maintenanceVehicles &&
+      (mapLayers.maintenanceVehicles || mapLayers.roadInspectionVehicles) &&
       mapLayers.realtimeMaintenanceVehicles
     ) {
       const mode = getStreetMode(location, config);
@@ -136,12 +136,15 @@ class MapWithTrackingStateHandler extends React.Component {
     if (
       newProps.mapLayers.maintenanceVehicles !==
         this.props.mapLayers.maintenanceVehicles ||
+      newProps.mapLayers.roadInspectionVehicles !==
+        this.props.mapLayers.roadInspectionVehicles ||
       newProps.mapLayers.realtimeMaintenanceVehicles !==
         this.props.mapLayers.realtimeMaintenanceVehicles ||
       newMode !== mode
     ) {
       this.setMaintenanceRealtimeClient(
-        newProps.mapLayers.maintenanceVehicles &&
+        (newProps.mapLayers.maintenanceVehicles ||
+          newProps.mapLayers.roadInspectionVehicles) &&
           newProps.mapLayers.realtimeMaintenanceVehicles,
         newMode,
       );
@@ -320,7 +323,7 @@ class MapWithTrackingStateHandler extends React.Component {
     }
 
     if (
-      mapLayers.maintenanceVehicles &&
+      (mapLayers.maintenanceVehicles || mapLayers.roadInspectionVehicles) &&
       mapLayers.realtimeMaintenanceVehicles
     ) {
       leafletObjs.push(

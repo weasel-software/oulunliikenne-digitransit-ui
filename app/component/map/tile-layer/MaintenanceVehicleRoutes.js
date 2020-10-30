@@ -1,14 +1,15 @@
 import { VectorTile } from '@mapbox/vector-tile';
 import get from 'lodash/get';
-import uniqBy from 'lodash/uniqBy';
 import Protobuf from 'pbf';
 import { drawMaintenanceVehicleRoutePath } from '../../../util/mapIconUtils';
 import { isBrowser } from '../../../util/browser';
 import { MaintenanceJobColors, StreetMode } from '../../../constants';
 import { getStreetMode } from '../../../util/modeUtils';
+import { getTileLayerFeaturesToRender } from '../../../util/maintenanceUtils';
 
 class MaintenanceVehicleRoutes {
   constructor(tile, config, layers, layerOptions, location) {
+    this.onlyInspectionJob = false;
     this.tile = tile;
     this.config = config;
     this.timeRange = get(layerOptions, 'maintenanceVehicles.timeRange');
@@ -44,6 +45,7 @@ class MaintenanceVehicleRoutes {
           }
           return res.arrayBuffer();
         },
+        // eslint-disable-next-line
         err => console.log(err),
       )
       .then(buf => {
@@ -62,23 +64,19 @@ class MaintenanceVehicleRoutes {
           for (let j = 0, ll = vt.layers[layerKey].length - 1; j <= ll; j++) {
             const feature = vt.layers[layerKey].feature(j);
             const { timestamp } = feature.properties;
-            if (timestamp >= selectedTimeRange) {
+            if (!this.onlyInspectionJob) {
+              if (timestamp >= selectedTimeRange) {
+                tileLayerFeatures.push(feature);
+              }
+            } else {
               tileLayerFeatures.push(feature);
             }
           }
 
-          // Sort the features by their ID first and those without will be put last.
-          // Then filter only unique features by their hash value, removing any features
-          // without an ID if there is one with that same hash.
-          const sortedFeatures = tileLayerFeatures.sort((feat1, feat2) => {
-            if (feat1.properties.id && !feat2.properties.id) {
-              return -1;
-            } else if (!feat1.properties.id && feat2.properties.id) {
-              return 1;
-            }
-            return 0;
-          });
-          const uniqueFeatures = uniqBy(sortedFeatures, 'properties.hash');
+          const uniqueFeatures = getTileLayerFeaturesToRender(
+            tileLayerFeatures,
+            this.onlyInspectionJob,
+          );
 
           // Draw the remaining features onto the map.
           for (let i = 0, ref = uniqueFeatures.length - 1; i <= ref; i++) {
@@ -108,6 +106,14 @@ class MaintenanceVehicleRoutes {
         }
       });
   };
+}
+
+export class RoadInspectionVehicleRoutes extends MaintenanceVehicleRoutes {
+  constructor(tile, config, layers, layerOptions, location) {
+    super(tile, config, layers, layerOptions, location);
+    this.onlyInspectionJob = true;
+  }
+  static getName = () => 'roadInspectionVehicles';
 }
 
 export default MaintenanceVehicleRoutes;

@@ -212,6 +212,12 @@ export default configMerger(walttiConfig, {
     showRealtimeMaintenanceVehicles: true,
   },
 
+  roadInspectionVehicles: {
+    showLines: true,
+    showRoadInspectionVehicles: true,
+    roadInspectionVehiclesMinZoom: 7,
+  },
+
   roadSigns: {
     showRoadSigns: true,
     roadSignsMinZoom: 11,
@@ -524,6 +530,7 @@ export default configMerger(walttiConfig, {
       fluencies: true,
       maintenanceVehicles: false,
       realtimeMaintenanceVehicles: false,
+      roadInspectionVehicles: false,
       roadSigns: true,
     },
     BICYCLE: {
@@ -535,6 +542,7 @@ export default configMerger(walttiConfig, {
       ecoCounters: true,
       maintenanceVehicles: true,
       realtimeMaintenanceVehicles: true,
+      roadInspectionVehicles: false,
       bicycleRoutes: true,
       bicycleRoutesMainRegional: true,
       bicycleRouteTypes: true,

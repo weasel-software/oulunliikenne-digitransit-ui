@@ -78,8 +78,25 @@ export const MaintenanceJobColors = {
   2864: '#F347E8',
   1357: '#9073ac',
   99901: '#9073ac',
-  0: '#1C95F2',
+  99902: '#FFFF0A',
+  0: '#1C95F2', // basic geometry
 };
+
+export const RoadInspectionJobId = 99902;
+export const OtherMaintenanceJobIds = [
+  1370,
+  1367,
+  1368,
+  1369,
+  1366,
+  2864,
+  1357,
+  99901,
+];
+
+// Several jobIds can be grouped to one job, this array contains
+// the ids that map to correct colors in the map legend (do not use elsewhere).
+export const MaintenanceJobLegendIds = [1370, 1369, 1366, 1357, 0];
 
 export const MaintenanceJobPriorities = {
   1370: 1,
@@ -90,7 +107,8 @@ export const MaintenanceJobPriorities = {
   2864: 6,
   1357: 7,
   99901: 8,
-  0: 9,
+  99902: 9,
+  0: 10,
 };
 
 export const BicycleRouteMainRegionalLines = {
