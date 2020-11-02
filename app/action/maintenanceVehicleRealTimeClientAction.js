@@ -1,5 +1,7 @@
 import ceil from 'lodash/ceil';
 import chunk from 'lodash/chunk';
+import { isBrowser } from '../util/browser';
+import { MaintenanceVehicleAllowedInactivitySeconds } from '../constants';
 
 const AWS = require('aws-sdk');
 const iot = require('aws-iot-device-sdk');
@@ -11,6 +13,19 @@ function getTopic(type) {
   const routeType = type || '+';
 
   return `/hfp/v1/harja/${routeType}/+`;
+}
+
+const timer = {
+  id: '',
+};
+
+function clearInactiveVehicles(actionContext) {
+  // make sure there is only one interval ticking away
+  clearInterval(timer.id);
+  const id = setInterval(() => {
+    actionContext.dispatch('MaintenanceVehicleRealTimeClientInactive');
+  }, MaintenanceVehicleAllowedInactivitySeconds * 1000);
+  timer.id = id;
 }
 
 export function parseMessage(topic, message, actionContext) {
@@ -70,6 +85,10 @@ export function startRealTimeClient(actionContext, originalOptions, done) {
         // A single SUBSCRIBE request is limited a maximum of eight subscriptions. So we need to subscribe in chunks of max 8
         const topicsChunkList = chunk(topics, 8);
         topicsChunkList.forEach(topicsChunk => client.subscribe(topicsChunk));
+        // Start method to periodically clear inactive vehicles
+        if (isBrowser) {
+          clearInactiveVehicles(actionContext);
+        }
       });
 
       // client.on('error', e => console.log(e));
@@ -99,6 +118,7 @@ export function updateTopic(actionContext, options, done) {
 }
 
 export function stopRealTimeClient(actionContext, client, done) {
+  clearInterval(timer.id); // Stop method that periodically clears inactive vehicles
   client.end();
   actionContext.dispatch('MaintenanceVehicleRealTimeClientStopped');
   done();

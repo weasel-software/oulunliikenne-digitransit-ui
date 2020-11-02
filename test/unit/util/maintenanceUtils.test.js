@@ -1,9 +1,12 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 
-import { getTileLayerFeaturesToRender } from '../../../app/util/maintenanceUtils';
 import { BrushingJobIds, RoadInspectionJobId } from '../../../app/constants';
 import { MockTileLayers } from '../test-data/mockTileLayers';
+import {
+  getTileLayerFeaturesToRender,
+  clearStaleMaintenanceVehicles,
+} from '../../../app/util/maintenanceUtils';
 
 describe('maintenanceUtils', () => {
   describe('getTileLayerFeaturesToRender', () => {
@@ -108,6 +111,44 @@ describe('maintenanceUtils', () => {
       it('must not contain duplicate hashes', () => {
         const res = getTileLayerFeaturesToRender(opts);
         expect(hasDuplicateHashes(res)).to.eq(false);
+      });
+    });
+  });
+  describe('clearStaleMaintenanceVehicles', () => {
+    const nyt = Math.floor(Date.now() / 1000);
+    const vehicles = {
+      727: {
+        id: 727,
+        timestamp: nyt,
+      },
+      728: {
+        id: 728,
+        timestamp: nyt - 10,
+      },
+      729: {
+        id: 729,
+        timestamp: nyt - 400,
+      },
+      730: {
+        id: 730,
+        timestamp: nyt - 3,
+      },
+    };
+    it('clears vehicles older than constants.MaintenanceVehicleAllowedInactivitySeconds', () => {
+      const res = clearStaleMaintenanceVehicles(vehicles);
+      expect(res).to.deep.equal({
+        727: {
+          id: 727,
+          timestamp: nyt,
+        },
+        728: {
+          id: 728,
+          timestamp: nyt - 10,
+        },
+        730: {
+          id: 730,
+          timestamp: nyt - 3,
+        },
       });
     });
   });

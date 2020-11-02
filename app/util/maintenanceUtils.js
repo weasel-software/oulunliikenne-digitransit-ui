@@ -3,6 +3,7 @@ import {
   RoadInspectionJobId,
   NonInspectionMaintenanceJobIds,
   BrushingJobIds,
+  MaintenanceVehicleAllowedInactivitySeconds,
 } from '../constants';
 
 // eslint-disable-next-line import/prefer-default-export
@@ -91,4 +92,17 @@ export const getTileLayerFeaturesToRender = ({
     }
     return 0;
   });
+};
+
+export const clearStaleMaintenanceVehicles = vehicles => {
+  const onlyCurrentVehicles = {};
+  Object.values(vehicles).forEach(v => {
+    if (
+      v.timestamp >=
+      Date.now() / 1000 - MaintenanceVehicleAllowedInactivitySeconds
+    ) {
+      onlyCurrentVehicles[v.id] = v;
+    }
+  });
+  return onlyCurrentVehicles;
 };
