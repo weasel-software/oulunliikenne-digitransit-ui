@@ -290,8 +290,10 @@ class IndexPage extends React.Component {
             </React.Fragment>
           )}
         />
-        <MaintenanceVehicleLegend />
-        <BicycleRoutesLegend />
+        <div className="map-legend-container">
+          <MaintenanceVehicleLegend />
+          <BicycleRoutesLegend />
+        </div>
         {(this.props.showSpinner && <OverlayWithSpinner />) || null}
         {!footerOptions.hidden && (
           <div id="page-footer-container">

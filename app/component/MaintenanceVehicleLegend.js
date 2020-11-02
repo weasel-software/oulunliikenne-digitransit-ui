@@ -8,7 +8,7 @@ import { MaintenanceJobColors, MaintenanceJobLegendIds } from '../constants';
 
 const MaintenanceVehicleLegend = ({ mapLayers }) => {
   if (!mapLayers || !mapLayers.maintenanceVehicles) {
-    return <div className="maintenance-vehicle-legend" />;
+    return null;
   }
 
   return (

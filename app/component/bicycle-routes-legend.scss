@@ -1,14 +1,10 @@
 .bicycle-routes-legend {
-  position: absolute;
-  bottom: 16px;
-  right: 30px;
-  z-index: index($zindex, footer);
   padding: $border-radius-bigger;
   padding-bottom: 0;
   overflow: hidden;
   background: $white;
   border-radius: $border-radius-bigger;
-  max-width: 450px;
+  margin-top: 4px;
 
   &--hidden {
     display: none;
