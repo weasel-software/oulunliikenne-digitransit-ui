@@ -205,6 +205,7 @@ export default configMerger(walttiConfig, {
       720: 'maintenance-vehicle-time-range-12h',
       1440: 'maintenance-vehicle-time-range-1d',
       4320: 'maintenance-vehicle-time-range-3d',
+      43200: 'maintenance-vehicle-time-range-30d',
     },
   },
 
@@ -556,6 +557,7 @@ export default configMerger(walttiConfig, {
       ecoCounters: true,
       maintenanceVehicles: true,
       realtimeMaintenanceVehicles: true,
+      roadInspectionVehicles: false,
       // tmsStations: false,
       // citybike: true, NOTE: taken from transportModes.citybike.availableForSelection
     },

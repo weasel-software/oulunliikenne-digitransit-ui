@@ -6,6 +6,7 @@ class MapLayerOptionsStore extends Store {
   static defaultMapLayerOptions = {
     maintenanceVehicles: {
       timeRange: 1440, // 1d
+      brushingFor30days: false,
     },
   };
 

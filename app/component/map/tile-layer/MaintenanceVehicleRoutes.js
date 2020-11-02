@@ -13,6 +13,10 @@ class MaintenanceVehicleRoutes {
     this.tile = tile;
     this.config = config;
     this.timeRange = get(layerOptions, 'maintenanceVehicles.timeRange');
+    this.brushingFor30days = get(
+      layerOptions,
+      'maintenanceVehicles.brushingFor30days',
+    );
     const scaleRatio = (isBrowser && window.devicePixelRatio) || 1;
     this.imageSize = 20 * scaleRatio;
     this.streetMode = getStreetMode(location, config);
@@ -58,25 +62,13 @@ class MaintenanceVehicleRoutes {
             : 'maintenanceroutesnonmotorised';
 
         if (vt.layers[layerKey] != null) {
-          // Filter out any features that are not within the user selected time range.
-          const tileLayerFeatures = [];
-          const selectedTimeRange = Date.now() / 1000 - this.timeRange * 60;
-          for (let j = 0, ll = vt.layers[layerKey].length - 1; j <= ll; j++) {
-            const feature = vt.layers[layerKey].feature(j);
-            const { timestamp } = feature.properties;
-            if (!this.onlyInspectionJob) {
-              if (timestamp >= selectedTimeRange) {
-                tileLayerFeatures.push(feature);
-              }
-            } else {
-              tileLayerFeatures.push(feature);
-            }
-          }
-
-          const uniqueFeatures = getTileLayerFeaturesToRender(
-            tileLayerFeatures,
-            this.onlyInspectionJob,
-          );
+          const featureArray = vt.layers[layerKey];
+          const uniqueFeatures = getTileLayerFeaturesToRender({
+            featureArray,
+            timeRange: this.timeRange,
+            includeOnlyInspectionJob: this.onlyInspectionJob,
+            includeOnlyBrushingJobs: this.brushingFor30days,
+          });
 
           // Draw the remaining features onto the map.
           for (let i = 0, ref = uniqueFeatures.length - 1; i <= ref; i++) {
@@ -112,6 +104,7 @@ export class RoadInspectionVehicleRoutes extends MaintenanceVehicleRoutes {
   constructor(tile, config, layers, layerOptions, location) {
     super(tile, config, layers, layerOptions, location);
     this.onlyInspectionJob = true;
+    this.brushingFor30days = false;
   }
   static getName = () => 'roadInspectionVehicles';
 }
