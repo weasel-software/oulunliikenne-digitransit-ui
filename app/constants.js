@@ -82,8 +82,9 @@ export const MaintenanceJobColors = {
   0: '#1C95F2', // basic geometry
 };
 
+export const BrushingJobIds = [99901, 1357];
 export const RoadInspectionJobId = 99902;
-export const OtherMaintenanceJobIds = [
+export const NonInspectionMaintenanceJobIds = [
   1370,
   1367,
   1368,

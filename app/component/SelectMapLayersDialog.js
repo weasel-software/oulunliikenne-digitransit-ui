@@ -96,6 +96,25 @@ class SelectMapLayersDialog extends React.Component {
     });
   };
 
+  updateTimeRangeSelection = timeRangeMinutes => {
+    const timeRange = Number(timeRangeMinutes);
+    // 30 day timerange available only for brushing categories
+    // currently does not display other maintenance categories
+    // simultaneously with brushing
+    const brushingFor30days = timeRange === 43200;
+    const newOptions = {
+      ...this.props.mapLayerOptions.maintenanceVehicles,
+      brushingFor30days,
+      timeRange,
+    };
+    this.props.updateMapLayerOptions({
+      ...this.props.mapLayerOptions,
+      maintenanceVehicles: {
+        ...newOptions,
+      },
+    });
+  };
+
   updateStopAndTerminalSetting = newSetting => {
     const { mapLayers } = this.props;
     const stop = {
@@ -470,11 +489,9 @@ class SelectMapLayersDialog extends React.Component {
                                     },
                                   )}
                                   onClick={() =>
-                                    this.updateMapLayerOptions({
-                                      maintenanceVehicles: {
-                                        timeRange: Number(timeRangeMinutes),
-                                      },
-                                    })
+                                    this.updateTimeRangeSelection(
+                                      timeRangeMinutes,
+                                    )
                                   }
                                 >
                                   <FormattedMessage
