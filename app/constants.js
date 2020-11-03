@@ -112,6 +112,8 @@ export const MaintenanceJobPriorities = {
   0: 10,
 };
 
+export const MaintenanceVehicleAllowedInactivitySeconds = 120;
+
 export const BicycleRouteMainRegionalLines = {
   'MAIN_REGIONAL-MAIN': {
     color: '#FF4B00',

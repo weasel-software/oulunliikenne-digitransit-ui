@@ -1,6 +1,8 @@
 import Store from 'fluxible/addons/BaseStore';
 import PropTypes from 'prop-types';
 
+import { clearStaleMaintenanceVehicles } from '../util/maintenanceUtils';
+
 class MaintenanceVehicleRealTimeInformationStore extends Store {
   static storeName = 'MaintenanceVehicleRealTimeInformationStore';
 
@@ -37,9 +39,17 @@ class MaintenanceVehicleRealTimeInformationStore extends Store {
     this.emitChange();
   }
 
+  clearStaleVehicles() {
+    this.maintenanceVehicles = clearStaleMaintenanceVehicles(
+      this.maintenanceVehicles,
+    );
+    this.emitChange();
+  }
+
   static handlers = {
     MaintenanceVehicleRealTimeClientStarted: 'storeClient',
     MaintenanceVehicleRealTimeClientStopped: 'clearClient',
+    MaintenanceVehicleRealTimeClientInactive: 'clearStaleVehicles',
     MaintenanceVehicleRealTimeClientMessage: 'handleMessage',
     MaintenanceVehicleRealTimeClientTopicChanged: 'updateSubscriptions',
   };
