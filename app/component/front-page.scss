@@ -475,3 +475,11 @@ svg.icon.footer-icon {
 .favourite-locations-container {
   background: #eef1f3;
 }
+
+.map-legend-container {
+  position: absolute;
+  bottom: 16px;
+  right: 30px;
+  max-width: 450px;
+  z-index: index($zindex, footer);
+}
