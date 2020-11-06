@@ -215,3 +215,16 @@ export const BicycleRouteLinePriorities = {
   'TYPES-ACCESS_ROAD': 15,
   'TYPES-WIDE_SHOULDER': 16,
 };
+
+export const MaintenanceVehicleTypes = {
+  Bicycle: 'BICYCLE',
+  Car: 'CAR',
+  RoarRoller: 'ROAD_ROLLER',
+  Excavator: 'EXCAVATOR',
+  Truck: 'TRUCK',
+  SnowPlow: 'SNOW_PLOW',
+  Van: 'VAN',
+  WheelLoader: 'WHEEL_LOADER',
+  RoadGrader: 'ROAD_GRADER',
+  Tractor: 'TRACTOR',
+};

@@ -132,11 +132,39 @@
                                 "defaultValue": null
                             },
                             {
+                                "name": "feeds",
+                                "description": "List of feeds from which stops are returned. Defaults to all feeds",
+                                "type": {
+                                    "kind": "LIST",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "NON_NULL",
+                                        "name": null,
+                                        "ofType": {
+                                            "kind": "SCALAR",
+                                            "name": "String",
+                                            "ofType": null
+                                        }
+                                    }
+                                },
+                                "defaultValue": null
+                            },
+                            {
                                 "name": "name",
                                 "description": "Query stops by this name",
                                 "type": {
                                     "kind": "SCALAR",
                                     "name": "String",
+                                    "ofType": null
+                                },
+                                "defaultValue": null
+                            },
+                            {
+                                "name": "maxResults",
+                                "description": "Number of results to return when using `name` argument. Defaults to 10",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "Int",
                                     "ofType": null
                                 },
                                 "defaultValue": null
@@ -617,11 +645,39 @@
                                 "defaultValue": null
                             },
                             {
+                                "name": "feeds",
+                                "description": "List of feeds from which stations are returned. Defaults to all feeds",
+                                "type": {
+                                    "kind": "LIST",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "NON_NULL",
+                                        "name": null,
+                                        "ofType": {
+                                            "kind": "SCALAR",
+                                            "name": "String",
+                                            "ofType": null
+                                        }
+                                    }
+                                },
+                                "defaultValue": null
+                            },
+                            {
                                 "name": "name",
                                 "description": "Query stations by name",
                                 "type": {
                                     "kind": "SCALAR",
                                     "name": "String",
+                                    "ofType": null
+                                },
+                                "defaultValue": null
+                            },
+                            {
+                                "name": "maxResults",
+                                "description": "Number of results to return when using `name` argument. Defaults to 10",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "Int",
                                     "ofType": null
                                 },
                                 "defaultValue": null
@@ -2764,7 +2820,7 @@
                     },
                     {
                         "name": "maintenanceVehicleObservations",
-                        "description": "Get vehicle observations for contract ID from given time range, defaults to 1\nday. Max time range 1 week. Contract ID is expected to be either 1250 (ELY) or\n1255 (main bicycle/pedestrian paths in Oulu).",
+                        "description": "Get vehicle observations for contract ID from given time range, defaults to 1\nday. Max time range 1 week. Contract ID is expected to be either 1250 (ELY) or\n1255,1261 (main bicycle/pedestrian paths in Oulu).",
                         "args": [
                             {
                                 "name": "contractId",
@@ -5280,6 +5336,18 @@
                         "type": {
                             "kind": "SCALAR",
                             "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "stopSequence",
+                        "description": "The sequence number of the stop",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Int",
                             "ofType": null
                         },
                         "isDeprecated": false,
@@ -8109,6 +8177,18 @@
                         "deprecationReason": null
                     },
                     {
+                        "name": "stopSequence",
+                        "description": "For transit stops, the sequence number of the stop.",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Int",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
                         "name": "bikeRentalStation",
                         "description": "The bike rental station related to the place",
                         "args": [],
@@ -8558,6 +8638,18 @@
                         "type": {
                             "kind": "SCALAR",
                             "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "interlineWithPreviousLeg",
+                        "description": "Interlines with previous leg. This is true when the same vehicle is used for\nthe previous leg as for this leg and passenger can stay inside the vehicle.",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Boolean",
                             "ofType": null
                         },
                         "isDeprecated": false,
@@ -12511,6 +12603,18 @@
                         "deprecationReason": null
                     },
                     {
+                        "name": "vehicleType",
+                        "description": "Type of the maintenance vehicle",
+                        "args": [],
+                        "type": {
+                            "kind": "ENUM",
+                            "name": "MaintenanceVehicleType",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
                         "name": "measuredTime",
                         "description": "The route event measured time",
                         "args": [],
@@ -12524,7 +12628,7 @@
                     },
                     {
                         "name": "contractId",
-                        "description": "The route event contract ID, either 1250 or 1255",
+                        "description": "The route event contract ID, either 1250 (ELY) or 1255,1261 (main bicycle/pedestrian paths in Oulu)",
                         "args": [],
                         "type": {
                             "kind": "SCALAR",
@@ -12653,6 +12757,77 @@
                 "possibleTypes": null
             },
             {
+                "kind": "ENUM",
+                "name": "MaintenanceVehicleType",
+                "description": "",
+                "fields": null,
+                "inputFields": null,
+                "interfaces": null,
+                "enumValues": [
+                    {
+                        "name": "BICYCLE",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "CAR",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "ROAD_ROLLER",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "EXCAVATOR",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "TRUCK",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "SNOW_PLOW",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "VAN",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "WHEEL_LOADER",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "ROAD_GRADER",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "TRACTOR",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "possibleTypes": null
+            },
+            {
                 "kind": "SCALAR",
                 "name": "FeatureObject",
                 "description": null,
@@ -12688,8 +12863,8 @@
                         "description": "Type of the maintenance vehicle",
                         "args": [],
                         "type": {
-                            "kind": "SCALAR",
-                            "name": "String",
+                            "kind": "ENUM",
+                            "name": "MaintenanceVehicleType",
                             "ofType": null
                         },
                         "isDeprecated": false,
@@ -12709,7 +12884,7 @@
                     },
                     {
                         "name": "contractId",
-                        "description": "The contract ID  of the maintenance vehicle observation",
+                        "description": "The contract ID of the maintenance vehicle observation",
                         "args": [],
                         "type": {
                             "kind": "SCALAR",
@@ -13276,6 +13451,12 @@
                     },
                     {
                         "name": "WARNING",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "INFORMATION",
                         "description": "",
                         "isDeprecated": false,
                         "deprecationReason": null
