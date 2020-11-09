@@ -43,13 +43,14 @@ export function validateParams(req, config) {
     k.toUpperCase(),
   );
 
-  if (req.query.modes) {
+  if (typeof req.query.modes === 'string') {
     const modeArray = req.query.modes.split(',');
-    modeArray.forEach(key => {
-      if (availableModes.indexOf(key) === -1) {
-        url = removeUrlParam(req, 'modes');
-      }
-    });
+    const removeModes = modeArray.some(
+      key => availableModes.indexOf(key) === -1,
+    );
+    if (removeModes) {
+      url = removeUrlParam(req, 'modes');
+    }
   }
 
   return url;
