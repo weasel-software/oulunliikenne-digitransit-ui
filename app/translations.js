@@ -1667,7 +1667,7 @@ const translations = {
     'eco-counter-direction-5': 'Ei määritetty',
     'eco-counter-direction-6': 'Pohjoisesta',
     'eco-counter-direction-7': 'Idästä',
-    'eco-counter-direction-8': 'Etälästä',
+    'eco-counter-direction-8': 'Etelästä',
     'eco-counter-direction-9': 'Lännestä',
     'eco-counter-total': 'Yhteensä',
     'eco-counter-week-title': 'Viikko {date}',
