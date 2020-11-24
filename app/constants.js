@@ -78,8 +78,9 @@ export const MaintenanceJobColors = {
   2864: '#F347E8',
   1357: '#9073ac',
   99901: '#9073ac',
-  99902: '#FFFF0A',
   0: '#1C95F2', // basic geometry
+  '99902-car': '#FFFF0A',
+  '99902-bicycle': '#2d8f00',
 };
 
 export const BrushingJobIds = [99901, 1357];

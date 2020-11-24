@@ -12,7 +12,7 @@ import Card from '../../Card';
 import CardHeader from '../../CardHeader';
 import ComponentUsageExample from '../../ComponentUsageExample';
 
-const getJobs = (event, limit = 6) => {
+const getJobs = (event, onlyInspectionJobs, limit = 6) => {
   const jobs = [
     ...event.jobIds.map(jobId => ({
       jobId,
@@ -23,13 +23,20 @@ const getJobs = (event, limit = 6) => {
 
   const previousEvents = get(event, 'previousRouteEvents', []);
   previousEvents.forEach(previousEvent => {
-    previousEvent.jobIds.forEach(jobId => {
-      jobs.push({
-        jobId,
-        date: moment(previousEvent.measuredTime),
-        vehicleType: previousEvent.vehicleType,
+    previousEvent.jobIds
+      .filter(
+        jobId =>
+          onlyInspectionJobs
+            ? jobId === RoadInspectionJobId
+            : jobId !== RoadInspectionJobId,
+      )
+      .forEach(jobId => {
+        jobs.push({
+          jobId,
+          date: moment(previousEvent.measuredTime),
+          vehicleType: previousEvent.vehicleType,
+        });
       });
-    });
   });
 
   return jobs.length > limit ? jobs.slice(0, limit) : jobs;
@@ -52,8 +59,8 @@ function MaintenanceVehicleRoutePopup(
       <Card className="padding-small">
         <CardHeader
           name={intl.formatMessage({
-            id: 'maintenance',
-            defaultMessage: 'Maintenance',
+            id: isInspectionJob ? 'roadinspection' : 'maintenance',
+            defaultMessage: isInspectionJob ? 'Road inspection' : 'Maintenance',
           })}
           description={intl.formatMessage({
             id: 'maintenance-job-realization',
@@ -65,7 +72,7 @@ function MaintenanceVehicleRoutePopup(
           {(...content) => `${content}:`}
         </FormattedMessage>
         <ul className="maintenance-vehicle-job-list">
-          {getJobs(maintenanceVehicleRouteEvent).map(job => {
+          {getJobs(maintenanceVehicleRouteEvent, isInspectionJob).map(job => {
             const vehicleType =
               typeof job.vehicleType === 'string'
                 ? job.vehicleType.toLowerCase()
@@ -134,7 +141,7 @@ export default Relay.createContainer(MaintenanceVehicleRoutePopup, {
         contractId
         jobIds
         geojson
-        previousRouteEvents {
+        previousRouteEvents(limit: 12) {
           routeEventId
           vehicleType
           measuredTime

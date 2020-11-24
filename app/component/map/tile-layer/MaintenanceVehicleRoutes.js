@@ -3,7 +3,11 @@ import get from 'lodash/get';
 import Protobuf from 'pbf';
 import { drawMaintenanceVehicleRoutePath } from '../../../util/mapIconUtils';
 import { isBrowser } from '../../../util/browser';
-import { MaintenanceJobColors, StreetMode } from '../../../constants';
+import {
+  MaintenanceJobColors,
+  StreetMode,
+  RoadInspectionJobId,
+} from '../../../constants';
 import { getStreetMode } from '../../../util/modeUtils';
 import { getTileLayerFeaturesToRender } from '../../../util/maintenanceUtils';
 
@@ -73,10 +77,20 @@ class MaintenanceVehicleRoutes {
           // Draw the remaining features onto the map.
           for (let i = 0, ref = uniqueFeatures.length - 1; i <= ref; i++) {
             const feature = uniqueFeatures[i];
-            const { jobId } = feature.properties;
+            const { jobId, vehicleType } = feature.properties;
 
+            // inspection jobs have the same jobId but must render a different
+            // colour based on vehicleType (when undefined default to car)
+            let colorKey = jobId;
+            if (this.onlyInspectionJob && jobId === RoadInspectionJobId) {
+              const inspectionVehicleType =
+                typeof vehicleType === 'string'
+                  ? vehicleType.toLowerCase()
+                  : 'car';
+              colorKey = `${jobId}-${inspectionVehicleType}`;
+            }
             const color =
-              MaintenanceJobColors[jobId] || MaintenanceJobColors[0];
+              MaintenanceJobColors[colorKey] || MaintenanceJobColors[0];
             const geometryList = feature.loadGeometry();
 
             geometryList.forEach(geom => {
