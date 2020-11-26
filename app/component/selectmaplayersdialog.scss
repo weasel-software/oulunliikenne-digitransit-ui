@@ -37,6 +37,7 @@
   }
 
   &.bubble-dialog-content .maintenance-vehicles-container,
+  &.bubble-dialog-content .roadinspection-vehicles-container,
   &.bubble-dialog-content .bicycle-routes-container {
     background: #EEF1F3;
     border-top: 1px solid #D8D8D8;
@@ -51,6 +52,21 @@
     }
   }
 
+  .roadinspection-vehicles-time-range {
+    border-bottom: 0.5px solid #D8D8D8;
+    padding: 0 1.5em 0.8em;
+    margin: 0 -1.5em 0.8em;
+
+    &-label {
+      width: 100%;
+      margin: 0 0 0px;
+      font-size: 11px;
+      line-height: 11px;
+      color: #3B3B3B;
+      letter-spacing: 0;
+      text-align: left;
+    }
+  }
 
   .maintenance-vehicles-time-range {
     border-bottom: 0.5px solid #D8D8D8;
@@ -76,7 +92,7 @@
 
       li {
         display: inline-block;
-        width: 33.33%;
+        min-width: 33.33%;
         padding: 4px;
       }
     }

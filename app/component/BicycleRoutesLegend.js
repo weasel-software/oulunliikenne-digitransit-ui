@@ -12,8 +12,15 @@ import {
 import { getSortedItems } from '../util/bicycleRouteUtils';
 
 const BicycleRoutesLegend = ({ mapLayers }) => {
-  if (!mapLayers || !mapLayers.bicycleRoutes) {
-    return <div className="bicycle-routes-legend" />;
+  if (
+    !mapLayers ||
+    !mapLayers.bicycleRoutes ||
+    (!mapLayers.bicycleRouteTypes &&
+      !mapLayers.bicycleRoutesBaana &&
+      !mapLayers.bicycleRoutesBrand &&
+      !mapLayers.bicycleRoutesMainRegional)
+  ) {
+    return null;
   }
 
   const renderItems = items =>

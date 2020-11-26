@@ -7,6 +7,8 @@ import IconMarker from '../IconMarker';
 import MaintenanceVehiclePopup from '../popups/MaintenanceVehiclePopup';
 
 import { isBrowser } from '../../../util/browser';
+import { isLayerEnabled } from '../../../util/mapLayerUtils';
+import { RoadInspectionJobId } from '../../../constants';
 
 let Popup;
 
@@ -29,8 +31,22 @@ if (isBrowser) {
   /* eslint-enable global-require */
 }
 
-function MaintenanceVehicleMarkerContainer({ className, maintenanceVehicles }) {
+function MaintenanceVehicleMarkerContainer({
+  className,
+  maintenanceVehicles,
+  mapLayers,
+}) {
+  const showOnlyInspectionJobs = isLayerEnabled(
+    'roadInspectionVehicles',
+    mapLayers,
+  );
   return Object.entries(maintenanceVehicles)
+    .filter(
+      ([, message]) =>
+        showOnlyInspectionJobs
+          ? message.jobIds.includes(RoadInspectionJobId)
+          : true,
+    )
     .filter(([, message]) => message.lat && message.long)
     .map(([id, message]) => (
       <IconMarker
@@ -75,12 +91,13 @@ MaintenanceVehicleMarkerContainer.defaultProps = {
 
 export default connectToStores(
   MaintenanceVehicleMarkerContainer,
-  ['MaintenanceVehicleRealTimeInformationStore'],
+  ['MaintenanceVehicleRealTimeInformationStore', 'MapLayerStore'],
   (context, props) => ({
     ...props,
     maintenanceVehicles: context.getStore(
       'MaintenanceVehicleRealTimeInformationStore',
     ).maintenanceVehicles,
+    mapLayers: context.getStore('MapLayerStore').mapLayers,
   }),
   {
     executeAction: PropTypes.func,

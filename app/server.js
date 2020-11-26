@@ -173,8 +173,22 @@ const isRobotRequest = agent =>
 const RELAY_FETCH_TIMEOUT = process.env.RELAY_FETCH_TIMEOUT || 1000;
 
 function getNetworkLayer(config, agent) {
+  const emptyResponse = { payload: { data: null } };
   return new RelayNetworkLayer([
-    next => req => next(req).catch(() => ({ payload: { data: null } })),
+    next => req =>
+      next(req)
+        .then(
+          // If the GraphQL server returns any errors just return an empty payload,
+          // or Relay will throw a rejected promise crashing this server.
+          // The errors are logged to console by the `gqErrorsMiddleware`.
+          res =>
+            res && res.payload && res.payload.errors ? emptyResponse : res,
+        )
+        .catch(err => {
+          // eslint-disable-next-line no-console
+          console.log(err);
+          return emptyResponse;
+        }),
     retryMiddleware({
       fetchTimeout: isRobotRequest(agent) ? 10000 : RELAY_FETCH_TIMEOUT,
       retryDelays: [],
@@ -185,7 +199,9 @@ function getNetworkLayer(config, agent) {
     batchMiddleware({
       batchUrl: `${config.URL.OTP}/graphql/batch`,
     }),
-    gqErrorsMiddleware(),
+    gqErrorsMiddleware({
+      disableServerMiddlewareTip: true,
+    }),
   ]);
 }
 
@@ -356,6 +372,7 @@ export default function(req, res, next) {
         return [content, relayData];
       })
       .catch(err => {
+        // eslint-disable-next-line no-console
         console.log(err);
         return ['', undefined];
       });

@@ -166,13 +166,13 @@ class EcoCounterComparisonContent extends React.Component {
       },
     ];
 
+    const range1channel2Counts = get(range1channel2, 'siteData', []).map(
+      ({ counts }) => (!counts ? 0 : counts),
+    );
+    const range2channel2Counts = get(range2channel2, 'siteData', []).map(
+      ({ counts }) => (!counts ? 0 : counts),
+    );
     if (range1channel2) {
-      const range1channel2Counts = get(range1channel2, 'siteData', []).map(
-        ({ counts }) => (!counts ? 0 : counts),
-      );
-      const range2channel2Counts = get(range2channel2, 'siteData', []).map(
-        ({ counts }) => (!counts ? 0 : counts),
-      );
       range1datasets.push({
         label: formatMessage({
           id: `eco-counter-direction-${this.getChannelDirection(channel2Id)}`,
@@ -191,40 +191,39 @@ class EcoCounterComparisonContent extends React.Component {
         backgroundColor: 'rgba(0,0,0,0)',
         hidden: true,
       });
+    }
+    const range1ChannelTotals = combineEcoCounterCounts([
+      range1channel1Counts,
+      range1channel2Counts,
+    ]);
 
-      const range1ChannelTotals = combineEcoCounterCounts([
-        range1channel1Counts,
-        range1channel2Counts,
-      ]);
+    const range2ChannelTotals = combineEcoCounterCounts([
+      range2channel1Counts,
+      range2channel2Counts,
+    ]);
 
-      const range2ChannelTotals = combineEcoCounterCounts([
-        range2channel1Counts,
-        range2channel2Counts,
-      ]);
+    if (range1ChannelTotals && range1ChannelTotals.length > 0) {
+      range1datasets.push({
+        label: formatMessage({
+          id: 'eco-counter-total',
+        }),
+        data: range1ChannelTotals,
+        borderColor: '#FFC107',
+        backgroundColor: 'rgba(0,0,0,0)',
+        hidden: false,
+      });
+    }
 
-      if (range1ChannelTotals && range1ChannelTotals.length > 0) {
-        range1datasets.push({
-          label: formatMessage({
-            id: 'eco-counter-total',
-          }),
-          data: range1ChannelTotals,
-          borderColor: '#FFC107',
-          backgroundColor: 'rgba(0,0,0,0)',
-          hidden: false,
-        });
-      }
-
-      if (range2ChannelTotals && range2ChannelTotals.length > 0) {
-        range2datasets.push({
-          label: formatMessage({
-            id: 'eco-counter-total',
-          }),
-          data: range2ChannelTotals,
-          borderColor: '#FFC107',
-          backgroundColor: 'rgba(0,0,0,0)',
-          hidden: false,
-        });
-      }
+    if (range2ChannelTotals && range2ChannelTotals.length > 0) {
+      range2datasets.push({
+        label: formatMessage({
+          id: 'eco-counter-total',
+        }),
+        data: range2ChannelTotals,
+        borderColor: '#FFC107',
+        backgroundColor: 'rgba(0,0,0,0)',
+        hidden: false,
+      });
     }
 
     return (
@@ -271,7 +270,10 @@ class EcoCounterComparisonContent extends React.Component {
                   condition={userType === CYCLING}
                   onClick={() => changeUserType(CYCLING)}
                 >
-                  <Icon img="icon-icon_bicycle-withoutBox" viewBox="0 0 25 25" />
+                  <Icon
+                    img="icon-icon_bicycle-withoutBox"
+                    viewBox="0 0 25 25"
+                  />
                 </EcoCounterButton>
               )}
             </div>

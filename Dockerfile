@@ -1,5 +1,5 @@
-FROM node:8
-MAINTAINER Reittiopas version: 0.1
+ARG DOCKER_IMAGE=node:8
+FROM $DOCKER_IMAGE
 
 EXPOSE 8080
 
@@ -36,7 +36,6 @@ ADD . ${WORK}
 
 RUN \
   yarn install --silent && \
-  yarn add --force node-sass && \
   yarn run build && \
   rm -rf static docs test /tmp/* && \
   yarn cache clean

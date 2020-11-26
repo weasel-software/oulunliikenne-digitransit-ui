@@ -4,26 +4,39 @@ import Relay from 'react-relay/classic';
 import { FormattedMessage, intlShape } from 'react-intl';
 import moment from 'moment';
 import get from 'lodash/get';
+import {
+  MaintenanceVehicleTypes,
+  RoadInspectionJobId,
+} from '../../../constants';
 import Card from '../../Card';
 import CardHeader from '../../CardHeader';
 import ComponentUsageExample from '../../ComponentUsageExample';
 
-const getJobs = (event, limit = 6) => {
+const getJobs = (event, onlyInspectionJobs, limit = 6) => {
   const jobs = [
     ...event.jobIds.map(jobId => ({
       jobId,
       date: moment(event.measuredTime),
+      vehicleType: event.vehicleType,
     })),
   ];
 
   const previousEvents = get(event, 'previousRouteEvents', []);
   previousEvents.forEach(previousEvent => {
-    previousEvent.jobIds.forEach(jobId => {
-      jobs.push({
-        jobId,
-        date: moment(previousEvent.measuredTime),
+    previousEvent.jobIds
+      .filter(
+        jobId =>
+          onlyInspectionJobs
+            ? jobId === RoadInspectionJobId
+            : jobId !== RoadInspectionJobId,
+      )
+      .forEach(jobId => {
+        jobs.push({
+          jobId,
+          date: moment(previousEvent.measuredTime),
+          vehicleType: previousEvent.vehicleType,
+        });
       });
-    });
   });
 
   return jobs.length > limit ? jobs.slice(0, limit) : jobs;
@@ -33,32 +46,50 @@ function MaintenanceVehicleRoutePopup(
   { maintenanceVehicleRouteEvent },
   { intl },
 ) {
+  const isInspectionJob = maintenanceVehicleRouteEvent.jobIds.includes(
+    RoadInspectionJobId,
+  );
+  const iconName =
+    isInspectionJob &&
+    maintenanceVehicleRouteEvent.vehicleType === MaintenanceVehicleTypes.Bicycle
+      ? 'icon-icon_bicycle'
+      : 'icon-icon_maintenance-vehicle';
   return (
     <div className="card">
       <Card className="padding-small">
         <CardHeader
           name={intl.formatMessage({
-            id: 'maintenance',
-            defaultMessage: 'Maintenance',
+            id: isInspectionJob ? 'roadinspection' : 'maintenance',
+            defaultMessage: isInspectionJob ? 'Road inspection' : 'Maintenance',
           })}
           description={intl.formatMessage({
             id: 'maintenance-job-realization',
           })}
-          icon="icon-icon_maintenance-vehicle"
+          icon={iconName}
           unlinked
         />
         <FormattedMessage id="maintenance-job" defaultMessage="Maintenance job">
           {(...content) => `${content}:`}
         </FormattedMessage>
         <ul className="maintenance-vehicle-job-list">
-          {getJobs(maintenanceVehicleRouteEvent).map(job => (
-            <li key={`job-${job.jobId}-${job.date.unix()}`}>
-              <FormattedMessage id={`maintenance-job-${job.jobId}`}>
-                {(...content) => `${content} `}
-              </FormattedMessage>
-              {job.date.format('D.M.Y HH:mm:ss')}
-            </li>
-          ))}
+          {getJobs(maintenanceVehicleRouteEvent, isInspectionJob).map(job => {
+            const vehicleType =
+              typeof job.vehicleType === 'string'
+                ? job.vehicleType.toLowerCase()
+                : 'unknown';
+            return (
+              <li key={`job-${job.jobId}-${job.date.unix()}`}>
+                <FormattedMessage id={`maintenance-job-${job.jobId}`}>
+                  {(...content) => `${content} `}
+                </FormattedMessage>
+                {job.jobId === RoadInspectionJobId &&
+                  intl.formatMessage({
+                    id: `maintenance-inspection-vehicle-type-${vehicleType}`,
+                  })}
+                {job.date.format('D.M.Y HH:mm:ss')}
+              </li>
+            );
+          })}
         </ul>
       </Card>
     </div>
@@ -105,12 +136,14 @@ export default Relay.createContainer(MaintenanceVehicleRoutePopup, {
         id
         routeEventId
         routeType
+        vehicleType
         measuredTime
         contractId
         jobIds
         geojson
-        previousRouteEvents {
+        previousRouteEvents(limit: 12) {
           routeEventId
+          vehicleType
           measuredTime
           jobIds
         }

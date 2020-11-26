@@ -96,6 +96,25 @@ class SelectMapLayersDialog extends React.Component {
     });
   };
 
+  updateTimeRangeSelection = timeRangeMinutes => {
+    const timeRange = Number(timeRangeMinutes);
+    // 30 day timerange available only for brushing categories
+    // currently does not display other maintenance categories
+    // simultaneously with brushing
+    const brushingFor30days = timeRange === 43200;
+    const newOptions = {
+      ...this.props.mapLayerOptions.maintenanceVehicles,
+      brushingFor30days,
+      timeRange,
+    };
+    this.props.updateMapLayerOptions({
+      ...this.props.mapLayerOptions,
+      maintenanceVehicles: {
+        ...newOptions,
+      },
+    });
+  };
+
   updateStopAndTerminalSetting = newSetting => {
     const { mapLayers } = this.props;
     const stop = {
@@ -159,6 +178,7 @@ class SelectMapLayersDialog extends React.Component {
       ecoCounters,
       maintenanceVehicles,
       realtimeMaintenanceVehicles,
+      roadInspectionVehicles,
       roadSigns,
       bicycleRoutes,
       bicycleRoutesMainRegional,
@@ -433,7 +453,10 @@ class SelectMapLayersDialog extends React.Component {
                 labelId="maintenance"
                 defaultMessage="Maintenance"
                 onChange={e =>
-                  this.updateSetting({ maintenanceVehicles: e.target.checked })
+                  this.updateSetting({
+                    maintenanceVehicles: e.target.checked,
+                    roadInspectionVehicles: false,
+                  })
                 }
               />
               {maintenanceVehicles &&
@@ -466,11 +489,9 @@ class SelectMapLayersDialog extends React.Component {
                                     },
                                   )}
                                   onClick={() =>
-                                    this.updateMapLayerOptions({
-                                      maintenanceVehicles: {
-                                        timeRange: Number(timeRangeMinutes),
-                                      },
-                                    })
+                                    this.updateTimeRangeSelection(
+                                      timeRangeMinutes,
+                                    )
                                   }
                                 >
                                   <FormattedMessage
@@ -491,6 +512,47 @@ class SelectMapLayersDialog extends React.Component {
                       checked={realtimeMaintenanceVehicles}
                       labelId="realtime-maintenance-vehicles"
                       defaultMessage="Realtime maintenance vehicles"
+                      onChange={e =>
+                        this.updateSetting({
+                          realtimeMaintenanceVehicles: e.target.checked,
+                        })
+                      }
+                    />
+                  </div>
+                )}
+            </React.Fragment>
+          )}
+        {config.roadInspectionVehicles &&
+          config.roadInspectionVehicles.showRoadInspectionVehicles &&
+          isMapLayerEnabled('roadInspectionVehicles') && (
+            <React.Fragment>
+              <InputField
+                checked={roadInspectionVehicles}
+                labelId="roadinspection"
+                defaultMessage="Road inspection"
+                onChange={e =>
+                  this.updateSetting({
+                    roadInspectionVehicles: e.target.checked,
+                    maintenanceVehicles: false,
+                    realtimeMaintenanceVehicles: false,
+                  })
+                }
+              />
+              {roadInspectionVehicles &&
+                config.realtimeMaintenanceVehicles &&
+                config.realtimeMaintenanceVehicles
+                  .showRealtimeMaintenanceVehicles &&
+                isMapLayerEnabled('realtimeMaintenanceVehicles') && (
+                  <div className="roadinspection-vehicles-container">
+                    <div className="roadinspection-vehicles-time-range">
+                      <p className="roadinspection-vehicles-time-range-label">
+                        <FormattedMessage id="roadinspection-vehicle-time-range" />
+                      </p>
+                    </div>
+                    <InputField
+                      checked={realtimeMaintenanceVehicles}
+                      labelId="realtime-roadinspection-vehicles"
+                      defaultMessage="Realtime road inspection vehicles"
                       onChange={e =>
                         this.updateSetting({
                           realtimeMaintenanceVehicles: e.target.checked,
@@ -652,6 +714,9 @@ const mapLayersConfigShape = PropTypes.shape({
   }),
   maintenanceVehicles: PropTypes.shape({
     showMaintenanceVehicles: PropTypes.bool,
+  }),
+  roadInspectionVehicles: PropTypes.shape({
+    showRoadInspectionVehicles: PropTypes.bool,
   }),
   bicycleRoutes: PropTypes.shape({
     showBicycleRoutes: PropTypes.bool,

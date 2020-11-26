@@ -205,11 +205,18 @@ export default configMerger(walttiConfig, {
       720: 'maintenance-vehicle-time-range-12h',
       1440: 'maintenance-vehicle-time-range-1d',
       4320: 'maintenance-vehicle-time-range-3d',
+      43200: 'maintenance-vehicle-time-range-30d',
     },
   },
 
   realtimeMaintenanceVehicles: {
     showRealtimeMaintenanceVehicles: true,
+  },
+
+  roadInspectionVehicles: {
+    showLines: true,
+    showRoadInspectionVehicles: true,
+    roadInspectionVehiclesMinZoom: 7,
   },
 
   roadSigns: {
@@ -524,6 +531,7 @@ export default configMerger(walttiConfig, {
       fluencies: true,
       maintenanceVehicles: false,
       realtimeMaintenanceVehicles: false,
+      roadInspectionVehicles: false,
       roadSigns: true,
     },
     BICYCLE: {
@@ -535,6 +543,7 @@ export default configMerger(walttiConfig, {
       ecoCounters: true,
       maintenanceVehicles: true,
       realtimeMaintenanceVehicles: true,
+      roadInspectionVehicles: false,
       bicycleRoutes: true,
       bicycleRoutesMainRegional: true,
       bicycleRouteTypes: true,
@@ -548,6 +557,7 @@ export default configMerger(walttiConfig, {
       ecoCounters: true,
       maintenanceVehicles: true,
       realtimeMaintenanceVehicles: true,
+      roadInspectionVehicles: false,
       // tmsStations: false,
       // citybike: true, NOTE: taken from transportModes.citybike.availableForSelection
     },

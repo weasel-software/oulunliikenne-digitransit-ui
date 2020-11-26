@@ -1,17 +1,26 @@
 import { VectorTile } from '@mapbox/vector-tile';
 import get from 'lodash/get';
-import uniqBy from 'lodash/uniqBy';
 import Protobuf from 'pbf';
 import { drawMaintenanceVehicleRoutePath } from '../../../util/mapIconUtils';
 import { isBrowser } from '../../../util/browser';
-import { MaintenanceJobColors, StreetMode } from '../../../constants';
+import {
+  MaintenanceJobColors,
+  StreetMode,
+  RoadInspectionJobId,
+} from '../../../constants';
 import { getStreetMode } from '../../../util/modeUtils';
+import { getTileLayerFeaturesToRender } from '../../../util/maintenanceUtils';
 
 class MaintenanceVehicleRoutes {
   constructor(tile, config, layers, layerOptions, location) {
+    this.onlyInspectionJob = false;
     this.tile = tile;
     this.config = config;
     this.timeRange = get(layerOptions, 'maintenanceVehicles.timeRange');
+    this.brushingFor30days = get(
+      layerOptions,
+      'maintenanceVehicles.brushingFor30days',
+    );
     const scaleRatio = (isBrowser && window.devicePixelRatio) || 1;
     this.imageSize = 20 * scaleRatio;
     this.streetMode = getStreetMode(location, config);
@@ -44,6 +53,7 @@ class MaintenanceVehicleRoutes {
           }
           return res.arrayBuffer();
         },
+        // eslint-disable-next-line
         err => console.log(err),
       )
       .then(buf => {
@@ -56,37 +66,31 @@ class MaintenanceVehicleRoutes {
             : 'maintenanceroutesnonmotorised';
 
         if (vt.layers[layerKey] != null) {
-          // Filter out any features that are not within the user selected time range.
-          const tileLayerFeatures = [];
-          const selectedTimeRange = Date.now() / 1000 - this.timeRange * 60;
-          for (let j = 0, ll = vt.layers[layerKey].length - 1; j <= ll; j++) {
-            const feature = vt.layers[layerKey].feature(j);
-            const { timestamp } = feature.properties;
-            if (timestamp >= selectedTimeRange) {
-              tileLayerFeatures.push(feature);
-            }
-          }
-
-          // Sort the features by their ID first and those without will be put last.
-          // Then filter only unique features by their hash value, removing any features
-          // without an ID if there is one with that same hash.
-          const sortedFeatures = tileLayerFeatures.sort((feat1, feat2) => {
-            if (feat1.properties.id && !feat2.properties.id) {
-              return -1;
-            } else if (!feat1.properties.id && feat2.properties.id) {
-              return 1;
-            }
-            return 0;
+          const featureArray = vt.layers[layerKey];
+          const uniqueFeatures = getTileLayerFeaturesToRender({
+            featureArray,
+            timeRange: this.timeRange,
+            includeOnlyInspectionJob: this.onlyInspectionJob,
+            includeOnlyBrushingJobs: this.brushingFor30days,
           });
-          const uniqueFeatures = uniqBy(sortedFeatures, 'properties.hash');
 
           // Draw the remaining features onto the map.
           for (let i = 0, ref = uniqueFeatures.length - 1; i <= ref; i++) {
             const feature = uniqueFeatures[i];
-            const { jobId } = feature.properties;
+            const { jobId, vehicleType } = feature.properties;
 
+            // inspection jobs have the same jobId but must render a different
+            // colour based on vehicleType (when undefined default to car)
+            let colorKey = jobId;
+            if (this.onlyInspectionJob && jobId === RoadInspectionJobId) {
+              const inspectionVehicleType =
+                typeof vehicleType === 'string'
+                  ? vehicleType.toLowerCase()
+                  : 'car';
+              colorKey = `${jobId}-${inspectionVehicleType}`;
+            }
             const color =
-              MaintenanceJobColors[jobId] || MaintenanceJobColors[0];
+              MaintenanceJobColors[colorKey] || MaintenanceJobColors[0];
             const geometryList = feature.loadGeometry();
 
             geometryList.forEach(geom => {
@@ -108,6 +112,15 @@ class MaintenanceVehicleRoutes {
         }
       });
   };
+}
+
+export class RoadInspectionVehicleRoutes extends MaintenanceVehicleRoutes {
+  constructor(tile, config, layers, layerOptions, location) {
+    super(tile, config, layers, layerOptions, location);
+    this.onlyInspectionJob = true;
+    this.brushingFor30days = false;
+  }
+  static getName = () => 'roadInspectionVehicles';
 }
 
 export default MaintenanceVehicleRoutes;
