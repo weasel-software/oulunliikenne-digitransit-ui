@@ -42,6 +42,7 @@ import { clearDepartures } from '../action/RealtimeDeparturesActions';
 import IntroPopup from './IntroPopup';
 import MaintenanceVehicleLegend from './MaintenanceVehicleLegend';
 import BicycleRoutesLegend from './BicycleRoutesLegend';
+import InspectionVehicleLegend from './InspectionVehicleLegend';
 
 const debug = d('IndexPage.js');
 
@@ -293,6 +294,7 @@ class IndexPage extends React.Component {
         <div className="map-legend-container">
           <MaintenanceVehicleLegend />
           <BicycleRoutesLegend />
+          <InspectionVehicleLegend />
         </div>
         {(this.props.showSpinner && <OverlayWithSpinner />) || null}
         {!footerOptions.hidden && (
