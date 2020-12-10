@@ -299,7 +299,7 @@ class TileContainer {
             // get the cartesian distance between the two points
             const screenDistance = clickPoint.distanceTo(linePoint);
 
-            if (screenDistance < 20 * this.scaleratio) {
+            if (screenDistance < 20) {
               currentFeature.feature.dist = screenDistance;
               currentFeature.feature.geom = {
                 x: localPoint[0] * this.ratio,
