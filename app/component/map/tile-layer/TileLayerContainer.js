@@ -327,12 +327,13 @@ class TileLayerContainer extends GridLayer {
         {},
       );
 
-      // If maintenanceVehiclelayer is present, should check if there are
-      // older timestamped layers within 2m further away than
-      // the closest target. There are partially overlapping
-      // geometries which might be older than the one drawn
-      // in the UI but closer to the click target. This is to
-      // mitigate that scenario.
+      // There are partially overlapping geometries which might be older
+      // than the one drawn in the UI but closer to the click target.
+      // If maintenanceVehiclelayer is present, we check if there are
+      // more currently timestamped layers slightly further than the closest target.
+      // This is done to mitigate the scenario where we draw some actualization
+      // in the UI but clicking near it would show a popup with another
+      // actualization.
       const closestMaintenanceVehicleLayer = closestTargets.maintenanceVehicles;
       if (closestMaintenanceVehicleLayer) {
         const closestDist = get(closestMaintenanceVehicleLayer, 'feature.dist');
@@ -340,7 +341,7 @@ class TileLayerContainer extends GridLayer {
           .filter(
             target =>
               target.layer === 'maintenanceVehicles' &&
-              get(target, 'feature.dist') - closestDist < 2,
+              get(target, 'feature.dist') - closestDist < 1,
           )
           .sort(
             (a, b) =>
