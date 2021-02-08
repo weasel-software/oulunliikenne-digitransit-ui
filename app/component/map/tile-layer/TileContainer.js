@@ -2,8 +2,12 @@ import flatten from 'lodash/flatten';
 import omit from 'lodash/omit';
 import L from 'leaflet';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
-import { point as turfPoint, polygon as turfPolygon } from '@turf/helpers';
-import { distanceToPolygon } from 'distance-to-polygon';
+import {
+  point as turfPoint,
+  polygon as turfPolygon,
+  lineString as turfLineString,
+} from '@turf/helpers';
+import nearestPointOnLine from '@turf/nearest-point-on-line';
 
 import { isBrowser } from '../../../util/browser';
 import { isLayerEnabled } from '../../../util/mapLayerUtils';
@@ -218,7 +222,6 @@ class TileContainer {
         (point[0] * this.scaleratio) % this.tileSize,
         (point[1] * this.scaleratio) % this.tileSize,
       ];
-
       features = flatten(
         this.layers.map(
           layer =>
@@ -226,6 +229,7 @@ class TileContainer {
             layer.features.map(feature => ({
               layer: layer.constructor.getName(),
               feature,
+              map: layer.tile.map,
             })),
         ),
       );
@@ -267,18 +271,36 @@ class TileContainer {
             const currentFeature = { ...feature };
             const { lineString } = currentFeature.feature;
 
-            const formatedLineString = lineString.map(cords => [
-              cords.x / this.ratio,
-              cords.y / this.ratio,
-            ]);
+            // convert coordinates to lon/lat for nearest point calculation
+            const lonLatLineString = lineString.map(cords => {
+              const { lon, lat } = this.project(cords);
+              return [lon, lat];
+            });
 
-            const pointToLineDist = distanceToPolygon(
-              localPoint,
-              formatedLineString,
+            // get the nearest point in the line measured from the click event
+            const nearestPointOnLineTurf = nearestPointOnLine(
+              turfLineString(lonLatLineString),
+              turfPoint([e.latlng.lng, e.latlng.lat]),
             );
 
-            if (pointToLineDist < 20) {
-              currentFeature.feature.dist = pointToLineDist;
+            // get maplayerpoint for the click
+            const clickPoint = feature.map.latLngToLayerPoint(
+              L.latLng(e.latlng.lat, e.latlng.lng),
+            );
+
+            // get maplayerpoint for the closest point in the line
+            const linePoint = feature.map.latLngToLayerPoint(
+              L.latLng(
+                nearestPointOnLineTurf.geometry.coordinates[1],
+                nearestPointOnLineTurf.geometry.coordinates[0],
+              ),
+            );
+
+            // get the cartesian distance between the two points
+            const screenDistance = clickPoint.distanceTo(linePoint);
+
+            if (screenDistance < 20) {
+              currentFeature.feature.dist = screenDistance;
               currentFeature.feature.geom = {
                 x: localPoint[0] * this.ratio,
                 y: localPoint[1] * this.ratio,
@@ -299,6 +321,14 @@ class TileContainer {
             return feature;
           }
           return null;
+        })
+        .map(feature => {
+          if (feature) {
+            // map is no longer needed
+            const { map, ...featuresWithoutMap } = feature;
+            return featuresWithoutMap;
+          }
+          return feature;
         })
         .filter(item => item !== null);
 

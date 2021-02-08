@@ -267,7 +267,8 @@ class TileLayerContainer extends GridLayer {
 
       selectableTargetsFiltered = uniqBy(selectableTargetsFiltered, item =>
         [
-          get(item, 'feature.properties.id') || get(item, 'feature.properties.code'),
+          get(item, 'feature.properties.id') ||
+            get(item, 'feature.properties.code'),
           get(item, 'feature.properties.trafficDirection'),
           get(item, 'layer'),
         ].join('_'),
@@ -302,7 +303,7 @@ class TileLayerContainer extends GridLayer {
       });
 
       // Get targets with the shortest distance for each layer
-      const closestTargets = selectableTargetsFiltered.reduce(
+      let closestTargets = selectableTargetsFiltered.reduce(
         (closestCollection, target) => {
           const targetLayer = get(target, 'layer');
           const targetDistance = get(target, 'feature.dist');
@@ -326,6 +327,36 @@ class TileLayerContainer extends GridLayer {
         {},
       );
 
+      // There are partially overlapping geometries which might be older
+      // than the one drawn in the UI but closer to the click target.
+      // If maintenanceVehiclelayer is present, we check if there are
+      // more currently timestamped layers slightly further than the closest target.
+      // This is done to mitigate the scenario where we draw some actualization
+      // in the UI but clicking near it would show a popup with another
+      // actualization.
+      const closestMaintenanceVehicleLayer = closestTargets.maintenanceVehicles;
+      if (closestMaintenanceVehicleLayer) {
+        const closestDist = get(closestMaintenanceVehicleLayer, 'feature.dist');
+        const closeAndMoreRecentLayers = selectableTargetsFiltered
+          .filter(
+            target =>
+              target.layer === 'maintenanceVehicles' &&
+              get(target, 'feature.dist') - closestDist < 1,
+          )
+          .sort(
+            (a, b) =>
+              get(b, 'feature.properties.timestamp') -
+              get(a, 'feature.properties.timestamp'),
+          );
+        if (closeAndMoreRecentLayers.length > 0) {
+          closestTargets = {
+            ...closestTargets,
+            maintenanceVehicles: {
+              ...closeAndMoreRecentLayers[0],
+            },
+          };
+        }
+      }
       // Filter out other than the closest targets
       selectableTargetsFiltered = selectableTargetsFiltered.filter(target => {
         if (closestTargets[target.layer]) {
