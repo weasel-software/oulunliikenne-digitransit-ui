@@ -527,6 +527,9 @@ export function getRoadSignIconId(type, value) {
     const warningType = value;
     return `icon-icon_warning-${warningType}`;
   }
+  if (type === 'INFORMATION') {
+    return `icon-icon_information`;
+  }
   return null;
 }
 
@@ -539,6 +542,13 @@ export function drawSpeedLimitRoadSignIcon(tile, geom, imageSize, speedLimit) {
 
 export function drawWarningRoadSignIcon(tile, geom, imageSize, warningType) {
   const iconId = getRoadSignIconId('WARNING', warningType);
+  getImageFromSpriteCache(iconId, imageSize, imageSize).then(image => {
+    drawIconImage(image, tile, geom, imageSize, imageSize);
+  });
+}
+
+export function drawInformationRoadSignIcon(tile, geom, imageSize) {
+  const iconId = getRoadSignIconId('INFORMATION');
   getImageFromSpriteCache(iconId, imageSize, imageSize).then(image => {
     drawIconImage(image, tile, geom, imageSize, imageSize);
   });

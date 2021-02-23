@@ -61,6 +61,11 @@ export default Relay.createContainer(RoadSignPopup, {
         roadAddress
         lat
         lon
+        textRows {
+          screen
+          rowNumber
+          text
+        }
       }
     `,
   },

@@ -290,7 +290,7 @@ class TileLayerContainer extends GridLayer {
         return layer !== 'roadInspectionVehicles' || jobId !== 0;
       });
 
-      // Filter out roadSigns without any display value
+      // Filter out speedlimit or warning roadSigns without any display value
       selectableTargetsFiltered = selectableTargetsFiltered.filter(target => {
         const layer = get(target, 'layer');
         const type = get(target, 'feature.properties.type');
@@ -299,7 +299,13 @@ class TileLayerContainer extends GridLayer {
           type === 'SPEEDLIMIT' && value !== 'null' && !!value;
         const isValidWarning =
           type === 'WARNING' && value !== 'null' && !!value;
-        return layer !== 'roadSigns' || isValidSpeedLimit || isValidWarning;
+        const isInformation = type === 'INFORMATION';
+        return (
+          layer !== 'roadSigns' ||
+          isValidSpeedLimit ||
+          isValidWarning ||
+          isInformation
+        );
       });
 
       // Get targets with the shortest distance for each layer

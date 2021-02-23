@@ -4,6 +4,7 @@ import Protobuf from 'pbf';
 import {
   drawSpeedLimitRoadSignIcon,
   drawWarningRoadSignIcon,
+  drawInformationRoadSignIcon,
 } from '../../../util/mapIconUtils';
 import { isBrowser } from '../../../util/browser';
 
@@ -38,7 +39,7 @@ export default class RoadSigns {
           }
           return res.arrayBuffer();
         },
-        err => console.log(err),
+        err => console.log(err), // eslint-disable-line no-console
       )
       .then(buf => {
         const vt = new VectorTile(new Protobuf(buf));
@@ -60,6 +61,14 @@ export default class RoadSigns {
                   speedLimit,
                 );
               }
+            }
+
+            if (feature.properties.type === 'INFORMATION') {
+              drawInformationRoadSignIcon(
+                this.tile,
+                feature.geom,
+                this.imageSize,
+              );
             }
 
             if (feature.properties.type === 'WARNING') {
