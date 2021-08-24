@@ -199,8 +199,8 @@ class TileLayerContainer extends GridLayer {
 
   PopupOptions = {
     offset: [110, 16],
-    minWidth: 260,
-    maxWidth: 260,
+    minWidth: 320,
+    maxWidth: 320,
     autoPanPaddingTopLeft: [5, 125],
     className: 'popup',
     ref: 'popup',
