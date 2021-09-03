@@ -13417,6 +13417,22 @@
                         },
                         "isDeprecated": false,
                         "deprecationReason": null
+                    },
+                    {
+                        "name": "textRows",
+                        "description": "Text rows shown for INFORMATION signs",
+                        "args": [],
+                        "type": {
+                          "kind": "LIST",
+                          "name": null,
+                          "ofType": {
+                            "kind": "OBJECT",
+                            "name": "VariableRoadSignTextRow",
+                            "ofType": null
+                          }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
                     }
                 ],
                 "inputFields": null,
@@ -13572,6 +13588,53 @@
                         "deprecationReason": null
                     }
                 ],
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "VariableRoadSignTextRow",
+                "description": "A type for variable road sign text rows, used mostly by INFORMATION signs",
+                "fields": [
+                  {
+                    "name": "screen",
+                    "description": "The screen number where the text is shown, there can be multiscreen setups",
+                    "args": [],
+                    "type": {
+                      "kind": "SCALAR",
+                      "name": "Int",
+                      "ofType": null
+                    },
+                    "isDeprecated": false,
+                    "deprecationReason": null
+                  },
+                  {
+                    "name": "rowNumber",
+                    "description": "The row number where the text is shown, each screen can have multiple rows to display information",
+                    "args": [],
+                    "type": {
+                      "kind": "SCALAR",
+                      "name": "Int",
+                      "ofType": null
+                    },
+                    "isDeprecated": false,
+                    "deprecationReason": null
+                  },
+                  {
+                    "name": "text",
+                    "description": "The text shown on the screen row, usually only in Finnish but can occasionally be in mixed languages",
+                    "args": [],
+                    "type": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    },
+                    "isDeprecated": false,
+                    "deprecationReason": null
+                  }
+                ],
+                "inputFields": null,
+                "interfaces": [],
+                "enumValues": null,
                 "possibleTypes": null
             },
             {

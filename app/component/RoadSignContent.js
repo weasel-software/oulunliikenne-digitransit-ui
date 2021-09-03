@@ -5,68 +5,82 @@ import { intlShape } from 'react-intl';
 import ComponentUsageExample from './ComponentUsageExample';
 import { lang as exampleLang } from './ExampleData';
 
-const RoadSignContentRow = ({ label, value }) => (
-  <tr>
-    <td>{label}</td>
-    <td>
-      <span>{value}</span>
-    </td>
-  </tr>
-);
+const RoadSignContentRow = ({ label, value }) => {
+  const createDisplayTextRows = val =>
+    Array.isArray(val) ? (
+      val.map(({ rowNumber, text }) => <div key={rowNumber}>{text}</div>)
+    ) : (
+      <div>{val}</div>
+    );
+  return (
+    <tr>
+      <td>{label}</td>
+      <td>{createDisplayTextRows(value)}</td>
+    </tr>
+  );
+};
 
 RoadSignContentRow.propTypes = {
   label: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.array]).isRequired,
 };
 
-const RoadSignContent = ({ roadSign }, { intl }) => {
-  return (
-    <div className="roadsign-container">
-      <table className="component-list">
-        <tbody>
-          {roadSign.type && (
+const RoadSignContent = ({ roadSign }, { intl }) => (
+  <div className="roadsign-container">
+    <table className="component-list">
+      <tbody>
+        {roadSign.type && (
+          <RoadSignContentRow
+            label={intl.formatMessage({
+              id: 'road-sign-type',
+            })}
+            value={intl.formatMessage({
+              id: `road-sign-${roadSign.type}`,
+            })}
+          />
+        )}
+        {roadSign.type === 'SPEEDLIMIT' &&
+          roadSign.displayValue && (
             <RoadSignContentRow
               label={intl.formatMessage({
-                id: 'road-sign-type',
+                id: 'road-sign-display-value',
+              })}
+              value={roadSign.displayValue}
+            />
+          )}
+        {roadSign.type === 'INFORMATION' &&
+          Array.isArray(roadSign.textRows) &&
+          roadSign.textRows.length > 0 && (
+            <RoadSignContentRow
+              label={intl.formatMessage({
+                id: 'road-sign-display-value',
+              })}
+              value={roadSign.textRows}
+            />
+          )}
+        {roadSign.type === 'WARNING' &&
+          roadSign.displayValue && (
+            <RoadSignContentRow
+              label={intl.formatMessage({
+                id: 'road-sign-display-value',
               })}
               value={intl.formatMessage({
-                id: `road-sign-${roadSign.type}`,
+                id: `road-sign-warning-${roadSign.displayValue}`,
               })}
             />
           )}
-          {roadSign.type === 'SPEEDLIMIT' &&
-            roadSign.displayValue && (
-              <RoadSignContentRow
-                label={intl.formatMessage({
-                  id: 'road-sign-display-value',
-                })}
-                value={roadSign.displayValue}
-              />
-            )}
-          {roadSign.type === 'WARNING' &&
-            roadSign.displayValue && (
-              <RoadSignContentRow
-                label={intl.formatMessage({
-                  id: 'road-sign-display-value',
-                })}
-                value={intl.formatMessage({
-                  id: `road-sign-warning-${roadSign.displayValue}`,
-                })}
-              />
-            )}
-          {roadSign.effectDate && (
-            <RoadSignContentRow
-              label={intl.formatMessage({
-                id: 'road-sign-effective-from',
-              })}
-              value={moment.utc(roadSign.effectDate).format('DD.MM.YYYY HH:mm')}
-            />
-          )}
-        </tbody>
-      </table>
-    </div>
-  );
-};
+        {roadSign.effectDate && (
+          <RoadSignContentRow
+            label={intl.formatMessage({
+              id: 'road-sign-effective-from',
+            })}
+            value={moment.utc(roadSign.effectDate).format('DD.MM.YYYY HH:mm')}
+          />
+        )}
+      </tbody>
+    </table>
+  </div>
+);
 
 RoadSignContent.displayName = 'RoadSignContent';
 
