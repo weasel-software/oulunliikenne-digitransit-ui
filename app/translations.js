@@ -1579,7 +1579,7 @@ const translations = {
     'bicycle-route-prop-year': 'Valmistumisvuosi',
     'bicycle-route-prop-length': 'Pituus',
     'bicycle-routes': 'Pyörätiet',
-    'bicycle-routes-BAANA': 'Baana',
+    'bicycle-routes-BAANA': 'Baanat',
     'bicycle-routes-BAANA-CURRENT': 'Baana',
     'bicycle-routes-BAANA-PLANNED': 'Suunnitteilla oleva baana',
     'bicycle-routes-BRAND': 'Brändireitit',
