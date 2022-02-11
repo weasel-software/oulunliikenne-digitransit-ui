@@ -432,8 +432,13 @@ export default configMerger(walttiConfig, {
         header: 'Tietoja palvelusta',
         // header: 'Tietoja Oulunliikenne.fi-palvelusta',
         paragraphs: [
-          'Oulunliikenne.fi-palvelu sisältää joukkoliikenteen, kävelyn, pyöräilyn ja autoilun reittioppaat, joukkoliikenteen reaaliaikaisen pysäkki-informaation sekä tietoja liikenneolosuhteista ja liikenteen sujuvuudesta. Palvelun tilaajina ovat Oulun kaupunki ja Pohjois-Pohjanmaan ELY-keskus. Palveluntuottajana toimii Digia Oyj. Palvelu perustuu Digitransit-palvelualustaan.',
+          'Oulunliikenne.fi-palvelu sisältää joukkoliikenteen, kävelyn, pyöräilyn ja autoilun reittioppaat, joukkoliikenteen reaaliaikaisen pysäkki-informaation sekä tietoja liikenneolosuhteista ja liikenteen sujuvuudesta. Palvelun tilaajina ovat Oulun kaupunki ja Pohjois-Pohjanmaan ELY-keskus. Palveluntuottajana toimii Digia Oyj. Palvelu perustuu Digitransit-palvelualustaan. Katso palvelun englanninkielinen tekninen kuvaus {link}.',
         ],
+        link: {
+          href:
+            'https://wp.oulunliikenne.fi/wp-content/uploads/2022/02/Oulunliikenne.fi_service_documentation.pdf',
+          text: 'tästä',
+        },
       },
       {
         header: 'Digitransit palvelualusta',
