@@ -5,6 +5,22 @@ import { Link } from 'react-router';
 import { FormattedMessage } from 'react-intl';
 import connectToStores from 'fluxible-addons-react/connectToStores';
 
+const getParagraphWithLink = (paragraph, link) => {
+  if (paragraph.includes('{link}') && link) {
+    const [start, end] = paragraph.split('{link}');
+    return (
+      <>
+        {start}
+        <a target="_blank" rel="noopener noreferrer" href={link.href}>
+          {link.text}
+        </a>
+        {end}
+      </>
+    );
+  }
+  return paragraph;
+};
+
 const AboutPage = ({ currentLanguage }, context) => {
   const about = context.config.aboutThisService[currentLanguage];
   return (
@@ -12,15 +28,15 @@ const AboutPage = ({ currentLanguage }, context) => {
       <div className="page-frame fullscreen momentum-scroll">
         {about.map(
           (section, i) =>
-            (section.paragraphs && section.paragraphs.length) ||
-            section.link ? (
+            section.paragraphs && section.paragraphs.length ? (
               <div key={`about-section-${i}`}>
                 <h1 className="about-header">{section.header}</h1>
                 {section.paragraphs &&
                   section.paragraphs.map((p, j) => (
-                    <p key={`about-section-${i}-p-${j}`}>{p}</p>
+                    <p key={`about-section-${i}-p-${j}`}>
+                      {getParagraphWithLink(p, section.link)}
+                    </p>
                   ))}
-                {section.link && <Link to={section.link}>{section.link}</Link>}
               </div>
             ) : (
               false

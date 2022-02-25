@@ -581,7 +581,7 @@ class SelectMapLayersDialog extends React.Component {
                     <InputField
                       checked={bicycleRoutesBaana}
                       labelId="bicycle-routes-BAANA"
-                      defaultMessage="Baana"
+                      defaultMessage="Baanat"
                       onChange={e =>
                         this.updateSetting({
                           bicycleRoutesBaana: e.target.checked,
