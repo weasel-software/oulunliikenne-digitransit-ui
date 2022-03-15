@@ -4,22 +4,7 @@ import React from 'react';
 import { Link } from 'react-router';
 import { FormattedMessage } from 'react-intl';
 import connectToStores from 'fluxible-addons-react/connectToStores';
-
-const getParagraphWithLink = (paragraph, link) => {
-  if (paragraph.includes('{link}') && link) {
-    const [start, end] = paragraph.split('{link}');
-    return (
-      <>
-        {start}
-        <a target="_blank" rel="noopener noreferrer" href={link.href}>
-          {link.text}
-        </a>
-        {end}
-      </>
-    );
-  }
-  return paragraph;
-};
+import getFormattedText from '../util/configFormatter';
 
 const AboutPage = ({ currentLanguage }, context) => {
   const about = context.config.aboutThisService[currentLanguage];
@@ -34,7 +19,7 @@ const AboutPage = ({ currentLanguage }, context) => {
                 {section.paragraphs &&
                   section.paragraphs.map((p, j) => (
                     <p key={`about-section-${i}-p-${j}`}>
-                      {getParagraphWithLink(p, section.link)}
+                      {getFormattedText(p, section.link)}
                     </p>
                   ))}
               </div>
