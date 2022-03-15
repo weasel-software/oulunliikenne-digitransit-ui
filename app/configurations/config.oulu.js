@@ -423,6 +423,11 @@ export default configMerger(walttiConfig, {
         route: '/tietoja-palvelusta',
         icon: 'icon-icon_info',
       },
+      {
+        name: 'accessibility-report',
+        route: '/saavutettavuusseloste',
+        languages: ['fi'],
+      },
     ],
   },
 
