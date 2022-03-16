@@ -503,6 +503,7 @@ const translations = {
     accessibility: 'Accessibility',
     'accessibility-limited': 'Wheelchair',
     'accessibility-nolimit': 'No limits',
+    'accessibility-report': 'Accessibility report',
     'add-itinerary-via-point': 'Add via point for itinerary',
     'add-location': 'Add location',
     'add-location-to-favourites': 'Add an important location to your Favorites',
@@ -2892,6 +2893,7 @@ const translations = {
     accessibility: 'Tillgänglighet',
     'accessibility-limited': 'Med rullstolen',
     'accessibility-nolimit': 'Ingen begränsning',
+    'accessibility-report': 'Tillgänglighetsrapport',
     'add-itinerary-via-point': 'Lägg till mellanstopp',
     'add-location': 'Lägg till en plats',
     'add-location-to-favourites':
