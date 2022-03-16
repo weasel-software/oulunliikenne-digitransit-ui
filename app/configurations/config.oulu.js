@@ -423,6 +423,11 @@ export default configMerger(walttiConfig, {
         route: '/tietoja-palvelusta',
         icon: 'icon-icon_info',
       },
+      {
+        name: 'accessibility-report',
+        route: '/saavutettavuusseloste',
+        languages: ['fi'],
+      },
     ],
   },
 
@@ -498,6 +503,151 @@ export default configMerger(walttiConfig, {
           'The maps and the information of streets, buildings, bus stops etc. are provided by © OpenStreetMap contributors. Address data is retrieved from the Building and Dwelling Register of the Finnish Population Register Center. Public transport routes and timetables are downloaded from the database of Oulu Public Transport Authority.',
           'The source of many traffic information published in the service is Traffic Management Finland / digitraffic.fi, lisence CC 4.0 BY.',
         ],
+      },
+    ],
+  },
+
+  accessibilityReport: {
+    fi: [
+      {
+        header: 'Saavutettavuusseloste',
+        paragraphs: [
+          'Tämä seloste koskee Oulun Liikenteen digitaalisia palveluita sivulla www.oulunliikenne.fi',
+          'Tämä seloste on laadittu 27.1.2022 ja päivitetty 11.3.2022 Palvelun saavutettavuuden on arvioinut ulkopuolinen asiantuntijaorganisaatio, jonka avustuksella palvelua kehitetään jatkuvasti saavutettavammaksi.',
+          '{bold} Oulunliikenne.fi -sivuston saavutettavuuden tila:',
+          'Oulunliikenne.fi-palvelu täyttää saavutettavuusvaatimukset osittain. Palvelun saavutettavuuspuutteiden korjauksia toteutetaan tulevaisuudessa.',
+          '{bold} Alla mainittu sisältö ei ole WCAG-kriteerien mukaan saavutettava:',
+        ],
+      },
+      {
+        header2: '1. Havaittavuus',
+        paragraphs: [
+          'Puutteen kuvaus \n' +
+            '(WCAG-saavutettavuuskriteerit, jotka eivät täyty):',
+        ],
+        list: [
+          'Vasemman yläkulman logolinkillä ei ole tekstivastinetta.\n' +
+            '(WCAG 1.1.1)',
+          'Visuaaliset taulukot (esim. Aikataulut) eivät ole ohjelmallisesti taulukkoja.',
+          'Muotoilupuutteet haittaavat ruudunlukijakäyttöä:\n' +
+            'Otsikot eivät ole semanttisesti oikeassa järjestyksessä: Sivulla on H2, vaikkavsivulla ei ole H1:tä.',
+          'Osa painikkeista ei ole ohjelmallisesti painikkeita, esimerkiksi Häiriöt.',
+          'Osa listoista ei ole ohjelmallisesti listoja, esimerkiksi Asetuksissa olevat listat.',
+          'Landmark:eja ei ole käytetty merkitsemään sivun osia.\n' +
+            '(WCAG 1.3.1)',
+          'Reittiehdotukset-näkymässä Asetukset-valikko on vain visuaalisesti piilotettu, vaikka on ohjelmallisesti saatavilla.\n' +
+            '(WCAG 1.3.2)',
+        ],
+      },
+      {
+        paragraphs: ['{bold} VÄRIT JA KONTRASTIT'],
+        list: [
+          'Joissain sisällöissä väriä käytetään ainoana visuaalisena keinona informaation välittämisessä.',
+          'Sivustolla on kahta eri väriä olevia Häiriö-ikoneita, käyttäjä ei saa lisätietoa miten eriväriset häiriöikonit eroavat toisistaan.',
+          'Kunnossapito, Kelintarkistus, Pyörätiet: Oikean alakulman eri kategoriat ilmoitetaan vain väreillä, kartassa ilmaistaan eri kategoriat vain väreillä.',
+          'Ruuhkat, Ajokeli: Eroista viestitään pelkillä väreillä. Eroista viestitään pelkillä väreillä myös kartalla.',
+          'Ajokeli-, Kunnossapito- ja Kelintarkistus-laatikot: Tietoa ilmaistaan vain eri värisillä ympyröillä.\n' +
+            '(WCAG 1.4.1)',
+          'Tekstin ja taustavärin kontrasti ei ole kaikissa tapauksissa riittävän suuri.',
+          'Puutteita kontrasteissa: \n' +
+            'Reittiehdotukset-sivulla Asetukset.\n' +
+            'Linja-sivulla ei-aktiiviset välilehdet.\n' +
+            'Muut kulkumuodot-valikon linkit.\n' +
+            '(WCAG 1.4.3)',
+          'Ei tekstimuotoisen sisällön kontrastit.\n(WCAG 1.4.11)',
+        ],
+      },
+      {
+        header2: '2. Hallittavuus',
+        paragraphs: [
+          'Puutteen kuvaus \n' +
+            '(WCAG-saavutettavuuskriteerit, jotka eivät täyty):',
+        ],
+        list: [
+          'Joihinkin toimintoihin ei pääse ruudunlukijalla tai näppäimistöllä navigoimalla.',
+          'Linkit-ikkunaa ei saa suljettua pelkällä näppäimistöllä.',
+          'Kartalla olevia tietoja ei voi hallita pelkällä näppäimistöllä.',
+          'Häiriöt -painikkeeseen ei pääse näppäimistöllä.\n' +
+            '(WCAG 2.1.1., 2.1.2)',
+          'Pysäkkien ”reaaliaika”-ajat on merkitty ikonilla, joka vilkkuu, eikä vilkkuvaa sisältöä voi tauottaa, pysäyttää tai piilottaa. (HUOM. Chrome ja Firefox, ei Safari) \n' +
+            '(WCAG 2.2.2)',
+          'Sivustolla ei ole mekanismia ohittaa toistuvia lohkoja. \n' +
+            '(WCAG 2.4.1)',
+          'Sivuston sivuilla on osittain puutteelliset sivuotsikot. \n' +
+            '(WCAG 2.4.2)',
+          'Kohdistusjärjestys ei ole kaikilta osin looginen ja johdonmukainen: \n' +
+            'Reittiehdotukset-näkymästä avautuvaan Asetukset-valikkoon pääse vain menemällä kohdistusjärjestyksessä taaksepäin.\n' +
+            '(WCAG 2.4.3)',
+          'Kohdistus ei ole kaikkialla näkyvä. \n(WCAG 2.4.7)',
+          'Osoitinlaitteella tehtyä valintaa ei voi kaikkialla peruuttaa. \n' +
+            '(WCAG 2.5.2)',
+          'Joillakin elementeillä visuaalinen nimi ei vastaa ohjelmallista nimeä. \n' +
+            '(WCAG 2.5.3)',
+        ],
+      },
+      {
+        header2: '3. Ymmärrettävyys',
+        paragraphs: [
+          'Puutteen kuvaus \n' +
+            '(WCAG-saavutettavuuskriteerit, jotka eivät täyty):',
+        ],
+        list: [
+          'Sivun kieltä ei voida selvittää ohjelmallisesti.  Lang="fi", vaikka kieleksi vaihtaisi SV tai EN.\n' +
+            '(WCAG 3.1.1)',
+          'Joidenkin komponenttien merkitseminen ei ole johdonmukaista. \n' +
+            '(WCAG 3.2.4)',
+          'Käyttäjälle ei ilmoiteta virheellisestä syötteestä. Hakukentissä virheellisestä syötteestä ei ilmoiteta, vaan annetaan lähin mahdollinen tulos. \n' +
+            '(WCAG 3.3.1, 3.3.3)',
+          'Syöttökentillä ei pääsääntöisesti ole nimilappuja tai ohjeita. Esimerkiksi Reittiehdotukset-sivun valinnoilla ei ole nimilappuja. (Aika, Tänään, Lähtöaika, Tallennetut asetukset)\n' +
+            ' (WCAG 3.3.2)',
+        ],
+      },
+      {
+        header2: '4. Toimintavarmuus',
+        paragraphs: [
+          'Puutteen kuvaus \n' +
+            '(WCAG-saavutettavuuskriteerit, jotka eivät täyty):',
+        ],
+        list: [
+          'Sivuston koodi ei ole täysin standardinmukaista. \n' +
+            '(WCAG 4.1.1)',
+          'Joidenkin painikkeiden ja syöttökenttien nimet eivät ole saatavilla ohjelmallisesti.',
+          'Joidenkin valintojen tilaa ei voi päätellä ohjelmallisesti. \n' +
+            '(WCAG 4.1.2)',
+          'Ruudunlukijakäyttäjälle ei viestitä suosikin lisäämisen tai poistamisen onnistumisesta tai epäonnistumisesta. \n' +
+            '(WCAG 4.1.3)',
+        ],
+      },
+      {
+        header2: 'Palaute ja yhteystiedot',
+        paragraphs: [
+          '',
+          'Tarjoamme puhelimitse tukea asiakaspalvelussamme käyttäjille, joille digipalvelut eivät ole saavutettavissa. Oulun joukkoliikenteen asiakaspalvelu on avoinna ma–pe klo 9–15.30. Puhelinnumeromme on 08 5584 0400.',
+          'Huomasitko saavutettavuuspuutteen Oulunliikenne.fi -palvelussa? Kerro se meille ja teemme parhaamme puutteen korjaamiseksi. Otamme mielellämme vastaan huomioita ja parannusehdotuksia.',
+          'Voit lähettää saavutettavuuspalautetta sähköpostitse osoitteeseen: \n' +
+            '{link}',
+        ],
+        link: {
+          href: 'mailto:palaute.oulunliikenne@ouka.fi',
+          text: 'palaute.oulunliikenne@ouka.fi',
+        },
+      },
+      {
+        paragraphs: [
+          'Joukkoliikenteen toimintaa koskevat palautteet pyydämme lähettämään nettilomakkeen avulla osoitteessa {link}',
+          '{bold} Saavutettavuuskantelun ja -selvityspyynnön tekeminen',
+          'Jos et ole tyytyväinen saamaasi vastaukseen tai et saa vastausta lainkaan kahden viikon aikana, voit tehdä ilmoituksen Etelä-Suomen aluehallintovirastoon. Etelä-Suomen aluehallintovirasto valvoo saavutettavuusvaatimusten noudattamista Suomessa. ',
+          '{bold} Valvontaviranomaisen yhteystiedot',
+          'Etelä-Suomen aluehallintovirasto\n' +
+            'Saavutettavuuden valvonnan yksikkö\n' +
+            'www.saavutettavuusvaatimukset.fi\n' +
+            'saavutettavuus(at)avi.fi\n' +
+            'puhelinnumero vaihde 0295 016 000',
+        ],
+        link: {
+          href: 'https://www.oulunjoukkoliikenne.fi/asiakaspalvelu',
+          text: 'https://www.oulunjoukkoliikenne.fi/asiakaspalvelu',
+        },
       },
     ],
   },
