@@ -1546,6 +1546,7 @@ const translations = {
     accessibility: 'Esteettömyys',
     'accessibility-limited': 'Liikun pyörätuolilla',
     'accessibility-nolimit': 'Ei rajoitusta',
+    'accessibility-report': 'Saavutettavuusseloste',
     'add-itinerary-via-point': 'Lisää reitille välipiste',
     'add-location': 'Lisää paikka',
     'add-location-to-favourites':
