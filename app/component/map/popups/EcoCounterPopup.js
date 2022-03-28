@@ -19,7 +19,7 @@ import EcoCounterComparisonSingleChannelRoute from '../../../route/EcoCounterCom
 import LoadingPage from '../../LoadingPage';
 import NetworkError from '../../NetworkError';
 
-const DATE_FORMAT = 'YYYY-MM-DDTHH:mm:ss';
+const DATE_FORMAT = 'YYYY-MM-DDTHH:mm:ssZ';
 
 const STEPS = {
   HOUR: 'hour',
@@ -141,15 +141,7 @@ class EcoCounterPopup extends React.Component {
     }
   };
 
-  formatDate = date => {
-    const { step } = this.state;
-
-    if (step === STEPS.HOUR) {
-      return date.utc().format(DATE_FORMAT);
-    }
-
-    return date.format(DATE_FORMAT);
-  };
+  formatDate = date => date.utc().format(DATE_FORMAT);
 
   getChannelsByUserType = () => {
     const channels = this.props.channels || [];
