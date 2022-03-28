@@ -141,15 +141,7 @@ class EcoCounterPopup extends React.Component {
     }
   };
 
-  formatDate = date => {
-    const { step } = this.state;
-
-    if (step === STEPS.HOUR) {
-      return date.utc().format(DATE_FORMAT);
-    }
-
-    return date.format(DATE_FORMAT);
-  };
+  formatDate = date => date.utc().format(DATE_FORMAT);
 
   getChannelsByUserType = () => {
     const channels = this.props.channels || [];
