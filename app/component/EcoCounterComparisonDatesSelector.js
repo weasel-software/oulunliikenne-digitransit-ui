@@ -36,6 +36,7 @@ export default class EcoCounterComparisonDatesSelector extends React.Component {
   };
 
   onDateChange = datePickerName => newDate => {
+    newDate.set('hour', 0);
     this.setState({ isDatePickerOpen: false, openDatePicker: null });
     switch (datePickerName) {
       case RANGE1_START:
