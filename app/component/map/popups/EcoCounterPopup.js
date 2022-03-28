@@ -19,7 +19,7 @@ import EcoCounterComparisonSingleChannelRoute from '../../../route/EcoCounterCom
 import LoadingPage from '../../LoadingPage';
 import NetworkError from '../../NetworkError';
 
-const DATE_FORMAT = 'YYYY-MM-DDTHH:mm:ss';
+const DATE_FORMAT = 'YYYY-MM-DDTHH:mm:ssZ';
 
 const STEPS = {
   HOUR: 'hour',
