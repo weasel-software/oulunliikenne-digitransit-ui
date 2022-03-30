@@ -68,7 +68,14 @@ const AppBarLarge = (
   return (
     <div>
       <div className="top-bar bp-large flex-horizontal">
-        <button className="noborder" onClick={titleClicked}>
+        <button
+          className="noborder"
+          onClick={titleClicked}
+          aria-label={intl.formatMessage({
+            id: 'frontpage',
+            defaultMessage: 'Front page',
+          })}
+        >
           {logoElement}
         </button>
         {config.availableModes && (
