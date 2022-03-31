@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 import { FormattedMessage } from 'react-intl';
+import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import connectToStores from 'fluxible-addons-react/connectToStores';
 import { uniqueId } from 'lodash';
@@ -9,8 +10,17 @@ import getFormattedText from '../util/configFormatter';
 const AccessibilityReport = ({ currentLanguage }, context) => {
   const accessibilityReport =
     context.config.accessibilityReport[currentLanguage];
+  const { intl } = context;
   return (
     <div className="accessibility-report-page fullscreen">
+      <Helmet>
+        <title>
+          {intl.formatMessage({
+            id: 'accessibility-report',
+            defaultMessage: 'Accessibility report',
+          })}
+        </title>
+      </Helmet>
       <div className="page-frame fullscreen momentum-scroll">
         {accessibilityReport &&
           accessibilityReport.map(
@@ -58,6 +68,7 @@ AccessibilityReport.propTypes = {
 
 AccessibilityReport.contextTypes = {
   config: PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 export default connectToStores(
