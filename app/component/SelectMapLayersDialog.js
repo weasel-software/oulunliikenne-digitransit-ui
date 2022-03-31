@@ -34,6 +34,7 @@ function InputField(props, { config, intl }) {
         toggled={props.checked}
         className="toggle-item"
         onClick={props.onChange}
+        rippleStyle={!props.checked ? { color: 'black' } : { opacity: 0.5 }}
       />
     );
   }
