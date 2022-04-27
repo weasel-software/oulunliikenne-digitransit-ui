@@ -18,6 +18,8 @@ const AWS_IDENTITY_POOL_ID =
   process.env.AWS_IDENTITY_POOL_ID ||
   'eu-central-1:8f58773b-4d45-46bc-9534-5a9a0d19c76d';
 
+const ANALYTICS_URL = 'https://analytics.sitowise.com/kapy_oulu/';
+
 const walttiConfig = require('./waltti').default;
 
 export default configMerger(walttiConfig, {
@@ -53,6 +55,7 @@ export default configMerger(walttiConfig, {
     BICYCLE_ROUTE_TYPES_MAP: `${AWS_MAP_URL}/map/bicycleroutetypes/`,
     BICYCLE_ROUTES_BAANA_MAP: `${AWS_MAP_URL}/map/bicycleroutesbaana/`,
     BICYCLE_ROUTES_BRAND_MAP: `${AWS_MAP_URL}/map/bicycleroutesbrand/`,
+    ANALYTICS: ANALYTICS_URL,
   },
 
   map: {

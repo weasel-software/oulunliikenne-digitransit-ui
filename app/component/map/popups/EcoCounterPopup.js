@@ -55,6 +55,7 @@ class EcoCounterPopup extends React.Component {
     intl: intlShape.isRequired,
     router: routerShape.isRequired,
     location: locationShape.isRequired,
+    config: PropTypes.object.isRequired,
   };
   static description = (
     <div>
@@ -357,6 +358,7 @@ class EcoCounterPopup extends React.Component {
                     toggleView={this.toggleView}
                     renderMonthElement={this.renderMonthElement}
                     openComparison={this.openComparison}
+                    analyticsUrl={this.context.config.URL.ANALYTICS}
                   />
                 ) : (
                   <EcoCounterComparisonContent
