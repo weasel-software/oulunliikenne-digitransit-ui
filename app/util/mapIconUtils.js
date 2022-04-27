@@ -518,7 +518,7 @@ export function drawEcoCounterIcon(tile, geom, imageSize) {
   );
 }
 
-export function getRoadSignIconId(type, value) {
+export function getRoadSignIconId(type, value, severity) {
   if (type === 'SPEEDLIMIT') {
     const speedLimit = value;
     return `icon-icon_speed-limit-${speedLimit}`;
@@ -527,8 +527,11 @@ export function getRoadSignIconId(type, value) {
     const warningType = value;
     return `icon-icon_warning-${warningType}`;
   }
-  if (type === 'INFORMATION') {
+  if (type === 'INFORMATION' && severity !== 'UNKNOWN') {
     return `icon-icon_information`;
+  }
+  if (type === 'INFORMATION' && severity === 'UNKNOWN') {
+    return `icon-icon_information-grey`;
   }
   return null;
 }
@@ -547,8 +550,8 @@ export function drawWarningRoadSignIcon(tile, geom, imageSize, warningType) {
   });
 }
 
-export function drawInformationRoadSignIcon(tile, geom, imageSize) {
-  const iconId = getRoadSignIconId('INFORMATION');
+export function drawInformationRoadSignIcon(tile, geom, imageSize, severity) {
+  const iconId = getRoadSignIconId('INFORMATION', undefined, severity);
   getImageFromSpriteCache(iconId, imageSize, imageSize).then(image => {
     drawIconImage(image, tile, geom, imageSize, imageSize);
   });

@@ -68,6 +68,7 @@ export default class RoadSigns {
                 this.tile,
                 feature.geom,
                 this.imageSize,
+                feature.properties.severity,
               );
             }
 
