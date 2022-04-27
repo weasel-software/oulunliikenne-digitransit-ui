@@ -5,17 +5,17 @@ import Icon from '../../Icon';
 import ComponentUsageExample from '../../ComponentUsageExample';
 import { getRoadSignIconId } from '../../../util/mapIconUtils';
 
-const renderIcon = (type, value) => {
-  const iconId = getRoadSignIconId(type, value);
+const renderIcon = (type, value, severity) => {
+  const iconId = getRoadSignIconId(type, value, severity);
   return iconId ? <Icon img={iconId} /> : null;
 };
 
-const SelectRoadSignRow = ({ type, displayValue, ...props }) => (
+const SelectRoadSignRow = ({ type, displayValue, severity, ...props }) => (
   <div className="no-margin">
     {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
     <div className="cursor-pointer select-row" onClick={props.selectRow}>
       <div className="padding-vertical-normal select-row-icon">
-        {renderIcon(type, displayValue)}
+        {renderIcon(type, displayValue, severity)}
       </div>
       <div className="padding-vertical-normal select-row-text">
         <span className="header-primary no-margin link-color">
@@ -34,6 +34,7 @@ SelectRoadSignRow.propTypes = {
   type: PropTypes.string.isRequired,
   displayValue: PropTypes.string.isRequired,
   selectRow: PropTypes.func.isRequired,
+  severity: PropTypes.string.isRequired,
 };
 
 SelectRoadSignRow.displayName = 'SelectRoadSignRow';

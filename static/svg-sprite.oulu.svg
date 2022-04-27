@@ -2039,5 +2039,37 @@
 	</g>
 </symbol>
 
+<symbol id="icon-icon_information-grey" viewBox="0 0 24 24">
+	<g stroke="none" stroke-width="1"	fill="none"	fill-rule="evenodd"	>
+		<polygon points="0 0 24 0 24 24 0 24" />
+		<g transform="translate(0.000000, 1.000000)">
+			<path
+					d="M10.5881876,0.881790983 C11.2501979,-0.252573014 12.61695,-0.288767702 13.3289993,0.751760679 L13.4112156,0.881790983 L23.7368966,18.5749893 C24.4021069,19.7148366 23.7426173,20.9112957 22.4693468,20.9953032 L22.3253825,21 L1.67402062,21 C0.347204358,21 -0.370307076,19.8367278 0.194445342,18.7010067 L0.262506607,18.5749893 L10.5881876,0.881790983 Z"
+					fill="#aaaaaa"
+					fill-rule="nonzero"
+			/>
+			<polygon
+					fill="#cccccc"
+					fill-rule="nonzero"
+					points="11.999 2.43 2.329 19 21.669 19"
+			/>
+			<rect
+					fill="#aaaaaa"
+					x="11"
+					y="11"
+					width="2"
+					height="6"
+			/>
+			<rect
+					fill="#aaaaaa"
+					x="11"
+					y="8"
+					width="2"
+					height="2"
+			/>
+		</g>
+	</g>
+</symbol>
+
 </defs>
 </svg>
