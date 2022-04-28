@@ -13311,6 +13311,18 @@
                         "deprecationReason": null
                     },
                     {
+                        "name": "severity",
+                        "description": "The severity level of the road sign",
+                        "args": [],
+                        "type": {
+                            "kind": "ENUM",
+                            "name": "VariableRoadSignSeverity",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
                         "name": "direction",
                         "description": "The road sign direction in relation to the road address",
                         "args": [],
@@ -13473,6 +13485,41 @@
                     },
                     {
                         "name": "INFORMATION",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "possibleTypes": null
+            },
+            {
+                "kind": "ENUM",
+                "name": "VariableRoadSignSeverity",
+                "description": "",
+                "fields": null,
+                "inputFields": null,
+                "interfaces": null,
+                "enumValues": [
+                    {
+                        "name": "UNKNOWN",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "HIGH",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "MEDIUM",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "LOW",
                         "description": "",
                         "isDeprecated": false,
                         "deprecationReason": null

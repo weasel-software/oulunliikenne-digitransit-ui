@@ -18,7 +18,11 @@ function RoadSignPopup({ roadSign }, { intl }) {
             defaultMessage: 'Road sign',
           })}
           description={roadSign.roadSignId}
-          icon={getRoadSignIconId(roadSign.type, roadSign.displayValue)}
+          icon={getRoadSignIconId(
+            roadSign.type,
+            roadSign.displayValue,
+            roadSign.severity,
+          )}
           unlinked
         />
         <RoadSignContent roadSign={roadSign} />
@@ -61,6 +65,7 @@ export default Relay.createContainer(RoadSignPopup, {
         roadAddress
         lat
         lon
+        severity
         textRows {
           screen
           rowNumber
