@@ -507,6 +507,7 @@ const translations = {
     'add-itinerary-via-point': 'Add via point for itinerary',
     'add-location': 'Add location',
     'add-location-to-favourites': 'Add an important location to your Favorites',
+    'additional-analytics': 'Additional analytics',
     address: 'Address',
     'address-or-stop': 'Address or stop',
     agency: 'Operator',
@@ -1552,6 +1553,7 @@ const translations = {
     'add-location': 'Lisää paikka',
     'add-location-to-favourites':
       'Lisää sinulle tärkeä paikka Suosikkisi-välilehdelle',
+    'additional-analytics': 'Lisäanalytiikka',
     address: 'Osoite',
     'address-or-stop': 'Osoite tai pysäkki',
     agency: 'Liikennöitsijä',
@@ -2898,6 +2900,7 @@ const translations = {
     'add-location': 'Lägg till en plats',
     'add-location-to-favourites':
       'Lägg till en plats som är viktig för dig på fliken Favoriter',
+    'additional-analytics': 'Ytterligare analyser',
     address: 'Adress',
     'address-or-stop': 'Adress eller hållplats',
     agency: 'Trafikidkare',

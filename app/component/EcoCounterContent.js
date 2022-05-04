@@ -50,6 +50,7 @@ class EcoCounterContent extends React.Component {
     toggleView: PropTypes.func.isRequired,
     renderMonthElement: PropTypes.func,
     openComparison: PropTypes.func,
+    analyticsUrl: PropTypes.string.isRequired,
   };
 
   static contextTypes = {
@@ -137,6 +138,7 @@ class EcoCounterContent extends React.Component {
       availableUserTypes,
       openComparison,
       renderMonthElement,
+      analyticsUrl,
     } = this.props;
     const { isDatePickerOpen } = this.state;
 
@@ -194,6 +196,10 @@ class EcoCounterContent extends React.Component {
         hidden: false,
       });
     }
+
+    const openAnalytics = () => {
+      window.open(analyticsUrl, '_blank').focus();
+    };
 
     return (
       <div className="eco-counter-content">
@@ -267,6 +273,15 @@ class EcoCounterContent extends React.Component {
           >
             {formatMessage({ id: 'monthly' })}
           </EcoCounterButton>
+        </div>
+        <div className="analytics-row">
+          <button
+            onClick={openAnalytics}
+            aria-label={formatMessage({ id: 'additional-analytics' })}
+          >
+            {formatMessage({ id: 'additional-analytics' })}
+            <Icon img="icon-icon_arrow-collapse--right" viewBox="0 0 25 25" />
+          </button>
         </div>
       </div>
     );
