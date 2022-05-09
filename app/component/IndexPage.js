@@ -231,6 +231,11 @@ class IndexPage extends React.Component {
       defaultMessage: 'Search',
     });
 
+    const favouritesTitle = intl.formatMessage({
+      id: 'your-favourites',
+      defaultMessage: 'Favorites',
+    });
+
     return breakpoint === 'large' ? (
       <div
         className={`front-page flex-vertical ${origin &&
@@ -274,6 +279,8 @@ class IndexPage extends React.Component {
         <ContentToggle
           icon="icon_star"
           iconClass="favourites-toggle"
+          ariaLabel={favouritesTitle}
+          title={favouritesTitle}
           toggleDisabled={!config.toggleableFavourites}
         >
           <div key="foo" className="fpccontainer">
