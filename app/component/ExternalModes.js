@@ -1,12 +1,13 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import Relay from 'react-relay/classic';
+import { intlShape } from 'react-intl';
 
 import ExternalModesContent from './ExternalModesContent';
 import BubbleDialog from './BubbleDialog';
 import ComponentUsageExample from './ComponentUsageExample';
 
-const ExternalModes = ({ isOpen }) => (
+const ExternalModes = ({ isOpen }, { intl }) => (
   <BubbleDialog
     containerClassName="bubble-dialog-component-container-alt"
     header="external-modes"
@@ -14,6 +15,10 @@ const ExternalModes = ({ isOpen }) => (
     icon="more"
     isOpen={isOpen}
     isFullscreenOnMobile
+    toggleButtonTitle={intl.formatMessage({
+      id: 'external-modes',
+      defaultMessage: 'Other transportation',
+    })}
   >
     <Relay.RootContainer
       Component={ExternalModesContent}
@@ -40,6 +45,10 @@ ExternalModes.propTypes = {
 
 ExternalModes.defaultProps = {
   isOpen: false,
+};
+
+ExternalModes.contextTypes = {
+  intl: intlShape.isRequired,
 };
 
 ExternalModes.description = (

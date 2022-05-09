@@ -172,6 +172,8 @@ class BubbleDialog extends React.Component {
       >
         <button
           className="bubble-dialog-toggle"
+          aria-label={this.props.toggleButtonTitle}
+          title={this.props.toggleButtonTitle}
           onClick={() => (isOpen ? this.closeDialog() : this.openDialog())}
           onKeyDown={e =>
             isKeyboardSelectionEvent(e) &&
@@ -233,6 +235,7 @@ BubbleDialog.propTypes = {
   isFullscreenOnMobile: PropTypes.bool,
   isOpen: PropTypes.bool,
   onDialogOpen: PropTypes.func,
+  toggleButtonTitle: PropTypes.string,
 };
 
 BubbleDialog.defaultProps = {
@@ -244,6 +247,7 @@ BubbleDialog.defaultProps = {
   isFullscreenOnMobile: false,
   isOpen: false,
   onDialogOpen: undefined,
+  toggleButtonTitle: '',
 };
 
 BubbleDialog.contextTypes = {
