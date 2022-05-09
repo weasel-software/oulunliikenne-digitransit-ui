@@ -226,6 +226,11 @@ class IndexPage extends React.Component {
     );
     const selectedMainTab = this.getSelectedTab();
 
+    const searchTitle = intl.formatMessage({
+      id: 'search',
+      defaultMessage: 'Search',
+    });
+
     return breakpoint === 'large' ? (
       <div
         className={`front-page flex-vertical ${origin &&
@@ -237,6 +242,8 @@ class IndexPage extends React.Component {
         <ContentToggle
           icon="icon_search"
           iconClass="search-toggle"
+          title={searchTitle}
+          ariaLabel={searchTitle}
           toggleDisabled={!config.toggleableSearch}
           active={origin.set || destination.set}
         >
@@ -334,6 +341,8 @@ class IndexPage extends React.Component {
             <ContentToggle
               icon="icon_search"
               iconClass="search-toggle"
+              title={searchTitle}
+              ariaLabel={searchTitle}
               toggleDisabled={!config.toggleableSearch}
               active={origin.set || destination.set}
             >
