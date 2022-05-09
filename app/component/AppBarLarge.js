@@ -64,6 +64,11 @@ const AppBarLarge = (
     );
   }
 
+  const frontPageTitle = intl.formatMessage({
+    id: 'frontpage',
+    defaultMessage: 'Front page',
+  });
+
   /* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions, jsx-a11y/anchor-is-valid */
   return (
     <div>
@@ -71,10 +76,8 @@ const AppBarLarge = (
         <button
           className="noborder"
           onClick={titleClicked}
-          aria-label={intl.formatMessage({
-            id: 'frontpage',
-            defaultMessage: 'Front page',
-          })}
+          aria-label={frontPageTitle}
+          title={frontPageTitle}
         >
           {logoElement}
         </button>
