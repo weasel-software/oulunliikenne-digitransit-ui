@@ -272,6 +272,10 @@ class IndexPage extends React.Component {
                 id: 'hide-realtime-on-map',
                 defaultMessage: 'Hide vehicles on map',
               })}
+              aria-label={intl.formatMessage({
+                id: 'hide-realtime-on-map',
+                defaultMessage: 'Hide vehicles on map',
+              })}
             >
               <Icon img="icon-icon_realtime_off" />
             </button>
