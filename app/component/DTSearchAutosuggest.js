@@ -145,7 +145,14 @@ class DTAutosuggest extends React.Component {
   clearButton = () => {
     const img = this.state.value ? 'icon-icon_close' : 'icon-icon_search';
     return (
-      <button className="noborder clear-input" onClick={this.clearInput}>
+      <button
+        className="noborder clear-input"
+        onClick={this.clearInput}
+        title={this.context.intl.formatMessage({
+          id: this.state.value ? 'clear' : 'search',
+          defaultMessage: this.state.value ? 'Clear' : 'Search',
+        })}
+      >
         <Icon img={img} />
       </button>
     );

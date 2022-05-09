@@ -582,6 +582,7 @@ const translations = {
       'City bike stations will be opened again next spring',
     'citybike-register-required': 'To use city bikes, you need to register',
     citybike_off: 'Closed',
+    clear: 'Clear',
     'clear-selected-options': 'Clear options',
     close: 'Close',
     'close-comparison': 'Close comparison',
@@ -1627,6 +1628,7 @@ const translations = {
     'citybike-register-required':
       'Kaupunkipyörien käyttö vaatii rekisteröitymisen',
     citybike_off: 'Suljettu',
+    clear: 'Tyhjennä',
     'clear-selected-options': 'Tyhjennä valinnat',
     close: 'Sulje',
     'close-comparison': 'Sulje vertailu',
@@ -2973,6 +2975,7 @@ const translations = {
     'citybike-register-required':
       'Det krävs registrering för att kunna använda stadscyklar',
     citybike_off: 'Stängd',
+    clear: 'Klar',
     'clear-selected-options': 'Töm dina val',
     close: 'Stäng',
     'close-comparison': 'Avslut',
