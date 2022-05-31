@@ -93,6 +93,10 @@ export default class EcoCounterComparisonDatesSelector extends React.Component {
               <button
                 className="date-row__input-group__input"
                 onClick={this.toggleDatePicker(RANGE1_START)}
+                aria-label={`${this.props.formatMessage({
+                  id: 'choose-date',
+                  defaultMessage: 'Choose date',
+                })}, ${range1[0].format('D.M.Y')}`}
               >
                 <span className="value">{range1[0].format('D.M.Y')}</span>
                 {calendarIcon}
@@ -103,6 +107,10 @@ export default class EcoCounterComparisonDatesSelector extends React.Component {
               <button
                 className="date-row__input-group__input"
                 onClick={this.toggleDatePicker(RANGE1_END)}
+                aria-label={`${this.props.formatMessage({
+                  id: 'choose-date',
+                  defaultMessage: 'Choose date',
+                })}, ${range1[1].format('D.M.Y')}`}
               >
                 <span className="value">{range1[1].format('D.M.Y')}</span>
                 {calendarIcon}
@@ -144,6 +152,10 @@ export default class EcoCounterComparisonDatesSelector extends React.Component {
               <button
                 className="date-row__input-group__input"
                 onClick={this.toggleDatePicker(RANGE2_START)}
+                aria-label={`${this.props.formatMessage({
+                  id: 'choose-date',
+                  defaultMessage: 'Choose date',
+                })}, ${range2[0].format('D.M.Y')}`}
               >
                 <span className="value">{range2[0].format('D.M.Y')}</span>
                 {calendarIcon}
@@ -154,6 +166,10 @@ export default class EcoCounterComparisonDatesSelector extends React.Component {
               <button
                 className="date-row__input-group__input"
                 onClick={this.toggleDatePicker(RANGE2_END)}
+                aria-label={`${this.props.formatMessage({
+                  id: 'choose-date',
+                  defaultMessage: 'Choose date',
+                })}, ${range2[1].format('D.M.Y')}`}
               >
                 <span className="value">{range2[1].format('D.M.Y')}</span>
                 {calendarIcon}
