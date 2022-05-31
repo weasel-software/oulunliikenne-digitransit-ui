@@ -110,6 +110,10 @@ class CustomizeSearch extends React.Component {
             className="close-offcanvas"
             onClick={onToggleClick}
             onKeyPress={onToggleClick}
+            aria-label={intl.formatMessage({
+              id: 'close',
+              defaultMessage: 'Close',
+            })}
           >
             <Icon className="close-icon" img="icon-icon_close" />
           </button>
