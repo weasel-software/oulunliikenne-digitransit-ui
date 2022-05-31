@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, intlShape } from 'react-intl';
 import Icon from './Icon';
 import { isKeyboardSelectionEvent } from '../util/browser';
 
-const AlertPopUp = props => (
+const AlertPopUp = (props, { intl: { formatMessage } }) => (
   <div
     role="button"
     tabIndex={0}
@@ -21,7 +21,13 @@ const AlertPopUp = props => (
       onKeyPress={e => isKeyboardSelectionEvent(e) && props.togglePopUp}
     >
       <div className="close-popup">
-        <button onClick={props.togglePopUp}>
+        <button
+          onClick={props.togglePopUp}
+          aria-label={formatMessage({
+            id: 'close',
+            defaultMessage: 'Close',
+          })}
+        >
           <Icon className="close" img="icon-icon_close" />
         </button>
       </div>
@@ -42,6 +48,10 @@ AlertPopUp.propTypes = {
   textId: PropTypes.string,
   icon: PropTypes.string,
   togglePopUp: PropTypes.func,
+};
+
+AlertPopUp.contextTypes = {
+  intl: intlShape.isRequired,
 };
 
 export default AlertPopUp;
