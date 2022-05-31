@@ -152,6 +152,10 @@ class DTAutosuggest extends React.Component {
           id: this.state.value ? 'clear' : 'search',
           defaultMessage: this.state.value ? 'Clear' : 'Search',
         })}
+        aria-label={this.context.intl.formatMessage({
+          id: this.state.value ? 'clear' : 'search',
+          defaultMessage: this.state.value ? 'Clear' : 'Search',
+        })}
       >
         <Icon img={img} />
       </button>
