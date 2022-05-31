@@ -116,6 +116,10 @@ class BubbleDialog extends React.Component {
               onKeyDown={e =>
                 isKeyboardSelectionEvent(e) && this.closeDialog(true)
               }
+              aria-label={intl.formatMessage({
+                id: 'close',
+                defaultMessage: 'Close',
+              })}
             >
               <Icon img="icon-icon_close" />
             </button>
