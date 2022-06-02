@@ -28,7 +28,7 @@
     padding-bottom: 1.5em;
   }
 
-  h1 {
+  h2 {
     text-transform: none;
     font-size: $font-size-normal;
     letter-spacing: -0.6pt;
@@ -46,7 +46,7 @@
 }
 
 .transport-mode-header {
-  h1 {
+  h2 {
     text-transform: uppercase;
     letter-spacing: -0.6pt;
     font-size: $font-size-normal;
@@ -174,7 +174,7 @@
   }
 }
 
-.route-preferences-container h1 {
+.route-preferences-container h2 {
   text-transform: uppercase;
   font-size: $font-size-normal;
 }
@@ -207,7 +207,7 @@
 }
 
 .option-container {
-  h1 {
+  h2 {
     text-transform: none;
     font-size: $font-size-normal;
     letter-spacing: -0.6pt;

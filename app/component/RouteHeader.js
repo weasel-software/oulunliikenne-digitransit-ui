@@ -33,10 +33,10 @@ export default function RouteHeader(props) {
 
   return (
     <div className={cx('route-header', props.className)}>
-      <h1 className={mode}>
+      <h2 className={mode}>
         <RouteNumber mode={mode} text={routeLine} />
         {trip}
-      </h1>
+      </h2>
     </div>
   );
 }

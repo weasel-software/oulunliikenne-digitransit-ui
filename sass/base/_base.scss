@@ -80,8 +80,8 @@ a {
 }
 
 /* HEADINGS */
-h1,
-.h1 {
+h2,
+.h2 {
   @include font-narrow-medium;
   font-size: $font-size-xlarge;
   padding: 0.4em 0 0.2em;
@@ -120,7 +120,7 @@ a h5,
 a .h5 {
   color: $link-color;
 }
-h1 a {
+h2 a {
   color: inherit;
   text-decoration: none;
 }

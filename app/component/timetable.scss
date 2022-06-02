@@ -68,10 +68,10 @@
     border: 1px solid $light-gray;
     border-top: none;
     padding: $padding-medium $padding-large $padding-large $padding-large;
-    .mobile h1.title {
+    .mobile h2.title {
       font-size: $font-size-large;
     }
-    h1.title {
+    h2.title {
       font-size: $font-size-xlarge;
       @media print {
         display: none;

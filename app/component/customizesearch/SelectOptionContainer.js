@@ -138,12 +138,12 @@ const SelectOptionContainer = (
 
   return (
     <div className="option-container">
-      <h1>
+      <h2>
         {intl.formatMessage({
           id: title,
           defaultMessage: 'option',
         })}
-      </h1>
+      </h2>
       <div className="select-container">
         <Select
           name={title}

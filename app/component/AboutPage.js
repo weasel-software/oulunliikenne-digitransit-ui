@@ -25,7 +25,7 @@ const AboutPage = ({ currentLanguage }, context) => {
           (section, i) =>
             section.paragraphs && section.paragraphs.length ? (
               <div key={`about-section-${i}`}>
-                <h1 className="about-header">{section.header}</h1>
+                <h2 className="about-header">{section.header}</h2>
                 {section.paragraphs &&
                   section.paragraphs.map((p, j) => (
                     <p key={`about-section-${i}-p-${j}`}>
