@@ -38,7 +38,7 @@ class Select extends React.Component {
     const { headerText } = this.props;
     return (
       <React.Fragment>
-        {headerText && <h4>{headerText}</h4>}
+        {headerText && <h5>{headerText}</h5>}
         <select
           onChange={this.props.onSelectChange}
           value={this.props.selected}

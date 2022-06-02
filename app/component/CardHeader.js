@@ -34,7 +34,7 @@ const CardHeader = ({
       </div>
     )}
     <div className="card-header-wrapper">
-      <span className={headingStyle || 'h4'}>
+      <span className={headingStyle || 'h5'}>
         {name}
         {unlinked ? null : <span className="link-arrow"> ›</span>}
       </span>

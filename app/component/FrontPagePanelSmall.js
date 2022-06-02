@@ -14,8 +14,8 @@ const FrontPagePanelSmall = ({
   //  location,
 }) => {
   const tabClasses = ['hover'];
-  const nearbyClasses = ['nearby-routes', 'h4'];
-  const favouritesClasses = ['favourites', 'h4'];
+  const nearbyClasses = ['nearby-routes', 'h5'];
+  const favouritesClasses = ['favourites', 'h5'];
 
   if (selectedPanel === 1) {
     nearbyClasses.push('selected');
