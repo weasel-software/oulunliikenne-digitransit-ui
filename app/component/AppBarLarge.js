@@ -79,7 +79,7 @@ const AppBarLarge = (
           aria-label={frontPageTitle}
           title={frontPageTitle}
         >
-          {logoElement}
+          <h1>{logoElement}</h1>
         </button>
         {config.availableModes && (
           <div className="navi-modes padding-left-large">
