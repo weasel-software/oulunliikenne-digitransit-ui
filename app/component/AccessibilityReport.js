@@ -29,7 +29,7 @@ const AccessibilityReport = ({ currentLanguage }, context) => {
               section.paragraphs.length && (
                 <div key={uniqueId('accessibility-report-section')}>
                   {section.header && <h1>{section.header}</h1>}
-                  {section.header2 && <h2>{section.header2}</h2>}
+                  {section.header2 && <h3>{section.header2}</h3>}
                   {section.paragraphs &&
                     section.paragraphs.map(p => {
                       const key = uniqueId('accessibility-report-paragraph');

@@ -397,7 +397,7 @@ const SummaryRow = (
               <FormattedMessage
                 id="itinerary-page.title"
                 defaultMessage="Itinerary"
-                tagName="h2"
+                tagName="h3"
               />
             </div>,
             <button
