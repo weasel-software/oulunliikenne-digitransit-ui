@@ -180,6 +180,10 @@ class MessageBar extends Component {
                   id: 'messagebar-label-close-message-bar',
                   defaultMessage: 'Close banner',
                 })}
+                aria-label={this.context.intl.formatMessage({
+                  id: 'messagebar-label-close-message-bar',
+                  defaultMessage: 'Close banner',
+                })}
                 onClick={this.handleClose}
                 className="noborder close-button cursor-pointer"
               >
