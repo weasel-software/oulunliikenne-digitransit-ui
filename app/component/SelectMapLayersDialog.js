@@ -161,6 +161,33 @@ class SelectMapLayersDialog extends React.Component {
     this.updateSetting({ bicycleRoutes });
   };
 
+  getToggleButtonTitle = headerId => {
+    const { intl, getStore } = this.context;
+    const language = getStore('PreferencesStore').getLanguage();
+
+    const start = intl.formatMessage({
+      id: headerId,
+      defaultMessage: '',
+    });
+
+    let end = intl
+      .formatMessage({
+        id: 'settings',
+        defaultMessage: 'settings',
+      })
+      .toLowerCase();
+
+    // Finnish grammar policing
+    if (language === 'fi' && start.includes(' ')) {
+      end = ` -${end}`;
+    } else if (language === 'fi' && start.endsWith(end.charAt(0))) {
+      end = `-${end}`;
+    } else if (language !== 'fi') {
+      end = ` ${end}`;
+    }
+    return start + end;
+  };
+
   renderContents = () => {
     const {
       citybike,
@@ -649,6 +676,7 @@ class SelectMapLayersDialog extends React.Component {
   render() {
     const { config, breakpoint } = this.props;
     const headerId = this.getHeaderId();
+    const toggleButtonTitle = this.getToggleButtonTitle(headerId);
 
     return (
       <BubbleDialog
@@ -668,6 +696,7 @@ class SelectMapLayersDialog extends React.Component {
         }
         isOpen={this.props.isOpen}
         isFullscreenOnMobile
+        toggleButtonTitle={toggleButtonTitle}
       >
         {this.renderContents()}
       </BubbleDialog>
@@ -743,6 +772,11 @@ SelectMapLayersDialog.propTypes = {
   clearMapLayers: PropTypes.func.isRequired,
   breakpoint: PropTypes.string,
   executeAction: PropTypes.func,
+};
+
+SelectMapLayersDialog.contextTypes = {
+  intl: intlShape.isRequired,
+  getStore: PropTypes.func.isRequired,
 };
 
 SelectMapLayersDialog.defaultProps = {
