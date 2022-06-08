@@ -17,6 +17,7 @@ const FavouriteIconTable = ({
         'selected-icon': value === selectedIconId,
       })}
       onClick={() => handleClick(value)}
+      aria-label={value}
     >
       <Icon img={value} />
     </button>
