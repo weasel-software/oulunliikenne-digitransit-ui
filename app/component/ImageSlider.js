@@ -2,11 +2,12 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import ComponentUsageExample from './ComponentUsageExample';
 import Icon from './Icon';
+import { intlShape } from 'react-intl';
 
 class ImageSlider extends React.Component {
   static FIRST = 0;
 
-  constructor(props) {
+  constructor(props, context) {
     super(props);
     this.state = {
       active: ImageSlider.FIRST,
@@ -44,6 +45,9 @@ class ImageSlider extends React.Component {
   render() {
     const { children } = this.props;
     const { active } = this.state;
+    const {
+      intl: { formatMessage },
+    } = this.context;
 
     return (
       <div
@@ -70,7 +74,7 @@ class ImageSlider extends React.Component {
         {children.length > 1 && [
           <div className="nav" key="nav">
             {React.Children.map(children, (item, i) => (
-              <span
+              <button
                 onClick={() => this.changeActive(i)}
                 onKeyDown={evt => {
                   if (evt.which === 32) {
@@ -78,31 +82,37 @@ class ImageSlider extends React.Component {
                   }
                 }}
                 className={i === active ? 'active' : ''}
-                role="button"
                 tabIndex={i + 1}
+                aria-label={`img ${i + 1}`}
               />
             ))}
           </div>,
-          <div
+          <button
             className="prev"
             onClick={this.prev}
             onKeyDown={() => {}}
-            role="button"
             tabIndex={-1}
             key="prev"
+            aria-label={formatMessage({
+              id: 'previous',
+              defaultMessage: 'Previous',
+            })}
           >
             <Icon img="icon-icon_arrow-collapse--left" />
-          </div>,
-          <div
+          </button>,
+          <button
             className="next"
             onClick={this.next}
             onKeyDown={() => {}}
-            role="button"
             tabIndex={-1}
             key="next"
+            aria-label={formatMessage({
+              id: 'next',
+              defaultMessage: 'Next',
+            })}
           >
             <Icon img="icon-icon_arrow-collapse--right" />
-          </div>,
+          </button>,
         ]}
       </div>
     );
@@ -125,6 +135,10 @@ ImageSlider.description = (
 
 ImageSlider.propTypes = {
   children: PropTypes.node.isRequired,
+};
+
+ImageSlider.contextTypes = {
+  intl: intlShape.isRequired,
 };
 
 export default ImageSlider;
