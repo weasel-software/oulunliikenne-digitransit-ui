@@ -257,15 +257,17 @@ class DTAutosuggest extends React.Component {
 
   render() {
     const { value, suggestions } = this.state;
+    const placeholder = this.context.intl.formatMessage({
+      id: this.props.placeholder,
+      defaultMessage: '',
+    });
     const inputProps = {
-      placeholder: this.context.intl.formatMessage({
-        id: this.props.placeholder,
-        defaultMessage: '',
-      }),
+      placeholder,
       value,
       onChange: this.onChange,
       onBlur: this.onBlur,
       className: `react-autosuggest__input ${this.props.className}`,
+      'aria-label': placeholder,
     };
 
     return (
