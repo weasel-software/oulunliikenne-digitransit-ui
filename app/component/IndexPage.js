@@ -316,11 +316,15 @@ class IndexPage extends React.Component {
         </div>
         {(this.props.showSpinner && <OverlayWithSpinner />) || null}
         {!footerOptions.hidden && (
-          <div id="page-footer-container">
+          <footer id="page-footer-container">
             <PageFooter
               content={(config.footer && config.footer.content) || []}
+              ariaLabel={intl.formatMessage({
+                id: 'footer-links',
+                defaultMessage: 'Footer links',
+              })}
             />
-          </div>
+          </footer>
         )}
         {config.showIntroPopup && <IntroPopup />}
       </div>
