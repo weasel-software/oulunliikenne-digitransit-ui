@@ -203,7 +203,7 @@ class AddFavouriteContainer extends React.Component {
                 />
               </div>
               <div className="add-favourite-container__header-text small-11 columns">
-                <h3>
+                <h4>
                   {(!this.isEdit() && (
                     <FormattedMessage
                       id="add-location-to-favourites"
@@ -215,16 +215,16 @@ class AddFavouriteContainer extends React.Component {
                       defaultMessage="Edit the location in the Favorites"
                     />
                   )}
-                </h3>
+                </h4>
               </div>
             </header>
             <div className="add-favourite-container__search search-form">
-              <h4>
+              <h5>
                 <FormattedMessage
                   id="specify-location"
                   defaultMessage="Specify location"
                 />
-              </h4>
+              </h5>
               <DTEndpointAutosuggest
                 id="origin"
                 refPoint={{ lat: 0, lon: 0 }}
@@ -237,12 +237,12 @@ class AddFavouriteContainer extends React.Component {
               />
             </div>
             <div className="add-favourite-container__give-name">
-              <h4>
+              <h5>
                 <FormattedMessage
                   id="give-name-to-location"
                   defaultMessage="Give the location a descriptive name"
                 />
-              </h4>
+              </h5>
               <div className="add-favourite-container__input-placeholder">
                 <input
                   className="add-favourite-container__input"
@@ -256,9 +256,9 @@ class AddFavouriteContainer extends React.Component {
               </div>
             </div>
             <div className="add-favourite-container__pick-icon">
-              <h4>
+              <h5>
                 <FormattedMessage id="pick-icon" defaultMessage="Select icon" />
-              </h4>
+              </h5>
               <FavouriteIconTable
                 selectedIconId={(() => {
                   if (favourite.selectedIconId !== 'undefined' || null) {

@@ -60,6 +60,8 @@ class ContentToggle extends React.Component {
       active,
       children,
       breakpoint,
+      ariaLabel,
+      title,
     } = this.props;
 
     if (toggleDisabled) {
@@ -90,6 +92,8 @@ class ContentToggle extends React.Component {
             className={cx(iconClass, {
               'is-mobile': breakpoint !== 'large',
             })}
+            aria-label={ariaLabel}
+            title={title}
           >
             {icon && <Icon img={`icon-${icon}`} />}
           </button>
@@ -106,6 +110,8 @@ ContentToggle.propTypes = {
   toggleDisabled: PropTypes.bool,
   active: PropTypes.bool,
   onToggle: PropTypes.func,
+  ariaLabel: PropTypes.string,
+  title: PropTypes.string,
 };
 
 ContentToggle.defaultProps = {
@@ -114,6 +120,8 @@ ContentToggle.defaultProps = {
   toggleDisabled: false,
   active: false,
   onToggle: undefined,
+  ariaLabel: '',
+  title: '',
 };
 
 export default withBreakpoint(ContentToggle);

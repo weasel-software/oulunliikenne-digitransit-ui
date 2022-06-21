@@ -19,7 +19,7 @@ export default function DesktopView(
     >
       <div className="main-content">
         <div className="desktop-title">
-          <h2>
+          <h3>
             <Link
               title={formatMessage({
                 id: 'back-to-front-page',
@@ -34,7 +34,7 @@ export default function DesktopView(
               className="arrow-icon"
             />
             {title}
-          </h2>
+          </h3>
         </div>
         <div
           className={cx('scrollable-content-wrapper', {

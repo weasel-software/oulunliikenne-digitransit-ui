@@ -44,7 +44,7 @@ export default class ComponentDocumentation extends React.Component {
     }
     return (
       <div className="card padding-normal" id={getName(this.props.component)}>
-        <h2>{getName(this.props.component)}</h2>
+        <h3>{getName(this.props.component)}</h3>
         <div>{getDescription(this.props.component)} </div>
         <p>Required props:</p>
         <ul>

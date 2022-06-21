@@ -3,7 +3,7 @@ import React from 'react';
 
 const heading = (e, key) => {
   if (e.type === 'heading') {
-    return <h2 key={`${key}-heading`}>{e.content}</h2>;
+    return <h3 key={`${key}-heading`}>{e.content}</h3>;
   }
   return null;
 };

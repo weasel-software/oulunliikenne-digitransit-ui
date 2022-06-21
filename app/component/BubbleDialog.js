@@ -116,6 +116,10 @@ class BubbleDialog extends React.Component {
               onKeyDown={e =>
                 isKeyboardSelectionEvent(e) && this.closeDialog(true)
               }
+              aria-label={intl.formatMessage({
+                id: 'close',
+                defaultMessage: 'Close',
+              })}
             >
               <Icon img="icon-icon_close" />
             </button>
@@ -170,6 +174,25 @@ class BubbleDialog extends React.Component {
           this.props.containerClassName,
         )}
       >
+        <button
+          className="bubble-dialog-toggle"
+          aria-label={this.props.toggleButtonTitle}
+          title={this.props.toggleButtonTitle}
+          onClick={() => (isOpen ? this.closeDialog() : this.openDialog())}
+          onKeyDown={e =>
+            isKeyboardSelectionEvent(e) &&
+            (isOpen ? this.closeDialog(true) : this.openDialog(true))
+          }
+          ref={this.toggleDialogRef}
+          tabIndex="0"
+        >
+          {this.props.buttonText &&
+            intl.formatMessage({
+              id: this.props.buttonText,
+              defaultMessage: 'Bubble Dialog Button',
+            })}
+          <Icon img={`icon-icon_${this.props.icon}`} viewBox="0 0 25 25" />
+        </button>
         {isFullscreen ? (
           <LazilyLoad modules={this.modules}>
             {({ Drawer }) => (
@@ -190,24 +213,6 @@ class BubbleDialog extends React.Component {
         ) : (
           isOpen && this.renderContent(false)
         )}
-        <div
-          className="bubble-dialog-toggle"
-          onClick={() => (isOpen ? this.closeDialog() : this.openDialog())}
-          onKeyDown={e =>
-            isKeyboardSelectionEvent(e) &&
-            (isOpen ? this.closeDialog(true) : this.openDialog(true))
-          }
-          ref={this.toggleDialogRef}
-          role="button"
-          tabIndex="0"
-        >
-          {this.props.buttonText &&
-            intl.formatMessage({
-              id: this.props.buttonText,
-              defaultMessage: 'Bubble Dialog Button',
-            })}
-          <Icon img={`icon-icon_${this.props.icon}`} viewBox="0 0 25 25" />
-        </div>
       </div>
     );
   }
@@ -234,6 +239,7 @@ BubbleDialog.propTypes = {
   isFullscreenOnMobile: PropTypes.bool,
   isOpen: PropTypes.bool,
   onDialogOpen: PropTypes.func,
+  toggleButtonTitle: PropTypes.string,
 };
 
 BubbleDialog.defaultProps = {
@@ -245,6 +251,7 @@ BubbleDialog.defaultProps = {
   isFullscreenOnMobile: false,
   isOpen: false,
   onDialogOpen: undefined,
+  toggleButtonTitle: '',
 };
 
 BubbleDialog.contextTypes = {

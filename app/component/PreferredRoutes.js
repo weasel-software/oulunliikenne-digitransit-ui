@@ -29,12 +29,12 @@ class PreferredRoutes extends React.Component {
 
   getPreferredRouteNumbers = routeOptions => (
     <div className="preferred-routes-input-container">
-      <h1>
+      <h2>
         {this.context.intl.formatMessage({
           id: routeOptions.optionName,
           defaultMessage: routeOptions.optionName,
         })}
-      </h1>
+      </h2>
       <DTEndpointAutosuggest
         placeholder="give-route"
         searchType="search"

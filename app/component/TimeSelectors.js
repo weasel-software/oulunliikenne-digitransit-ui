@@ -6,16 +6,41 @@ import Icon from './Icon';
 import ComponentUsageExample from './ComponentUsageExample';
 import ItineraryTimePicker from './ItineraryTimePicker';
 
-export default function TimeSelectors({ time, dates, changeTime, changeDate }) {
+export default function TimeSelectors(
+  { time, dates, changeTime, changeDate },
+  { intl },
+) {
+  const ariaLabelHours = intl.formatMessage({
+    id: 'hour',
+    defaultMessage: 'Hour',
+  });
+
+  const ariaLabelMinutes = intl.formatMessage({
+    id: 'minutes',
+    defaultMessage: 'Minutes',
+  });
+
+  const ariaLabelDate = intl.formatMessage({
+    id: 'date',
+    defaultMessage: 'Date',
+  });
+
   return (
     <div className="time-selectors">
       <ItineraryTimePicker
         initHours={time.format('H')}
         initMin={time.format('m')}
         changeTime={changeTime}
+        ariaLabelHours={ariaLabelHours}
+        ariaLabelMinutes={ariaLabelMinutes}
       />
       <div className="select-wrapper">
-        <select className="date" value={`${time.unix()}`} onChange={changeDate}>
+        <select
+          className="date"
+          value={`${time.unix()}`}
+          onChange={changeDate}
+          aria-label={ariaLabelDate}
+        >
           {dates}
         </select>
         <Icon className="fake-select-arrow" img="icon-icon_arrow-dropdown" />

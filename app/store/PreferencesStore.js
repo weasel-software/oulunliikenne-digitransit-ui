@@ -46,6 +46,7 @@ class PreferencesStore extends Store {
       path: '/',
     });
     this.language = language;
+    document.documentElement.lang = language;
     this.emitChange();
   }
 

@@ -136,17 +136,18 @@ const SelectOptionContainer = (
           },
   );
 
+  const heading = intl.formatMessage({
+    id: title,
+    defaultMessage: 'option',
+  });
+
   return (
     <div className="option-container">
-      <h1>
-        {intl.formatMessage({
-          id: title,
-          defaultMessage: 'option',
-        })}
-      </h1>
+      <h2>{heading}</h2>
       <div className="select-container">
         <Select
           name={title}
+          ariaLabel={heading}
           selected={`${currentSelection}`}
           options={uniqBy(
             sortByValue

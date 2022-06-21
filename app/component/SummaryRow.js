@@ -397,11 +397,12 @@ const SummaryRow = (
               <FormattedMessage
                 id="itinerary-page.title"
                 defaultMessage="Itinerary"
-                tagName="h2"
+                tagName="h3"
               />
             </div>,
             <button
               title={itineraryLabel}
+              aria-label={itineraryLabel}
               key="arrow"
               className="action-arrow-click-area noborder flex-vertical"
               onClick={e => {
@@ -459,6 +460,7 @@ const SummaryRow = (
             </div>,
             <button
               title={itineraryLabel}
+              aria-label={itineraryLabel}
               key="arrow"
               className="action-arrow-click-area flex-vertical noborder"
               onClick={e => {

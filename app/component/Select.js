@@ -6,6 +6,7 @@ class Select extends React.Component {
     onSelectChange: PropTypes.func.isRequired,
     headerText: PropTypes.string,
     selected: PropTypes.string,
+    ariaLabel: PropTypes.string,
     options: PropTypes.arrayOf(
       PropTypes.shape({
         displayName: PropTypes.string.isRequired,
@@ -22,6 +23,7 @@ class Select extends React.Component {
   static defaultProps = {
     headerText: undefined,
     selected: undefined,
+    ariaLabel: '',
   };
 
   static getOptionTags(options) {
@@ -38,10 +40,11 @@ class Select extends React.Component {
     const { headerText } = this.props;
     return (
       <React.Fragment>
-        {headerText && <h4>{headerText}</h4>}
+        {headerText && <h5>{headerText}</h5>}
         <select
           onChange={this.props.onSelectChange}
           value={this.props.selected}
+          aria-label={this.props.ariaLabel}
         >
           {Select.getOptionTags(this.props.options)}
         </select>

@@ -444,6 +444,27 @@ div.map {
     border-left: 1px solid rgba(151, 151, 151, 0.2);
   }
 
+  button {
+    color: $primary-color;
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    min-width: 3rem;
+    min-height: 2.5rem;
+
+    span {
+      display: flex;
+    }
+
+    &:hover {
+      color: darken($primary-color, 10%);
+    }
+  }
+
   *:hover {
     color: #0062a1;
   }

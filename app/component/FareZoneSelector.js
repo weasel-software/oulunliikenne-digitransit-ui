@@ -40,7 +40,7 @@ class FareZoneSelector extends React.Component {
     return (
       <div className="settings-option-container ticket-options-container">
         <div className="option-container">
-          <h1>{this.props.headerText}</h1>
+          <h2>{this.props.headerText}</h2>
           <div className="select-container">
             <Select
               name="ticket"

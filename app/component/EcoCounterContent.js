@@ -204,13 +204,13 @@ class EcoCounterContent extends React.Component {
     return (
       <div className="eco-counter-content">
         <div className="eco-counter-content__title">
-          <h5>
+          <h6>
             <button onClick={this.onTitleClick}>{this.getTitle()}</button>
             <button onClick={openComparison}>
               {formatMessage({ id: 'compare' })}
               <Icon img="icon-icon_arrow-collapse--right" viewBox="0 0 25 25" />
             </button>
-          </h5>
+          </h6>
           {isDatePickerOpen && (
             <div className="eco-counter-content__date-picker">
               <DayPickerSingleDateController

@@ -18,7 +18,9 @@ const AppBarSmall = ({ disableBackButton, showLogo, title, homeUrl, logo }) => (
     <nav className="top-bar">
       {!disableBackButton && <BackButton />}
       <section className="title">
-        <LogoSmall showLogo={showLogo} logo={logo} title={title} />
+        <h1>
+          <LogoSmall showLogo={showLogo} logo={logo} title={title} />
+        </h1>
       </section>
       <MainMenuContainer homeUrl={homeUrl} />
     </nav>

@@ -22,7 +22,7 @@ const StopPageHeader = compose(
   mapProps(props => ({
     stop: props.stop,
     className: 'stop-page header',
-    headingStyle: 'h3',
+    headingStyle: 'h4',
     icons: [
       // TODO: Re-add when done
       /* <Labeled
