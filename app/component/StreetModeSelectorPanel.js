@@ -60,7 +60,7 @@ class StreetModeSelectorPanel extends React.Component {
         {showRouteHereButton && (
           <div className="route-here-container">
             <RouteHere>
-              <div
+              <button
                 title={intl.formatMessage({
                   id: 'route-here-button',
                   defaultMessage: 'Copy route here',
@@ -71,7 +71,7 @@ class StreetModeSelectorPanel extends React.Component {
                 })}
               >
                 <Icon img="icon-icon_clipboard" />
-              </div>
+              </button>
             </RouteHere>
           </div>
         )}

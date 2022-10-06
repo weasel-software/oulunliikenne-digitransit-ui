@@ -64,78 +64,94 @@ const AppBarLarge = (
     );
   }
 
+  const frontPageTitle = intl.formatMessage({
+    id: 'frontpage',
+    defaultMessage: 'Front page',
+  });
+
   /* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions, jsx-a11y/anchor-is-valid */
   return (
     <div>
-      <div className="top-bar bp-large flex-horizontal">
-        <button className="noborder" onClick={titleClicked}>
-          {logoElement}
-        </button>
-        {config.availableModes && (
-          <div className="navi-modes padding-left-large">
-            <ModeSelect
-              selectedStreetMode={getStreetMode(router.location, config)}
-              selectStreetMode={(streetMode, isExclusive) => {
-                setStreetMode(streetMode, config, router, isExclusive);
-                executeAction(updateMapLayersMode, streetMode);
-                executeAction(clearDepartures);
-              }}
-              streetModeConfigs={getAvailableStreetModeConfigs(config)}
-            />
-          </div>
-        )}
-
-        {config.appBarExternalModes && (
-          <div className="navi-buttons-more">
-            <ExternalModes />
-          </div>
-        )}
-
-        <div className="empty-space flex-grow" />
-
-        {config.mapTrackingButtons &&
-          config.mapTrackingButtons.altPosition && (
-            <div className="navi-buttons right-border navi-margin">
-              <SelectMapLayersDialog />
+      <header className="top-bar bp-large flex-horizontal">
+        <nav className="top-bar flex-grow flex-horizontal">
+          <button
+            className="noborder"
+            onClick={titleClicked}
+            aria-label={frontPageTitle}
+            title={frontPageTitle}
+          >
+            <h1 className="no-margin">{logoElement}</h1>
+          </button>
+          {config.availableModes && (
+            <div className="navi-modes padding-left-large">
+              <ModeSelect
+                selectedStreetMode={getStreetMode(router.location, config)}
+                selectStreetMode={(streetMode, isExclusive) => {
+                  setStreetMode(streetMode, config, router, isExclusive);
+                  executeAction(updateMapLayersMode, streetMode);
+                  executeAction(clearDepartures);
+                }}
+                streetModeConfigs={getAvailableStreetModeConfigs(config)}
+              />
             </div>
           )}
-        <div className="navi-languages right-border navi-margin">
-          <LangSelect />
-        </div>
-        {config.appBarDisruptionInfo && (
-          <div className="navi-icons navi-margin">
-            <a
-              className="noborder"
-              onClick={openDisruptionInfo}
-              aria-label={intl.formatMessage({
-                id: 'disruptions',
-                defaultMessage: 'Disruptions',
-              })}
-            >
-              <Icon img="icon-icon_caution" pointerEvents />
-            </a>
+
+          {config.appBarExternalModes && (
+            <div className="navi-buttons-more">
+              <ExternalModes />
+            </div>
+          )}
+
+          <div className="empty-space flex-grow" />
+
+          {config.mapTrackingButtons &&
+            config.mapTrackingButtons.altPosition && (
+              <div className="navi-buttons right-border navi-margin">
+                <SelectMapLayersDialog />
+              </div>
+            )}
+          <div className="navi-languages right-border navi-margin">
+            <LangSelect />
           </div>
-        )}
-        {config.appBarLinks && (
-          <div className="navi-buttons navi-margin">
-            <button
-              className="navi-button"
-              onClick={openNavbarLinks}
-              aria-label={intl.formatMessage({
-                id: 'links',
-                defaultMessage: 'Links',
-              })}
-            >
-              <FormattedMessage id="links" defaultMessage="Links" />
-            </button>
-          </div>
-        )}
-        {config.appBarLink && (
-          <div className="padding-left-large navi-margin">
-            <ExternalLink className="external-top-bar" {...config.appBarLink} />
-          </div>
-        )}
-      </div>
+          {config.appBarDisruptionInfo && (
+            <div className="navi-icons navi-margin">
+              <a
+                className="noborder"
+                onClick={openDisruptionInfo}
+                aria-label={intl.formatMessage({
+                  id: 'disruptions',
+                  defaultMessage: 'Disruptions',
+                })}
+              >
+                <Icon img="icon-icon_caution" pointerEvents />
+              </a>
+            </div>
+          )}
+          {config.appBarLinks && (
+            <div className="navi-buttons navi-margin">
+              <button
+                className="navi-button"
+                onClick={openNavbarLinks}
+                aria-label={intl.formatMessage({
+                  id: 'links',
+                  defaultMessage: 'Links',
+                })}
+              >
+                <FormattedMessage id="links" defaultMessage="Links" />
+              </button>
+            </div>
+          )}
+          {config.appBarLink && (
+            <div className="padding-left-large navi-margin">
+              <ExternalLink
+                className="external-top-bar"
+                {...config.appBarLink}
+              />
+            </div>
+          )}
+        </nav>
+      </header>
+
       <MessageBar />
       <DisruptionInfo />
       <NavbarLinks />

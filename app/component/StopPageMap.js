@@ -164,6 +164,10 @@ class StopPageMap extends React.Component {
             id: 'hide-realtime-on-map',
             defaultMessage: 'Hide vehicles on map',
           })}
+          aria-label={intl.formatMessage({
+            id: 'hide-realtime-on-map',
+            defaultMessage: 'Hide vehicles on map',
+          })}
           key="realtime-toggle"
         >
           <Icon img="icon-icon_realtime_off" />

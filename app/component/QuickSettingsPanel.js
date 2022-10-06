@@ -298,6 +298,13 @@ class QuickSettingsPanel extends React.Component {
               className="arrive"
               value={arriveBy}
               onChange={this.setArriveBy}
+              aria-label={`${this.context.intl.formatMessage({
+                id: 'leaving-at',
+                defaultMessage: 'Leaving at',
+              })} / ${this.context.intl.formatMessage({
+                id: 'arriving-at',
+                defaultMessage: 'Arriving',
+              })}`}
             >
               <option value="false">
                 {this.context.intl.formatMessage({
@@ -348,6 +355,10 @@ class QuickSettingsPanel extends React.Component {
               className="select-route-modes"
               value={quickOption}
               onChange={e => this.setQuickOption(e.target.value)}
+              aria-label={this.context.intl.formatMessage({
+                id: 'route-preferences',
+                defaultMessage: 'Route preferences',
+              })}
             >
               <option value="default-route">
                 {this.context.intl.formatMessage({

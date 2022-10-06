@@ -48,11 +48,11 @@ const RoutePreferencesSection = (
 
   return (
     <div className="route-preferences-container">
-      <h1>
+      <h2>
         {intl.formatMessage({
           id: 'route-preferences',
         })}
-      </h1>
+      </h2>
       <Checkbox
         checked={isAvoidElevationChangesChecked}
         defaultMessage=""

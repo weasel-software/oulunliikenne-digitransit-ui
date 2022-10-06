@@ -516,7 +516,8 @@ export default configMerger(walttiConfig, {
         header: 'Saavutettavuusseloste',
         paragraphs: [
           'Tämä seloste koskee Oulun Liikenteen digitaalisia palveluita sivulla www.oulunliikenne.fi',
-          'Tämä seloste on laadittu 27.1.2022 ja päivitetty 11.3.2022 Palvelun saavutettavuuden on arvioinut ulkopuolinen asiantuntijaorganisaatio, jonka avustuksella palvelua kehitetään jatkuvasti saavutettavammaksi.',
+          'Tämä seloste on laadittu 27.1.2022 ja päivitetty 9.9.2022\n' +
+            'Palvelun saavutettavuuden on arvioinut ulkopuolinen asiantuntijaorganisaatio, jonka avustuksella palvelua kehitetään jatkuvasti saavutettavammaksi.',
           '{bold} Oulunliikenne.fi -sivuston saavutettavuuden tila:',
           'Oulunliikenne.fi-palvelu täyttää saavutettavuusvaatimukset osittain. Palvelun saavutettavuuspuutteiden korjauksia toteutetaan tulevaisuudessa.',
           '{bold} Alla mainittu sisältö ei ole WCAG-kriteerien mukaan saavutettava:',
@@ -529,15 +530,8 @@ export default configMerger(walttiConfig, {
             '(WCAG-saavutettavuuskriteerit, jotka eivät täyty):',
         ],
         list: [
-          'Vasemman yläkulman logolinkillä ei ole tekstivastinetta.\n' +
-            '(WCAG 1.1.1)',
           'Visuaaliset taulukot (esim. Aikataulut) eivät ole ohjelmallisesti taulukkoja.',
-          'Muotoilupuutteet haittaavat ruudunlukijakäyttöä:\n' +
-            'Otsikot eivät ole semanttisesti oikeassa järjestyksessä: Sivulla on H2, vaikkavsivulla ei ole H1:tä.',
-          'Osa painikkeista ei ole ohjelmallisesti painikkeita, esimerkiksi Häiriöt.',
           'Osa listoista ei ole ohjelmallisesti listoja, esimerkiksi Asetuksissa olevat listat.',
-          'Landmark:eja ei ole käytetty merkitsemään sivun osia.\n' +
-            '(WCAG 1.3.1)',
           'Reittiehdotukset-näkymässä Asetukset-valikko on vain visuaalisesti piilotettu, vaikka on ohjelmallisesti saatavilla.\n' +
             '(WCAG 1.3.2)',
         ],
@@ -578,10 +572,6 @@ export default configMerger(walttiConfig, {
             '(WCAG 2.4.1)',
           'Sivuston sivuilla on osittain puutteelliset sivuotsikot. \n' +
             '(WCAG 2.4.2)',
-          'Kohdistusjärjestys ei ole kaikilta osin looginen ja johdonmukainen: \n' +
-            'Reittiehdotukset-näkymästä avautuvaan Asetukset-valikkoon pääse vain menemällä kohdistusjärjestyksessä taaksepäin.\n' +
-            '(WCAG 2.4.3)',
-          'Kohdistus ei ole kaikkialla näkyvä. \n(WCAG 2.4.7)',
           'Osoitinlaitteella tehtyä valintaa ei voi kaikkialla peruuttaa. \n' +
             '(WCAG 2.5.2)',
           'Joillakin elementeillä visuaalinen nimi ei vastaa ohjelmallista nimeä. \n' +
@@ -595,14 +585,8 @@ export default configMerger(walttiConfig, {
             '(WCAG-saavutettavuuskriteerit, jotka eivät täyty):',
         ],
         list: [
-          'Sivun kieltä ei voida selvittää ohjelmallisesti.  Lang="fi", vaikka kieleksi vaihtaisi SV tai EN.\n' +
-            '(WCAG 3.1.1)',
-          'Joidenkin komponenttien merkitseminen ei ole johdonmukaista. \n' +
-            '(WCAG 3.2.4)',
           'Käyttäjälle ei ilmoiteta virheellisestä syötteestä. Hakukentissä virheellisestä syötteestä ei ilmoiteta, vaan annetaan lähin mahdollinen tulos. \n' +
             '(WCAG 3.3.1, 3.3.3)',
-          'Syöttökentillä ei pääsääntöisesti ole nimilappuja tai ohjeita. Esimerkiksi Reittiehdotukset-sivun valinnoilla ei ole nimilappuja. (Aika, Tänään, Lähtöaika, Tallennetut asetukset)\n' +
-            ' (WCAG 3.3.2)',
         ],
       },
       {
@@ -614,9 +598,6 @@ export default configMerger(walttiConfig, {
         list: [
           'Sivuston koodi ei ole täysin standardinmukaista. \n' +
             '(WCAG 4.1.1)',
-          'Joidenkin painikkeiden ja syöttökenttien nimet eivät ole saatavilla ohjelmallisesti.',
-          'Joidenkin valintojen tilaa ei voi päätellä ohjelmallisesti. \n' +
-            '(WCAG 4.1.2)',
           'Ruudunlukijakäyttäjälle ei viestitä suosikin lisäämisen tai poistamisen onnistumisesta tai epäonnistumisesta. \n' +
             '(WCAG 4.1.3)',
         ],

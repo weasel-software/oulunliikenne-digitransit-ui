@@ -3,19 +3,29 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router';
 import { FormattedMessage } from 'react-intl';
+import Helmet from 'react-helmet';
 import connectToStores from 'fluxible-addons-react/connectToStores';
 import getFormattedText from '../util/configFormatter';
 
 const AboutPage = ({ currentLanguage }, context) => {
   const about = context.config.aboutThisService[currentLanguage];
+  const { intl } = context;
   return (
     <div className="about-page fullscreen">
+      <Helmet>
+        <title>
+          {intl.formatMessage({
+            id: 'about-this-service',
+            defaultMessage: 'About',
+          })}
+        </title>
+      </Helmet>
       <div className="page-frame fullscreen momentum-scroll">
         {about.map(
           (section, i) =>
             section.paragraphs && section.paragraphs.length ? (
               <div key={`about-section-${i}`}>
-                <h1 className="about-header">{section.header}</h1>
+                <h2 className="about-header">{section.header}</h2>
                 {section.paragraphs &&
                   section.paragraphs.map((p, j) => (
                     <p key={`about-section-${i}-p-${j}`}>
@@ -46,6 +56,7 @@ AboutPage.propTypes = {
 
 AboutPage.contextTypes = {
   config: PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 export default connectToStores(AboutPage, ['PreferencesStore'], context => ({

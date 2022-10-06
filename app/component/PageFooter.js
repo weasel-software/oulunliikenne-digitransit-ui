@@ -19,19 +19,21 @@ const getFooterItem = (link, currentLanguage, i) => {
   );
 };
 
-const PageFooter = ({ content, currentLanguage }) => (
-  <div id="page-footer">
+const PageFooter = ({ content, currentLanguage, ariaLabel }) => (
+  <nav id="page-footer" aria-label={ariaLabel}>
     {content.map((link, i) => getFooterItem(link, currentLanguage, i))}
-  </div>
+  </nav>
 );
 
 PageFooter.propTypes = {
   currentLanguage: PropTypes.string.isRequired,
   content: PropTypes.arrayOf(PropTypes.shape(FooterItem.propTypes)),
+  ariaLabel: PropTypes.string,
 };
 
 PageFooter.defaultProps = {
   content: [],
+  ariaLabel: '',
 };
 
 PageFooter.displayName = 'PageFooter';

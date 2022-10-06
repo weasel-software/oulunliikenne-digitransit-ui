@@ -226,6 +226,16 @@ class IndexPage extends React.Component {
     );
     const selectedMainTab = this.getSelectedTab();
 
+    const searchTitle = intl.formatMessage({
+      id: 'search',
+      defaultMessage: 'Search',
+    });
+
+    const favouritesTitle = intl.formatMessage({
+      id: 'your-favourites',
+      defaultMessage: 'Favorites',
+    });
+
     return breakpoint === 'large' ? (
       <div
         className={`front-page flex-vertical ${origin &&
@@ -237,6 +247,8 @@ class IndexPage extends React.Component {
         <ContentToggle
           icon="icon_search"
           iconClass="search-toggle"
+          title={searchTitle}
+          ariaLabel={searchTitle}
           toggleDisabled={!config.toggleableSearch}
           active={origin.set || destination.set}
         >
@@ -260,6 +272,10 @@ class IndexPage extends React.Component {
                 id: 'hide-realtime-on-map',
                 defaultMessage: 'Hide vehicles on map',
               })}
+              aria-label={intl.formatMessage({
+                id: 'hide-realtime-on-map',
+                defaultMessage: 'Hide vehicles on map',
+              })}
             >
               <Icon img="icon-icon_realtime_off" />
             </button>
@@ -267,6 +283,8 @@ class IndexPage extends React.Component {
         <ContentToggle
           icon="icon_star"
           iconClass="favourites-toggle"
+          ariaLabel={favouritesTitle}
+          title={favouritesTitle}
           toggleDisabled={!config.toggleableFavourites}
         >
           <div key="foo" className="fpccontainer">
@@ -298,11 +316,15 @@ class IndexPage extends React.Component {
         </div>
         {(this.props.showSpinner && <OverlayWithSpinner />) || null}
         {!footerOptions.hidden && (
-          <div id="page-footer-container">
+          <footer id="page-footer-container">
             <PageFooter
               content={(config.footer && config.footer.content) || []}
+              ariaLabel={intl.formatMessage({
+                id: 'footer-links',
+                defaultMessage: 'Footer links',
+              })}
             />
-          </div>
+          </footer>
         )}
         {config.showIntroPopup && <IntroPopup />}
       </div>
@@ -334,6 +356,8 @@ class IndexPage extends React.Component {
             <ContentToggle
               icon="icon_search"
               iconClass="search-toggle"
+              title={searchTitle}
+              ariaLabel={searchTitle}
               toggleDisabled={!config.toggleableSearch}
               active={origin.set || destination.set}
             >
@@ -354,6 +378,10 @@ class IndexPage extends React.Component {
                   className="realtime-toggle"
                   onClick={this.deactivateRealtimeVehicles}
                   title={intl.formatMessage({
+                    id: 'hide-realtime-on-map',
+                    defaultMessage: 'Hide vehicles on map',
+                  })}
+                  aria-label={intl.formatMessage({
                     id: 'hide-realtime-on-map',
                     defaultMessage: 'Hide vehicles on map',
                   })}

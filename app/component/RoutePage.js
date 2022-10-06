@@ -106,14 +106,14 @@ class RoutePage extends React.Component {
     return (
       <div>
         <div className="header-for-printing">
-          <h1>
+          <h2>
             <FormattedMessage
               id="print-route-app-title"
               defaultMessage={this.context.config.title}
             />
             {` - `}
             <FormattedMessage id="route-guide" defaultMessage="Route guide" />
-          </h1>
+          </h2>
         </div>
         {this.props.route.type === 715 && (
           <CallAgencyWarning route={this.props.route} />

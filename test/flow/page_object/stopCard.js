@@ -47,7 +47,7 @@ module.exports = {
       selector: '.card-header .sub-header-h4',
     },
     cardName: {
-      selector: '.card-header > .card-header-wrapper > .h3',
+      selector: '.card-header > .card-header-wrapper > .h4',
     },
     departure: {
       selector: '.route-detail-text',

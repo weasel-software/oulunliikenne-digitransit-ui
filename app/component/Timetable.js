@@ -267,9 +267,9 @@ class Timetable extends React.Component {
           />
         </div>
         <div className="timetable-for-printing-header">
-          <h1>
+          <h2>
             <FormattedMessage id="timetable" defaultMessage="Timetable" />
-          </h1>
+          </h2>
         </div>
         <div className="timetable-for-printing">{this.dateForPrinting()}</div>
         <div className="momentum-scroll">
@@ -294,12 +294,12 @@ class Timetable extends React.Component {
                   : 'none',
             }}
           >
-            <h1>
+            <h2>
               <FormattedMessage
                 id="explanations"
                 defaultMessage="Explanations"
               />:
-            </h1>
+            </h2>
             {variantsWithMarks.map(o => (
               <div className="remark-row" key={`${o.id}-${o.headsign}`}>
                 <span>{`${o.name}${o.duplicate} = ${o.headsign}`}</span>

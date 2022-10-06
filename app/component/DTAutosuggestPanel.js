@@ -30,21 +30,23 @@ const ItinerarySearchControl = ({
   enabled,
   onClick,
   onKeyPress,
+  title,
   ...rest
 }) =>
   enabled &&
   onClick && (
     <div className="itinerary-search-control">
-      <div
+      <button
         {...rest}
         className={cx(className, 'cursor-pointer')}
         onClick={onClick}
         onKeyPress={onKeyPress}
-        role="button"
         tabIndex="0"
+        aria-label={title}
+        title={title}
       >
         {children}
-      </div>
+      </button>
     </div>
   );
 
@@ -335,6 +337,10 @@ class DTAutosuggestPanel extends React.Component {
             onKeyPress={e =>
               isKeyboardSelectionEvent(e) && this.handleSwapOrderClick()
             }
+            title={this.context.intl.formatMessage({
+              id: 'reverse-route',
+              defaultMessage: 'Reverse route direction',
+            })}
           >
             <Icon img="icon-icon_direction-b" />
           </ItinerarySearchControl>
@@ -384,6 +390,10 @@ class DTAutosuggestPanel extends React.Component {
                     isKeyboardSelectionEvent(e) &&
                     this.handleToggleViaPointSlackClick(i)
                   }
+                  title={this.context.intl.formatMessage({
+                    id: 'viapoint-slack-amount',
+                    defaultMessage: 'Stop duration',
+                  })}
                 >
                   <Icon img="icon-icon_time" />
                   <Icon
@@ -404,6 +414,10 @@ class DTAutosuggestPanel extends React.Component {
                     isKeyboardSelectionEvent(e) &&
                     this.handleRemoveViaPointClick(i)
                   }
+                  title={this.context.intl.formatMessage({
+                    id: 'viapoint-remove',
+                    defaultMessage: 'Stop duration',
+                  })}
                 >
                   <Icon img="icon-icon_close" />
                 </ItinerarySearchControl>
@@ -485,6 +499,10 @@ class DTAutosuggestPanel extends React.Component {
               onKeyPress={e =>
                 isKeyboardSelectionEvent(e) && this.handleAddViaPointClick()
               }
+              title={this.context.intl.formatMessage({
+                id: 'add-itinerary-via-point',
+                defaultMessage: 'Add via point for itinerary',
+              })}
             >
               <Icon img="icon-icon_plus" />
             </ItinerarySearchControl>

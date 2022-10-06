@@ -78,7 +78,7 @@ class Slider extends React.Component {
       >
         <div className="slider-container-headers">
           <div className="left">
-            <h4>{this.props.headerText}</h4>
+            <h5>{this.props.headerText}</h5>
           </div>
           {showWrittenValue}
         </div>

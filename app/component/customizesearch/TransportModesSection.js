@@ -20,12 +20,12 @@ const TransportModesSection = ({ config, currentModes }, { intl, router }) => {
   return (
     <React.Fragment>
       <div className="transport-mode-header">
-        <h1>
+        <h2>
           {intl.formatMessage({
             id: 'public-transport',
             defaultMessage: 'Public Transport',
           })}
-        </h1>
+        </h2>
       </div>
       <div className="transport-mode-subheader">
         <FormattedMessage

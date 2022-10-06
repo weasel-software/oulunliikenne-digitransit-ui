@@ -11,7 +11,7 @@ const FrontPagePanelLarge = ({
   favouritesClicked,
   children,
 }) => {
-  const tabClasses = ['bp-large', 'h4'];
+  const tabClasses = ['bp-large', 'h5'];
   const nearbyClasses = ['nearby-routes'];
   const favouritesClasses = ['favourites'];
 

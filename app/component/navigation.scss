@@ -452,7 +452,7 @@ section.content {
     color: $primary-font-color;
   }
 
-  h2 {
+  h3 {
     @include font-medium;
     color: $primary-font-color;
     margin: 20px 30px;
@@ -498,7 +498,7 @@ section.content {
     width: 45px;
   }
 
-  h2 {
+  h3 {
     @include font-medium;
     font-size: $font-size-large;
     margin-top: 0;
@@ -506,7 +506,7 @@ section.content {
   }
 
   .message-bar-error {
-    h2 {
+    h3 {
       color: red;
     }
   }

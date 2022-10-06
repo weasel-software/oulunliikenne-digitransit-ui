@@ -12,7 +12,7 @@ const TimetableRow = ({ title, stoptimes, showRoutes, timerows }) => (
           : undefined,
     }}
   >
-    <h1 className="title bold">{title}:</h1>
+    <h2 className="title bold">{title}:</h2>
     <div className="timetable-printable-title">{title}</div>
     <div className="timetable-rowcontainer">
       {stoptimes
