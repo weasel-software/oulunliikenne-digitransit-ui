@@ -34,7 +34,11 @@ SelectRoadSignRow.propTypes = {
   type: PropTypes.string.isRequired,
   displayValue: PropTypes.string.isRequired,
   selectRow: PropTypes.func.isRequired,
-  severity: PropTypes.string.isRequired,
+  severity: PropTypes.string,
+};
+
+SelectRoadSignRow.defaultProps = {
+  severity: '',
 };
 
 SelectRoadSignRow.displayName = 'SelectRoadSignRow';
