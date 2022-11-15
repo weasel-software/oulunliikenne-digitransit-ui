@@ -7,6 +7,7 @@ import {
   MaintenanceJobColors,
   StreetMode,
   RoadInspectionJobId,
+  ContractTypes,
 } from '../../../constants';
 import { getStreetMode } from '../../../util/modeUtils';
 import { getTileLayerFeaturesToRender } from '../../../util/maintenanceUtils';
@@ -25,6 +26,8 @@ class MaintenanceVehicleRoutes {
     this.imageSize = 20 * scaleRatio;
     this.streetMode = getStreetMode(location, config);
     this.promise = this.getPromise();
+
+    this.bicycleRoutesMainContract = get(layers, 'bicycleRoutesMainContract');
   }
 
   static getName = () => 'maintenanceVehicles';
@@ -72,6 +75,9 @@ class MaintenanceVehicleRoutes {
             timeRange: this.timeRange,
             includeOnlyInspectionJob: this.onlyInspectionJob,
             includeOnlyBrushingJobs: this.brushingFor30days,
+            includeOnlyContractType: this.bicycleRoutesMainContract
+              ? ContractTypes.Oulu
+              : false,
           });
 
           // Draw the remaining features onto the map.

@@ -204,6 +204,7 @@ class SelectMapLayersDialog extends React.Component {
       roadConditions,
       fluencies,
       ecoCounters,
+      bicycleRoutesMainContract,
       maintenanceVehicles,
       realtimeMaintenanceVehicles,
       roadInspectionVehicles,
@@ -546,6 +547,16 @@ class SelectMapLayersDialog extends React.Component {
                         })
                       }
                     />
+                    <InputField
+                      checked={bicycleRoutesMainContract}
+                      labelId="main-bicycle-route-contract"
+                      defaultMessage="Main bicycle route contract"
+                      onChange={e =>
+                        this.updateSetting({
+                          bicycleRoutesMainContract: e.target.checked,
+                        })
+                      }
+                    />
                   </div>
                 )}
             </React.Fragment>
@@ -563,6 +574,7 @@ class SelectMapLayersDialog extends React.Component {
                     roadInspectionVehicles: e.target.checked,
                     maintenanceVehicles: false,
                     realtimeMaintenanceVehicles: false,
+                    bicycleRoutesMainContract: false,
                   })
                 }
               />
