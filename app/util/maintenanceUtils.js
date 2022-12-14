@@ -1,11 +1,11 @@
 import uniqBy from 'lodash/uniqBy';
 import orderBy from 'lodash/orderBy';
 import {
-  MaintenanceJobPriorities,
-  RoadInspectionJobId,
-  NonInspectionMaintenanceJobIds,
   BrushingJobIds,
+  MaintenanceJobPriorities,
   MaintenanceVehicleAllowedInactivitySeconds,
+  NonInspectionMaintenanceJobIds,
+  RoadInspectionJobId,
 } from '../constants';
 
 // eslint-disable-next-line import/prefer-default-export
@@ -20,26 +20,29 @@ export const getTileLayerFeaturesToRender = ({
   timeRange,
   includeOnlyInspectionJob,
   includeOnlyBrushingJobs,
+  includeOnlyContractType,
 }) => {
-  let targetedJobIs = [];
+  let targetedJobIds = [];
   if (includeOnlyInspectionJob) {
-    targetedJobIs = [RoadInspectionJobId];
+    targetedJobIds = [RoadInspectionJobId];
   } else if (includeOnlyBrushingJobs) {
-    targetedJobIs = BrushingJobIds;
+    targetedJobIds = BrushingJobIds;
   } else {
-    targetedJobIs = NonInspectionMaintenanceJobIds;
+    targetedJobIds = NonInspectionMaintenanceJobIds;
   }
 
   const baseFeatures = [];
   const jobFeatures = [];
+
   for (let j = 0; j < featureArray.length; j++) {
     const feature = featureArray.feature(j);
     if (feature.properties.jobId === 0) {
       baseFeatures.push(feature);
-    } else if (targetedJobIs.includes(feature.properties.jobId)) {
+    } else if (targetedJobIds.includes(feature.properties.jobId)) {
       jobFeatures.push(feature);
     }
   }
+
   const selectedTimeRange = Date.now() / 1000 - timeRange * 60;
   const timeFilteredFeatures = jobFeatures.filter(f => {
     if (!includeOnlyInspectionJob && !includeOnlyBrushingJobs) {
@@ -47,6 +50,7 @@ export const getTileLayerFeaturesToRender = ({
     }
     return true;
   });
+
   const sortedFeatures = orderBy(
     timeFilteredFeatures,
     'properties.timestamp',
@@ -56,7 +60,13 @@ export const getTileLayerFeaturesToRender = ({
     sortedFeatures.concat(baseFeatures),
     'properties.hash',
   );
-  return uniqueFeatures;
+
+  return uniqueFeatures.filter(f => {
+    if (!includeOnlyContractType) {
+      return true;
+    }
+    return f.properties.contractType === includeOnlyContractType;
+  });
 };
 
 export const clearStaleMaintenanceVehicles = vehicles => {

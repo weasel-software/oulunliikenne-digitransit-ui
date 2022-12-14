@@ -684,6 +684,7 @@ export default configMerger(walttiConfig, {
       realtimeMaintenanceVehicles: true,
       roadInspectionVehicles: false,
       bicycleRoutes: true,
+      bicycleRoutesMainContract: true,
       bicycleRoutesMainRegional: true,
       bicycleRouteTypes: true,
       bicycleRoutesBaana: true,

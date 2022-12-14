@@ -229,3 +229,9 @@ export const MaintenanceVehicleTypes = {
   RoadGrader: 'ROAD_GRADER',
   Tractor: 'TRACTOR',
 };
+
+export const ContractTypes = {
+  Oulu: 'OULU',
+  Ely: 'ELY',
+  Unknown: 'UNKNOWN',
+};
