@@ -21,7 +21,8 @@ const getWindDirection = degrees => {
     'west',
     'northwest',
   ];
-  const index = Math.floor(degrees / 45.0);
+
+  const index = Math.round(degrees / 45.0) % directions.length;
 
   return directions[index];
 };
