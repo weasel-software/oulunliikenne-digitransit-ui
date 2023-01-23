@@ -1,0 +1,44 @@
+.sensor-info {
+    width: 136px;
+    height: 91px;
+    color: #666666;
+    background: #EEF1F3;
+    margin: 5px 0px;
+    padding: 5px 0px;
+
+    tr {
+        font-family: 'Lato';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 17px;
+        text-align: center;
+    }
+
+    span {
+        font-family: 'Lato';
+        font-style: normal;
+        font-weight: 900;
+        font-size: 26px;
+        line-height: 31px;
+        text-align: center;
+        color: #333333;
+    }
+}
+
+.camera-icon {
+    height: 44px;
+    width: 44px;
+}
+
+.camera-icon-container {
+    margin: 5px 0px;
+    padding: 5px 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 136px;
+    height: 91px;
+    color: #666666;
+    background: #EEF1F3;
+}

@@ -25,6 +25,7 @@ class TileContainer {
       config.disorders.disordersMinZoom,
       config.cameraStations.cameraStationsMinZoom,
       config.weatherStations.weatherStationsMinZoom,
+      config.cityWeatherStations.cityWeatherStationsMinZoom,
       config.tmsStations.tmsStationsMinZoom,
       config.roadConditions.roadConditionsMinZoom,
       config.fluencies.fluenciesMinZoom,
@@ -99,6 +100,11 @@ class TileContainer {
         } else if (
           layerName === 'weatherStations' &&
           this.coords.z >= config.weatherStations.weatherStationsMinZoom
+        ) {
+          return isEnabled;
+        } else if (
+          layerName === 'cityWeatherStations' &&
+          this.coords.z >= config.cityWeatherStations.cityWeatherStationsMinZoom
         ) {
           return isEnabled;
         } else if (

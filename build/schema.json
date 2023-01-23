@@ -2543,6 +2543,64 @@
                         "deprecationReason": null
                     },
                     {
+                        "name": "cityWeatherStations",
+                        "description": "Get all city weather stations",
+                        "args": [
+                            {
+                                "name": "ids",
+                                "description": "",
+                                "type": {
+                                    "kind": "LIST",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "SCALAR",
+                                        "name": "String",
+                                        "ofType": null
+                                    }
+                                },
+                                "defaultValue": null
+                            }
+                        ],
+                        "type": {
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "OBJECT",
+                                "name": "CityWeatherStation",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "cityWeatherStation",
+                        "description": "Get a single city weather station based on its ID, i.e. value of field 'weatherStationId'",
+                        "args": [
+                            {
+                                "name": "id",
+                                "description": "",
+                                "type": {
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "SCALAR",
+                                        "name": "String",
+                                        "ofType": null
+                                    }
+                                },
+                                "defaultValue": null
+                            }
+                        ],
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "CityWeatherStation",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
                         "name": "transportMenu",
                         "description": "Get the transport menu from the CMS",
                         "args": [],
@@ -3131,6 +3189,11 @@
                     {
                         "kind": "OBJECT",
                         "name": "RoadCondition",
+                        "ofType": null
+                    },
+                    {
+                        "kind": "OBJECT",
+                        "name": "CityWeatherStation",
                         "ofType": null
                     },
                     {
@@ -5100,6 +5163,11 @@
                     {
                         "kind": "OBJECT",
                         "name": "WeatherStation",
+                        "ofType": null
+                    },
+                    {
+                        "kind": "OBJECT",
+                        "name": "CityWeatherStation",
                         "ofType": null
                     },
                     {
@@ -7223,6 +7291,61 @@
                         },
                         "isDeprecated": false,
                         "deprecationReason": null
+                    },
+                    {
+                        "name": "tags",
+                        "description": "Additional information labels (tags) for the Bike park",
+                        "args": [],
+                        "type": {
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "String",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "openingHours",
+                        "description": "Opening hours for the selected dates using the local time of the park. Each date can have multiple time spans.",
+                        "args": [
+                            {
+                                "name": "dates",
+                                "description": "Opening hours will be returned for these dates. Dates should use YYYYMMDD format",
+                                "type": {
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "LIST",
+                                        "name": null,
+                                        "ofType": {
+                                            "kind": "NON_NULL",
+                                            "name": null,
+                                            "ofType": {
+                                                "kind": "SCALAR",
+                                                "name": "String",
+                                                "ofType": null
+                                            }
+                                        }
+                                    }
+                                },
+                                "defaultValue": null
+                            }
+                        ],
+                        "type": {
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "OBJECT",
+                                "name": "LocalTimeSpanDate",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
                     }
                 ],
                 "inputFields": null,
@@ -7238,6 +7361,92 @@
                         "ofType": null
                     }
                 ],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "LocalTimeSpanDate",
+                "description": "A date using the local timezone of the object that can contain timespans.",
+                "fields": [
+                    {
+                        "name": "timeSpans",
+                        "description": "The time spans for this date.",
+                        "args": [],
+                        "type": {
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "OBJECT",
+                                "name": "LocalTimeSpan",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "date",
+                        "description": "The date of this time span. Format: YYYYMMDD.",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "String",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "LocalTimeSpan",
+                "description": "A span of time.",
+                "fields": [
+                    {
+                        "name": "from",
+                        "description": "The start of the time timespan as seconds from midnight.",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "Int",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "to",
+                        "description": "The end of the timespan as seconds from midnight.",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "Int",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [],
                 "enumValues": null,
                 "possibleTypes": null
             },
@@ -11424,7 +11633,7 @@
                     },
                     {
                         "name": "lon",
-                        "description": "Longitude of the car park (WGS 84)",
+                        "description": "Longitude of the weather station (WGS 84)",
                         "args": [],
                         "type": {
                             "kind": "SCALAR",
@@ -11436,7 +11645,7 @@
                     },
                     {
                         "name": "lat",
-                        "description": "Latitude of the car park (WGS 84)",
+                        "description": "Latitude of the weather station (WGS 84)",
                         "args": [],
                         "type": {
                             "kind": "SCALAR",
@@ -11894,6 +12103,242 @@
                         "type": {
                             "kind": "SCALAR",
                             "name": "Boolean",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "CityWeatherStation",
+                "description": "City weather station type",
+                "fields": [
+                    {
+                        "name": "id",
+                        "description": "Global object ID provided by Relay. This value can be used to refetch this object using **node** query.",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "ID",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "weatherStationId",
+                        "description": "City weather station ID",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "name",
+                        "description": "City weather station name",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "lon",
+                        "description": "Longitude of the city weather station (WGS 84)",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Float",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "lat",
+                        "description": "Latitude of the city weather station (WGS 84)",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Float",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "sensorValues",
+                        "description": "City weather station sensor values",
+                        "args": [],
+                        "type": {
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "OBJECT",
+                                "name": "CityWeatherStationSensorValue",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "cameras",
+                        "description": "City weather station cameras",
+                        "args": [],
+                        "type": {
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "OBJECT",
+                                "name": "CityWeatherStationCamera",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [
+                    {
+                        "kind": "INTERFACE",
+                        "name": "Node",
+                        "ofType": null
+                    },
+                    {
+                        "kind": "INTERFACE",
+                        "name": "PlaceInterface",
+                        "ofType": null
+                    }
+                ],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "CityWeatherStationSensorValue",
+                "description": "City weather station sensor value type",
+                "fields": [
+                    {
+                        "name": "id",
+                        "description": "City weather station sensor ID",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "name",
+                        "description": "City weather station sensor name, e.g. SADE",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "shortName",
+                        "description": "City weather station sensor short name, e.g. Sade",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "sensorValue",
+                        "description": "City weather station sensor value, e.g. 0",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Float",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "sensorUnit",
+                        "description": "City weather station sensor unit",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "measuredTime",
+                        "description": "City weather sensor value measured time in ISO-8601 format",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "GraphQLDateTime",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "CityWeatherStationCamera",
+                "description": "City weather station camera type",
+                "fields": [
+                    {
+                        "name": "cameraId",
+                        "description": "City weather station camera ID",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Int",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "imageUrl",
+                        "description": "City weather station camera image url",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
                             "ofType": null
                         },
                         "isDeprecated": false,
@@ -13311,18 +13756,6 @@
                         "deprecationReason": null
                     },
                     {
-                        "name": "severity",
-                        "description": "The severity level of the road sign",
-                        "args": [],
-                        "type": {
-                            "kind": "ENUM",
-                            "name": "VariableRoadSignSeverity",
-                            "ofType": null
-                        },
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
                         "name": "direction",
                         "description": "The road sign direction in relation to the road address",
                         "args": [],
@@ -13348,7 +13781,7 @@
                     },
                     {
                         "name": "displayValue",
-                        "description": "The value displayed on the road sign, for SPEEDLIMIT signs it will be the\ncurrent speed limit, for WARNING signs it will be a numeric value representing\nthe type of warning",
+                        "description": "The value displayed on the road sign, for SPEEDLIMIT signs it will be the\ncurrent speed limit, for WARNING signs it will be a numeric value representing\nthe type of warning, for INFORMATION signs it can be a numeric value\nrepresenting the type",
                         "args": [],
                         "type": {
                             "kind": "SCALAR",
@@ -13377,6 +13810,18 @@
                         "type": {
                             "kind": "ENUM",
                             "name": "VariableRoadSignCause",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "severity",
+                        "description": "The severity of the road sign information",
+                        "args": [],
+                        "type": {
+                            "kind": "ENUM",
+                            "name": "VariableRoadSignSeverity",
                             "ofType": null
                         },
                         "isDeprecated": false,
@@ -13435,13 +13880,13 @@
                         "description": "Text rows shown for INFORMATION signs",
                         "args": [],
                         "type": {
-                          "kind": "LIST",
-                          "name": null,
-                          "ofType": {
-                            "kind": "OBJECT",
-                            "name": "VariableRoadSignTextRow",
-                            "ofType": null
-                          }
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "OBJECT",
+                                "name": "VariableRoadSignTextRow",
+                                "ofType": null
+                            }
                         },
                         "isDeprecated": false,
                         "deprecationReason": null
@@ -13485,41 +13930,6 @@
                     },
                     {
                         "name": "INFORMATION",
-                        "description": "",
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    }
-                ],
-                "possibleTypes": null
-            },
-            {
-                "kind": "ENUM",
-                "name": "VariableRoadSignSeverity",
-                "description": "",
-                "fields": null,
-                "inputFields": null,
-                "interfaces": null,
-                "enumValues": [
-                    {
-                        "name": "UNKNOWN",
-                        "description": "",
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
-                        "name": "HIGH",
-                        "description": "",
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
-                        "name": "MEDIUM",
-                        "description": "",
-                        "isDeprecated": false,
-                        "deprecationReason": null
-                    },
-                    {
-                        "name": "LOW",
                         "description": "",
                         "isDeprecated": false,
                         "deprecationReason": null
@@ -13610,6 +14020,41 @@
             },
             {
                 "kind": "ENUM",
+                "name": "VariableRoadSignSeverity",
+                "description": "",
+                "fields": null,
+                "inputFields": null,
+                "interfaces": null,
+                "enumValues": [
+                    {
+                        "name": "HIGH",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "MEDIUM",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "LOW",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "UNKNOWN",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "possibleTypes": null
+            },
+            {
+                "kind": "ENUM",
                 "name": "VariableRoadSignReliability",
                 "description": "",
                 "fields": null,
@@ -13642,42 +14087,42 @@
                 "name": "VariableRoadSignTextRow",
                 "description": "A type for variable road sign text rows, used mostly by INFORMATION signs",
                 "fields": [
-                  {
-                    "name": "screen",
-                    "description": "The screen number where the text is shown, there can be multiscreen setups",
-                    "args": [],
-                    "type": {
-                      "kind": "SCALAR",
-                      "name": "Int",
-                      "ofType": null
+                    {
+                        "name": "screen",
+                        "description": "The screen number where the text is shown, there can be multiscreen setups",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Int",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
                     },
-                    "isDeprecated": false,
-                    "deprecationReason": null
-                  },
-                  {
-                    "name": "rowNumber",
-                    "description": "The row number where the text is shown, each screen can have multiple rows to display information",
-                    "args": [],
-                    "type": {
-                      "kind": "SCALAR",
-                      "name": "Int",
-                      "ofType": null
+                    {
+                        "name": "rowNumber",
+                        "description": "The row number where the text is shown, each screen can have multiple rows to display information",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Int",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
                     },
-                    "isDeprecated": false,
-                    "deprecationReason": null
-                  },
-                  {
-                    "name": "text",
-                    "description": "The text shown on the screen row, usually only in Finnish but can occasionally be in mixed languages",
-                    "args": [],
-                    "type": {
-                      "kind": "SCALAR",
-                      "name": "String",
-                      "ofType": null
-                    },
-                    "isDeprecated": false,
-                    "deprecationReason": null
-                  }
+                    {
+                        "name": "text",
+                        "description": "The text shown on the screen row, usually only in Finnish but can occasionally be in mixed languages",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
                 ],
                 "inputFields": null,
                 "interfaces": [],
@@ -14629,77 +15074,6 @@
                 "possibleTypes": null
             }
         ],
-        "directives": [
-            {
-                "name": "include",
-                "description": "Directs the executor to include this field or fragment only when the `if` argument is true.",
-                "locations": [
-                    "FIELD",
-                    "FRAGMENT_SPREAD",
-                    "INLINE_FRAGMENT"
-                ],
-                "args": [
-                    {
-                        "name": "if",
-                        "description": "Included when true.",
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": null,
-                            "ofType": {
-                                "kind": "SCALAR",
-                                "name": "Boolean",
-                                "ofType": null
-                            }
-                        },
-                        "defaultValue": null
-                    }
-                ]
-            },
-            {
-                "name": "skip",
-                "description": "Directs the executor to skip this field or fragment when the `if` argument is true.",
-                "locations": [
-                    "FIELD",
-                    "FRAGMENT_SPREAD",
-                    "INLINE_FRAGMENT"
-                ],
-                "args": [
-                    {
-                        "name": "if",
-                        "description": "Skipped when true.",
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": null,
-                            "ofType": {
-                                "kind": "SCALAR",
-                                "name": "Boolean",
-                                "ofType": null
-                            }
-                        },
-                        "defaultValue": null
-                    }
-                ]
-            },
-            {
-                "name": "deprecated",
-                "description": "Marks an element of a GraphQL schema as no longer supported.",
-                "locations": [
-                    "FIELD_DEFINITION",
-                    "ENUM_VALUE"
-                ],
-                "args": [
-                    {
-                        "name": "reason",
-                        "description": "Explains why this element was deprecated, usually also including a suggestion for how to access supported similar data. Formatted using the Markdown syntax (as specified by [CommonMark](https://commonmark.org/).",
-                        "type": {
-                            "kind": "SCALAR",
-                            "name": "String",
-                            "ofType": null
-                        },
-                        "defaultValue": "\"No longer supported\""
-                    }
-                ]
-            }
-        ]
+        "directives": []
     }
 }

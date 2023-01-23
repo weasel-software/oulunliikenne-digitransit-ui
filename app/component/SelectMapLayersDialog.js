@@ -207,6 +207,7 @@ class SelectMapLayersDialog extends React.Component {
       disorders,
       roadworks,
       cameraStations,
+      cityWeatherStations,
       weatherStations,
       tmsStations,
       roadConditions,
@@ -433,6 +434,18 @@ class SelectMapLayersDialog extends React.Component {
                 defaultMessage="Weather stations"
                 onChange={e =>
                   this.updateSetting({ weatherStations: e.target.checked })
+                }
+              />
+            )}
+          {config.cityWeatherStations &&
+            config.cityWeatherStations.showCityWeatherStations &&
+            isMapLayerEnabled('cityWeatherStations') && (
+              <InputField
+                checked={cityWeatherStations}
+                labelId="city-weather-stations"
+                defaultMessage="Weather stations"
+                onChange={e =>
+                  this.updateSetting({ cityWeatherStations: e.target.checked })
                 }
               />
             )}
@@ -738,6 +751,9 @@ const mapLayersConfigShape = PropTypes.shape({
   }),
   tmsStations: PropTypes.shape({
     showTmsStations: PropTypes.bool,
+  }),
+  cityWeatherStations: PropTypes.shape({
+    showWeatherStations: PropTypes.bool,
   }),
   weatherStations: PropTypes.shape({
     showWeatherStations: PropTypes.bool,
