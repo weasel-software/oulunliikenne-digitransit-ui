@@ -3,6 +3,13 @@
 $font-color: #666666;
 $value-color: #333333;
 
+.information-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+}
+
 .list {
     list-style: none;
     padding: 0;

@@ -3,245 +3,305 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import PropTypes from 'prop-types';
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
+import Relay from 'react-relay/classic';
+import moment from 'moment';
+import { FormattedMessage, intlShape } from 'react-intl';
+import { routerShape, locationShape } from 'react-router';
+import { connectToStores } from 'fluxible-addons-react';
 import ComponentUsageExample from './ComponentUsageExample';
 import { lang as exampleLang } from './ExampleData';
 import './city-weather-station-container.scss';
 import Icon from './Icon';
+import Card from './Card';
+import CardHeader from './CardHeader';
 
-const CityWeatherStationContent = ({
-  sensors,
-  cameras,
-  openCameraModal,
-  getWindDirection,
-}) => {
-  const snowDepth = sensors.find(item => item.name === 'SNOW_DEPTH');
-  const rainfallDepth = sensors.find(item => item.name === 'RAINFALL_DEPTH');
-  const airRelativeHumidity = sensors.find(
+const CityWeatherStationContent = (
+  { openCameraModal, getWindDirection, toggleView, station },
+  { intl, router, location },
+) => {
+  const { cameras, sensorValues } = station;
+  const snowDepth = sensorValues.find(item => item.name === 'SNOW_DEPTH');
+  const rainfallDepth = sensorValues.find(
+    item => item.name === 'RAINFALL_DEPTH',
+  );
+  const airRelativeHumidity = sensorValues.find(
     item => item.name === 'AIR_RELATIVE_HUMIDITY',
   );
-  const windDirection = sensors.find(item => item.name === 'WIND_DIRECTION');
-  const windSpeed = sensors.find(item => item.name === 'WIND_SPEED');
-  const airTemperature = sensors.find(item => item.name === 'AIR_TEMPERATURE');
-  const roadSurfaceTemperature = sensors.find(
+  const windDirection = sensorValues.find(
+    item => item.name === 'WIND_DIRECTION',
+  );
+  const windSpeed = sensorValues.find(item => item.name === 'WIND_SPEED');
+  const airTemperature = sensorValues.find(
+    item => item.name === 'AIR_TEMPERATURE',
+  );
+  const roadSurfaceTemperature = sensorValues.find(
     item => item.name === 'ROAD_SURFACE_TEMPERATURE',
   );
 
+  const { measuredTime } = airTemperature;
+
+  const localName = station.name;
+
   return (
-    <table className="component-list">
-      <tbody>
-        <tr>
-          {airTemperature && (
-            <td>
-              <table className="sensor-info">
-                <tbody>
-                  <tr>
-                    <td>
-                      <FormattedMessage
-                        id="air-temperature"
-                        defaultMessage="Air temperature"
-                      >
-                        {(...content) => `${content}`}
-                      </FormattedMessage>
-                    </td>
-                  </tr>
-                  <tr className="value">
-                    <td>
-                      <span>{airTemperature.sensorValue}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>{airTemperature.sensorUnit}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-          )}
-          {roadSurfaceTemperature && (
-            <td>
-              <table className="sensor-info">
-                <tbody>
-                  <tr>
-                    <td>
-                      <FormattedMessage
-                        id="road-temperature"
-                        defaultMessage="Road temperature"
-                      >
-                        {(...content) => `${content}`}
-                      </FormattedMessage>
-                    </td>
-                  </tr>
-                  <tr className="value">
-                    <td>
-                      <span>{roadSurfaceTemperature.sensorValue}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>{roadSurfaceTemperature.sensorUnit}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-          )}
-        </tr>
-        <tr>
-          {windSpeed && (
-            <td>
-              <table className="sensor-info">
-                <tbody>
-                  <tr>
-                    <td>
-                      <FormattedMessage
-                        id="wind-speed"
-                        defaultMessage="Wind speed"
-                      >
-                        {(...content) => `${content}`}
-                      </FormattedMessage>
-                    </td>
-                  </tr>
-                  <tr className="value">
-                    <td>
-                      <span>{windSpeed.sensorValue}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>{windSpeed.sensorUnit}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-          )}
-          {windDirection && (
-            <td>
-              <table className="sensor-info">
-                <tbody>
-                  <tr>
-                    <td>
-                      <FormattedMessage
-                        id="wind-direction"
-                        defaultMessage="Wind direction"
-                      >
-                        {(...content) => `${content}`}
-                      </FormattedMessage>
-                    </td>
-                  </tr>
-                  <tr className="value">
-                    <td>
-                      <span>
-                        <FormattedMessage
-                          id={getWindDirection(windDirection.sensorValue)}
-                          defaultMessage="North"
-                        >
-                          {(...content) => `${content}`}
-                        </FormattedMessage>
-                      </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      {windDirection.sensorValue}
-                      °
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-          )}
-        </tr>
-        <tr>
-          {airRelativeHumidity && (
-            <td>
-              <table className="sensor-info">
-                <tbody>
-                  <tr>
-                    <td>
-                      <FormattedMessage
-                        id="air-humidity"
-                        defaultMessage="Air humidity"
-                      >
-                        {(...content) => `${content}`}
-                      </FormattedMessage>
-                    </td>
-                  </tr>
-                  <tr className="value">
-                    <td>
-                      <span>{airRelativeHumidity.sensorValue}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>%</td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-          )}
-          {rainfallDepth && (
-            <td>
-              <table className="sensor-info">
-                <tbody>
-                  <tr>
-                    <td>
-                      <FormattedMessage
-                        id="rainfall-depth"
-                        defaultMessage="Rainfall depth"
-                      >
-                        {(...content) => `${content}`}
-                      </FormattedMessage>
-                    </td>
-                  </tr>
-                  <tr className="value">
-                    <td>
-                      <span>{rainfallDepth.sensorValue}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>{rainfallDepth.sensorUnit}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-          )}
-        </tr>
-        <tr>
-          {snowDepth && (
-            <td>
-              <table className="sensor-info">
-                <tbody>
-                  <tr>
-                    <td>
-                      <FormattedMessage
-                        id="snow-depth"
-                        defaultMessage="Snow depth"
-                      >
-                        {(...content) => `${content}`}
-                      </FormattedMessage>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <span className="value">{snowDepth.sensorValue}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>{snowDepth.sensorUnit}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-          )}
-          {cameras && (
-            <td>
-              <div
-                className="camera-icon-container"
-                onClick={() => openCameraModal()}
-              >
-                <Icon img="icon-icon_camera-station" className="camera-icon" />
-              </div>
-            </td>
-          )}
-        </tr>
-      </tbody>
-    </table>
+    <div className="card">
+      <Card className="padding-small">
+        <CardHeader
+          name={intl.formatMessage({
+            id: 'city-weather-station',
+            defaultMessage: 'Weather station',
+          })}
+          description={localName}
+          icon="icon-icon_weather-station"
+          unlinked
+        />
+        <table className="component-list">
+          <tbody>
+            <tr>
+              {airTemperature && (
+                <td>
+                  <table className="sensor-info">
+                    <tbody>
+                      <tr>
+                        <td>
+                          <FormattedMessage
+                            id="air-temperature"
+                            defaultMessage="Air temperature"
+                          >
+                            {(...content) => `${content}`}
+                          </FormattedMessage>
+                        </td>
+                      </tr>
+                      <tr className="value">
+                        <td>
+                          <span>{airTemperature.sensorValue}</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>{airTemperature.sensorUnit}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              )}
+              {roadSurfaceTemperature && (
+                <td>
+                  <table className="sensor-info">
+                    <tbody>
+                      <tr>
+                        <td>
+                          <FormattedMessage
+                            id="road-temperature"
+                            defaultMessage="Road temperature"
+                          >
+                            {(...content) => `${content}`}
+                          </FormattedMessage>
+                        </td>
+                      </tr>
+                      <tr className="value">
+                        <td>
+                          <span>{roadSurfaceTemperature.sensorValue}</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>{roadSurfaceTemperature.sensorUnit}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              )}
+            </tr>
+            <tr>
+              {windSpeed && (
+                <td>
+                  <table className="sensor-info">
+                    <tbody>
+                      <tr>
+                        <td>
+                          <FormattedMessage
+                            id="wind-speed"
+                            defaultMessage="Wind speed"
+                          >
+                            {(...content) => `${content}`}
+                          </FormattedMessage>
+                        </td>
+                      </tr>
+                      <tr className="value">
+                        <td>
+                          <span>{windSpeed.sensorValue}</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>{windSpeed.sensorUnit}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              )}
+              {windDirection && (
+                <td>
+                  <table className="sensor-info">
+                    <tbody>
+                      <tr>
+                        <td>
+                          <FormattedMessage
+                            id="wind-direction"
+                            defaultMessage="Wind direction"
+                          >
+                            {(...content) => `${content}`}
+                          </FormattedMessage>
+                        </td>
+                      </tr>
+                      <tr className="value">
+                        <td>
+                          <span>
+                            <FormattedMessage
+                              id={getWindDirection(windDirection.sensorValue)}
+                              defaultMessage="North"
+                            >
+                              {(...content) => `${content}`}
+                            </FormattedMessage>
+                          </span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          {windDirection.sensorValue}
+                          °
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              )}
+            </tr>
+            <tr>
+              {airRelativeHumidity && (
+                <td>
+                  <table className="sensor-info">
+                    <tbody>
+                      <tr>
+                        <td>
+                          <FormattedMessage
+                            id="air-humidity"
+                            defaultMessage="Air humidity"
+                          >
+                            {(...content) => `${content}`}
+                          </FormattedMessage>
+                        </td>
+                      </tr>
+                      <tr className="value">
+                        <td>
+                          <span>{airRelativeHumidity.sensorValue}</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>%</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              )}
+              {rainfallDepth && (
+                <td>
+                  <table className="sensor-info">
+                    <tbody>
+                      <tr>
+                        <td>
+                          <FormattedMessage
+                            id="rainfall-depth"
+                            defaultMessage="Rainfall depth"
+                          >
+                            {(...content) => `${content}`}
+                          </FormattedMessage>
+                        </td>
+                      </tr>
+                      <tr className="value">
+                        <td>
+                          <span>{rainfallDepth.sensorValue}</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>{rainfallDepth.sensorUnit}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              )}
+            </tr>
+            <tr>
+              {snowDepth && (
+                <td>
+                  <table className="sensor-info">
+                    <tbody>
+                      <tr>
+                        <td>
+                          <FormattedMessage
+                            id="snow-depth"
+                            defaultMessage="Snow depth"
+                          >
+                            {(...content) => `${content}`}
+                          </FormattedMessage>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span className="value">{snowDepth.sensorValue}</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>{snowDepth.sensorUnit}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              )}
+              {cameras && (
+                <td>
+                  <div
+                    className="camera-icon-container"
+                    onClick={() =>
+                      openCameraModal(router, location, localName, cameras)
+                    }
+                  >
+                    <Icon
+                      img="icon-icon_camera-station"
+                      className="camera-icon"
+                    />
+                  </div>
+                </td>
+              )}
+            </tr>
+            {measuredTime && (
+              <tr>
+                <td colSpan={2} className="last-updated">
+                  <FormattedMessage
+                    id="last-updated"
+                    defaultMessage="Last updated"
+                  >
+                    {(...content) => `${content} `}
+                  </FormattedMessage>
+                  {moment(measuredTime).format('HH:mm:ss') || ''}
+                </td>
+              </tr>
+            )}
+            <tr>
+              <td colSpan={2} className="last-updated">
+                <div
+                  aria-hidden="true"
+                  className="show-as-list"
+                  onClick={() => toggleView()}
+                >
+                  {`${intl.formatMessage({
+                    id: 'show-information-as-list',
+                    defaultMessage: 'Show information as list',
+                  })} >`}
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </Card>
+    </div>
   );
 };
 
@@ -257,10 +317,42 @@ CityWeatherStationContent.description = (
 );
 
 CityWeatherStationContent.propTypes = {
-  sensors: PropTypes.array.isRequired,
-  cameras: PropTypes.array.isRequired,
-  openCameraModal: PropTypes.func.isRequired,
+  station: PropTypes.object.isRequired,
   getWindDirection: PropTypes.func.isRequired,
+  openCameraModal: PropTypes.func.isRequired,
+  toggleView: PropTypes.func.isRequired,
 };
 
-export default CityWeatherStationContent;
+CityWeatherStationContent.contextTypes = {
+  intl: intlShape.isRequired,
+  router: routerShape.isRequired,
+  location: locationShape.isRequired,
+};
+
+export default Relay.createContainer(
+  connectToStores(CityWeatherStationContent, ['PreferencesStore'], context => ({
+    lang: context.getStore('PreferencesStore').getLanguage(),
+  })),
+  {
+    fragments: {
+      station: () => Relay.QL`
+      fragment on CityWeatherStation {
+        weatherStationId
+        name
+        lon
+        lat
+        sensorValues {
+          name
+          sensorValue
+          sensorUnit
+          measuredTime
+        }
+        cameras {
+          cameraId
+          imageUrl
+        }
+      }
+    `,
+    },
+  },
+);

@@ -59,7 +59,6 @@ import EcoCounterPopup from '../popups/EcoCounterPopup';
 import RoadSignPopup from '../popups/RoadSignPopup';
 import RoadSignRoute from '../../../route/RoadSignRoute';
 import BicycleRoutePopup from '../popups/BicycleRoutePopup';
-import CityWeatherStationRoute from '../../../route/CityWeatherStationRoute';
 import CityWeatherStationPopup from '../popups/CityWeatherStationPopup';
 
 const initialState = {
@@ -578,15 +577,7 @@ class TileLayerContainer extends GridLayer {
         break;
       case 'cityWeatherStations':
         id = get(selectableTarget, 'feature.properties.id');
-        contents = (
-          <Relay.RootContainer
-            Component={CityWeatherStationPopup}
-            forceFetch
-            route={new CityWeatherStationRoute({ id })}
-            renderLoading={this.renderLoadingPopup}
-            renderFetched={data => <CityWeatherStationPopup {...data} />}
-          />
-        );
+        contents = <CityWeatherStationPopup id={id} />;
         break;
       case 'weatherStations':
         id = get(selectableTarget, 'feature.properties.id');

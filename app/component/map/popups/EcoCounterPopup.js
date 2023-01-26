@@ -343,6 +343,7 @@ class EcoCounterPopup extends React.Component {
             environment={Relay.Store}
             render={({ done, error, loading, retry, props }) => {
               if (done) {
+                console.log(props);
                 return view === VIEW.SINGLE ? (
                   <EcoCounterContent
                     {...props}

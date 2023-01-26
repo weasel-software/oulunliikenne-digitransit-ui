@@ -1,18 +1,17 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-import PropTypes from 'prop-types';
+import PropTypes, { object } from 'prop-types';
 import React from 'react';
 import Relay from 'react-relay/classic';
-import connectToStores from 'fluxible-addons-react/connectToStores';
-import { FormattedMessage, intlShape } from 'react-intl';
+import { intlShape } from 'react-intl';
 import { routerShape, locationShape } from 'react-router';
-import moment from 'moment';
-import Card from '../../Card';
-import CardHeader from '../../CardHeader';
 import ComponentUsageExample from '../../ComponentUsageExample';
 import CityWeatherStationContent from '../../CityWeatherStationContent';
 import ImageSlider from '../../ImageSlider';
 import CityWeatherStationContentList from '../../CityWeatherStationContentList';
+import CityWeatherStationRoute from '../../../route/CityWeatherStationRoute';
+import Card from '../../Card';
+import CardHeader from '../../CardHeader';
 
 class CityWeatherStationPopup extends React.Component {
   static description = (
@@ -28,8 +27,7 @@ class CityWeatherStationPopup extends React.Component {
   );
 
   static propTypes = {
-    lang: PropTypes.string.isRequired,
-    station: PropTypes.object.isRequired,
+    id: PropTypes.string.isRequired,
   };
 
   static contextTypes = {
@@ -91,123 +89,92 @@ class CityWeatherStationPopup extends React.Component {
     });
   };
 
-  toggleSimplified = () => {
+  toggleView = () => {
     this.setState({
       showList: !this.state.showList,
     });
   };
 
   render() {
-    const { station, lang } = this.props;
+    const { id } = this.props;
+    const { intl } = this.context;
     const { showList } = this.state;
-    const { intl, location, router } = this.context;
-    const localName = station.name;
-    const { measuredTime } = station.sensorValues[0];
+    const queryConfig = new CityWeatherStationRoute({ id });
 
     return (
-      <div className="card">
-        <Card className="padding-small">
-          <CardHeader
-            name={intl.formatMessage({
-              id: 'city-weather-station',
-              defaultMessage: 'Weather station',
-            })}
-            description={localName}
-            icon="icon-icon_weather-station"
-            unlinked
-          />
+      <Relay.Renderer
+        Container={
+          showList ? CityWeatherStationContentList : CityWeatherStationContent
+        }
+        queryConfig={queryConfig}
+        environment={Relay.Store}
+        render={stuff => {
+          const { done, error, props } = stuff;
+          if (done) {
+            return showList ? (
+              <CityWeatherStationContentList
+                toggleView={this.toggleView}
+                {...props}
+              />
+            ) : (
+              <CityWeatherStationContent
+                getWindDirection={this.getWindDirection}
+                openCameraModal={this.openCameraModal}
+                toggleView={this.toggleView}
+                {...props}
+              />
+            );
+          }
 
-          {!showList && (
-            <CityWeatherStationContent
-              sensors={station.sensorValues}
-              cameras={station.cameras}
-              openCameraModal={() =>
-                this.openCameraModal(
-                  router,
-                  location,
-                  localName,
-                  station.cameras,
-                )
-              }
-              getWindDirection={this.getWindDirection}
-              lang={lang}
-            />
-          )}
-          {showList && (
-            <CityWeatherStationContentList
-              sensors={station.sensorValues}
-              lang={lang}
-            />
-          )}
-          <table className="component-list">
-            <tbody>
-              {measuredTime && (
-                <tr>
-                  <td colSpan={2} className="last-updated">
-                    <FormattedMessage
-                      id="last-updated"
-                      defaultMessage="Last updated"
-                    >
-                      {(...content) => `${content} `}
-                    </FormattedMessage>
-                    {moment(measuredTime).format('HH:mm:ss') || ''}
-                  </td>
-                </tr>
-              )}
-              <tr>
-                <td colSpan={2} className="last-updated">
-                  <div
-                    aria-hidden="true"
-                    className="show-as-list"
-                    onClick={() => this.toggleSimplified()}
-                  >
-                    {!showList
-                      ? `${intl.formatMessage({
-                          id: 'show-information-as-list',
-                          defaultMessage: 'Show information as list',
-                        })} >`
-                      : ''}
-                    {showList
-                      ? `< ${intl.formatMessage({
-                          id: 'back',
-                          defaultMessage: 'Show information as list',
-                        })}`
-                      : ''}
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </Card>
-      </div>
+          if (!done) {
+            return (
+              <InformationContainer {...props}>
+                <div className="spinner-loader" />
+              </InformationContainer>
+            );
+          }
+
+          if (error) {
+            return (
+              <InformationContainer {...props}>
+                {intl.formatMessage({
+                  id: 'generic-error',
+                  defaultMessage: 'There was an error',
+                })}
+              </InformationContainer>
+            );
+          }
+
+          return null;
+        }}
+      />
     );
   }
 }
 
-export default Relay.createContainer(
-  connectToStores(CityWeatherStationPopup, ['PreferencesStore'], context => ({
-    lang: context.getStore('PreferencesStore').getLanguage(),
-  })),
-  {
-    fragments: {
-      station: () => Relay.QL`
-      fragment on CityWeatherStation {
-        weatherStationId
-        name
-        lon
-        lat
-        sensorValues {
-          name
-          sensorValue
-          sensorUnit
-          measuredTime
-        }
-        cameras {
-          cameraId
-          imageUrl
-        }
-      }
-    `,
-    },
-  },
+const InformationContainer = ({ children }, { intl }) => (
+  <div className="card">
+    <Card className="padding-small">
+      <CardHeader
+        name={intl.formatMessage({
+          id: 'city-weather-station',
+          defaultMessage: 'Weather station',
+        })}
+        description=""
+        icon="icon-icon_weather-station"
+        unlinked
+      />
+      <div className="information-container">{children}</div>
+    </Card>
+  </div>
 );
+
+InformationContainer.propTypes = {
+  children: object.isRequired,
+};
+
+InformationContainer.contextTypes = {
+  intl: intlShape.isRequired,
+};
+
+export default CityWeatherStationPopup;
