@@ -246,7 +246,7 @@ const CityWeatherStationContentList = (
               <td colSpan={2}>
                 <div
                   aria-hidden="true"
-                  className="show-as-list"
+                  className="text-button"
                   onClick={() => toggleView()}
                 >
                   {`< ${intl.formatMessage({

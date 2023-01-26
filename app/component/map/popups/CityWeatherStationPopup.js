@@ -7,7 +7,6 @@ import { intlShape } from 'react-intl';
 import { routerShape, locationShape } from 'react-router';
 import ComponentUsageExample from '../../ComponentUsageExample';
 import CityWeatherStationContentTable from '../../CityWeatherStationContentTable';
-import ImageSlider from '../../ImageSlider';
 import CityWeatherStationContentList from '../../CityWeatherStationContentList';
 import CityWeatherStationRoute from '../../../route/CityWeatherStationRoute';
 import Card from '../../Card';
@@ -63,32 +62,6 @@ class CityWeatherStationPopup extends React.Component {
     return directions[index];
   };
 
-  openCameraModal = (router, location, localName, cameras) => {
-    router.push({
-      ...location,
-      state: {
-        ...location.state,
-        moreInfoModalOpen: true,
-        moreInfoModalTitle: localName,
-        moreInfoModalContent: (
-          <ImageSlider>
-            {cameras.map(item => (
-              <figure className="slide" key={item.presetId}>
-                <img
-                  src={item.imageUrl}
-                  alt={item.presentationName}
-                  onClick={() => {
-                    window.open(item.imageUrl, '_blank');
-                  }}
-                />
-              </figure>
-            ))}
-          </ImageSlider>
-        ),
-      },
-    });
-  };
-
   toggleView = () => {
     this.setState({
       showList: !this.state.showList,
@@ -122,7 +95,6 @@ class CityWeatherStationPopup extends React.Component {
             ) : (
               <CityWeatherStationContentTable
                 getWindDirection={this.getWindDirection}
-                openCameraModal={this.openCameraModal}
                 toggleView={this.toggleView}
                 {...props}
               />

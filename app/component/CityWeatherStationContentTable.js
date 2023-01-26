@@ -14,9 +14,10 @@ import './city-weather-station-container.scss';
 import Icon from './Icon';
 import Card from './Card';
 import CardHeader from './CardHeader';
+import ImageSlider from './ImageSlider';
 
 const CityWeatherStationContentTable = (
-  { openCameraModal, getWindDirection, toggleView, station },
+  { getWindDirection, toggleView, station },
   { intl, router, location },
 ) => {
   const { cameras, sensorValues } = station;
@@ -41,6 +42,60 @@ const CityWeatherStationContentTable = (
   const { measuredTime } = airTemperature;
 
   const localName = station.name;
+
+  const openCameraModal = () => {
+    router.push({
+      ...location,
+      state: {
+        ...location.state,
+        moreInfoModalOpen: true,
+        moreInfoModalTitle: (
+          <table>
+            <tbody>
+              <tr>
+                <td style={{ paddingRight: '10px' }}>
+                  <Icon
+                    img="icon-icon_camera-station"
+                    className="camera-icon"
+                  />
+                </td>
+                <td>{localName}</td>
+              </tr>
+            </tbody>
+          </table>
+        ),
+        moreInfoModalContent: (
+          <>
+            <ImageSlider>
+              {cameras.map(item => (
+                <figure className="slide" key={item.presetId}>
+                  <img
+                    className="camera-img"
+                    src={item.imageUrl}
+                    alt={item.presentationName}
+                    onClick={() => {
+                      window.open(item.imageUrl, '_blank');
+                    }}
+                  />
+                </figure>
+              ))}
+            </ImageSlider>
+            <br />
+            <div
+              aria-hidden="true"
+              className="text-button"
+              onClick={() => router.goBack()}
+            >
+              {`< ${intl.formatMessage({
+                id: 'back',
+                defaultMessage: 'Go bakc',
+              })}`}
+            </div>
+          </>
+        ),
+      },
+    });
+  };
 
   return (
     <div className="card">
@@ -246,7 +301,13 @@ const CityWeatherStationContentTable = (
                   <div
                     className="camera-icon-container"
                     onClick={() =>
-                      openCameraModal(router, location, localName, cameras)
+                      openCameraModal(
+                        intl,
+                        router,
+                        location,
+                        localName,
+                        cameras,
+                      )
                     }
                   >
                     <Icon
@@ -274,7 +335,7 @@ const CityWeatherStationContentTable = (
               <td colSpan={2}>
                 <div
                   aria-hidden="true"
-                  className="show-as-list"
+                  className="text-button"
                   onClick={() => toggleView()}
                 >
                   {`${intl.formatMessage({
@@ -305,7 +366,6 @@ CityWeatherStationContentTable.description = (
 CityWeatherStationContentTable.propTypes = {
   station: PropTypes.object.isRequired,
   getWindDirection: PropTypes.func.isRequired,
-  openCameraModal: PropTypes.func.isRequired,
   toggleView: PropTypes.func.isRequired,
 };
 
