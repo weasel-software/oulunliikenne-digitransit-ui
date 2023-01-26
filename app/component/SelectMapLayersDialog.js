@@ -444,9 +444,9 @@ class SelectMapLayersDialog extends React.Component {
                 checked={cityWeatherStations}
                 labelId="city-weather-stations"
                 defaultMessage="Weather stations"
-                onChange={e =>
-                  this.updateSetting({ cityWeatherStations: e.target.checked })
-                }
+                onChange={e => {
+                  this.updateSetting({ cityWeatherStations: e.target.checked });
+                }}
               />
             )}
           {config.roadConditions &&
@@ -753,7 +753,7 @@ const mapLayersConfigShape = PropTypes.shape({
     showTmsStations: PropTypes.bool,
   }),
   cityWeatherStations: PropTypes.shape({
-    showWeatherStations: PropTypes.bool,
+    showCityWeatherStations: PropTypes.bool,
   }),
   weatherStations: PropTypes.shape({
     showWeatherStations: PropTypes.bool,

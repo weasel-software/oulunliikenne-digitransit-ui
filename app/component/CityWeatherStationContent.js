@@ -4,30 +4,17 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import moment from 'moment';
 import ComponentUsageExample from './ComponentUsageExample';
 import { lang as exampleLang } from './ExampleData';
 import './city-weather-station-container.scss';
 import Icon from './Icon';
 
-const getWindDirection = degrees => {
-  const directions = [
-    'north',
-    'northeast',
-    'east',
-    'southeast',
-    'south',
-    'southwest',
-    'west',
-    'northwest',
-  ];
-
-  const index = Math.round(degrees / 45.0) % directions.length;
-
-  return directions[index];
-};
-
-const CityWeatherStationContent = ({ sensors, cameras, openCameraModal }) => {
+const CityWeatherStationContent = ({
+  sensors,
+  cameras,
+  openCameraModal,
+  getWindDirection,
+}) => {
   const snowDepth = sensors.find(item => item.name === 'SNOW_DEPTH');
   const rainfallDepth = sensors.find(item => item.name === 'RAINFALL_DEPTH');
   const airRelativeHumidity = sensors.find(
@@ -242,24 +229,16 @@ const CityWeatherStationContent = ({ sensors, cameras, openCameraModal }) => {
               </table>
             </td>
           )}
-          {rainfallDepth && (
+          {cameras && (
             <td>
               <div
                 className="camera-icon-container"
-                onClick={() => openCameraModal(cameras)}
+                onClick={() => openCameraModal()}
               >
                 <Icon img="icon-icon_camera-station" className="camera-icon" />
               </div>
             </td>
           )}
-        </tr>
-        <tr>
-          <td colSpan={2} className="last-updated">
-            <FormattedMessage id="last-updated" defaultMessage="Last updated">
-              {(...content) => `${content} `}
-            </FormattedMessage>
-            {moment(airTemperature.measuredTime).format('HH:mm:ss') || ''}
-          </td>
         </tr>
       </tbody>
     </table>
@@ -281,6 +260,7 @@ CityWeatherStationContent.propTypes = {
   sensors: PropTypes.array.isRequired,
   cameras: PropTypes.array.isRequired,
   openCameraModal: PropTypes.func.isRequired,
+  getWindDirection: PropTypes.func.isRequired,
 };
 
 export default CityWeatherStationContent;
