@@ -6,7 +6,7 @@ import Relay from 'react-relay/classic';
 import { intlShape } from 'react-intl';
 import { routerShape, locationShape } from 'react-router';
 import ComponentUsageExample from '../../ComponentUsageExample';
-import CityWeatherStationContent from '../../CityWeatherStationContent';
+import CityWeatherStationContentTable from '../../CityWeatherStationContentTable';
 import ImageSlider from '../../ImageSlider';
 import CityWeatherStationContentList from '../../CityWeatherStationContentList';
 import CityWeatherStationRoute from '../../../route/CityWeatherStationRoute';
@@ -104,7 +104,9 @@ class CityWeatherStationPopup extends React.Component {
     return (
       <Relay.Renderer
         Container={
-          showList ? CityWeatherStationContentList : CityWeatherStationContent
+          showList
+            ? CityWeatherStationContentList
+            : CityWeatherStationContentTable
         }
         queryConfig={queryConfig}
         environment={Relay.Store}
@@ -114,10 +116,11 @@ class CityWeatherStationPopup extends React.Component {
             return showList ? (
               <CityWeatherStationContentList
                 toggleView={this.toggleView}
+                getWindDirection={this.getWindDirection}
                 {...props}
               />
             ) : (
-              <CityWeatherStationContent
+              <CityWeatherStationContentTable
                 getWindDirection={this.getWindDirection}
                 openCameraModal={this.openCameraModal}
                 toggleView={this.toggleView}

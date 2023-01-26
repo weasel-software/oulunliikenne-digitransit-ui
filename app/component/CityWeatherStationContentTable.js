@@ -15,7 +15,7 @@ import Icon from './Icon';
 import Card from './Card';
 import CardHeader from './CardHeader';
 
-const CityWeatherStationContent = (
+const CityWeatherStationContentTable = (
   { openCameraModal, getWindDirection, toggleView, station },
   { intl, router, location },
 ) => {
@@ -71,10 +71,8 @@ const CityWeatherStationContent = (
                           </FormattedMessage>
                         </td>
                       </tr>
-                      <tr className="value">
-                        <td>
-                          <span>{airTemperature.sensorValue}</span>
-                        </td>
+                      <tr>
+                        <td>{airTemperature.sensorValue}</td>
                       </tr>
                       <tr>
                         <td>{airTemperature.sensorUnit}</td>
@@ -97,10 +95,8 @@ const CityWeatherStationContent = (
                           </FormattedMessage>
                         </td>
                       </tr>
-                      <tr className="value">
-                        <td>
-                          <span>{roadSurfaceTemperature.sensorValue}</span>
-                        </td>
+                      <tr>
+                        <td>{roadSurfaceTemperature.sensorValue}</td>
                       </tr>
                       <tr>
                         <td>{roadSurfaceTemperature.sensorUnit}</td>
@@ -125,10 +121,8 @@ const CityWeatherStationContent = (
                           </FormattedMessage>
                         </td>
                       </tr>
-                      <tr className="value">
-                        <td>
-                          <span>{windSpeed.sensorValue}</span>
-                        </td>
+                      <tr>
+                        <td>{windSpeed.sensorValue}</td>
                       </tr>
                       <tr>
                         <td>{windSpeed.sensorUnit}</td>
@@ -151,16 +145,14 @@ const CityWeatherStationContent = (
                           </FormattedMessage>
                         </td>
                       </tr>
-                      <tr className="value">
+                      <tr>
                         <td>
-                          <span>
-                            <FormattedMessage
-                              id={getWindDirection(windDirection.sensorValue)}
-                              defaultMessage="North"
-                            >
-                              {(...content) => `${content}`}
-                            </FormattedMessage>
-                          </span>
+                          <FormattedMessage
+                            id={getWindDirection(windDirection.sensorValue)}
+                            defaultMessage="North"
+                          >
+                            {(...content) => `${content}`}
+                          </FormattedMessage>
                         </td>
                       </tr>
                       <tr>
@@ -189,10 +181,8 @@ const CityWeatherStationContent = (
                           </FormattedMessage>
                         </td>
                       </tr>
-                      <tr className="value">
-                        <td>
-                          <span>{airRelativeHumidity.sensorValue}</span>
-                        </td>
+                      <tr>
+                        <td>{airRelativeHumidity.sensorValue}</td>
                       </tr>
                       <tr>
                         <td>%</td>
@@ -216,9 +206,7 @@ const CityWeatherStationContent = (
                         </td>
                       </tr>
                       <tr className="value">
-                        <td>
-                          <span>{rainfallDepth.sensorValue}</span>
-                        </td>
+                        <td>{rainfallDepth.sensorValue}</td>
                       </tr>
                       <tr>
                         <td>{rainfallDepth.sensorUnit}</td>
@@ -244,9 +232,7 @@ const CityWeatherStationContent = (
                         </td>
                       </tr>
                       <tr>
-                        <td>
-                          <span className="value">{snowDepth.sensorValue}</span>
-                        </td>
+                        <td>{snowDepth.sensorValue}</td>
                       </tr>
                       <tr>
                         <td>{snowDepth.sensorUnit}</td>
@@ -273,7 +259,7 @@ const CityWeatherStationContent = (
             </tr>
             {measuredTime && (
               <tr>
-                <td colSpan={2} className="last-updated">
+                <td colSpan={2} className="updated">
                   <FormattedMessage
                     id="last-updated"
                     defaultMessage="Last updated"
@@ -285,7 +271,7 @@ const CityWeatherStationContent = (
               </tr>
             )}
             <tr>
-              <td colSpan={2} className="last-updated">
+              <td colSpan={2}>
                 <div
                   aria-hidden="true"
                   className="show-as-list"
@@ -305,34 +291,38 @@ const CityWeatherStationContent = (
   );
 };
 
-CityWeatherStationContent.displayName = 'CityWeatherStationContent';
+CityWeatherStationContentTable.displayName = 'CityWeatherStationContentTable';
 
-CityWeatherStationContent.description = (
+CityWeatherStationContentTable.description = (
   <div>
     <p>RendTimeers content of a roadwork popup or modal</p>
     <ComponentUsageExample description="">
-      <CityWeatherStationContent comment={exampleLang} />
+      <CityWeatherStationContentTable comment={exampleLang} />
     </ComponentUsageExample>
   </div>
 );
 
-CityWeatherStationContent.propTypes = {
+CityWeatherStationContentTable.propTypes = {
   station: PropTypes.object.isRequired,
   getWindDirection: PropTypes.func.isRequired,
   openCameraModal: PropTypes.func.isRequired,
   toggleView: PropTypes.func.isRequired,
 };
 
-CityWeatherStationContent.contextTypes = {
+CityWeatherStationContentTable.contextTypes = {
   intl: intlShape.isRequired,
   router: routerShape.isRequired,
   location: locationShape.isRequired,
 };
 
 export default Relay.createContainer(
-  connectToStores(CityWeatherStationContent, ['PreferencesStore'], context => ({
-    lang: context.getStore('PreferencesStore').getLanguage(),
-  })),
+  connectToStores(
+    CityWeatherStationContentTable,
+    ['PreferencesStore'],
+    context => ({
+      lang: context.getStore('PreferencesStore').getLanguage(),
+    }),
+  ),
   {
     fragments: {
       station: () => Relay.QL`

@@ -3,6 +3,13 @@
 $font-color: #666666;
 $value-color: #333333;
 
+.updated {
+    font-size: $font-size-xsmall;
+    font-style: italic;
+    color: $gray;
+    padding-top: 20px;
+  }
+
 .information-container {
     display: flex;
     justify-content: center;
@@ -23,7 +30,6 @@ $value-color: #333333;
       &:first-child {
         color: $font-color;
         font-family: 'Lato';
-        font-style: normal;
         font-weight: 400;
         font-size: 14px;
         line-height: 17px;
@@ -32,7 +38,6 @@ $value-color: #333333;
       &:nth-child(2) {
         color: $value-color;
         font-family: 'Lato';
-        font-style: normal;
         font-weight: 900;
         font-size: 13px;
         line-height: 16px;
@@ -55,28 +60,28 @@ $value-color: #333333;
 .sensor-info {
     width: 136px;
     height: 91px;
-    color: $font-color;
     background: #EEF1F3;
+    color: $font-color;
     margin: 5px 0px;
     padding: 5px 0px;
+    font-family: 'Lato';
+    font-style: normal;
+    text-align: center;
 
     tr {
-        font-family: 'Lato';
-        font-style: normal;
         font-weight: 400;
         font-size: 14px;
         line-height: 17px;
-        text-align: center;
     }
 
-    span {
-        font-family: 'Lato';
-        font-style: normal;
+    tr:nth-child(2) {
         font-weight: 900;
         font-size: 26px;
         line-height: 31px;
-        text-align: center;
-        color: $value-color;
+        
+        td:first-child {
+            color: $value-color;
+        }
     }
 }
 

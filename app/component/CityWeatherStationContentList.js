@@ -12,11 +12,33 @@ import { lang as exampleLang } from './ExampleData';
 import Card from './Card';
 import CardHeader from './CardHeader';
 
-const CityWeatherStationContentList = ({ toggleView, station }, { intl }) => {
+import './city-weather-station-container.scss';
+
+const rainTypes = {
+  '0': 'no-rain',
+  '98': 'has-rain',
+  '4': 'light-snow',
+  '5': 'moderate-snow',
+  '6': 'heavy-snow',
+};
+
+const CityWeatherStationContentList = (
+  { toggleView, station, getWindDirection },
+  { intl },
+) => {
   const { sensorValues } = station;
+  const dewPointTemperature = sensorValues.find(
+    item => item.name === 'DEW_POINT_TEMPERATURE',
+  );
   const snowDepth = sensorValues.find(item => item.name === 'SNOW_DEPTH');
+  const rainfallIntensity = sensorValues.find(
+    item => item.name === 'RAINFALL_INTENSITY',
+  );
   const rainfallDepth = sensorValues.find(
     item => item.name === 'RAINFALL_DEPTH',
+  );
+  const rainClassification = sensorValues.find(
+    item => item.name === 'RAIN_CLASSIFICATION',
   );
   const airRelativeHumidity = sensorValues.find(
     item => item.name === 'AIR_RELATIVE_HUMIDITY',
@@ -57,42 +79,49 @@ const CityWeatherStationContentList = ({ toggleView, station }, { intl }) => {
                     id="air-temperature"
                     defaultMessage="Air temperature"
                   >
-                    {(...content) => `${content}`}
+                    {(...content) => `${content} ${airTemperature.sensorUnit}`}
                   </FormattedMessage>
                 </td>
-                <td>
-                  {airTemperature.sensorValue} {airTemperature.sensorUnit}
-                </td>
+                <td>{airTemperature.sensorValue}</td>
               </tr>
             )}
-            {roadSurfaceTemperature && (
+            {airRelativeHumidity && (
               <tr>
                 <td>
                   <FormattedMessage
-                    id="road-temperature"
-                    defaultMessage="Road temperature"
+                    id="air-humidity"
+                    defaultMessage="Air humidity"
                   >
-                    {(...content) => `${content}`}
+                    {(...content) => `${content} %`}
                   </FormattedMessage>
                 </td>
-                <td>
-                  {roadSurfaceTemperature.sensorValue}{' '}
-                  {roadSurfaceTemperature.sensorUnit}
-                </td>
+                <td>{airRelativeHumidity.sensorValue}</td>
               </tr>
             )}
+            {dewPointTemperature && (
+              <tr>
+                <td>
+                  <FormattedMessage
+                    id="dew-point-temperature"
+                    defaultMessage="Dew Point Temperature"
+                  >
+                    {(...content) =>
+                      `${content} ${dewPointTemperature.sensorUnit}`
+                    }
+                  </FormattedMessage>
+                </td>
+                <td>{dewPointTemperature.sensorValue}</td>
+              </tr>
+            )}
+
             {windSpeed && (
               <tr>
                 <td>
                   <FormattedMessage id="wind-speed" defaultMessage="Wind speed">
-                    {(...content) => `${content}`}
+                    {(...content) => `${content} ${windSpeed.sensorUnit}`}
                   </FormattedMessage>
                 </td>
-                <td>
-                  <span>
-                    {windSpeed.sensorValue} {windSpeed.sensorUnit}
-                  </span>
-                </td>
+                <td>{windSpeed.sensorValue}</td>
               </tr>
             )}
             {windDirection && (
@@ -106,22 +135,13 @@ const CityWeatherStationContentList = ({ toggleView, station }, { intl }) => {
                   </FormattedMessage>
                 </td>
                 <td>
-                  {windDirection.sensorValue}
-                  °
-                </td>
-              </tr>
-            )}
-            {airRelativeHumidity && (
-              <tr>
-                <td>
                   <FormattedMessage
-                    id="air-humidity"
-                    defaultMessage="Air humidity"
+                    id={getWindDirection(windDirection.sensorValue)}
+                    defaultMessage="North"
                   >
                     {(...content) => `${content}`}
                   </FormattedMessage>
                 </td>
-                <td>{airRelativeHumidity.sensorValue} %</td>
               </tr>
             )}
             {rainfallDepth && (
@@ -131,31 +151,75 @@ const CityWeatherStationContentList = ({ toggleView, station }, { intl }) => {
                     id="rainfall-depth"
                     defaultMessage="Rainfall depth"
                   >
-                    {(...content) => `${content}`}
+                    {(...content) => `${content} ${rainfallDepth.sensorUnit}`}
                   </FormattedMessage>
                 </td>
+                <td>{rainfallDepth.sensorValue}</td>
+              </tr>
+            )}
+            {rainfallIntensity && (
+              <tr>
                 <td>
-                  <span>
-                    {rainfallDepth.sensorValue} {rainfallDepth.sensorUnit}
-                  </span>
+                  <FormattedMessage
+                    id="rainfall-intensity"
+                    defaultMessage="Rainfall intensity"
+                  >
+                    {(...content) =>
+                      `${content} ${rainfallIntensity.sensorUnit}`
+                    }
+                  </FormattedMessage>
                 </td>
+                <td>{rainfallIntensity.sensorValue}</td>
               </tr>
             )}
             {snowDepth && (
               <tr>
                 <td>
                   <FormattedMessage id="snow-depth" defaultMessage="Snow depth">
+                    {(...content) => `${content} ${snowDepth.sensorUnit}`}
+                  </FormattedMessage>
+                </td>
+                <td>{snowDepth.sensorValue}</td>
+              </tr>
+            )}
+            {rainClassification && (
+              <tr>
+                <td>
+                  <FormattedMessage
+                    id="rain-classification"
+                    defaultMessage="Rain classification"
+                  >
                     {(...content) => `${content}`}
                   </FormattedMessage>
                 </td>
                 <td>
-                  {snowDepth.sensorValue} {snowDepth.sensorUnit}
+                  <FormattedMessage
+                    id={rainTypes[rainClassification.sensorValue]}
+                    defaultMessage="Clear"
+                  >
+                    {(...content) => `${content}`}
+                  </FormattedMessage>
                 </td>
+              </tr>
+            )}
+            {roadSurfaceTemperature && (
+              <tr>
+                <td>
+                  <FormattedMessage
+                    id="road-temperature"
+                    defaultMessage="Road temperature"
+                  >
+                    {(...content) =>
+                      `${content} ${roadSurfaceTemperature.sensorUnit}`
+                    }
+                  </FormattedMessage>
+                </td>
+                <td>{roadSurfaceTemperature.sensorValue}</td>
               </tr>
             )}
             {measuredTime && (
               <tr>
-                <td colSpan={2} className="last-updated">
+                <td colSpan={2} className="updated">
                   <FormattedMessage
                     id="last-updated"
                     defaultMessage="Last updated"
@@ -167,7 +231,7 @@ const CityWeatherStationContentList = ({ toggleView, station }, { intl }) => {
               </tr>
             )}
             <tr>
-              <td colSpan={2} className="last-updated">
+              <td colSpan={2}>
                 <div
                   aria-hidden="true"
                   className="show-as-list"
@@ -201,6 +265,7 @@ CityWeatherStationContentList.description = (
 CityWeatherStationContentList.propTypes = {
   station: PropTypes.object.isRequired,
   toggleView: PropTypes.func.isRequired,
+  getWindDirection: PropTypes.func.isRequired,
 };
 
 CityWeatherStationContentList.contextTypes = {
