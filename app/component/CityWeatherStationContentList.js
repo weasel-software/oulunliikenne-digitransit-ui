@@ -22,6 +22,16 @@ const rainTypes = {
   '6': 'heavy-snow',
 };
 
+const getRainClassificationType = number => {
+  const type = rainTypes[number];
+
+  if (type === null || type === undefined) {
+    return 'no-rain';
+  }
+
+  return type;
+};
+
 const CityWeatherStationContentList = (
   { toggleView, station, getWindDirection },
   { intl },
@@ -194,7 +204,9 @@ const CityWeatherStationContentList = (
                 </td>
                 <td>
                   <FormattedMessage
-                    id={rainTypes[rainClassification.sensorValue]}
+                    id={getRainClassificationType(
+                      rainClassification.sensorValue,
+                    )}
                     defaultMessage="Clear"
                   >
                     {(...content) => `${content}`}
