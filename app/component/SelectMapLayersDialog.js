@@ -443,7 +443,7 @@ class SelectMapLayersDialog extends React.Component {
               <InputField
                 checked={cityWeatherStations}
                 labelId="city-weather-stations"
-                defaultMessage="Weather stations"
+                defaultMessage="City weather stations"
                 onChange={e => {
                   this.updateSetting({ cityWeatherStations: e.target.checked });
                 }}

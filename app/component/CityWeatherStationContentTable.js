@@ -17,14 +17,15 @@ import Card from './Card';
 import CardHeader from './CardHeader';
 import ImageSlider from './ImageSlider';
 
-const SensorInfo = ({ id, defaultMessage, value, unit }) => {
-  if (value === undefined || value === null) {
+const SensorInfo = ({ id, defaultMessage, sensor }) => {
+  if (!sensor) {
     return null;
   }
 
-  if (unit === undefined || unit === null) {
+  if (sensor.sensorValue === undefined || sensor.sensorUnit === undefined) {
     return null;
   }
+
   return (
     <td>
       <table className="sensor-info">
@@ -37,10 +38,10 @@ const SensorInfo = ({ id, defaultMessage, value, unit }) => {
             </td>
           </tr>
           <tr>
-            <td>{value}</td>
+            <td>{sensor.sensorValue}</td>
           </tr>
           <tr>
-            <td>{unit}</td>
+            <td>{sensor.sensorUnit}</td>
           </tr>
         </tbody>
       </table>
@@ -51,8 +52,11 @@ const SensorInfo = ({ id, defaultMessage, value, unit }) => {
 SensorInfo.propTypes = {
   id: PropTypes.string.isRequired,
   defaultMessage: PropTypes.string.isRequired,
-  value: PropTypes.any.isRequired,
-  unit: PropTypes.any.isRequired,
+  sensor: PropTypes.object,
+};
+
+SensorInfo.defaultProps = {
+  sensor: undefined,
 };
 
 const CameraIcon = ({ id, onClick }) => (
@@ -69,10 +73,11 @@ CameraIcon.propTypes = {
 };
 
 const CityWeatherStationContentTable = (
-  { getWindDirection, toggleView, cityWeatherStation },
+  { getWindDirection, toggleView, station },
   { intl, router, location },
 ) => {
-  const { cameras, sensorValues } = cityWeatherStation;
+  const { cameras, sensorValues } = station;
+
   const snowDepth = sensorValues.find(item => item.name === 'SNOW_DEPTH');
   const rainfallDepth = sensorValues.find(
     item => item.name === 'RAINFALL_DEPTH',
@@ -93,7 +98,7 @@ const CityWeatherStationContentTable = (
 
   const { measuredTime } = airTemperature;
 
-  const localName = cityWeatherStation.name;
+  const localName = station.name;
 
   const openCameraModal = () => {
     router.push({
@@ -154,15 +159,13 @@ const CityWeatherStationContentTable = (
       {
         id: 'air-temperature',
         defaultMessage: 'Air temperature',
-        value: airTemperature.sensorValue,
-        unit: airTemperature.sensorUnit,
+        sensor: airTemperature,
         Component: SensorInfo,
       },
       {
         id: 'road-temperature',
         defaultMessage: 'Road temperature',
-        value: roadSurfaceTemperature.sensorValue,
-        unit: roadSurfaceTemperature.sensorUnit,
+        sensor: roadSurfaceTemperature,
         Component: SensorInfo,
       },
     ],
@@ -170,22 +173,26 @@ const CityWeatherStationContentTable = (
       {
         id: 'wind-speed',
         defaultMessage: 'Wind speed',
-        value: windSpeed.sensorValue,
-        unit: windSpeed.sensorUnit,
+        sensor: windSpeed,
         Component: SensorInfo,
       },
       {
         id: 'wind-direction',
         defaultMessage: 'Wind direction',
-        value: (
-          <FormattedMessage
-            id={getWindDirection(windDirection.sensorValue)}
-            defaultMessage="North"
-          >
-            {(...content) => `${content} `}
-          </FormattedMessage>
-        ),
-        unit: `${windDirection.sensorValue}°`,
+        sensor:
+          windDirection.sensorValue === undefined
+            ? undefined
+            : {
+                sensorValue: (
+                  <FormattedMessage
+                    id={getWindDirection(windDirection.sensorValue)}
+                    defaultMessage="North"
+                  >
+                    {(...content) => `${content} `}
+                  </FormattedMessage>
+                ),
+                sensorUnit: `${windDirection.sensorValue}°`,
+              },
         Component: SensorInfo,
       },
     ],
@@ -193,15 +200,16 @@ const CityWeatherStationContentTable = (
       {
         id: 'air-humidity',
         defaultMessage: 'Air humidity',
-        value: airRelativeHumidity.sensorValue,
-        unit: '%',
+        sensor: {
+          ...airRelativeHumidity,
+          sensorUnit: '%',
+        },
         Component: SensorInfo,
       },
       {
         id: 'rainfall-depth',
         defaultMessage: 'Rainfall depth',
-        value: rainfallDepth.sensorValue,
-        unit: rainfallDepth.sensorUnit,
+        sensor: rainfallDepth,
         Component: SensorInfo,
       },
     ],
@@ -209,8 +217,7 @@ const CityWeatherStationContentTable = (
       {
         id: 'snow-depth',
         defaultMessage: 'snow-depth',
-        value: snowDepth.sensorValue,
-        unit: snowDepth.sensorUnit,
+        sensor: snowDepth,
         Component: SensorInfo,
       },
       {
@@ -238,8 +245,8 @@ const CityWeatherStationContentTable = (
             {tableContent.map(arr => (
               <tr key={_.uniqueId()}>
                 {arr.map(obj => {
-                  const { id, Component } = obj;
-                  return <Component key={id} {...obj} />;
+                  const { Component } = obj;
+                  return <Component key={_.uniqueId()} {...obj} />;
                 })}
               </tr>
             ))}
@@ -281,7 +288,7 @@ CityWeatherStationContentTable.displayName = 'CityWeatherStationContentTable';
 
 CityWeatherStationContentTable.description = (
   <div>
-    <p>RendTimeers content of a roadwork popup or modal</p>
+    <p>City Weather station content</p>
     <ComponentUsageExample description="">
       <CityWeatherStationContentTable comment={exampleLang} />
     </ComponentUsageExample>
@@ -289,7 +296,7 @@ CityWeatherStationContentTable.description = (
 );
 
 CityWeatherStationContentTable.propTypes = {
-  cityWeatherStation: PropTypes.object.isRequired,
+  station: PropTypes.object.isRequired,
   getWindDirection: PropTypes.func.isRequired,
   toggleView: PropTypes.func.isRequired,
 };
@@ -310,7 +317,7 @@ export default Relay.createContainer(
   ),
   {
     fragments: {
-      cityWeatherStation: () => Relay.QL`
+      station: () => Relay.QL`
       fragment on CityWeatherStation {
         weatherStationId
         name

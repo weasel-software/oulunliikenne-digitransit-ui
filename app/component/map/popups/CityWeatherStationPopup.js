@@ -73,9 +73,9 @@ class CityWeatherStationPopup extends React.Component {
     const { intl } = this.context;
     const { showList } = this.state;
     const queryConfig = new CityWeatherStationRoute({ id });
-
     return (
       <Relay.Renderer
+        forceFetch
         Container={
           showList
             ? CityWeatherStationContentList
@@ -83,8 +83,7 @@ class CityWeatherStationPopup extends React.Component {
         }
         queryConfig={queryConfig}
         environment={Relay.Store}
-        render={stuff => {
-          const { done, error, props } = stuff;
+        render={({ done, error, props }) => {
           if (done) {
             return showList ? (
               <CityWeatherStationContentList
@@ -133,7 +132,7 @@ const InformationContainer = ({ children }, { intl }) => (
       <CardHeader
         name={intl.formatMessage({
           id: 'city-weather-station',
-          defaultMessage: 'Weather station',
+          defaultMessage: 'City weather station',
         })}
         description=""
         icon="icon-icon_weather-station"

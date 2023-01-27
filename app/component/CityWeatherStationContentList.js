@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Relay from 'react-relay/classic';
 import moment from 'moment';
+import _ from 'lodash';
 import { FormattedMessage, intlShape } from 'react-intl';
 import { connectToStores } from 'fluxible-addons-react';
 import ComponentUsageExample from './ComponentUsageExample';
@@ -14,22 +15,22 @@ import CardHeader from './CardHeader';
 
 import './city-weather-station-container.scss';
 
-const SensorInfo = ({ id, defaultMessage, value, unit }) => {
-  if (value === undefined || value === null) {
+const SensorInfo = ({ id, defaultMessage, sensor }) => {
+  if (sensor === undefined) {
     return null;
   }
 
-  if (unit === undefined || unit === null) {
+  if (sensor.sensorValue === undefined || sensor.sensorUnit === undefined) {
     return null;
   }
   return (
     <tr>
       <td>
         <FormattedMessage id={id} defaultMessage={defaultMessage}>
-          {(...content) => `${content} ${unit}`}
+          {(...content) => `${content} ${sensor.sensorUnit}`}
         </FormattedMessage>
       </td>
-      <td>{value}</td>
+      <td>{sensor.sensorValue}</td>
     </tr>
   );
 };
@@ -37,8 +38,11 @@ const SensorInfo = ({ id, defaultMessage, value, unit }) => {
 SensorInfo.propTypes = {
   id: PropTypes.string.isRequired,
   defaultMessage: PropTypes.string.isRequired,
-  value: PropTypes.any.isRequired,
-  unit: PropTypes.any.isRequired,
+  sensor: PropTypes.object,
+};
+
+SensorInfo.defaultProps = {
+  sensor: undefined,
 };
 
 const rainTypes = {
@@ -60,10 +64,10 @@ const getRainClassificationType = number => {
 };
 
 const CityWeatherStationContentList = (
-  { toggleView, cityWeatherStation, getWindDirection },
+  { toggleView, station, getWindDirection },
   { intl },
 ) => {
-  const { sensorValues } = cityWeatherStation;
+  const { sensorValues } = station;
   const dewPointTemperature = sensorValues.find(
     item => item.name === 'DEW_POINT_TEMPERATURE',
   );
@@ -95,92 +99,100 @@ const CityWeatherStationContentList = (
     {
       id: 'air-temperature',
       defaultMessage: 'Air temperature',
-      value: airTemperature.sensorValue,
-      unit: airTemperature.sensorUnit,
+      sensor: airTemperature,
       Component: SensorInfo,
     },
     {
       id: 'air-humidity',
       defaultMessage: 'Air humidity',
-      value: airRelativeHumidity.sensorValue,
-      unit: '%',
+      sensor: {
+        ...airRelativeHumidity,
+        sensorUnit: '%',
+      },
       Component: SensorInfo,
     },
     {
       id: 'dew-point-temperature',
       defaultMessage: 'Dew point temperature',
-      value: dewPointTemperature.sensorValue,
-      unit: '%',
+      sensor: {
+        ...dewPointTemperature,
+        sensorUnit: '%',
+      },
       Component: SensorInfo,
     },
     {
       id: 'wind-speed',
       defaultMessage: 'Wind speed',
-      value: windSpeed.sensorValue,
-      unit: windSpeed.sensorUnit,
+      sensor: windSpeed,
       Component: SensorInfo,
     },
     {
       id: 'wind-direction',
       defaultMessage: 'Wind direction',
-      value: (
-        <FormattedMessage
-          id={getWindDirection(windDirection.sensorValue)}
-          defaultMessage="North"
-        >
-          {(...content) => `${content} `}
-        </FormattedMessage>
-      ),
-      unit: '',
+      sensor:
+        windDirection === undefined
+          ? undefined
+          : {
+              sensorValue: (
+                <FormattedMessage
+                  id={getWindDirection(windDirection.sensorValue)}
+                  defaultMessage="North"
+                >
+                  {(...content) => `${content} `}
+                </FormattedMessage>
+              ),
+              sensorUnit: '',
+            },
       Component: SensorInfo,
     },
     {
       id: 'rainfall-depth',
       defaultMessage: 'Rainfall depth',
-      value: rainfallDepth.sensorValue,
-      unit: rainfallDepth.sensorUnit,
+      sensor: rainfallDepth,
       Component: SensorInfo,
     },
     {
       id: 'rainfall-intensity',
       defaultMessage: 'Rainfall intensity',
-      value: rainfallIntensity.sensorValue,
-      unit: rainfallIntensity.sensorUnit,
+      sensor: rainfallIntensity,
       Component: SensorInfo,
     },
     {
       id: 'snow-depth',
       defaultMessage: 'Snow depth',
-      value: snowDepth.sensorValue,
-      unit: snowDepth.sensorUnit,
+      sensor: snowDepth,
       Component: SensorInfo,
     },
     {
       id: 'rain-classification',
       defaultMessage: 'Rain classification',
-      value: (
-        <FormattedMessage
-          id={getRainClassificationType(rainClassification.sensorValue)}
-          defaultMessage="North"
-        >
-          {(...content) => `${content} `}
-        </FormattedMessage>
-      ),
-      unit: '',
+      sensor:
+        rainClassification === undefined
+          ? undefined
+          : {
+              sensorValue: (
+                <FormattedMessage
+                  id={getRainClassificationType(rainClassification.sensorValue)}
+                  defaultMessage="North"
+                >
+                  {(...content) => `${content} `}
+                </FormattedMessage>
+              ),
+              sensorUnit: '',
+            },
       Component: SensorInfo,
     },
     {
       id: 'road-temperature',
       defaultMessage: 'Road temperature',
-      value: roadSurfaceTemperature.sensorValue,
-      unit: roadSurfaceTemperature.sensorUnit,
+      sensor: roadSurfaceTemperature,
       Component: SensorInfo,
     },
   ];
 
   const { measuredTime } = airTemperature;
 
-  const localName = cityWeatherStation.name;
+  const localName = station.name;
 
   return (
     <div className="card">
@@ -197,8 +209,8 @@ const CityWeatherStationContentList = (
         <table className="list">
           <tbody>
             {tableContent.map(obj => {
-              const { id, Component } = obj;
-              return <Component key={id} {...obj} />;
+              const { Component } = obj;
+              return <Component key={_.uniqueId()} {...obj} />;
             })}
             {measuredTime && (
               <tr>
@@ -246,7 +258,7 @@ CityWeatherStationContentList.description = (
 );
 
 CityWeatherStationContentList.propTypes = {
-  cityWeatherStation: PropTypes.object.isRequired,
+  station: PropTypes.object.isRequired,
   toggleView: PropTypes.func.isRequired,
   getWindDirection: PropTypes.func.isRequired,
 };
@@ -265,7 +277,7 @@ export default Relay.createContainer(
   ),
   {
     fragments: {
-      cityWeatherStation: () => Relay.QL`
+      station: () => Relay.QL`
       fragment on CityWeatherStation {
         weatherStationId
         name
