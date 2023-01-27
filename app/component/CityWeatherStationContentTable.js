@@ -8,6 +8,7 @@ import moment from 'moment';
 import { FormattedMessage, intlShape } from 'react-intl';
 import { routerShape, locationShape } from 'react-router';
 import { connectToStores } from 'fluxible-addons-react';
+import _ from 'lodash';
 import ComponentUsageExample from './ComponentUsageExample';
 import { lang as exampleLang } from './ExampleData';
 import './city-weather-station-container.scss';
@@ -16,11 +17,62 @@ import Card from './Card';
 import CardHeader from './CardHeader';
 import ImageSlider from './ImageSlider';
 
+const SensorInfo = ({ id, defaultMessage, value, unit }) => {
+  if (value === undefined || value === null) {
+    return null;
+  }
+
+  if (unit === undefined || unit === null) {
+    return null;
+  }
+  return (
+    <td>
+      <table className="sensor-info">
+        <tbody>
+          <tr>
+            <td>
+              <FormattedMessage id={id} defaultMessage={defaultMessage}>
+                {(...content) => `${content}`}
+              </FormattedMessage>
+            </td>
+          </tr>
+          <tr>
+            <td>{value}</td>
+          </tr>
+          <tr>
+            <td>{unit}</td>
+          </tr>
+        </tbody>
+      </table>
+    </td>
+  );
+};
+
+SensorInfo.propTypes = {
+  id: PropTypes.string.isRequired,
+  defaultMessage: PropTypes.string.isRequired,
+  value: PropTypes.any.isRequired,
+  unit: PropTypes.any.isRequired,
+};
+
+const CameraIcon = ({ id, onClick }) => (
+  <td key={id}>
+    <div className="camera-icon-container" onClick={onClick}>
+      <Icon img="icon-icon_camera-station" className="camera-icon" />
+    </div>
+  </td>
+);
+
+CameraIcon.propTypes = {
+  id: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
+};
+
 const CityWeatherStationContentTable = (
-  { getWindDirection, toggleView, station },
+  { getWindDirection, toggleView, cityWeatherStation },
   { intl, router, location },
 ) => {
-  const { cameras, sensorValues } = station;
+  const { cameras, sensorValues } = cityWeatherStation;
   const snowDepth = sensorValues.find(item => item.name === 'SNOW_DEPTH');
   const rainfallDepth = sensorValues.find(
     item => item.name === 'RAINFALL_DEPTH',
@@ -41,7 +93,7 @@ const CityWeatherStationContentTable = (
 
   const { measuredTime } = airTemperature;
 
-  const localName = station.name;
+  const localName = cityWeatherStation.name;
 
   const openCameraModal = () => {
     router.push({
@@ -68,7 +120,7 @@ const CityWeatherStationContentTable = (
           <>
             <ImageSlider>
               {cameras.map(item => (
-                <figure className="slide" key={item.presetId}>
+                <figure key={_.uniqueId()} className="slide">
                   <img
                     className="camera-img"
                     src={item.imageUrl}
@@ -97,6 +149,78 @@ const CityWeatherStationContentTable = (
     });
   };
 
+  const tableContent = [
+    [
+      {
+        id: 'air-temperature',
+        defaultMessage: 'Air temperature',
+        value: airTemperature.sensorValue,
+        unit: airTemperature.sensorUnit,
+        Component: SensorInfo,
+      },
+      {
+        id: 'road-temperature',
+        defaultMessage: 'Road temperature',
+        value: roadSurfaceTemperature.sensorValue,
+        unit: roadSurfaceTemperature.sensorUnit,
+        Component: SensorInfo,
+      },
+    ],
+    [
+      {
+        id: 'wind-speed',
+        defaultMessage: 'Wind speed',
+        value: windSpeed.sensorValue,
+        unit: windSpeed.sensorUnit,
+        Component: SensorInfo,
+      },
+      {
+        id: 'wind-direction',
+        defaultMessage: 'Wind direction',
+        value: (
+          <FormattedMessage
+            id={getWindDirection(windDirection.sensorValue)}
+            defaultMessage="North"
+          >
+            {(...content) => `${content} `}
+          </FormattedMessage>
+        ),
+        unit: `${windDirection.sensorValue}°`,
+        Component: SensorInfo,
+      },
+    ],
+    [
+      {
+        id: 'air-humidity',
+        defaultMessage: 'Air humidity',
+        value: airRelativeHumidity.sensorValue,
+        unit: '%',
+        Component: SensorInfo,
+      },
+      {
+        id: 'rainfall-depth',
+        defaultMessage: 'Rainfall depth',
+        value: rainfallDepth.sensorValue,
+        unit: rainfallDepth.sensorUnit,
+        Component: SensorInfo,
+      },
+    ],
+    [
+      {
+        id: 'snow-depth',
+        defaultMessage: 'snow-depth',
+        value: snowDepth.sensorValue,
+        unit: snowDepth.sensorUnit,
+        Component: SensorInfo,
+      },
+      {
+        id: 'camera',
+        onClick: openCameraModal,
+        Component: CameraIcon,
+      },
+    ],
+  ];
+
   return (
     <div className="card">
       <Card className="padding-small">
@@ -111,213 +235,14 @@ const CityWeatherStationContentTable = (
         />
         <table className="component-list">
           <tbody>
-            <tr>
-              {airTemperature && (
-                <td>
-                  <table className="sensor-info">
-                    <tbody>
-                      <tr>
-                        <td>
-                          <FormattedMessage
-                            id="air-temperature"
-                            defaultMessage="Air temperature"
-                          >
-                            {(...content) => `${content}`}
-                          </FormattedMessage>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>{airTemperature.sensorValue}</td>
-                      </tr>
-                      <tr>
-                        <td>{airTemperature.sensorUnit}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </td>
-              )}
-              {roadSurfaceTemperature && (
-                <td>
-                  <table className="sensor-info">
-                    <tbody>
-                      <tr>
-                        <td>
-                          <FormattedMessage
-                            id="road-temperature"
-                            defaultMessage="Road temperature"
-                          >
-                            {(...content) => `${content}`}
-                          </FormattedMessage>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>{roadSurfaceTemperature.sensorValue}</td>
-                      </tr>
-                      <tr>
-                        <td>{roadSurfaceTemperature.sensorUnit}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </td>
-              )}
-            </tr>
-            <tr>
-              {windSpeed && (
-                <td>
-                  <table className="sensor-info">
-                    <tbody>
-                      <tr>
-                        <td>
-                          <FormattedMessage
-                            id="wind-speed"
-                            defaultMessage="Wind speed"
-                          >
-                            {(...content) => `${content}`}
-                          </FormattedMessage>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>{windSpeed.sensorValue}</td>
-                      </tr>
-                      <tr>
-                        <td>{windSpeed.sensorUnit}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </td>
-              )}
-              {windDirection && (
-                <td>
-                  <table className="sensor-info">
-                    <tbody>
-                      <tr>
-                        <td>
-                          <FormattedMessage
-                            id="wind-direction"
-                            defaultMessage="Wind direction"
-                          >
-                            {(...content) => `${content}`}
-                          </FormattedMessage>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <FormattedMessage
-                            id={getWindDirection(windDirection.sensorValue)}
-                            defaultMessage="North"
-                          >
-                            {(...content) => `${content}`}
-                          </FormattedMessage>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          {windDirection.sensorValue}
-                          °
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </td>
-              )}
-            </tr>
-            <tr>
-              {airRelativeHumidity && (
-                <td>
-                  <table className="sensor-info">
-                    <tbody>
-                      <tr>
-                        <td>
-                          <FormattedMessage
-                            id="air-humidity"
-                            defaultMessage="Air humidity"
-                          >
-                            {(...content) => `${content}`}
-                          </FormattedMessage>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>{airRelativeHumidity.sensorValue}</td>
-                      </tr>
-                      <tr>
-                        <td>%</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </td>
-              )}
-              {rainfallDepth && (
-                <td>
-                  <table className="sensor-info">
-                    <tbody>
-                      <tr>
-                        <td>
-                          <FormattedMessage
-                            id="rainfall-depth"
-                            defaultMessage="Rainfall depth"
-                          >
-                            {(...content) => `${content}`}
-                          </FormattedMessage>
-                        </td>
-                      </tr>
-                      <tr className="value">
-                        <td>{rainfallDepth.sensorValue}</td>
-                      </tr>
-                      <tr>
-                        <td>{rainfallDepth.sensorUnit}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </td>
-              )}
-            </tr>
-            <tr>
-              {snowDepth && (
-                <td>
-                  <table className="sensor-info">
-                    <tbody>
-                      <tr>
-                        <td>
-                          <FormattedMessage
-                            id="snow-depth"
-                            defaultMessage="Snow depth"
-                          >
-                            {(...content) => `${content}`}
-                          </FormattedMessage>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>{snowDepth.sensorValue}</td>
-                      </tr>
-                      <tr>
-                        <td>{snowDepth.sensorUnit}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </td>
-              )}
-              {cameras && (
-                <td>
-                  <div
-                    className="camera-icon-container"
-                    onClick={() =>
-                      openCameraModal(
-                        intl,
-                        router,
-                        location,
-                        localName,
-                        cameras,
-                      )
-                    }
-                  >
-                    <Icon
-                      img="icon-icon_camera-station"
-                      className="camera-icon"
-                    />
-                  </div>
-                </td>
-              )}
-            </tr>
+            {tableContent.map(arr => (
+              <tr key={_.uniqueId()}>
+                {arr.map(obj => {
+                  const { id, Component } = obj;
+                  return <Component key={id} {...obj} />;
+                })}
+              </tr>
+            ))}
             {measuredTime && (
               <tr>
                 <td colSpan={2} className="updated">
@@ -364,7 +289,7 @@ CityWeatherStationContentTable.description = (
 );
 
 CityWeatherStationContentTable.propTypes = {
-  station: PropTypes.object.isRequired,
+  cityWeatherStation: PropTypes.object.isRequired,
   getWindDirection: PropTypes.func.isRequired,
   toggleView: PropTypes.func.isRequired,
 };
@@ -385,7 +310,7 @@ export default Relay.createContainer(
   ),
   {
     fragments: {
-      station: () => Relay.QL`
+      cityWeatherStation: () => Relay.QL`
       fragment on CityWeatherStation {
         weatherStationId
         name

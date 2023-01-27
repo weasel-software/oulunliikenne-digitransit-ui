@@ -14,6 +14,33 @@ import CardHeader from './CardHeader';
 
 import './city-weather-station-container.scss';
 
+const SensorInfo = ({ id, defaultMessage, value, unit }) => {
+  if (value === undefined || value === null) {
+    return null;
+  }
+
+  if (unit === undefined || unit === null) {
+    return null;
+  }
+  return (
+    <tr>
+      <td>
+        <FormattedMessage id={id} defaultMessage={defaultMessage}>
+          {(...content) => `${content} ${unit}`}
+        </FormattedMessage>
+      </td>
+      <td>{value}</td>
+    </tr>
+  );
+};
+
+SensorInfo.propTypes = {
+  id: PropTypes.string.isRequired,
+  defaultMessage: PropTypes.string.isRequired,
+  value: PropTypes.any.isRequired,
+  unit: PropTypes.any.isRequired,
+};
+
 const rainTypes = {
   '0': 'no-rain',
   '98': 'has-rain',
@@ -33,10 +60,10 @@ const getRainClassificationType = number => {
 };
 
 const CityWeatherStationContentList = (
-  { toggleView, station, getWindDirection },
+  { toggleView, cityWeatherStation, getWindDirection },
   { intl },
 ) => {
-  const { sensorValues } = station;
+  const { sensorValues } = cityWeatherStation;
   const dewPointTemperature = sensorValues.find(
     item => item.name === 'DEW_POINT_TEMPERATURE',
   );
@@ -64,9 +91,96 @@ const CityWeatherStationContentList = (
     item => item.name === 'ROAD_SURFACE_TEMPERATURE',
   );
 
+  const tableContent = [
+    {
+      id: 'air-temperature',
+      defaultMessage: 'Air temperature',
+      value: airTemperature.sensorValue,
+      unit: airTemperature.sensorUnit,
+      Component: SensorInfo,
+    },
+    {
+      id: 'air-humidity',
+      defaultMessage: 'Air humidity',
+      value: airRelativeHumidity.sensorValue,
+      unit: '%',
+      Component: SensorInfo,
+    },
+    {
+      id: 'dew-point-temperature',
+      defaultMessage: 'Dew point temperature',
+      value: dewPointTemperature.sensorValue,
+      unit: '%',
+      Component: SensorInfo,
+    },
+    {
+      id: 'wind-speed',
+      defaultMessage: 'Wind speed',
+      value: windSpeed.sensorValue,
+      unit: windSpeed.sensorUnit,
+      Component: SensorInfo,
+    },
+    {
+      id: 'wind-direction',
+      defaultMessage: 'Wind direction',
+      value: (
+        <FormattedMessage
+          id={getWindDirection(windDirection.sensorValue)}
+          defaultMessage="North"
+        >
+          {(...content) => `${content} `}
+        </FormattedMessage>
+      ),
+      unit: '',
+      Component: SensorInfo,
+    },
+    {
+      id: 'rainfall-depth',
+      defaultMessage: 'Rainfall depth',
+      value: rainfallDepth.sensorValue,
+      unit: rainfallDepth.sensorUnit,
+      Component: SensorInfo,
+    },
+    {
+      id: 'rainfall-intensity',
+      defaultMessage: 'Rainfall intensity',
+      value: rainfallIntensity.sensorValue,
+      unit: rainfallIntensity.sensorUnit,
+      Component: SensorInfo,
+    },
+    {
+      id: 'snow-depth',
+      defaultMessage: 'Snow depth',
+      value: snowDepth.sensorValue,
+      unit: snowDepth.sensorUnit,
+      Component: SensorInfo,
+    },
+    {
+      id: 'rain-classification',
+      defaultMessage: 'Rain classification',
+      value: (
+        <FormattedMessage
+          id={getRainClassificationType(rainClassification.sensorValue)}
+          defaultMessage="North"
+        >
+          {(...content) => `${content} `}
+        </FormattedMessage>
+      ),
+      unit: '',
+      Component: SensorInfo,
+    },
+    {
+      id: 'road-temperature',
+      defaultMessage: 'Road temperature',
+      value: roadSurfaceTemperature.sensorValue,
+      unit: roadSurfaceTemperature.sensorUnit,
+      Component: SensorInfo,
+    },
+  ];
+
   const { measuredTime } = airTemperature;
 
-  const localName = station.name;
+  const localName = cityWeatherStation.name;
 
   return (
     <div className="card">
@@ -82,153 +196,10 @@ const CityWeatherStationContentList = (
         />
         <table className="list">
           <tbody>
-            {airTemperature && (
-              <tr>
-                <td>
-                  <FormattedMessage
-                    id="air-temperature"
-                    defaultMessage="Air temperature"
-                  >
-                    {(...content) => `${content} ${airTemperature.sensorUnit}`}
-                  </FormattedMessage>
-                </td>
-                <td>{airTemperature.sensorValue}</td>
-              </tr>
-            )}
-            {airRelativeHumidity && (
-              <tr>
-                <td>
-                  <FormattedMessage
-                    id="air-humidity"
-                    defaultMessage="Air humidity"
-                  >
-                    {(...content) => `${content} %`}
-                  </FormattedMessage>
-                </td>
-                <td>{airRelativeHumidity.sensorValue}</td>
-              </tr>
-            )}
-            {dewPointTemperature && (
-              <tr>
-                <td>
-                  <FormattedMessage
-                    id="dew-point-temperature"
-                    defaultMessage="Dew Point Temperature"
-                  >
-                    {(...content) =>
-                      `${content} ${dewPointTemperature.sensorUnit}`
-                    }
-                  </FormattedMessage>
-                </td>
-                <td>{dewPointTemperature.sensorValue}</td>
-              </tr>
-            )}
-
-            {windSpeed && (
-              <tr>
-                <td>
-                  <FormattedMessage id="wind-speed" defaultMessage="Wind speed">
-                    {(...content) => `${content} ${windSpeed.sensorUnit}`}
-                  </FormattedMessage>
-                </td>
-                <td>{windSpeed.sensorValue}</td>
-              </tr>
-            )}
-            {windDirection && (
-              <tr>
-                <td>
-                  <FormattedMessage
-                    id="wind-direction"
-                    defaultMessage="Wind direction"
-                  >
-                    {(...content) => `${content}`}
-                  </FormattedMessage>
-                </td>
-                <td>
-                  <FormattedMessage
-                    id={getWindDirection(windDirection.sensorValue)}
-                    defaultMessage="North"
-                  >
-                    {(...content) => `${content}`}
-                  </FormattedMessage>
-                </td>
-              </tr>
-            )}
-            {rainfallDepth && (
-              <tr>
-                <td>
-                  <FormattedMessage
-                    id="rainfall-depth"
-                    defaultMessage="Rainfall depth"
-                  >
-                    {(...content) => `${content} ${rainfallDepth.sensorUnit}`}
-                  </FormattedMessage>
-                </td>
-                <td>{rainfallDepth.sensorValue}</td>
-              </tr>
-            )}
-            {rainfallIntensity && (
-              <tr>
-                <td>
-                  <FormattedMessage
-                    id="rainfall-intensity"
-                    defaultMessage="Rainfall intensity"
-                  >
-                    {(...content) =>
-                      `${content} ${rainfallIntensity.sensorUnit}`
-                    }
-                  </FormattedMessage>
-                </td>
-                <td>{rainfallIntensity.sensorValue}</td>
-              </tr>
-            )}
-            {snowDepth && (
-              <tr>
-                <td>
-                  <FormattedMessage id="snow-depth" defaultMessage="Snow depth">
-                    {(...content) => `${content} ${snowDepth.sensorUnit}`}
-                  </FormattedMessage>
-                </td>
-                <td>{snowDepth.sensorValue}</td>
-              </tr>
-            )}
-            {rainClassification && (
-              <tr>
-                <td>
-                  <FormattedMessage
-                    id="rain-classification"
-                    defaultMessage="Rain classification"
-                  >
-                    {(...content) => `${content}`}
-                  </FormattedMessage>
-                </td>
-                <td>
-                  <FormattedMessage
-                    id={getRainClassificationType(
-                      rainClassification.sensorValue,
-                    )}
-                    defaultMessage="Clear"
-                  >
-                    {(...content) => `${content}`}
-                  </FormattedMessage>
-                </td>
-              </tr>
-            )}
-            {roadSurfaceTemperature && (
-              <tr>
-                <td>
-                  <FormattedMessage
-                    id="road-temperature"
-                    defaultMessage="Road temperature"
-                  >
-                    {(...content) =>
-                      `${content} ${roadSurfaceTemperature.sensorUnit}`
-                    }
-                  </FormattedMessage>
-                </td>
-                <td>{roadSurfaceTemperature.sensorValue}</td>
-              </tr>
-            )}
+            {tableContent.map(obj => {
+              const { id, Component } = obj;
+              return <Component key={id} {...obj} />;
+            })}
             {measuredTime && (
               <tr>
                 <td colSpan={2} className="updated">
@@ -275,7 +246,7 @@ CityWeatherStationContentList.description = (
 );
 
 CityWeatherStationContentList.propTypes = {
-  station: PropTypes.object.isRequired,
+  cityWeatherStation: PropTypes.object.isRequired,
   toggleView: PropTypes.func.isRequired,
   getWindDirection: PropTypes.func.isRequired,
 };
@@ -294,7 +265,7 @@ export default Relay.createContainer(
   ),
   {
     fragments: {
-      station: () => Relay.QL`
+      cityWeatherStation: () => Relay.QL`
       fragment on CityWeatherStation {
         weatherStationId
         name
