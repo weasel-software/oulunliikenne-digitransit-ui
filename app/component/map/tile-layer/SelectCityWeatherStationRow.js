@@ -6,10 +6,12 @@ import ComponentUsageExample from '../../ComponentUsageExample';
 
 /* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
 function SelectCityWeatherStationRow(props, { intl }) {
-  const localName = props.name
-    ? JSON.parse(props.name)[intl.locale] || props.name
-    : props.name;
-
+  const defaultName = intl.formatMessage({
+    id: 'city-weather-station',
+    defaultMessage: 'City weather station',
+  });
+  const localName =
+    !props.name || props.name !== undefined ? props.name : defaultName;
   return (
     <div className="no-margin">
       <div className="cursor-pointer select-row" onClick={props.selectRow}>
