@@ -75,7 +75,6 @@ class CityWeatherStationPopup extends React.Component {
     const queryConfig = new CityWeatherStationRoute({ id });
     return (
       <Relay.Renderer
-        forceFetch
         Container={
           showList
             ? CityWeatherStationContentList
