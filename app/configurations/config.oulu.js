@@ -663,7 +663,7 @@ export default configMerger(walttiConfig, {
       },
       cameraStations: false,
       cityWeatherStations: false,
-      weatherStations: false,
+      weatherStations: true,
       disorders: true,
     },
     CAR: {
@@ -672,7 +672,7 @@ export default configMerger(walttiConfig, {
       roadworks: true,
       cameraStations: true,
       cityWeatherStations: false,
-      weatherStations: false,
+      weatherStations: true,
       tmsStations: false,
       roadConditions: false,
       fluencies: true,
@@ -683,7 +683,7 @@ export default configMerger(walttiConfig, {
     },
     BICYCLE: {
       disorders: true,
-      cityWeatherStations: false,
+      cityWeatherStations: true,
       weatherStations: false,
       cameraStations: false,
       // tmsStations: false,
@@ -701,7 +701,7 @@ export default configMerger(walttiConfig, {
     },
     WALK: {
       disorders: true,
-      cityWeatherStations: false,
+      cityWeatherStations: true,
       weatherStations: false,
       cameraStations: false,
       ecoCounters: true,
