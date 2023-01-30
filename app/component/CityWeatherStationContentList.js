@@ -199,7 +199,7 @@ const CityWeatherStationContentList = (
       <Card className="padding-small">
         <CardHeader
           name={intl.formatMessage({
-            id: 'city-weather-station',
+            id: 'weather-station',
             defaultMessage: 'Weather station',
           })}
           description={localName}

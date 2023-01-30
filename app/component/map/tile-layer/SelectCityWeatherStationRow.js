@@ -7,8 +7,8 @@ import ComponentUsageExample from '../../ComponentUsageExample';
 /* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
 function SelectCityWeatherStationRow(props, { intl }) {
   const defaultName = intl.formatMessage({
-    id: 'city-weather-station',
-    defaultMessage: 'City weather station',
+    id: 'weather-station',
+    defaultMessage: 'Weather station',
   });
   const localName = props.name || defaultName;
   return (

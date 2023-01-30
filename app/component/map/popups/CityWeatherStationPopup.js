@@ -130,7 +130,7 @@ const InformationContainer = ({ children }, { intl }) => (
     <Card className="padding-small">
       <CardHeader
         name={intl.formatMessage({
-          id: 'city-weather-station',
+          id: 'weather-station',
           defaultMessage: 'City weather station',
         })}
         description=""
