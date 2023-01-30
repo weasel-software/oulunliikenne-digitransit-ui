@@ -435,6 +435,10 @@ class SelectMapLayersDialog extends React.Component {
                 onChange={e =>
                   this.updateSetting({ weatherStations: e.target.checked })
                 }
+                isVisible={
+                  this.getHeaderId() === 'street-mode-car' ||
+                  this.getHeaderId() === 'street-mode-public_transport'
+                }
               />
             )}
           {config.cityWeatherStations &&
@@ -442,11 +446,15 @@ class SelectMapLayersDialog extends React.Component {
             isMapLayerEnabled('cityWeatherStations') && (
               <InputField
                 checked={cityWeatherStations}
-                labelId="city-weather-stations"
-                defaultMessage="City weather stations"
+                labelId="weather-stations"
+                defaultMessage="Weather stations"
                 onChange={e => {
                   this.updateSetting({ cityWeatherStations: e.target.checked });
                 }}
+                isVisible={
+                  this.getHeaderId() === 'street-mode-bicycle' ||
+                  this.getHeaderId() === 'street-mode-walk'
+                }
               />
             )}
           {config.roadConditions &&
