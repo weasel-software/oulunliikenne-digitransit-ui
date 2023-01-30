@@ -10,8 +10,7 @@ function SelectCityWeatherStationRow(props, { intl }) {
     id: 'city-weather-station',
     defaultMessage: 'City weather station',
   });
-  const localName =
-    !props.name || props.name !== undefined ? props.name : defaultName;
+  const localName = props.name || defaultName;
   return (
     <div className="no-margin">
       <div className="cursor-pointer select-row" onClick={props.selectRow}>
