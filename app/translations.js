@@ -581,7 +581,6 @@ const translations = {
     'choose-date': 'Choose date',
     'choose-stop': 'Define selection',
     'city-weather-station': 'Weather station',
-    'city-weather-stations': 'Weather stations',
     citybike: 'City bike',
     'citybike-distance-duration': 'Bike {distance} ({duration})',
     'citybike-off-season':
@@ -1254,7 +1253,7 @@ const translations = {
     'warning-call-agency-no-route':
       'Only on demand. Needs to be booked in advance.',
     'weather-at-destination': 'Weather at the destination',
-    'weather-stations': 'Road weather',
+    'weather-stations': 'Weather stations',
     weekly: 'Weekly',
     'wind-direction': 'Wind direction',
     'wind-speed': 'Wind speed',
@@ -1660,7 +1659,6 @@ const translations = {
     'choose-date': 'Valitse päivämäärä',
     'choose-stop': 'Tarkenna valinta',
     'city-weather-station': 'Sääasema',
-    'city-weather-stations': 'Sääasemat',
     citybike: 'Kaupunkipyörä',
     'citybike-distance-duration': 'Pyöräile {distance} ({duration})',
     'citybike-off-season': 'Kaupunkipyörät palaavat käyttöön ensi keväänä',
@@ -2333,7 +2331,7 @@ const translations = {
     'warning-call-agency-no-route':
       'Liikennöidään kutsujoukkoliikenteenä, joka on tilattava etukäteen',
     'weather-at-destination': 'Sää määränpäässä',
-    'weather-stations': 'Tiesää',
+    'weather-stations': 'Sääasemat',
     weekly: 'Viikoittain',
     'wind-direction': 'Tuulen suunta',
     'wind-speed': 'Tuulen nopeus',
@@ -3039,7 +3037,6 @@ const translations = {
     'choose-date': 'Välj datum',
     'choose-stop': 'Specifiera val',
     'city-weather-station': 'Väderstation',
-    'city-weather-stations': 'Väderstationer',
     citybike: 'Stadscykel',
     'citybike-distance-duration': 'Cykla {distance} ({duration})',
     'citybike-off-season': 'Stadscyklarna tas i bruk igen nästa vår',
@@ -3714,7 +3711,7 @@ const translations = {
     'warning-call-agency-no-route':
       'Trafikeras enligt behov som bör beställas på förhand.',
     'weather-at-destination': 'Vädret på destinationen',
-    'weather-stations': 'Vägväder',
+    'weather-stations': 'Väderstationer',
     weekly: 'Varje vecka',
     'wind-direction': 'Vindriktning',
     'wind-speed': 'Vindhastighet',
