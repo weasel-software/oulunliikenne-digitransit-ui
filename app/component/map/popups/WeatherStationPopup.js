@@ -16,8 +16,8 @@ function WeatherStationPopup({ station, lang }, { intl }) {
       <Card className="padding-small">
         <CardHeader
           name={intl.formatMessage({
-            id: 'road-weather',
-            defaultMessage: 'Road weather',
+            id: 'weather-station',
+            defaultMessage: 'Weather station',
           })}
           description={localName}
           icon="icon-icon_weather-station"
