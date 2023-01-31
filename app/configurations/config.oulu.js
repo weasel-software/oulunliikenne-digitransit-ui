@@ -44,6 +44,7 @@ export default configMerger(walttiConfig, {
     ROADWORKS_MAP: `${AWS_MAP_URL}/map/roadworks/`,
     DISORDERS_MAP: `${AWS_MAP_URL}/map/disruptions/`,
     WEATHER_STATIONS_MAP: `${AWS_MAP_URL}/map/weatherstations/`,
+    CITY_WEATHER_STATIONS_MAP: `${AWS_MAP_URL}/map/cityweatherstations/`,
     TMS_STATIONS_MAP: `${AWS_MAP_URL}/map/tmsstations/`,
     ROAD_CONDITIONS_MAP: `${AWS_MAP_URL}/map/roadconditions/`,
     FLUENCY_MAP: `${AWS_MAP_URL}/map/fluency/`,
@@ -78,6 +79,11 @@ export default configMerger(walttiConfig, {
   weatherStations: {
     showWeatherStations: true,
     weatherStationsMinZoom: 11,
+  },
+
+  cityWeatherStations: {
+    showCityWeatherStations: true,
+    cityWeatherStationsMinZoom: 11,
   },
 
   parkingStations: {
@@ -656,7 +662,8 @@ export default configMerger(walttiConfig, {
         bus: true,
       },
       cameraStations: false,
-      weatherStations: false,
+      cityWeatherStations: false,
+      weatherStations: true,
       disorders: true,
     },
     CAR: {
@@ -664,7 +671,8 @@ export default configMerger(walttiConfig, {
       disorders: true,
       roadworks: true,
       cameraStations: true,
-      weatherStations: false,
+      cityWeatherStations: false,
+      weatherStations: true,
       tmsStations: false,
       roadConditions: false,
       fluencies: true,
@@ -675,6 +683,7 @@ export default configMerger(walttiConfig, {
     },
     BICYCLE: {
       disorders: true,
+      cityWeatherStations: true,
       weatherStations: false,
       cameraStations: false,
       // tmsStations: false,
@@ -692,6 +701,7 @@ export default configMerger(walttiConfig, {
     },
     WALK: {
       disorders: true,
+      cityWeatherStations: true,
       weatherStations: false,
       cameraStations: false,
       ecoCounters: true,

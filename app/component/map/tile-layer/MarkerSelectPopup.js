@@ -22,6 +22,7 @@ import SelectBicycleRouteRow from './SelectBicycleRouteRow';
 import ComponentUsageExample from '../../ComponentUsageExample';
 import { options } from '../../ExampleData';
 import SelectEcoCounterRow from './SelectEcoCounterRow';
+import SelectCityWeatherStationRow from './SelectCityWeatherStationRow';
 
 function MarkerSelectPopup(props) {
   const rows = props.options.map((option, index) => {
@@ -108,6 +109,14 @@ function MarkerSelectPopup(props) {
     } else if (option.layer === 'weatherStations') {
       return (
         <SelectWeatherStationRow
+          {...option.feature.properties}
+          key={option.feature.properties.id}
+          selectRow={() => props.selectRow([option])}
+        />
+      );
+    } else if (option.layer === 'cityWeatherStations') {
+      return (
+        <SelectCityWeatherStationRow
           {...option.feature.properties}
           key={option.feature.properties.id}
           selectRow={() => props.selectRow([option])}

@@ -278,6 +278,11 @@ export default {
     fluenciesMinZoom: 7,
   },
 
+  cityWeatherStations: {
+    showCityWeatherStations: false,
+    cityWeatherStationsMinZoom: 14,
+  },
+
   weatherStations: {
     showWeatherStations: false,
     weatherStationsMinZoom: 14,

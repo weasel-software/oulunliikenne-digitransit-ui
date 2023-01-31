@@ -25,6 +25,7 @@ import {
   BicycleRoutesBrand,
   BicycleRoutesMainRegional,
 } from './BicycleRoutes';
+import CityWeatherStations from './CityWeatherStations';
 
 class VectorTileLayerContainer extends React.Component {
   constructor(props, context) {
@@ -97,6 +98,13 @@ class VectorTileLayerContainer extends React.Component {
         config.weatherStations.showWeatherStations
       ) {
         layers.push(WeatherStations);
+      }
+
+      if (
+        config.cityWeatherStations &&
+        config.cityWeatherStations.showCityWeatherStations
+      ) {
+        layers.push(CityWeatherStations);
       }
 
       if (config.tmsStations && config.tmsStations.showTmsStations) {

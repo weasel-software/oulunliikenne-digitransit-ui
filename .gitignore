@@ -21,3 +21,5 @@ tags
 coverage
 .nvmrc
 yarn-error.log
+.env
+.vscode

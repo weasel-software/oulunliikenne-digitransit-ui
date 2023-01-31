@@ -1,0 +1,103 @@
+@import '../../sass/themes/oulu/theme';
+
+$font-color: #666666;
+$value-color: #333333;
+
+.updated {
+    font-size: $font-size-xsmall;
+    font-style: italic;
+    color: $gray;
+    padding-top: 20px;
+  }
+
+.information-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+}
+
+.list {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+    margin: $padding-medium 0;
+    font-size: $font-size-small;
+    color: $gray;
+    td {
+      vertical-align: top;
+  
+      &:first-child {
+        color: $font-color;
+        font-family: 'Lato';
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 17px;
+      }
+
+      &:nth-child(2) {
+        color: $value-color;
+        font-family: 'Lato';
+        font-weight: 900;
+        font-size: 13px;
+        line-height: 16px;
+        text-align: right;
+      }
+    }
+  }
+
+.text-button {
+    display: flex;
+    justify-content: start;
+    font-size: $font-size-small;
+    color: $link-color;
+    cursor: pointer;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+  }
+
+.sensor-info {
+    width: 136px;
+    height: 91px;
+    background: #EEF1F3;
+    color: $font-color;
+    margin: 5px 0px;
+    padding: 5px 0px;
+    font-family: 'Lato';
+    font-style: normal;
+    text-align: center;
+
+    tr {
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 17px;
+    }
+
+    tr:nth-child(2) {
+        font-weight: 900;
+        font-size: 26px;
+        line-height: 31px;
+        
+        td:first-child {
+            color: $value-color;
+        }
+    }
+}
+
+.camera-icon {
+    height: 44px;
+    width: 44px;
+}
+
+.camera-icon-container {
+    margin: 5px 0px;
+    padding: 5px 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 136px;
+    height: 91px;
+    color: $font-color;
+    background: #EEF1F3;
+}
