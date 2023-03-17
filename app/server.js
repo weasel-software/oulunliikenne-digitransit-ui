@@ -38,6 +38,7 @@ import meta from './meta';
 
 // configuration
 import { getConfiguration } from './config';
+import addDigitransitAuthParameter from './util/authUtils';
 
 // Look up paths for various asset files
 const appRoot = `${process.cwd()}/`;
@@ -319,8 +320,8 @@ export default function(req, res, next) {
       );
 
       const preconnects = [
-        config.URL.API_URL,
-        config.URL.MAP_URL,
+        addDigitransitAuthParameter(config, config.URL.API_URL),
+        addDigitransitAuthParameter(config, config.URL.MAP_URL),
         config.staticMessagesUrl,
       ];
 

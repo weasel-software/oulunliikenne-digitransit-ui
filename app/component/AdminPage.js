@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import AdminForm from './AdminForm';
+import addDigitransitAuthParameter from '../util/authUtils';
 
 class AdminPage extends React.Component {
   static contextTypes = {
@@ -26,7 +27,7 @@ class AdminPage extends React.Component {
     }/routing-data/v2/${
       OTPURLSplit[OTPURLSplit.length - 2]
     }/router-config.json`;
-    fetch(dataContainerURL)
+    fetch(addDigitransitAuthParameter(this.context.config, dataContainerURL))
       .then(res => res.json())
       .then(
         result => {
