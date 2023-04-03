@@ -75,7 +75,6 @@ const CityWeatherStationContentTable = (
   { intl },
 ) => {
   const { cameras, sensorValues } = station;
-
   const snowDepth = sensorValues.find(item => item.name === 'SNOW_DEPTH');
   const rainfallDepth = sensorValues.find(
     item => item.name === 'RAINFALL_DEPTH',
@@ -98,7 +97,7 @@ const CityWeatherStationContentTable = (
 
   const localName = station.name;
 
-  const cameraInfo = { cameras, localName, measuredTime };
+  const cameraInfo = { cameras, localName };
 
   const tableContent = [
     [

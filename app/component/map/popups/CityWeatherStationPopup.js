@@ -6,7 +6,6 @@ import Relay from 'react-relay/classic';
 import { FormattedMessage, intlShape } from 'react-intl';
 import { routerShape, locationShape } from 'react-router';
 import { isEmpty } from 'lodash';
-import moment from 'moment';
 import ComponentUsageExample from '../../ComponentUsageExample';
 import CityWeatherStationContentTable from '../../CityWeatherStationContentTable';
 import CityWeatherStationContentList from '../../CityWeatherStationContentList';
@@ -168,11 +167,7 @@ const ImageViewContainer = ({ cameraInfo, toggleImageView }, { intl }) => (
         <ImageSlider>
           {cameraInfo.cameras.map(item => (
             <figure className="slide" key={item.cameraId}>
-              <figcaption>
-                {cameraInfo.localName}
-                {cameraInfo.measuredTime &&
-                  ` (${moment(cameraInfo.measuredTime).format('HH:mm:ss')})`}
-              </figcaption>
+              <figcaption>{cameraInfo.localName}</figcaption>
               <img
                 src={item.imageUrl}
                 alt={cameraInfo.localName}
