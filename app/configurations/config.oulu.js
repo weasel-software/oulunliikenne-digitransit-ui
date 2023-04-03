@@ -18,6 +18,8 @@ const AWS_IDENTITY_POOL_ID =
   process.env.AWS_IDENTITY_POOL_ID ||
   'eu-central-1:8f58773b-4d45-46bc-9534-5a9a0d19c76d';
 
+const SUBSCRIPTION_KEY = process.env.SUBSCRIPTION_KEY || null;
+
 const ANALYTICS_URL = 'https://analytics.sitowise.com/kapy_oulu/';
 
 const walttiConfig = require('./waltti').default;
@@ -31,6 +33,8 @@ export default configMerger(walttiConfig, {
       identityPoolId: AWS_IDENTITY_POOL_ID,
     },
   },
+
+  SUBSCRIPTION_KEY,
 
   URL: {
     API_URL,

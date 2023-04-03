@@ -12,6 +12,7 @@ import FilterTimeTableModal from './FilterTimeTableModal';
 import TimeTableOptionsPanel from './TimeTableOptionsPanel';
 import TimetableRow from './TimetableRow';
 import ComponentUsageExample from './ComponentUsageExample';
+import addDigitransitAuthParameter from '../util/authUtils';
 
 class Timetable extends React.Component {
   static propTypes = {
@@ -263,7 +264,10 @@ class Timetable extends React.Component {
             startDate={this.props.propsForStopPageActionBar.startDate}
             selectedDate={this.props.propsForStopPageActionBar.selectedDate}
             onDateChange={this.props.propsForStopPageActionBar.onDateChange}
-            stopPDFURL={stopPDFURL}
+            stopPDFURL={addDigitransitAuthParameter(
+              this.context.config,
+              stopPDFURL,
+            )}
           />
         </div>
         <div className="timetable-for-printing-header">
