@@ -1,16 +1,19 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-import PropTypes, { object } from 'prop-types';
+import PropTypes, { func, object } from 'prop-types';
 import React from 'react';
 import Relay from 'react-relay/classic';
-import { intlShape } from 'react-intl';
+import { FormattedMessage, intlShape } from 'react-intl';
 import { routerShape, locationShape } from 'react-router';
+import { isEmpty } from 'lodash';
+import moment from 'moment';
 import ComponentUsageExample from '../../ComponentUsageExample';
 import CityWeatherStationContentTable from '../../CityWeatherStationContentTable';
 import CityWeatherStationContentList from '../../CityWeatherStationContentList';
 import CityWeatherStationRoute from '../../../route/CityWeatherStationRoute';
 import Card from '../../Card';
 import CardHeader from '../../CardHeader';
+import ImageSlider from '../../ImageSlider';
 
 class CityWeatherStationPopup extends React.Component {
   static description = (
@@ -42,6 +45,8 @@ class CityWeatherStationPopup extends React.Component {
     super(props);
     this.state = {
       showList: false,
+      showImageView: false,
+      cameraInfo: null,
     };
   }
 
@@ -68,10 +73,17 @@ class CityWeatherStationPopup extends React.Component {
     });
   };
 
+  toggleImageView = cameraInfo => {
+    this.setState({
+      showImageView: !this.state.showImageView,
+      cameraInfo,
+    });
+  };
+
   render() {
     const { id } = this.props;
     const { intl } = this.context;
-    const { showList } = this.state;
+    const { showList, showImageView, cameraInfo } = this.state;
     const queryConfig = new CityWeatherStationRoute({ id });
     return (
       <Relay.Renderer
@@ -84,6 +96,14 @@ class CityWeatherStationPopup extends React.Component {
         environment={Relay.Store}
         render={({ done, error, props }) => {
           if (done) {
+            if (showImageView && cameraInfo) {
+              return (
+                <ImageViewContainer
+                  cameraInfo={cameraInfo}
+                  toggleImageView={this.toggleImageView}
+                />
+              );
+            }
             return showList ? (
               <CityWeatherStationContentList
                 toggleView={this.toggleView}
@@ -93,6 +113,7 @@ class CityWeatherStationPopup extends React.Component {
             ) : (
               <CityWeatherStationContentTable
                 getWindDirection={this.getWindDirection}
+                toggleImageView={this.toggleImageView}
                 toggleView={this.toggleView}
                 {...props}
               />
@@ -124,6 +145,68 @@ class CityWeatherStationPopup extends React.Component {
     );
   }
 }
+
+const ImageViewContainer = ({ cameraInfo, toggleImageView }, { intl }) => (
+  <div className="card">
+    <Card className="padding-small">
+      <CardHeader
+        name={intl.formatMessage({
+          id: 'weather-station',
+          defaultMessage: 'City weather station',
+        })}
+        description={cameraInfo.localName}
+        icon="icon-icon_camera-station"
+      />
+      {isEmpty(cameraInfo.cameras) ? (
+        <div className="card-empty">
+          <FormattedMessage
+            id="traffic-camera-no-recent-images"
+            defaultMessage="No recent images"
+          />
+        </div>
+      ) : (
+        <ImageSlider>
+          {cameraInfo.cameras.map(item => (
+            <figure className="slide" key={item.cameraId}>
+              <figcaption>
+                {cameraInfo.localName}
+                {cameraInfo.measuredTime &&
+                  ` (${moment(cameraInfo.measuredTime).format('HH:mm:ss')})`}
+              </figcaption>
+              <img
+                src={item.imageUrl}
+                alt={cameraInfo.localName}
+                onClick={() => {
+                  window.open(item.imageUrl, '_blank');
+                }}
+              />
+            </figure>
+          ))}
+        </ImageSlider>
+      )}
+      <br />
+      <div
+        aria-hidden="true"
+        className="text-button"
+        onClick={() => toggleImageView(null)}
+      >
+        {`< ${intl.formatMessage({
+          id: 'back',
+          defaultMessage: 'Go back',
+        })}`}
+      </div>
+    </Card>
+  </div>
+);
+
+ImageViewContainer.propTypes = {
+  cameraInfo: object.isRequired,
+  toggleImageView: func.isRequired,
+};
+
+ImageViewContainer.contextTypes = {
+  intl: intlShape.isRequired,
+};
 
 const InformationContainer = ({ children }, { intl }) => (
   <div className="card">

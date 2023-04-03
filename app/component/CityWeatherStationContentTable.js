@@ -6,7 +6,6 @@ import React from 'react';
 import Relay from 'react-relay/classic';
 import moment from 'moment';
 import { FormattedMessage, intlShape } from 'react-intl';
-import { routerShape, locationShape } from 'react-router';
 import { connectToStores } from 'fluxible-addons-react';
 import _ from 'lodash';
 import ComponentUsageExample from './ComponentUsageExample';
@@ -15,7 +14,6 @@ import './city-weather-station-container.scss';
 import Icon from './Icon';
 import Card from './Card';
 import CardHeader from './CardHeader';
-import ImageSlider from './ImageSlider';
 
 const SensorInfo = ({ id, defaultMessage, sensor }) => {
   if (!sensor) {
@@ -73,8 +71,8 @@ CameraIcon.propTypes = {
 };
 
 const CityWeatherStationContentTable = (
-  { getWindDirection, toggleView, station },
-  { intl, router, location },
+  { getWindDirection, toggleView, toggleImageView, station },
+  { intl },
 ) => {
   const { cameras, sensorValues } = station;
 
@@ -100,59 +98,7 @@ const CityWeatherStationContentTable = (
 
   const localName = station.name;
 
-  const openCameraModal = () => {
-    router.push({
-      ...location,
-      state: {
-        ...location.state,
-        moreInfoModalOpen: true,
-        moreInfoModalTitle: (
-          <table>
-            <tbody>
-              <tr>
-                <td style={{ paddingRight: '10px' }}>
-                  <Icon
-                    img="icon-icon_camera-station"
-                    className="camera-icon"
-                  />
-                </td>
-                <td>{localName}</td>
-              </tr>
-            </tbody>
-          </table>
-        ),
-        moreInfoModalContent: (
-          <>
-            <ImageSlider>
-              {cameras.map(item => (
-                <figure key={_.uniqueId()} className="slide">
-                  <img
-                    className="camera-img"
-                    src={item.imageUrl}
-                    alt={item.presentationName}
-                    onClick={() => {
-                      window.open(item.imageUrl, '_blank');
-                    }}
-                  />
-                </figure>
-              ))}
-            </ImageSlider>
-            <br />
-            <div
-              aria-hidden="true"
-              className="text-button"
-              onClick={() => router.goBack()}
-            >
-              {`< ${intl.formatMessage({
-                id: 'back',
-                defaultMessage: 'Go bakc',
-              })}`}
-            </div>
-          </>
-        ),
-      },
-    });
-  };
+  const cameraInfo = { cameras, localName, measuredTime };
 
   const tableContent = [
     [
@@ -222,7 +168,7 @@ const CityWeatherStationContentTable = (
       },
       {
         id: 'camera',
-        onClick: openCameraModal,
+        onClick: () => toggleImageView(cameraInfo),
         Component: CameraIcon,
       },
     ],
@@ -299,12 +245,11 @@ CityWeatherStationContentTable.propTypes = {
   station: PropTypes.object.isRequired,
   getWindDirection: PropTypes.func.isRequired,
   toggleView: PropTypes.func.isRequired,
+  toggleImageView: PropTypes.func.isRequired,
 };
 
 CityWeatherStationContentTable.contextTypes = {
   intl: intlShape.isRequired,
-  router: routerShape.isRequired,
-  location: locationShape.isRequired,
 };
 
 export default Relay.createContainer(
