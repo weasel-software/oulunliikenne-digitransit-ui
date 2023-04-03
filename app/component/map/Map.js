@@ -18,6 +18,7 @@ import VectorTileLayerContainer from './tile-layer/VectorTileLayerContainer';
 import { boundWithMinimumArea } from '../../util/geo-utils';
 import { isDebugTiles } from '../../util/browser';
 import { BreakpointConsumer } from '../../util/withBreakpoint';
+import addDigitransitAuthParameter from '../../util/authUtils';
 
 const zoomOutText = `<svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-icon_minus"/></svg>`;
 
@@ -139,7 +140,10 @@ export default class Map extends React.Component {
       >
         <TileLayer
           onLoad={this.setLoaded}
-          url={`${mapUrl}{z}/{x}/{y}{size}.png`}
+          url={addDigitransitAuthParameter(
+            config,
+            `${mapUrl}{z}/{x}/{y}{size}.png`,
+          )}
           tileSize={config.map.tileSize || 256}
           zoomOffset={config.map.zoomOffset || 0}
           updateWhenIdle={false}
