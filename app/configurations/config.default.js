@@ -23,11 +23,11 @@ export default {
     MAP_URL,
     OTP: process.env.OTP_URL || `${API_URL}/routing/v1/routers/finland/`,
     MAP: {
-      default: `${MAP_URL}/map/v1/hsl-map/`,
-      sv: `${MAP_URL}/map/v1/hsl-map-sv/`,
+      default: `${MAP_URL}/map/v2/hsl-map/`,
+      sv: `${MAP_URL}/map/v2/hsl-map-sv/`,
     },
-    STOP_MAP: `${MAP_URL}/map/v1/finland-stop-map/`,
-    CITYBIKE_MAP: `${MAP_URL}/map/v1/hsl-citybike-map/`,
+    STOP_MAP: `${MAP_URL}/map/v2/finland-stop-map/`,
+    CITYBIKE_MAP: `${MAP_URL}/map/v2/hsl-citybike-map/`,
     MQTT: 'wss://mqtt.hsl.fi',
     ALERTS: process.env.ALERTS_URL || `${API_URL}/realtime/service-alerts/v1`,
     FONT:

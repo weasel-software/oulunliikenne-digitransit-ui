@@ -8,8 +8,8 @@ export default {
   YEAR,
   URL: {
     OTP: process.env.OTP_URL || `${API_URL}/routing/v1/routers/waltti/`,
-    STOP_MAP: `${MAP_URL}/map/v1/waltti-stop-map/`,
-    CITYBIKE_MAP: `${MAP_URL}/map/v1/waltti-citybike-map/`,
+    STOP_MAP: `${MAP_URL}/map/v2/waltti-stop-map/`,
+    CITYBIKE_MAP: `${MAP_URL}/map/v2/waltti-citybike-map/`,
   },
 
   contactName: {

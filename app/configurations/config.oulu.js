@@ -41,7 +41,7 @@ export default configMerger(walttiConfig, {
     MAP_URL,
     OTP: OTP_URL,
     MQTT: MQTT_URL,
-    STOP_MAP: `${MAP_URL}/map/v1/waltti-stop-map/`,
+    STOP_MAP: `${MAP_URL}/map/v2/waltti-stop-map/`,
     CITYBIKE_MAP: `${AWS_MAP_URL}/map/bicyclestations/`,
     PARKING_STATIONS_MAP: `${AWS_MAP_URL}/map/carparks/`,
     CAMERASTATIONS_MAP: `${AWS_MAP_URL}/map/cameras/`,
