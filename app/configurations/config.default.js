@@ -1,8 +1,8 @@
 const CONFIG = process.env.CONFIG || 'default';
-const API_URL = process.env.API_URL || 'https://dev-api.digitransit.fi';
+const API_URL = process.env.API_URL || 'https://api.digitransit.fi';
 const GEOCODING_BASE_URL = `${API_URL}/geocoding/v1`;
 const MAP_URL =
-  process.env.MAP_URL || 'https://digitransit-dev-cdn-origin.azureedge.net';
+  process.env.MAP_URL || 'https://digitransit-prod-cdn-origin.azureedge.net';
 const APP_PATH = process.env.APP_CONTEXT || '';
 const { PIWIK_ADDRESS, PIWIK_ID, SENTRY_DSN } = process.env;
 const PORT = process.env.PORT || 8080;
