@@ -7,9 +7,9 @@ const APP_TITLE = 'Oulun liikenteen reittiopas';
 const AWS_REGION = process.env.AWS_REGION || 'eu-central-1';
 
 const OTP_URL = process.env.OTP_URL || 'https://api-dev.oulunliikenne.fi/proxy';
-const API_URL = process.env.API_URL || 'https://dev-api.digitransit.fi';
+const API_URL = process.env.API_URL || 'https://api.digitransit.fi';
 const MAP_URL =
-  process.env.MAP_URL || 'https://digitransit-dev-cdn-origin.azureedge.net';
+  process.env.MAP_URL || 'https://digitransit-prod-cdn-origin.azureedge.net';
 const AWS_MAP_URL =
   process.env.AWS_MAP_URL || 'https://d2lk9qao4tzpwi.cloudfront.net';
 const MQTT_URL =
@@ -41,7 +41,7 @@ export default configMerger(walttiConfig, {
     MAP_URL,
     OTP: OTP_URL,
     MQTT: MQTT_URL,
-    STOP_MAP: `${MAP_URL}/map/v1/waltti-stop-map/`,
+    STOP_MAP: `${MAP_URL}/map/v2/waltti-stop-map/`,
     CITYBIKE_MAP: `${AWS_MAP_URL}/map/bicyclestations/`,
     PARKING_STATIONS_MAP: `${AWS_MAP_URL}/map/carparks/`,
     CAMERASTATIONS_MAP: `${AWS_MAP_URL}/map/cameras/`,
