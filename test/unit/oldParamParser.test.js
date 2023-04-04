@@ -105,11 +105,11 @@ const resTo = {
 describe('oldParamParser', () => {
   before(() => {
     fetchMock.get(
-      'begin:https://dev-api.digitransit.fi/geocoding/v1/search?text=lapinlahdenkatu',
+      'begin:https://api.digitransit.fi/geocoding/v1/search?text=lapinlahdenkatu',
       resFrom,
     );
     fetchMock.get(
-      'begin:https://dev-api.digitransit.fi/geocoding/v1/search?text=koivikkotie',
+      'begin:https://api.digitransit.fi/geocoding/v1/search?text=koivikkotie',
       resTo,
     );
   });
