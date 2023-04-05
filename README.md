@@ -8,7 +8,7 @@ To keep the branches separate from the remote ones this version is using ol-deve
 
 **Running locally:**
 - `yarn install`
-- `CONFIG=oulu yarn run dev` to start the Oulu version
+- `SUBSCRIPTION_KEY=<Digitransit subs. key> CONFIG=oulu yarn run dev` to start the Oulu version
 
 **Configure Git Hooks**
 - `ln -s ../../hooks/pre-commit.sh .git/hooks/pre-commit`
