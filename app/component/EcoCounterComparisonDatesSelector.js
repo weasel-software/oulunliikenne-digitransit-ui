@@ -35,7 +35,6 @@ export default class EcoCounterComparisonDatesSelector extends React.Component {
 
   onTitleClick = () => {
     this.setState({
-      ...this.state,
       isDatePickerOpen: !this.state.isDatePickerOpen,
     });
   };
