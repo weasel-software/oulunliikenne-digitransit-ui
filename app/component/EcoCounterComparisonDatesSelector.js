@@ -27,10 +27,15 @@ export default class EcoCounterComparisonDatesSelector extends React.Component {
   state = {
     isDatePickerOpen: false,
     openDatePicker: null,
+    range1HasError: false,
+    range1ErrorRange: null,
+    range2HasError: false,
+    range2ErrorRange: null,
   };
 
   onTitleClick = () => {
     this.setState({
+      ...this.state,
       isDatePickerOpen: !this.state.isDatePickerOpen,
     });
   };
@@ -38,32 +43,69 @@ export default class EcoCounterComparisonDatesSelector extends React.Component {
   onDateChange = datePickerName => newDate => {
     newDate.set('hour', 0);
     this.setState({ isDatePickerOpen: false, openDatePicker: null });
+
+    let range;
+
     switch (datePickerName) {
       case RANGE1_START:
-        this.props.onRange1Change([newDate, this.props.range1[1]]);
+        range = [newDate, this.props.range1[1]];
         break;
       case RANGE1_END:
-        this.props.onRange1Change([this.props.range1[0], newDate]);
+        range = [this.props.range1[0], newDate];
         break;
       case RANGE2_START:
-        this.props.onRange2Change([newDate, this.props.range2[1]]);
+        range = [newDate, this.props.range2[1]];
         break;
       case RANGE2_END:
-        this.props.onRange2Change([this.props.range2[0], newDate]);
+        range = [this.props.range2[0], newDate];
         break;
       default:
         break;
     }
+
+    const isAllowedRange = this.isAllowedRange(range);
+    const isRange1 =
+      datePickerName === RANGE1_START || datePickerName === RANGE1_END;
+
+    if (isRange1) {
+      this.setState({
+        range1HasError: !isAllowedRange,
+        range1ErrorRange: !isAllowedRange ? range : null,
+        range2HasError: this.state.range2HasError,
+        range2ErrorRange: this.state.range2ErrorRange,
+      });
+    } else {
+      this.setState({
+        range1HasError: this.state.range1HasError,
+        range1ErrorRange: this.state.range1ErrorRange,
+        range2HasError: !isAllowedRange,
+        range2ErrorRange: !isAllowedRange ? range : null,
+      });
+    }
+
+    if (!isAllowedRange) {
+      return;
+    }
+
+    if (isRange1) {
+      this.props.onRange1Change(range);
+    } else {
+      this.props.onRange2Change(range);
+    }
   };
+
+  isAllowedRange = range => range[1].diff(range[0], 'days') > 0;
 
   toggleDatePicker = datePickerName => () => {
     if (this.state.openDatePicker === datePickerName) {
       this.setState({
+        ...this.state,
         isDatePickerOpen: false,
         openDatePicker: null,
       });
     } else {
       this.setState({
+        ...this.state,
         isDatePickerOpen: true,
         openDatePicker: datePickerName,
       });
@@ -72,7 +114,14 @@ export default class EcoCounterComparisonDatesSelector extends React.Component {
 
   render() {
     const { range1, range2, renderMonthElement } = this.props;
-    const { isDatePickerOpen, openDatePicker } = this.state;
+    const {
+      isDatePickerOpen,
+      openDatePicker,
+      range1HasError,
+      range1ErrorRange,
+      range2ErrorRange,
+      range2HasError,
+    } = this.state;
     const [range1start, range1end] = range1;
     const [range2start, range2end] = range2;
 
@@ -98,7 +147,11 @@ export default class EcoCounterComparisonDatesSelector extends React.Component {
                   defaultMessage: 'Choose date',
                 })}, ${range1[0].format('D.M.Y')}`}
               >
-                <span className="value">{range1[0].format('D.M.Y')}</span>
+                <span className="value">
+                  {range1HasError
+                    ? range1ErrorRange[0].format('D.M.Y')
+                    : range1[0].format('D.M.Y')}
+                </span>
                 {calendarIcon}
               </button>
             </div>
@@ -112,9 +165,24 @@ export default class EcoCounterComparisonDatesSelector extends React.Component {
                   defaultMessage: 'Choose date',
                 })}, ${range1[1].format('D.M.Y')}`}
               >
-                <span className="value">{range1[1].format('D.M.Y')}</span>
+                <span className="value">
+                  {range1HasError
+                    ? range1ErrorRange[1].format('D.M.Y')
+                    : range1[1].format('D.M.Y')}
+                </span>
                 {calendarIcon}
               </button>
+            </div>
+            <div
+              className={cn('datepicker-error', {
+                'is-visible': range1HasError,
+              })}
+            >
+              <small>{`${this.props.formatMessage({
+                id: 'choose-date-error',
+                defaultMessage:
+                  'The end date must be greater than the start date',
+              })}`}</small>
             </div>
             <div
               className={cn('datepicker-container', {
@@ -157,7 +225,11 @@ export default class EcoCounterComparisonDatesSelector extends React.Component {
                   defaultMessage: 'Choose date',
                 })}, ${range2[0].format('D.M.Y')}`}
               >
-                <span className="value">{range2[0].format('D.M.Y')}</span>
+                <span className="value">
+                  {range2HasError
+                    ? range2ErrorRange[0].format('D.M.Y')
+                    : range2[0].format('D.M.Y')}
+                </span>
                 {calendarIcon}
               </button>
             </div>
@@ -171,9 +243,24 @@ export default class EcoCounterComparisonDatesSelector extends React.Component {
                   defaultMessage: 'Choose date',
                 })}, ${range2[1].format('D.M.Y')}`}
               >
-                <span className="value">{range2[1].format('D.M.Y')}</span>
+                <span className="value">
+                  {range2HasError
+                    ? range2ErrorRange[1].format('D.M.Y')
+                    : range2[1].format('D.M.Y')}
+                </span>
                 {calendarIcon}
               </button>
+            </div>
+            <div
+              className={cn('datepicker-error', {
+                'is-visible': range2HasError,
+              })}
+            >
+              <small>{`${this.props.formatMessage({
+                id: 'choose-date-error',
+                defaultMessage:
+                  'The end date must be greater than the start date',
+              })}`}</small>
             </div>
             <div
               className={cn('datepicker-container', {
