@@ -9732,8 +9732,8 @@
                             "name": "Int",
                             "ofType": null
                         },
-                        "isDeprecated": false,
-                        "deprecationReason": null
+                        "isDeprecated": true,
+                        "deprecationReason": "Field roadStationId no longer available in Digitraffic"
                     },
                     {
                         "name": "nearestWeatherStationId",
@@ -9932,7 +9932,7 @@
             {
                 "kind": "OBJECT",
                 "name": "RoadAddress",
-                "description": "wWeather station road address details",
+                "description": "Weather station road address details",
                 "fields": [
                     {
                         "name": "roadNumber",
@@ -9979,8 +9979,8 @@
                             "name": "Int",
                             "ofType": null
                         },
-                        "isDeprecated": false,
-                        "deprecationReason": null
+                        "isDeprecated": true,
+                        "deprecationReason": "Field carriagewayCode no longer available in Digitraffic"
                     },
                     {
                         "name": "roadMaintenanceClass",
@@ -9991,8 +9991,8 @@
                             "name": "Int",
                             "ofType": null
                         },
-                        "isDeprecated": false,
-                        "deprecationReason": null
+                        "isDeprecated": true,
+                        "deprecationReason": "Field roadMainteinanceClass no longer available in Digitraffic"
                     },
                     {
                         "name": "contractArea",
@@ -10021,6 +10021,18 @@
                     {
                         "name": "carriageway",
                         "description": "Carriageway",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "side",
+                        "description": "Road address side information",
                         "args": [],
                         "type": {
                             "kind": "SCALAR",
@@ -11265,8 +11277,8 @@
                             "name": "Int",
                             "ofType": null
                         },
-                        "isDeprecated": false,
-                        "deprecationReason": null
+                        "isDeprecated": true,
+                        "deprecationReason": "Field roadStationId no longer available in Digitraffic"
                     },
                     {
                         "name": "name",
@@ -11364,8 +11376,8 @@
                             "name": "Int",
                             "ofType": null
                         },
-                        "isDeprecated": false,
-                        "deprecationReason": null
+                        "isDeprecated": true,
+                        "deprecationReason": "Field is not in use anymore"
                     },
                     {
                         "name": "name",
@@ -11560,6 +11572,18 @@
                                 "ofType": null
                             }
                         },
+                        "isDeprecated": true,
+                        "deprecationReason": "Field coordinatesETRS89 no longer available in Digitraffic."
+                    },
+                    {
+                        "name": "purpose",
+                        "description": "Purpose of the road station",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
                         "isDeprecated": false,
                         "deprecationReason": null
                     },
@@ -11691,15 +11715,15 @@
                     },
                     {
                         "name": "roadStationId",
-                        "description": "Nearest road station ID",
+                        "description": "Road station ID",
                         "args": [],
                         "type": {
                             "kind": "SCALAR",
                             "name": "Int",
                             "ofType": null
                         },
-                        "isDeprecated": false,
-                        "deprecationReason": null
+                        "isDeprecated": true,
+                        "deprecationReason": "Field roadStationId no longer available in Digitraffic"
                     },
                     {
                         "name": "name",
@@ -11720,6 +11744,18 @@
                         "type": {
                             "kind": "SCALAR",
                             "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "measuredTime",
+                        "description": "Weather sensor measured time in ISO-8601 format",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "GraphQLDateTime",
                             "ofType": null
                         },
                         "isDeprecated": false,

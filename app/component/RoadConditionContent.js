@@ -57,7 +57,7 @@ const RoadConditionContent = ({ forecasts, measuredTime }) => (
             </td>
             <td>
               <img
-                src={`https://corporate.foreca.com/en/uploads/Symbolset-1/${
+                src={`https://developer.foreca.com/static/images/symbols/${
                   forecast.weatherSymbol
                 }.png`}
                 style={{ width: '35px' }}
