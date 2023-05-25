@@ -56,6 +56,15 @@
           position: relative;
         }
 
+        .datepicker-error {
+          color: red;
+          margin-left: 1rem;
+          visibility: hidden;
+          &.is-visible {
+            visibility: visible;
+          }
+        }
+
         .datepicker-container {
           position: absolute;
           top: 100%;
