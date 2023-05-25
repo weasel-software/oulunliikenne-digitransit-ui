@@ -98,13 +98,11 @@ export default class EcoCounterComparisonDatesSelector extends React.Component {
   toggleDatePicker = datePickerName => () => {
     if (this.state.openDatePicker === datePickerName) {
       this.setState({
-        ...this.state,
         isDatePickerOpen: false,
         openDatePicker: null,
       });
     } else {
       this.setState({
-        ...this.state,
         isDatePickerOpen: true,
         openDatePicker: datePickerName,
       });
