@@ -579,7 +579,7 @@ const translations = {
     cause: 'cause',
     'char-left': 'characters',
     'choose-date': 'Choose date',
-    'choose-date-error': 'The end date must be greater than the start date',
+    'choose-date-error': 'The end date must be greater than the start date.',
     'choose-stop': 'Define selection',
     'weather-station': 'Weather station',
     citybike: 'City bike',

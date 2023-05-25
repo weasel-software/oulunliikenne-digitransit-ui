@@ -180,7 +180,7 @@ export default class EcoCounterComparisonDatesSelector extends React.Component {
               <small>{`${this.props.formatMessage({
                 id: 'choose-date-error',
                 defaultMessage:
-                  'The end date must be greater than the start date',
+                  'The end date must be greater than the start date.',
               })}`}</small>
             </div>
             <div
@@ -258,7 +258,7 @@ export default class EcoCounterComparisonDatesSelector extends React.Component {
               <small>{`${this.props.formatMessage({
                 id: 'choose-date-error',
                 defaultMessage:
-                  'The end date must be greater than the start date',
+                  'The end date must be greater than the start date.',
               })}`}</small>
             </div>
             <div
