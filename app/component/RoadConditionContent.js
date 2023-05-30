@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import moment from 'moment';
 import ComponentUsageExample from './ComponentUsageExample';
 import { lang as exampleLang } from './ExampleData';
+import formatWeatherSymbol from '../util/weatherSymbolUtils';
 
 const RoadConditionContent = ({ forecasts, measuredTime }) => (
   <table className="road-condition-content">
@@ -43,6 +44,9 @@ const RoadConditionContent = ({ forecasts, measuredTime }) => (
           EXTREMELY_POOR_CONDITION: 'extremely-poor',
           CONDITION_COULD_NOT_BE_RESOLVED: 'unresolved',
         }[forecast.overallRoadCondition];
+
+        const weatherSymbol = formatWeatherSymbol(forecast.weatherSymbol);
+
         return (
           <tr key={forecast.forecastName}>
             <td>
@@ -57,9 +61,7 @@ const RoadConditionContent = ({ forecasts, measuredTime }) => (
             </td>
             <td>
               <img
-                src={`https://corporate.foreca.com/en/uploads/Symbolset-1/${
-                  forecast.weatherSymbol
-                }.png`}
+                src={`https://developer.foreca.com/static/images/symbols/${weatherSymbol}.png`}
                 style={{ width: '35px' }}
                 alt="weather-symbol"
               />
