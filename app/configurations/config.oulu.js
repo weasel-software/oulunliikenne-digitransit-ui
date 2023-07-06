@@ -20,7 +20,7 @@ const AWS_IDENTITY_POOL_ID =
 
 const SUBSCRIPTION_KEY = process.env.SUBSCRIPTION_KEY || null;
 
-const ANALYTICS_URL = 'https://analytics.sitowise.com/kapy_oulu/';
+const ANALYTICS_URL = 'http://34.243.59.248/';
 
 const walttiConfig = require('./waltti').default;
 
