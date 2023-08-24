@@ -20,7 +20,7 @@ const AWS_IDENTITY_POOL_ID =
 
 const SUBSCRIPTION_KEY = process.env.SUBSCRIPTION_KEY || null;
 
-const ANALYTICS_URL = 'http://34.243.59.248/';
+const ANALYTICS_URL = 'https://kapydata.oulunseudunpyoraily.fi/';
 
 const walttiConfig = require('./waltti').default;
 
