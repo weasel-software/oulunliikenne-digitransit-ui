@@ -3,6 +3,7 @@ import d from 'debug';
 import { getJson } from '../util/xhrPromise';
 import { getPositioningHasSucceeded } from '../store/localStorage';
 import geolocationMessages from '../util/geolocationMessages';
+import addDigitransitAuthParameter from '../util/authUtils';
 
 const debug = d('PositionActions.js');
 
@@ -10,8 +11,11 @@ let geoWatchId;
 
 function reverseGeocodeAddress(actionContext, location) {
   const language = actionContext.getStore('PreferencesStore').getLanguage();
-
-  return getJson(actionContext.config.URL.PELIAS_REVERSE_GEOCODER, {
+  const url = addDigitransitAuthParameter(
+    actionContext.config,
+    actionContext.config.URL.PELIAS_REVERSE_GEOCODER,
+  );
+  return getJson(url, {
     'point.lat': location.lat,
     'point.lon': location.lon,
     lang: language,

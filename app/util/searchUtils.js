@@ -15,6 +15,7 @@ import { distance } from './geo-utils';
 import { uniqByLabel, isStop } from './suggestionUtils';
 import mapPeliasModality from './pelias-to-modality-mapper';
 import { PREFIX_ROUTES } from '../util/path';
+import addDigitransitAuthParameter from './authUtils';
 
 /**
  * LayerType depicts the type of the point-of-interest.
@@ -259,7 +260,9 @@ export function getGeocodingResult(
     opts = { ...opts, sources };
   }
 
-  return getJson(config.URL.PELIAS, opts).then(response =>
+  const url = addDigitransitAuthParameter(config, config.URL.PELIAS);
+
+  return getJson(url, opts).then(response =>
     mapPeliasModality(response.features, config),
   );
 }
