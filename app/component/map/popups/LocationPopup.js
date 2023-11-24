@@ -7,6 +7,7 @@ import MarkerPopupBottom from '../MarkerPopupBottom';
 import { getLabel } from '../../../util/suggestionUtils';
 import { getJson } from '../../../util/xhrPromise';
 import Loading from '../../Loading';
+import addDigitransitAuthParameter from '../../../util/authUtils';
 
 class LocationPopup extends React.Component {
   static contextTypes = {
@@ -34,7 +35,11 @@ class LocationPopup extends React.Component {
 
   componentDidMount() {
     const language = this.context.getStore('PreferencesStore').getLanguage();
-    getJson(this.context.config.URL.PELIAS_REVERSE_GEOCODER, {
+    const url = addDigitransitAuthParameter(
+      this.context.config,
+      this.context.config.URL.PELIAS_REVERSE_GEOCODER,
+    );
+    getJson(url, {
       'point.lat': this.props.lat,
       'point.lon': this.props.lon,
       'boundary.circle.lat': this.props.lat,
