@@ -214,8 +214,10 @@ const callback = () =>
                               window.location.host,
                               window.location.href,
                               config,
-                            )}
-                          />
+                            )}>
+                            <script defer src="https://cloud.umami.is/script.js"
+                                    data-website-id="1481903d-1fdf-40b5-8bc6-5296bbb9c9b1"></script>
+                          </Helmet>
                           <Router {...props} onUpdate={track} />
                         </React.Fragment>
                       </MuiThemeProvider>
