@@ -2,14 +2,12 @@ const path = require('path');
 const webpack = require('webpack');
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 const OfflinePlugin = require('offline-plugin');
 
 const CompressionPlugin = require('compression-webpack-plugin');
-const iltorb = require('iltorb');
-const zopfli = require('node-zopfli-es');
 
 const WebpackAssetsManifest = require('webpack-assets-manifest');
 const StatsPlugin = require('stats-webpack-plugin');
@@ -126,16 +124,18 @@ const productionPlugins = [
     chunkFilename: 'css/[name].[contenthash].css',
   }),
   new CompressionPlugin({
-    filename: '[path].gz[query]',
+    filename: '[path][base].gz[query]',
     test: /\.(js|css|html|svg|ico)$/,
     minRatio: 0.95,
-    algorithm: zopfli.gzip,
+    algorithm: 'gzip',
+    cache: false,
   }),
   new CompressionPlugin({
-    filename: '[path].br[query]',
+    filename: '[path][base].br[query]',
     test: /\.(js|css|html|svg|ico)$/,
     minRatio: 0.95,
-    algorithm: iltorb.compress,
+    algorithm: 'brotliCompress',
+    cache: false,
   }),
   new StatsPlugin('../stats.json', { chunkModules: true }),
   new WebpackAssetsManifest({ output: '../manifest.json' }),
@@ -187,8 +187,8 @@ module.exports = {
               },
             ],
             '@babel/plugin-syntax-dynamic-import',
-            ['@babel/plugin-proposal-class-properties', { loose: true }],
-            '@babel/plugin-proposal-json-strings',
+            ['@babel/plugin-transform-class-properties', { loose: true }],
+            '@babel/plugin-transform-json-strings',
           ],
         },
       },
@@ -227,7 +227,7 @@ module.exports = {
   ],
   optimization: {
     minimizer: [
-      new UglifyJsPlugin({
+      new TerserPlugin({
         cache: true,
         parallel: false,
         sourceMap: true, // set to true if you want JS source maps
@@ -313,14 +313,17 @@ module.exports = {
     'fbjs/lib/Map': 'var Map',
   },
   devServer: {
-    publicPath: '/',
-    noInfo: true,
+    devMiddleware: {
+      publicPath: '/',
+    },
     compress: true,
     host: '0.0.0.0',
     port: process.env.HOT_LOAD_PORT || 9000,
     headers: {
       'Access-Control-Allow-Origin': '*',
     },
-    overlay: true,
+    client: {
+      overlay: true,
+    },
   },
 };
