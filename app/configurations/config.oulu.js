@@ -450,7 +450,7 @@ export default configMerger(walttiConfig, {
         header: 'Tietoja palvelusta',
         // header: 'Tietoja Oulunliikenne.fi-palvelusta',
         paragraphs: [
-          'Oulunliikenne.fi-palvelu sisältää joukkoliikenteen, kävelyn, pyöräilyn ja autoilun reittioppaat, joukkoliikenteen reaaliaikaisen pysäkki-informaation sekä tietoja liikenneolosuhteista ja liikenteen sujuvuudesta. Palvelun tilaajina ovat Oulun kaupunki ja Pohjois-Pohjanmaan ELY-keskus. Palveluntuottajana toimii Digia Oyj. Palvelu perustuu Digitransit-palvelualustaan. Katso palvelun englanninkielinen tekninen kuvaus {link}.',
+          'Oulunliikenne.fi-palvelu sisältää joukkoliikenteen, kävelyn, pyöräilyn ja autoilun reittioppaat, joukkoliikenteen reaaliaikaisen pysäkki-informaation sekä tietoja liikenneolosuhteista ja liikenteen sujuvuudesta. Palvelun tilaajina ovat Oulun kaupunki ja Pohjois-Pohjanmaan ELY-keskus. Palveluntuottajana toimii Weasel Software Oy. Palvelu perustuu Digitransit-palvelualustaan. Katso palvelun englanninkielinen tekninen kuvaus {link}.',
         ],
         link: {
           href:
@@ -479,7 +479,7 @@ export default configMerger(walttiConfig, {
       {
         header: 'Om tjänsten',
         paragraphs: [
-          'Den här tjänsten omfattar reseplaneraren för kollektivtrafik, promenad, cykling och privat bilanvändning i Uleåborgsregionen. Tjänsten inkluderar passagerarinformation i realtid och information om vägförhållanden och rusningar. Tjänsten erbjuds av Uleåborgs stad och NTM-centralen i Norra Österbotten. Serviceproducenten är Digia Finland Ab. Tjänsten baserar sig på Digitransit-plattformen.',
+          'Den här tjänsten omfattar reseplaneraren för kollektivtrafik, promenad, cykling och privat bilanvändning i Uleåborgsregionen. Tjänsten inkluderar passagerarinformation i realtid och information om vägförhållanden och rusningar. Tjänsten erbjuds av Uleåborgs stad och NTM-centralen i Norra Österbotten. Serviceproducenten är Weasel Software Oy. Tjänsten baserar sig på Digitransit-plattformen.',
         ],
       },
       {
@@ -501,7 +501,7 @@ export default configMerger(walttiConfig, {
       {
         header: 'About this service',
         paragraphs: [
-          'The service covers route planners for public transport, walking, cycling and private car use in Oulu region. The service includes real-time passenger information and information of road conditions and traffic congestions. This service is provided by City of Oulu and ELY Center of North Ostrobothnia. The service producer is Digia Finland Ltd. The service is built on Digitransit platform.',
+          'The service covers route planners for public transport, walking, cycling and private car use in Oulu region. The service includes real-time passenger information and information of road conditions and traffic congestions. This service is provided by City of Oulu and ELY Center of North Ostrobothnia. The service producer is Weasel Software Ltd. The service is built on Digitransit platform.',
         ],
       },
       {
