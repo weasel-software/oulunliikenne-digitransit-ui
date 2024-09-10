@@ -317,7 +317,7 @@ module.exports = {
       publicPath: '/',
     },
     compress: true,
-    host: '0.0.0.0',
+    host: '::1',
     port: process.env.HOT_LOAD_PORT || 9000,
     headers: {
       'Access-Control-Allow-Origin': '*',
@@ -326,4 +326,8 @@ module.exports = {
       overlay: true,
     },
   },
+  // infrastructureLogging: {
+  //   level: 'verbose',
+  //   debug: [name => name.includes('webpack-dev-server')],
+  // },
 };
