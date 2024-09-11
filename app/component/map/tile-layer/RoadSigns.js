@@ -74,7 +74,7 @@ export default class RoadSigns {
 
             if (feature.properties.type === 'WARNING') {
               const warningType = feature.properties.displayValue;
-              if (warningType !== 'null') {
+              if (warningType && warningType !== 'null') {
                 drawWarningRoadSignIcon(
                   this.tile,
                   feature.geom,

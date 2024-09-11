@@ -1,5 +1,5 @@
 import Store from 'fluxible/addons/BaseStore';
-import reactCookie from 'react-cookie';
+import Cookies from 'universal-cookie';
 import moment from 'moment-timezone/moment-timezone';
 import { isLangMockEn } from '../util/browser';
 
@@ -19,8 +19,9 @@ class PreferencesStore extends Store {
     if (isLangMockEn) {
       this.setLanguage('en');
     }
+    this.cookies = new Cookies();
 
-    const language = reactCookie.load('lang');
+    const language = this.cookies.get('lang');
     if (this.availableLanguages.indexOf(language) === -1) {
       // illegal selection, use default
       this.language = this.defaultLanguage;
@@ -40,7 +41,7 @@ class PreferencesStore extends Store {
 
     moment.locale(language);
 
-    reactCookie.save('lang', language, {
+    this.cookies.set('lang', language, {
       // Good up to one year
       maxAge: 365 * 24 * 60 * 60,
       path: '/',
