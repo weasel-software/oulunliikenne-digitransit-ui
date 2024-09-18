@@ -161,7 +161,7 @@ module.exports = {
         include: [path.resolve(__dirname, 'app')],
         loader: 'babel-loader',
         options: {
-          babelrc: false,
+          configFile: false,
           presets: [
             [
               '@babel/preset-env',
@@ -189,6 +189,7 @@ module.exports = {
             '@babel/plugin-syntax-dynamic-import',
             ['@babel/plugin-transform-class-properties', { loose: true }],
             '@babel/plugin-transform-json-strings',
+            ['@babel/plugin-transform-private-methods', { loose: true }],
           ],
         },
       },

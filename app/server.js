@@ -228,7 +228,7 @@ function validateParams(params) {
   return idFields.every(f => !params[f] || params[f].indexOf(':') !== -1);
 }
 
-export default function(req, res, next) {
+export default function (req, res, next) {
   const config = getConfiguration(req);
   const locale = getLocale(req, res, config);
   const application = appCreator(config);

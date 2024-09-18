@@ -6,7 +6,9 @@
 const path = require('path');
 const fs = require('fs');
 
-require('@babel/register')();
+require('@babel/register')({
+  ignore: [/node_modules\/react-leaflet/],
+});
 
 global.fetch = require('node-fetch');
 const proxy = require('express-http-proxy');
