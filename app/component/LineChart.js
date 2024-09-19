@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Chart from 'chart.js';
+import Chart from 'chart.js/auto';
 import isEqual from 'lodash/isEqual';
 import omit from 'lodash/omit';
 
@@ -24,13 +24,9 @@ class LineChart extends React.Component {
       },
       options: {
         scales: {
-          yAxes: [
-            {
-              ticks: {
-                beginAtZero: true,
-              },
-            },
-          ],
+          y: {
+            beginAtZero: true,
+          },
         },
       },
     });

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import Relay from 'react-relay/classic';
-
+import { withLeaflet } from 'react-leaflet/es/context';
 import CityBikeMarker from './CityBikeMarker';
 import ComponentUsageExample from '../../ComponentUsageExample';
 
@@ -42,24 +42,34 @@ class CityBikeMarkerContainer extends React.Component {
     </div>
   );
 
+  static propTypes = {
+    leaflet: PropTypes.shape({
+      map: PropTypes.shape({
+        getZoom: PropTypes.func.isRequired,
+        on: PropTypes.func.isRequired,
+        off: PropTypes.func.isRequired,
+      }).isRequired,
+    }).isRequired,
+  };
+
   static contextTypes = {
-    map: PropTypes.object.isRequired,
     config: PropTypes.object.isRequired,
   };
 
   componentDidMount() {
-    this.context.map.on('zoomend', this.onMapZoom);
+    this.props.leaflet.map.on('zoomend', this.onMapZoom);
   }
 
   componentWillUnmount() {
-    this.context.map.off('zoomend', this.onMapZoom);
+    this.props.leaflet.map.off('zoomend', this.onMapZoom);
   }
 
   onMapZoom = () => this.forceUpdate();
 
   render() {
     if (
-      this.context.map.getZoom() < this.context.config.cityBike.cityBikeMinZoom
+      this.props.leaflet.map.getZoom() <
+      this.context.config.cityBike.cityBikeMinZoom
     ) {
       return false;
     }
@@ -83,4 +93,4 @@ class CityBikeMarkerContainer extends React.Component {
   }
 }
 
-export default CityBikeMarkerContainer;
+export default withLeaflet(CityBikeMarkerContainer);

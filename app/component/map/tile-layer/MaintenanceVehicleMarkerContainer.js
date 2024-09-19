@@ -27,7 +27,7 @@ function getMaintenanceVehicleIcon(className) {
 
 if (isBrowser) {
   /* eslint-disable global-require */
-  Popup = require('../Popup').default;
+  Popup = require('react-leaflet/es/Popup').default;
   /* eslint-enable global-require */
 }
 
@@ -41,11 +41,10 @@ function MaintenanceVehicleMarkerContainer({
     mapLayers,
   );
   return Object.entries(maintenanceVehicles)
-    .filter(
-      ([, message]) =>
-        showOnlyInspectionJobs
-          ? message.jobIds.includes(RoadInspectionJobId)
-          : true,
+    .filter(([, message]) =>
+      showOnlyInspectionJobs
+        ? message.jobIds.includes(RoadInspectionJobId)
+        : true,
     )
     .filter(([, message]) => message.lat && message.long)
     .map(([id, message]) => (

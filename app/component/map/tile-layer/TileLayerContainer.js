@@ -12,8 +12,8 @@ import isEqual from 'lodash/isEqual';
 import uniqBy from 'lodash/uniqBy';
 import get from 'lodash/get';
 import L from 'leaflet';
-
-import Popup from '../Popup';
+import { withLeaflet } from 'react-leaflet/es/context';
+import Popup from 'react-leaflet/es/Popup';
 import StopRoute from '../../../route/StopRoute';
 import TerminalRoute from '../../../route/TerminalRoute';
 import CityBikeRoute from '../../../route/CityBikeRoute';
@@ -80,6 +80,13 @@ class TileLayerContainer extends GridLayer {
     highlightedStop: PropTypes.string,
     highlightedFluency: PropTypes.string,
     maintenanceVehicleTail: maintenanceVehicleTailShape.isRequired,
+    leaflet: PropTypes.shape({
+      map: PropTypes.shape({
+        addLayer: PropTypes.func.isRequired,
+        addEventParent: PropTypes.func.isRequired,
+        removeEventParent: PropTypes.func.isRequired,
+      }).isRequired,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -90,22 +97,27 @@ class TileLayerContainer extends GridLayer {
   static contextTypes = {
     getStore: PropTypes.func.isRequired,
     intl: intlShape.isRequired,
-    map: PropTypes.object.isRequired,
     config: PropTypes.object.isRequired,
     location: locationShape.isRequired,
   };
 
-  state = {
-    ...initialState,
-    currentTime: this.context
-      .getStore('TimeStore')
-      .getCurrentTime()
-      .unix(),
-  };
+  constructor(props, context) {
+    super(props, context);
 
-  componentWillMount() {
-    super.componentWillMount();
+    // Required as it is not passed upwards through the whole inherittance chain
+    this.context = context;
+    this.state = {
+      ...initialState,
+      currentTime: context.getStore('TimeStore').getCurrentTime().unix(),
+    };
+    this.leafletElement.createTile = this.createTile;
+  }
+
+  componentDidMount() {
+    super.componentDidMount();
     this.context.getStore('TimeStore').addChangeListener(this.onTimeChange);
+    this.props.leaflet.map.addEventParent(this.leafletElement);
+    this.leafletElement.on('click contextmenu', this.onClick);
   }
 
   componentDidUpdate(prevProps) {
@@ -122,10 +134,10 @@ class TileLayerContainer extends GridLayer {
         this.props.maintenanceVehicleTail,
       )
     ) {
-      this.context.map.removeEventParent(this.leafletElement);
+      this.props.leaflet.map.removeEventParent(this.leafletElement);
       this.leafletElement.remove();
       this.leafletElement = this.createLeafletElement(this.props);
-      this.context.map.addLayer(this.leafletElement);
+      this.props.leaflet.map.addLayer(this.leafletElement);
 
       if (this.leafletElementHighlighted) {
         this.leafletElementHighlighted.remove();
@@ -145,7 +157,7 @@ class TileLayerContainer extends GridLayer {
           this.props,
           false,
         );
-        this.context.map.addLayer(this.leafletElementHighlighted);
+        this.props.leaflet.map.addLayer(this.leafletElementHighlighted);
       }
     }
   }
@@ -216,7 +228,7 @@ class TileLayerContainer extends GridLayer {
     const leafletElement = new Layer(this.getOptions(props));
 
     if (withEventParent) {
-      this.context.map.addEventParent(leafletElement);
+      this.props.leaflet.map.addEventParent(leafletElement);
       leafletElement.on('click contextmenu', this.onClick);
     }
 
@@ -249,7 +261,7 @@ class TileLayerContainer extends GridLayer {
       props,
       this.context.config,
       this.context.location,
-      this.context.map,
+      this.props.leaflet.map,
     );
 
     tile.onSelectableTargetClicked = (selectableTargets, coords) => {
@@ -731,19 +743,23 @@ class TileLayerContainer extends GridLayer {
   }
 }
 
-export default connectToStores(
-  TileLayerContainer,
-  [MapLayerStore, MapLayerOptionsStore, MaintenanceVehicleTailStore],
-  context => ({
-    mapLayers: context.getStore(MapLayerStore).getMapLayers(),
-    mapLayerOptions: context
-      .getStore(MapLayerOptionsStore)
-      .getMapLayerOptions(),
-    highlightedStop: context.getStore(MapLayerStore).getHighlightedStop(),
-    highlightedFluency: context.getStore(MapLayerStore).getHighlightedFluency(),
-    maintenanceVehicleTail: context
-      .getStore(MaintenanceVehicleTailStore)
-      .getTail(),
-    location: context.location,
-  }),
+export default withLeaflet(
+  connectToStores(
+    TileLayerContainer,
+    [MapLayerStore, MapLayerOptionsStore, MaintenanceVehicleTailStore],
+    context => ({
+      mapLayers: context.getStore(MapLayerStore).getMapLayers(),
+      mapLayerOptions: context
+        .getStore(MapLayerOptionsStore)
+        .getMapLayerOptions(),
+      highlightedStop: context.getStore(MapLayerStore).getHighlightedStop(),
+      highlightedFluency: context
+        .getStore(MapLayerStore)
+        .getHighlightedFluency(),
+      maintenanceVehicleTail: context
+        .getStore(MaintenanceVehicleTailStore)
+        .getTail(),
+      location: context.location,
+    }),
+  ),
 );

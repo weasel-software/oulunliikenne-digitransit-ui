@@ -6,6 +6,18 @@ import { stub } from 'sinon';
 
 before('setting up enzyme and jsdom', () => {
   const callback = warning => {
+    /**
+     * Ignore react-unsafe-component-lifecycles warnings since some old packages use those methods,
+     * however they are still supported in react ^16 but will be deprecated in react >= 17
+     *
+     * Ignore component appears to be a function component that returns a class instance warning that is caused by react-relay
+     */
+    if (
+      warning.includes('react-unsafe-component-lifecycles') ||
+      warning.includes('component appears to be a function component')
+    ) {
+      return;
+    }
     throw new Error(warning);
   };
   stub(console, 'error').callsFake(callback);
