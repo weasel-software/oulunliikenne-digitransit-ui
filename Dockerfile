@@ -31,6 +31,9 @@ ENV \
   AWS_MAP_URL='' \
   AWS_IDENTITY_POOL_ID=''
 
+# Set the PORT environment variable
+ENV PORT=8080
+
 WORKDIR ${WORK}
 ADD . ${WORK}
 
