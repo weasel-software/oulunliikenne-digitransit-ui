@@ -28,7 +28,7 @@
     "es-lint": "eslint .",
     "lint": "npm run es-lint && npm run stylelint",
     "stylelint": "stylelint sass/**/*.scss app/**/*.scss",
-    "build": "NODE_ENV=production node --max_old_space_size=4096 node_modules/.bin/webpack --progress --color --display-error-details",
+    "build": "NODE_ENV=production node --max_old_space_size=4096 node_modules/.bin/webpack --progress --color",
     "win-build": "set NODE_ENV=production&& webpack --progress --color",
     "win-build-dev": "set NODE_ENV=development&& webpack --progress --color",
     "start": "NODE_ENV=production node $NODE_OPTS server/server",
