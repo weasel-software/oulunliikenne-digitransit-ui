@@ -54,8 +54,8 @@ const WeatherStationContent = ({ sensors, measuredTime, lang }) => {
             </td>
             <td>
               {lang === 'fi'
-                ? rainSensor.sensorValueDescriptionFi.toLowerCase()
-                : rainSensor.sensorValueDescriptionEn.toLowerCase()}
+                ? rainSensor.sensorValueDescriptionFi?.toLowerCase()
+                : rainSensor.sensorValueDescriptionEn?.toLowerCase()}
             </td>
           </tr>
         )}
@@ -68,8 +68,8 @@ const WeatherStationContent = ({ sensors, measuredTime, lang }) => {
             </td>
             <td>
               {lang === 'fi'
-                ? weatherSensor.sensorValueDescriptionFi.toLowerCase()
-                : weatherSensor.sensorValueDescriptionEn.toLowerCase()}
+                ? weatherSensor.sensorValueDescriptionFi?.toLowerCase()
+                : weatherSensor.sensorValueDescriptionEn?.toLowerCase()}
             </td>
           </tr>
         )}
