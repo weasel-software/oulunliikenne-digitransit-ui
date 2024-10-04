@@ -210,14 +210,8 @@ class IndexPage extends React.Component {
   /* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
   render() {
     const { config, router, executeAction, intl } = this.context;
-    const {
-      breakpoint,
-      destination,
-      origin,
-      routes,
-      tab,
-      realtimeDepartures,
-    } = this.props;
+    const { breakpoint, destination, origin, routes, tab, realtimeDepartures } =
+      this.props;
     const { mapExpanded } = this.state;
 
     const footerOptions = Object.assign(
@@ -238,11 +232,13 @@ class IndexPage extends React.Component {
 
     return breakpoint === 'large' ? (
       <div
-        className={`front-page flex-vertical ${origin &&
+        className={`front-page flex-vertical ${
+          origin &&
           origin.gps === true &&
           origin.ready === false &&
           origin.gpsError === false &&
-          `blurred`} fullscreen bp-${breakpoint}`}
+          `blurred`
+        } fullscreen bp-${breakpoint}`}
       >
         <ContentToggle
           icon="icon_search"
@@ -263,23 +259,22 @@ class IndexPage extends React.Component {
             />
           </div>
         </ContentToggle>
-        {realtimeDepartures &&
-          realtimeDepartures.length > 0 && (
-            <button
-              className="realtime-toggle"
-              onClick={this.deactivateRealtimeVehicles}
-              title={intl.formatMessage({
-                id: 'hide-realtime-on-map',
-                defaultMessage: 'Hide vehicles on map',
-              })}
-              aria-label={intl.formatMessage({
-                id: 'hide-realtime-on-map',
-                defaultMessage: 'Hide vehicles on map',
-              })}
-            >
-              <Icon img="icon-icon_realtime_off" />
-            </button>
-          )}
+        {realtimeDepartures && realtimeDepartures.length > 0 && (
+          <button
+            className="realtime-toggle"
+            onClick={this.deactivateRealtimeVehicles}
+            title={intl.formatMessage({
+              id: 'hide-realtime-on-map',
+              defaultMessage: 'Hide vehicles on map',
+            })}
+            aria-label={intl.formatMessage({
+              id: 'hide-realtime-on-map',
+              defaultMessage: 'Hide vehicles on map',
+            })}
+          >
+            <Icon img="icon-icon_realtime_off" />
+          </button>
+        )}
         <ContentToggle
           icon="icon_star"
           iconClass="favourites-toggle"
@@ -330,11 +325,13 @@ class IndexPage extends React.Component {
       </div>
     ) : (
       <div
-        className={`front-page flex-vertical ${origin &&
+        className={`front-page flex-vertical ${
+          origin &&
           origin.gps === true &&
           origin.ready === false &&
           origin.gpsError === false &&
-          `blurred`} fullscreen bp-${breakpoint}`}
+          `blurred`
+        } fullscreen bp-${breakpoint}`}
       >
         <div
           className={cx('flex-grow', 'map-container', {
@@ -372,23 +369,22 @@ class IndexPage extends React.Component {
                 />
               </div>
             </ContentToggle>
-            {realtimeDepartures &&
-              realtimeDepartures.length > 0 && (
-                <button
-                  className="realtime-toggle"
-                  onClick={this.deactivateRealtimeVehicles}
-                  title={intl.formatMessage({
-                    id: 'hide-realtime-on-map',
-                    defaultMessage: 'Hide vehicles on map',
-                  })}
-                  aria-label={intl.formatMessage({
-                    id: 'hide-realtime-on-map',
-                    defaultMessage: 'Hide vehicles on map',
-                  })}
-                >
-                  <Icon img="icon-icon_realtime_off" />
-                </button>
-              )}
+            {realtimeDepartures && realtimeDepartures.length > 0 && (
+              <button
+                className="realtime-toggle"
+                onClick={this.deactivateRealtimeVehicles}
+                title={intl.formatMessage({
+                  id: 'hide-realtime-on-map',
+                  defaultMessage: 'Hide vehicles on map',
+                })}
+                aria-label={intl.formatMessage({
+                  id: 'hide-realtime-on-map',
+                  defaultMessage: 'Hide vehicles on map',
+                })}
+              >
+                <Icon img="icon-icon_realtime_off" />
+              </button>
+            )}
           </MapWithTracking>
         </div>
         <div style={{ position: 'relative' }}>

@@ -23,7 +23,7 @@ RouteDetails.propTypes = {
   }).isRequired,
 };
 
-export default Relay.createContainer(RouteDetails, {
+const RelayContainer = Relay.createContainer(RouteDetails, {
   fragments: {
     route: () => Relay.QL`
         fragment on Route {
@@ -34,3 +34,6 @@ export default Relay.createContainer(RouteDetails, {
       `,
   },
 });
+
+RelayContainer.prototype = React.Component.prototype;
+export default RelayContainer;

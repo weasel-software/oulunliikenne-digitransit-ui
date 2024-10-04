@@ -26,7 +26,7 @@ import fs from 'fs';
 import path from 'path';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import LRU from 'lru-cache';
+import { LRUCache } from 'lru-cache';
 
 // Application
 import appCreator from './app';
@@ -44,7 +44,7 @@ import addDigitransitAuthParameter from './util/authUtils';
 const appRoot = `${process.cwd()}/`;
 
 // cached assets
-const polyfillls = LRU(200);
+const polyfillls = new LRUCache({ max: 200 });
 
 // Disable relay query cache in order tonot leak memory, see facebook/relay#754
 RelayQueryCaching.disable();
@@ -228,7 +228,7 @@ function validateParams(params) {
   return idFields.every(f => !params[f] || params[f].indexOf(':') !== -1);
 }
 
-export default function(req, res, next) {
+export default function (req, res, next) {
   const config = getConfiguration(req);
   const locale = getLocale(req, res, config);
   const application = appCreator(config);
