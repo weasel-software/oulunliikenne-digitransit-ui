@@ -1,64 +1,17 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-
-import { FormattedMessage } from 'react-intl';
-import uniqBy from 'lodash/uniqBy';
-import reject from 'lodash/reject';
-
-import RouteDestination from '../../RouteDestination';
-import routeCompare from '../../../util/route-compare';
 import ComponentUsageExample from '../../ComponentUsageExample';
 
-function getName(pattern) {
-  if (pattern.shortName) {
-    return (
-      <span
-        key={pattern.shortName}
-        className={`${pattern.type.toLowerCase()} vehicle-number`}
-      >
-        {pattern.shortName}
-      </span>
-    );
-  }
-  return null;
-}
-
 function SelectStopRow(props) {
-  const patternData = JSON.parse(props.patterns).sort(routeCompare);
   const patterns = [];
-
+  const { code, type } = props;
   patterns.push(
     <div key="first" className="route-detail-text">
-      <span
-        className={`${patternData[0].type.toLowerCase()} vehicle-number no-padding`}
-      >
-        {patternData[0].shortName}
+      <span className={`${type.toLowerCase()} vehicle-number no-padding`}>
+        {code}
       </span>
-      {'\u00a0'}
-      <RouteDestination
-        mode={patternData[0].type}
-        destination={patternData[0].headsign}
-      />
     </div>,
   );
-
-  if (patternData.length > 1) {
-    const otherPatterns = reject(patternData, [
-      'shortName',
-      patternData[0].shortName,
-    ]);
-    if (otherPatterns.length > 0) {
-      patterns.push(
-        <div key="second" className="route-detail-text">
-          <span className="gray">
-            <FormattedMessage id="in-addition" defaultMessage="In addition" />
-          </span>
-          {uniqBy(otherPatterns, pattern => pattern.shortName).map(getName)}
-        </div>,
-      );
-    }
-  }
-
   /* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
   return (
     <div className="no-margin">
@@ -104,9 +57,7 @@ SelectStopRow.description = () => (
         name="DIAKONIAPUISTO"
         selectRow={() => {}}
         type="BUS"
-        patterns={
-          '[{"headsign":"Kuninkaanmäki","type":"BUS","shortName":"518"}]'
-        }
+        code="1234"
       />
     </ComponentUsageExample>
   </div>
@@ -116,7 +67,7 @@ SelectStopRow.propTypes = {
   type: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   selectRow: PropTypes.func.isRequired,
-  patterns: PropTypes.string.isRequired,
+  code: PropTypes.string.isRequired,
 };
 
 export default SelectStopRow;
