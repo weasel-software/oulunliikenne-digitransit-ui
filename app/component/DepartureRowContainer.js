@@ -23,7 +23,7 @@ const DepartureRow = ({ departure, currentTime, distance }, context) => {
   let headsign;
   if (departure.stoptimes) {
     departureTimes = departure.stoptimes.map(departureTime => {
-      headsign = departureTime.stopHeadsign;
+      headsign = departureTime.headsign;
       const canceled = departureTime.realtimeState === 'CANCELED';
       const key = `${departure.pattern.route.gtfsId}:${
         departure.pattern.headsign
@@ -215,7 +215,7 @@ export default Relay.createContainer(DepartureRow, {
           pickupType
           realtime
           serviceDay
-          stopHeadsign
+          headsign
           stop {
             code
             platformCode
