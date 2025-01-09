@@ -270,8 +270,8 @@ export function getGeocodingResult(
 function getFavouriteRoutes(favourites, input) {
   const query = Relay.createQuery(
     Relay.QL`
-    query favouriteRoutes($ids: [String!]!) {
-      routes(ids: $ids ) {
+    query favouriteRoutes($feeds: [String!]!) {
+      routes(feeds: $feeds ) {
         gtfsId
         agency { name }
         shortName
@@ -280,9 +280,9 @@ function getFavouriteRoutes(favourites, input) {
         patterns { code }
       }
     }`,
-    { ids: favourites },
+    { feeds: favourites },
   );
-
+  //TODO filter out others except favourite routes
   return getRelayQuery(query)
     .then(favouriteRoutes => favouriteRoutes.map(mapRoute))
     .then(routes =>
