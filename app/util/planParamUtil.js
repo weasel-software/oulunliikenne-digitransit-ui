@@ -122,6 +122,11 @@ const getNumberValueOrDefault = (value, defaultValue = undefined) =>
 const getBooleanValueOrDefault = (value, defaultValue = undefined) =>
   value !== undefined ? value === 'true' : defaultValue;
 
+const getModesStringAsTransportModesList = modes => {
+  const modesList = modes?.split(',')?.map(mode => ({ mode }));
+  return modesList;
+};
+
 export const getSettings = () => {
   const custSettings = getCustomizedSettings();
   const routingSettings = getRoutingSettings();
@@ -348,7 +353,7 @@ export const preparePlanParams = config => (
       },
       nullOrUndefined,
     ),
-    modes: modesOrDefault,
+    modes: getModesStringAsTransportModesList(modesOrDefault),
     ticketTypes: getTicketTypes(
       ticketTypes,
       settings.ticketTypes,

@@ -49,11 +49,7 @@ export default Relay.createContainer(FavouriteLocationContainer, {
           walkBoardCost: $walkBoardCost,
           minTransferTime: $minTransferTime,
           walkSpeed: $walkSpeed,
-          maxWalkDistance:
-          $maxWalkDistance,
           wheelchair: $wheelchair,
-          disableRemainingWeightHeuristic:
-          $disableRemainingWeightHeuristic,
           arriveBy: $arriveBy,
         ) {
           itineraries {
