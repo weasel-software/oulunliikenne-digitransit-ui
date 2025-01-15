@@ -45,7 +45,6 @@ class LocationPopup extends React.Component {
       'boundary.circle.lat': this.props.lat,
       'boundary.circle.lon': this.props.lon,
       'boundary.circle.radius': 0.1, // 100m
-      'digitransit-subscription-key': this.context.config.SUBSCRIPTION_KEY,
       lang: language,
       size: 1,
       layers: 'address',
