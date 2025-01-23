@@ -13,7 +13,7 @@ function DisruptionRow({
   endTime,
   description,
   cause,
-  stop,
+  stops,
 }) {
   return (
     <div className="row">
@@ -25,11 +25,15 @@ function DisruptionRow({
               routes={routes.filter(route => route)}
             />
           )}
-          {stop && (
-            <Link to={`/${PREFIX_STOPS}/${encodeURIComponent(stop.gtfsId)}`}>
-              <span className="stop-list left bold">{stop.name}</span>
-            </Link>
-          )}
+          {stops &&
+            stops.map(stop => (
+              <Link
+                key={stop.gtfsId}
+                to={`/${PREFIX_STOPS}/${encodeURIComponent(stop.gtfsId)}`}
+              >
+                <span className="stop-list left bold">{stop.name}</span>
+              </Link>
+            ))}
           <span className="time bold">
             {`${startTime.format('DD.MM.YYYY HH:mm')} - ${endTime.format(
               'DD.MM.YYYY HH:mm',
@@ -60,14 +64,14 @@ DisruptionRow.propTypes = {
   routes: PropTypes.arrayOf(PropTypes.object),
   description: PropTypes.node,
   cause: PropTypes.node,
-  stop: PropTypes.object,
+  stops: PropTypes.arrayOf(PropTypes.object),
 };
 
 DisruptionRow.defaultProps = {
   routes: [],
   description: null,
   cause: null,
-  stop: null,
+  stops: [],
 };
 
 export default DisruptionRow;

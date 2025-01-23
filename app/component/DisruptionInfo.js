@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import Relay from 'react-relay/classic';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, intlShape } from 'react-intl';
 import { routerShape, locationShape } from 'react-router';
 
 import Modal from './Modal';
@@ -52,15 +52,18 @@ function DisruptionInfo(props, context) {
         route={{
           name: 'ViewerRoute',
           queries: {
-            root: (Component, { feedIds }) => Relay.QL`
+            root: (Component, { feedIds, language }) => Relay.QL`
                 query {
                   viewer {
-                    ${Component.getFragment('root', { feedIds })}
+                    ${Component.getFragment('root', { feedIds, language })}
                   }
                 }
              `,
           },
-          params: { feedIds: context.config.feedIds },
+          params: {
+            feedIds: context.config.feedIds,
+            language: context.intl.locale,
+          },
         }}
         renderLoading={() => <Loading />}
       />
@@ -74,6 +77,7 @@ DisruptionInfo.contextTypes = {
   config: PropTypes.shape({
     feedIds: PropTypes.arrayOf(PropTypes.string.isRequired),
   }).isRequired,
+  intl: intlShape,
 };
 
 DisruptionInfo.propTypes = {
