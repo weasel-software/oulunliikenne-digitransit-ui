@@ -41,8 +41,7 @@ const getAlerts = (route, currentTime, intl) => {
   });
 };
 
-function RouteAlertsContainer({ route, currentTime, language }, { intl }) {
-  console.log('here', language);
+function RouteAlertsContainer({ route, currentTime }, { intl }) {
   if (route.alerts.length === 0) {
     return (
       <div className="no-alerts-message">
@@ -64,7 +63,6 @@ function RouteAlertsContainer({ route, currentTime, language }, { intl }) {
 RouteAlertsContainer.propTypes = {
   route: PropTypes.object.isRequired,
   currentTime: PropTypes.object,
-  language: PropTypes.string.isRequired,
 };
 
 RouteAlertsContainer.contextTypes = {
