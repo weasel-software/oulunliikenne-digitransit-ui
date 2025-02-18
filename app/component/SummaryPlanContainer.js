@@ -318,6 +318,7 @@ class SummaryPlanContainer extends React.Component {
 
   getQuery = () => Relay.QL`
     query Plan(
+      $via:[PlanViaLocationInput!]
       $numItineraries:Int!,
       $walkBoardCost:Int!,
       $minTransferTime:Int!,
@@ -347,6 +348,7 @@ class SummaryPlanContainer extends React.Component {
         plan(
           fromPlace:$fromPlace,
           toPlace:$toPlace,
+          via:$via,
           numItineraries:$numItineraries,
           date:$date,
           time:$time,

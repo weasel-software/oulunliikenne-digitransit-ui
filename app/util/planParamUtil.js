@@ -237,9 +237,17 @@ export const preparePlanParams = config => (
   const settings = getSettings();
   const fromLocation = otpToLocation(from);
   const toLocation = otpToLocation(to);
-  const intermediatePlaceLocations = getIntermediatePlaces({
-    intermediatePlaces,
-  });
+  const intermediatePlaceLocations = (
+    getIntermediatePlaces({
+      intermediatePlaces,
+      }) || []
+    ).map(viaPoint => ({
+      visit: {
+        label: viaPoint.address,
+        stopLocationIds: [viaPoint.stopId],
+        minimumWaitTime: `PT${viaPoint.locationSlack || 0}S`,
+      },
+  }));
   const modesOrDefault = filterModes(
     config,
     getModes({ query: { modes } }, config),

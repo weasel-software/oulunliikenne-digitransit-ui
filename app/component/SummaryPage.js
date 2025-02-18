@@ -387,6 +387,7 @@ export default Relay.createContainer(withBreakpoint(SummaryPage), {
           fromPlace: $fromPlace,
           toPlace: $toPlace,
           numItineraries: $numItineraries,
+          via: $intermediatePlaces,
           transportModes: $modes,
           date: $date,
           time: $time,

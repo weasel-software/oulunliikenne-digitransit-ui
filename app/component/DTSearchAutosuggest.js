@@ -257,6 +257,14 @@ class DTAutosuggest extends React.Component {
 
   render() {
     const { value, suggestions } = this.state;
+    let suggestionsToShow = suggestions;
+    /** Digitransit plan graphql queryType only supports stop viapoints, coordinate viapoints are not yet supported.
+     * -> Only display stops on _VIAPOINT_ suggestion list. */
+    if (this.props.id === 'viapoint') {
+      suggestionsToShow = suggestions.filter(
+        suggestion => suggestion.properties.layer === 'stop',
+      );
+    }
     const placeholder = this.context.intl.formatMessage({
       id: this.props.placeholder,
       defaultMessage: '',
@@ -277,7 +285,7 @@ class DTAutosuggest extends React.Component {
         </div>
         <Autosuggest
           id={this.props.id}
-          suggestions={suggestions}
+          suggestions={suggestionsToShow}
           onSuggestionsFetchRequested={this.fetchFunction}
           onSuggestionsClearRequested={this.onSuggestionsClearRequested}
           getSuggestionValue={this.getSuggestionValue}
