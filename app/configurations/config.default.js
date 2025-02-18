@@ -1,8 +1,7 @@
 const CONFIG = process.env.CONFIG || 'default';
 const API_URL = process.env.API_URL || 'https://api.digitransit.fi';
 const GEOCODING_BASE_URL = `${API_URL}/geocoding/v1`;
-const MAP_URL =
-  process.env.MAP_URL || 'https://digitransit-prod-cdn-origin.azureedge.net';
+const MAP_URL = process.env.MAP_URL || 'https://cdn.digitransit.fi';
 const APP_PATH = process.env.APP_CONTEXT || '';
 const { PIWIK_ADDRESS, PIWIK_ID, SENTRY_DSN } = process.env;
 const PORT = process.env.PORT || 8080;
@@ -23,11 +22,11 @@ export default {
     MAP_URL,
     OTP: process.env.OTP_URL || `${API_URL}/routing/v1/routers/finland/`,
     MAP: {
-      default: `${MAP_URL}/map/v2/hsl-map/`,
-      sv: `${MAP_URL}/map/v2/hsl-map-sv/`,
+      default: `${MAP_URL}/map/v3/hsl-map/`,
+      sv: `${MAP_URL}/map/v3/hsl-map-sv/`,
     },
-    STOP_MAP: `${MAP_URL}/map/v2/finland-stop-map/`,
-    CITYBIKE_MAP: `${MAP_URL}/map/v2/hsl-citybike-map/`,
+    STOP_MAP: `${MAP_URL}/map/v3/finland-stop-map/`,
+    CITYBIKE_MAP: `${MAP_URL}/map/v3/hsl-citybike-map/`,
     MQTT: 'wss://mqtt.hsl.fi',
     ALERTS: process.env.ALERTS_URL || `${API_URL}/realtime/service-alerts/v1`,
     FONT:

@@ -8,8 +8,7 @@ const AWS_REGION = process.env.AWS_REGION || 'eu-central-1';
 
 const OTP_URL = process.env.OTP_URL || 'https://api-dev.oulunliikenne.fi/proxy';
 const API_URL = process.env.API_URL || 'https://api.digitransit.fi';
-const MAP_URL =
-  process.env.MAP_URL || 'https://digitransit-prod-cdn-origin.azureedge.net';
+const MAP_URL = process.env.MAP_URL || 'https://cdn.digitransit.fi';
 const AWS_MAP_URL =
   process.env.AWS_MAP_URL || 'https://d2lk9qao4tzpwi.cloudfront.net';
 const MQTT_URL =
@@ -41,7 +40,7 @@ export default configMerger(walttiConfig, {
     MAP_URL,
     OTP: OTP_URL,
     MQTT: MQTT_URL,
-    STOP_MAP: `${MAP_URL}/map/v2/waltti-stop-map/`,
+    STOP_MAP: `${MAP_URL}/map/v3/waltti/fi/stops,stations/`,
     CITYBIKE_MAP: `${AWS_MAP_URL}/map/bicyclestations/`,
     PARKING_STATIONS_MAP: `${AWS_MAP_URL}/map/carparks/`,
     CAMERASTATIONS_MAP: `${AWS_MAP_URL}/map/cameras/`,
@@ -374,7 +373,12 @@ export default configMerger(walttiConfig, {
     'boundary.rect.max_lon': 26.61,
   },
 
-  areaPolygon: [[24.37, 64.71], [24.37, 65.38], [26.61, 65.38], [26.61, 64.71]],
+  areaPolygon: [
+    [24.37, 64.71],
+    [24.37, 65.38],
+    [26.61, 65.38],
+    [26.61, 64.71],
+  ],
 
   defaultEndpoint: {
     address: 'Keskusta',
@@ -426,8 +430,7 @@ export default configMerger(walttiConfig, {
       {
         name: 'footer-feedback',
         nameEn: 'Submit feedback',
-        href:
-          'mailto:palaute.oulunliikenne@ouka.fi?subject=Oulunliikenne palaute',
+        href: 'mailto:palaute.oulunliikenne@ouka.fi?subject=Oulunliikenne palaute',
         icon: 'icon-icon_speech-bubble',
       },
       {
@@ -453,8 +456,7 @@ export default configMerger(walttiConfig, {
           'Oulunliikenne.fi-palvelu sisältää joukkoliikenteen, kävelyn, pyöräilyn ja autoilun reittioppaat, joukkoliikenteen reaaliaikaisen pysäkki-informaation sekä tietoja liikenneolosuhteista ja liikenteen sujuvuudesta. Palvelun tilaajina ovat Oulun kaupunki ja Pohjois-Pohjanmaan ELY-keskus. Palveluntuottajana toimii Weasel Software Oy. Palvelu perustuu Digitransit-palvelualustaan. Katso palvelun englanninkielinen tekninen kuvaus {link}.',
         ],
         link: {
-          href:
-            'https://wp.oulunliikenne.fi/wp-content/uploads/2022/02/Oulunliikenne.fi_service_documentation.pdf',
+          href: 'https://wp.oulunliikenne.fi/wp-content/uploads/2022/02/Oulunliikenne.fi_service_documentation.pdf',
           text: 'tästä',
         },
       },

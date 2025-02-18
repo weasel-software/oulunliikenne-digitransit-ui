@@ -268,22 +268,26 @@ export function getGeocodingResult(
 }
 
 function getFavouriteRoutes(favourites, input) {
-  const query = Relay.createQuery(
-    Relay.QL`
-    query favouriteRoutes($ids: [String!]!) {
-      routes(ids: $ids ) {
-        gtfsId
-        agency { name }
-        shortName
-        mode
-        longName
-        patterns { code }
-      }
-    }`,
-    { ids: favourites },
-  );
+  const queries = favourites.map(favouriteId => {
+    const query = Relay.createQuery(
+      Relay.QL`
+          query favouriteRoute($id: String!) {
+              route(id: $id) {
+                  gtfsId
+                  agency { name }
+                  shortName
+                  mode
+                  longName
+                  patterns { code }
+              }
+          }`,
+      { id: favouriteId },
+    );
+    return getRelayQuery(query);
+  });
 
-  return getRelayQuery(query)
+  return Promise.all(queries)
+    .then(results => results.flat())
     .then(favouriteRoutes => favouriteRoutes.map(mapRoute))
     .then(routes =>
       routes.map(favourite => ({

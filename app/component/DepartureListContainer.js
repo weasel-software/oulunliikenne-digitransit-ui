@@ -49,7 +49,7 @@ const asDepartures = stoptimes =>
           stop: stoptime.stop,
           realtime: stoptime.realtime,
           pattern: stoptime.trip.pattern,
-          headsign: stoptime.stopHeadsign,
+          headsign: stoptime.headsign,
           trip: stoptime.trip,
           pickupType: stoptime.pickupType,
         };
@@ -276,7 +276,7 @@ export default Relay.createContainer(
             realtime
             serviceDay
             pickupType
-            stopHeadsign
+            headsign
             stop {
               code
               platformCode

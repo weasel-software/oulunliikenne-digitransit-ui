@@ -16,6 +16,7 @@ import {
 } from './util/path';
 import { preparePlanParams } from './util/planParamUtil';
 import { validateServiceTimeRange } from './util/timeUtils';
+import { prepareAlertParams } from './util/alertParamUtil';
 
 const ComponentLoading404Renderer = {
   /* eslint-disable react/prop-types */
@@ -401,6 +402,7 @@ export default config => {
               content: RouteQueries,
               meta: RouteQueries,
             }}
+            prepareParams={prepareAlertParams}
             render={ComponentLoading404Renderer}
           />
         </Route>

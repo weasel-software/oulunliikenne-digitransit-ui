@@ -122,6 +122,11 @@ const getNumberValueOrDefault = (value, defaultValue = undefined) =>
 const getBooleanValueOrDefault = (value, defaultValue = undefined) =>
   value !== undefined ? value === 'true' : defaultValue;
 
+const getModesStringAsTransportModesList = modes => {
+  const modesList = modes?.split(',')?.map(mode => ({ mode }));
+  return modesList;
+};
+
 export const getSettings = () => {
   const custSettings = getCustomizedSettings();
   const routingSettings = getRoutingSettings();
@@ -232,9 +237,17 @@ export const preparePlanParams = config => (
   const settings = getSettings();
   const fromLocation = otpToLocation(from);
   const toLocation = otpToLocation(to);
-  const intermediatePlaceLocations = getIntermediatePlaces({
-    intermediatePlaces,
-  });
+  const intermediatePlaceLocations = (
+    getIntermediatePlaces({
+      intermediatePlaces,
+      }) || []
+    ).map(viaPoint => ({
+      visit: {
+        label: viaPoint.address,
+        stopLocationIds: [viaPoint.stopId],
+        minimumWaitTime: `PT${viaPoint.locationSlack || 0}S`,
+      },
+  }));
   const modesOrDefault = filterModes(
     config,
     getModes({ query: { modes } }, config),
@@ -348,7 +361,7 @@ export const preparePlanParams = config => (
       },
       nullOrUndefined,
     ),
-    modes: modesOrDefault,
+    modes: getModesStringAsTransportModesList(modesOrDefault),
     ticketTypes: getTicketTypes(
       ticketTypes,
       settings.ticketTypes,

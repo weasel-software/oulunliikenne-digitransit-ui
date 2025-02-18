@@ -13,7 +13,9 @@ import {
 import { dtLocationShape } from '../util/shapes';
 
 const locationToOtp = location =>
-  `${location.address}::${location.lat},${location.lon}${
+  `${location.address}${location.layer === 'stop' && location.id ? `**${location.id}` : ''}::${
+    location.lat
+  },${location.lon}${
     location.locationSlack ? `::${location.locationSlack}` : ''
   }`;
 

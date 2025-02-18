@@ -19,14 +19,14 @@ class FavouriteRouteListContainerRoute extends Relay.Route {
   static queries = {
     routes: (Component, variables) => Relay.QL`
       query {
-        routes (ids:$ids) {
+        routes (feeds:$feeds) {
           ${Component.getFragment('routes', {
-            ids: variables.ids,
+            feeds: variables.feeds,
           })}
     }}`,
   };
   static paramDefinitions = {
-    ids: { required: true },
+    feeds: { required: true },
   };
   static routeName = 'FavouriteRouteRowRoute';
 }
