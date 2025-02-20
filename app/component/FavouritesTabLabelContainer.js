@@ -37,7 +37,8 @@ function FavouritesTabLabelContainer({ routes, ...rest }) {
     return (
       <Relay.Renderer
         Container={FavouritesTabLabelRelayConnector}
-        queryConfig={new RoutesRoute({ ids: routes })}
+        //TODO: get feeds ("OULU") from routes if this component is even used.
+        queryConfig={new RoutesRoute({ feeds: routes })}
         environment={Relay.Store}
         render={({ done, props }) =>
           done ? (

@@ -14,7 +14,6 @@ import {
   urlMiddleware,
   gqErrorsMiddleware,
   retryMiddleware,
-  batchMiddleware,
 } from 'react-relay-network-layer/lib';
 import OfflinePlugin from 'offline-plugin/runtime';
 import Helmet from 'react-helmet';
@@ -110,9 +109,6 @@ const callback = () =>
       new RelayNetworkLayer([
         urlMiddleware({
           url: `${config.URL.OTP}/graphql`,
-        }),
-        batchMiddleware({
-          batchUrl: `${config.URL.OTP}/graphql/batch`,
         }),
         gqErrorsMiddleware(),
         retryMiddleware({

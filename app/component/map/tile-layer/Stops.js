@@ -85,7 +85,7 @@ class Stops {
               }
               if (
                 feature.properties.type &&
-                (feature.properties.parentStation === 'null' ||
+                (!feature.properties.parentStation ||
                   this.config.terminalStopsMaxZoom - 1 <=
                     this.tile.coords.z + (this.tile.props.zoomOffset || 0))
               ) {

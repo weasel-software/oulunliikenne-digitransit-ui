@@ -138,9 +138,9 @@ export default connectToStores(
           stops {
             name
           }
-          tripsForDate(serviceDay: $serviceDay) {
+          tripsForDate(serviceDate: $serviceDay) {
             id
-            stoptimes: stoptimesForDate(serviceDay: $serviceDay) {
+            stoptimes: stoptimesForDate(serviceDate: $serviceDay) {
               scheduledArrival
               scheduledDeparture
               serviceDay

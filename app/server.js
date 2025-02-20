@@ -14,7 +14,6 @@ import {
   urlMiddleware,
   gqErrorsMiddleware,
   retryMiddleware,
-  batchMiddleware,
 } from 'react-relay-network-layer/lib';
 import provideContext from 'fluxible-addons-react/provideContext';
 
@@ -196,9 +195,6 @@ function getNetworkLayer(config, agent) {
     }),
     urlMiddleware({
       url: `${config.URL.OTP}/graphql`,
-    }),
-    batchMiddleware({
-      batchUrl: `${config.URL.OTP}/graphql/batch`,
     }),
     gqErrorsMiddleware({
       disableServerMiddlewareTip: true,
