@@ -14,6 +14,7 @@ import {
   urlMiddleware,
   gqErrorsMiddleware,
   retryMiddleware,
+  batchMiddleware,
 } from 'react-relay-network-layer/lib';
 import OfflinePlugin from 'offline-plugin/runtime';
 import Helmet from 'react-helmet';
@@ -86,6 +87,27 @@ const getParams = query => {
     }, {});
 };
 
+const selectiveBatchMiddleware = (() => {
+  const operationsToBatch = [
+    'Disorders',
+    'RoadConditions',
+    'NavbarLinks',
+    'ParkingStations',
+    'RoadworkRoute',
+  ];
+  const batch = batchMiddleware({
+    batchUrl: `${config.URL.OTP}/graphql/batch`,
+  });
+  return next => req => {
+    // Resolve operation name and batch if operationsToBatch includes the name.
+    const opName = req?.relayReqObj?._query?.__concreteNode__?.name;
+    if (req.relayReqType === 'query' && operationsToBatch.includes(opName)) {
+      return batch(next)(req);
+    }
+    return next(req);
+  };
+})();
+
 // Run application
 const callback = () =>
   app.rehydrate(window.state, (err, context) => {
@@ -110,6 +132,7 @@ const callback = () =>
         urlMiddleware({
           url: `${config.URL.OTP}/graphql`,
         }),
+        selectiveBatchMiddleware,
         gqErrorsMiddleware(),
         retryMiddleware({
           fetchTimeout: config.OTPTimeout + 1000,

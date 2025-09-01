@@ -53,7 +53,7 @@ export default class RoadSigns {
 
             if (feature.properties.type === 'SPEEDLIMIT') {
               const speedLimit = feature.properties.displayValue;
-              if (speedLimit !== 'null') {
+              if (speedLimit && speedLimit !== 'null') {
                 drawSpeedLimitRoadSignIcon(
                   this.tile,
                   feature.geom,
