@@ -14,6 +14,7 @@ import {
   urlMiddleware,
   gqErrorsMiddleware,
   retryMiddleware,
+  batchMiddleware,
 } from 'react-relay-network-layer/lib';
 import provideContext from 'fluxible-addons-react/provideContext';
 
@@ -174,6 +175,26 @@ const RELAY_FETCH_TIMEOUT = process.env.RELAY_FETCH_TIMEOUT || 1000;
 
 function getNetworkLayer(config, agent) {
   const emptyResponse = { payload: { data: null } };
+  const selectiveBatchMiddleware = (() => {
+    const operationsToBatch = [
+      'Disorders',
+      'RoadConditions',
+      'NavbarLinks',
+      'ParkingStations',
+      'RoadworkRoute',
+    ];
+    const batch = batchMiddleware({
+      batchUrl: `${config.URL.OTP}/graphql/batch`,
+    });
+    return next => req => {
+      // Resolve operation name and batch if operationsToBatch includes the name.
+      const opName = req?.relayReqObj?._query?.__concreteNode__?.name;
+      if (req.relayReqType === 'query' && operationsToBatch.includes(opName)) {
+        return batch(next)(req);
+      }
+      return next(req);
+    };
+  })();
   return new RelayNetworkLayer([
     next => req =>
       next(req)
@@ -196,6 +217,7 @@ function getNetworkLayer(config, agent) {
     urlMiddleware({
       url: `${config.URL.OTP}/graphql`,
     }),
+    selectiveBatchMiddleware,
     gqErrorsMiddleware({
       disableServerMiddlewareTip: true,
     }),
