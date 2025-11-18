@@ -132,7 +132,12 @@
     }
   }
 
-
+  & .eco-counter-info-message-row {
+    margin: 0.8em 0;
+    span {
+      font-size: 1em;
+    }
+  }
 
   & .button-row {
     display: flex;
