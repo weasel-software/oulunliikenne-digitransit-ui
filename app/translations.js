@@ -637,6 +637,8 @@ const translations = {
     'eco-counter-direction-9': 'From the west',
     'eco-counter-total': 'Total',
     'eco-counter-week-title': 'Week {date}',
+    'eco-counter-herukka-info-msg':
+      'Pedestrian statistics not available after 21.08.2025.',
     'edit-favourites': 'Edit the location in the Favorites',
     'elevation-gained-total': 'Elevation gained',
     'elevation-lost-total': 'Elevation lost',
@@ -1718,6 +1720,8 @@ const translations = {
     'eco-counter-direction-9': 'Lännestä',
     'eco-counter-total': 'Yhteensä',
     'eco-counter-week-title': 'Viikko {date}',
+    'eco-counter-herukka-info-msg':
+      'Jk-tilastot ei saatavilla 21.08.2025 jälkeen.',
     'edit-favourites': 'Muokkaa paikkaa Suosikkisi-välilehdellä',
     'elevation-gained-total': 'Nousua yhteensä',
     'elevation-lost-total': 'Laskua yhteensä',
@@ -3095,6 +3099,8 @@ const translations = {
     'eco-counter-direction-9': 'Västerifån',
     'eco-counter-total': 'Totalt',
     'eco-counter-week-title': 'Vecka {date}',
+    'eco-counter-herukka-info-msg':
+      'Gångstatistik är inte tillgänglig efter 21.08.2025.',
     'edit-favourites': 'Redigera favoritdestination',
     'elevation-gained-total': 'Uppförsbacke totalt',
     'elevation-lost-total': 'Nedförsbacke totalt',

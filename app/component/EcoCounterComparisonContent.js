@@ -4,6 +4,7 @@ import Relay from 'react-relay/classic';
 import cx from 'classnames';
 import moment from 'moment';
 import get from 'lodash/get';
+import { FormattedMessage } from 'react-intl';
 
 import LineChart from './LineChart';
 import Icon from './Icon';
@@ -226,6 +227,17 @@ class EcoCounterComparisonContent extends React.Component {
       });
     }
 
+    /**
+     * Herukka ecocounter was replaced with another counter which no longer collects walking data.
+     * History data is still available but new data is not collected.
+     * Show a message to the user when walking data is not available anymore.
+     */
+    const herukkaSiteId = '300062134';
+    const showWalkingUnavailableMsg =
+      userType === WALKING &&
+      ((channel1Id && channel1Id?.startsWith(herukkaSiteId)) ||
+        (channel2Id && channel2Id?.startsWith(herukkaSiteId)));
+
     return (
       <div className="eco-counter-content">
         <EcoCounterComparisonDatesSelector
@@ -255,6 +267,11 @@ class EcoCounterComparisonContent extends React.Component {
           title="Test"
         />
         <div className="ecocounter-bottom">
+          {showWalkingUnavailableMsg && (
+            <div className="eco-counter-info-message-row">
+              <FormattedMessage id="eco-counter-herukka-info-msg" />
+            </div>
+          )}
           <div className="button-rows">
             <div className="button-row">
               {availableUserTypes.includes(WALKING) && (
