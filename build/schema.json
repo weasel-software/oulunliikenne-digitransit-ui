@@ -305,6 +305,24 @@
                                 "defaultValue": null
                             },
                             {
+                                "name": "filters",
+                                "description": "Can be used to filter the results. When paging, the filter should not be changed between pages.\n    \nAn empty list of filters or no value means that all trips should be included. Only one filter\nis allowed for now. Once new filtering criteria is introduced, this limitation will be removed.",
+                                "type": {
+                                    "kind": "LIST",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "NON_NULL",
+                                        "name": null,
+                                        "ofType": {
+                                            "kind": "INPUT_OBJECT",
+                                            "name": "CanceledTripsFilterInput",
+                                            "ofType": null
+                                        }
+                                    }
+                                },
+                                "defaultValue": null
+                            },
+                            {
                                 "name": "first",
                                 "description": "Limits how many trips are returned. This parameter is part of the\n[GraphQL Cursor Connections Specification](https://relay.dev/graphql/connections.htm) and can be used together with\nthe `after` parameter.",
                                 "type": {
@@ -548,8 +566,8 @@
                             "name": "Cluster",
                             "ofType": null
                         },
-                        "isDeprecated": false,
-                        "deprecationReason": null
+                        "isDeprecated": true,
+                        "deprecationReason": "Not implemented"
                     },
                     {
                         "name": "clusters",
@@ -564,8 +582,8 @@
                                 "ofType": null
                             }
                         },
-                        "isDeprecated": false,
-                        "deprecationReason": null
+                        "isDeprecated": true,
+                        "deprecationReason": "Not implemented"
                     },
                     {
                         "name": "departureRow",
@@ -1246,16 +1264,6 @@
                                 "defaultValue": null
                             },
                             {
-                                "name": "preferred",
-                                "description": "List of routes and agencies which are given higher preference when planning the itinerary",
-                                "type": {
-                                    "kind": "INPUT_OBJECT",
-                                    "name": "InputPreferred",
-                                    "ofType": null
-                                },
-                                "defaultValue": null
-                            },
-                            {
                                 "name": "searchWindow",
                                 "description": "The length of the search-window in seconds. This parameter is optional.\n    \nThe search-window is defined as the duration between the earliest-departure-time(EDT) and\nthe latest-departure-time(LDT). OTP will search for all itineraries in this departure\nwindow. If `arriveBy=true` the `dateTime` parameter is the latest-arrival-time, so OTP\nwill dynamically calculate the EDT. Using a short search-window is faster than using a\nlonger one, but the search duration is not linear. Using a \\\"too\\\" short search-window will\nwaste resources server side, while using a search-window that is too long will be slow.\n    \nOTP will dynamically calculate a reasonable value for the search-window, if not provided.\nThe calculation comes with a significant overhead (10-20% extra). Whether you should use the\ndynamic calculated value or pass in a value depends on your use-case. For a travel planner\nin a small geographical area, with a dense network of public transportation, a fixed value\nbetween 40 minutes and 2 hours makes sense. To find the appropriate search-window, adjust\nit so that the number of itineraries on average is around the wanted `numItineraries`. Make\nsure you set the `numItineraries` to a high number while testing. For a country wide area\nlike Norway, using the dynamic search-window is the best.\n    \nWhen paginating, the search-window is calculated using the `numItineraries` in the original\nsearch together with statistics from the search for the last page. This behaviour is\nconfigured server side, and can not be overridden from the client.\n    \nThe search-window used is returned to the response metadata as `searchWindowUsed` for\ndebugging purposes.",
                                 "type": {
@@ -1409,7 +1417,7 @@
                             },
                             {
                                 "name": "walkSpeed",
-                                "description": "Max walk speed along streets, in meters per second. Default value: 1.33",
+                                "description": "Max walk speed along streets, in meters per second. Default value: 1.35",
                                 "type": {
                                     "kind": "SCALAR",
                                     "name": "Float",
@@ -1492,6 +1500,16 @@
                                     "name": "Int",
                                     "ofType": null
                                 },
+                                "defaultValue": "50"
+                            },
+                            {
+                                "name": "flex",
+                                "description": "Parameters that affect flexible transport routing per request.",
+                                "type": {
+                                    "kind": "INPUT_OBJECT",
+                                    "name": "FlexRequest",
+                                    "ofType": null
+                                },
                                 "defaultValue": null
                             },
                             {
@@ -1560,7 +1578,7 @@
                             },
                             {
                                 "name": "searchWindow",
-                                "description": "Duration of the search window. This either starts at the defined earliest departure\ntime or ends at the latest arrival time. If this is not provided, a reasonable\nsearch window is automatically generated. When searching for earlier or later itineraries\nwith paging, this search window is no longer used and the new window will be based\non how many suggestions were returned in the previous search. The new search window can be\nshorter or longer than the original search window. Note, itineraries are returned faster\nwith a smaller search window and search window limitation is done mainly for performance reasons.\n    \nSetting this parameter makes especially sense if the transportation network is as sparse or dense\nin the whole itinerary search area. Otherwise, letting the system decide what is the search window\nis in combination of using paging can lead to better performance and to getting a more consistent\nnumber of itineraries in each search.",
+                                "description": "Duration of the search window. This either starts at the defined earliest departure\ntime or ends at the latest arrival time. If this is not provided or the value is set as null,\na reasonable search window is automatically generated. When searching for earlier or later itineraries\nwith paging, this search window is no longer used and the new window will be based\non how many suggestions were returned in the previous search. The new search window can be\nshorter or longer than the original search window. Note, itineraries are returned faster\nwith a smaller search window and search window limitation is done mainly for performance reasons.\n    \nSetting this parameter makes especially sense if the transportation network is as sparse or dense\nin the whole itinerary search area. Otherwise, letting the system decide what is the search window\nis in combination of using paging can lead to better performance and to getting a more consistent\nnumber of itineraries in each search.",
                                 "type": {
                                     "kind": "SCALAR",
                                     "name": "Duration",
@@ -5014,6 +5032,22 @@
                         "deprecationReason": null
                     },
                     {
+                        "name": "isReplacement",
+                        "description": "Is this a replacement route.\nOnly true for GTFS-sourced data if set by the extended GTFS route type, because GTFS does not implement\nreplacement links, so replacement trips in GTFS cannot mechanically state their original trip.\nIn NeTEx/SIRI-sourced data this can be set by either a replacement submode, or a replacement\nlink in a DatedServiceJourney.",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "Boolean",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
                         "name": "longName",
                         "description": "Long name of the route, e.g. Helsinki-Leppävaara",
                         "args": [
@@ -5069,6 +5103,22 @@
                             "ofType": {
                                 "kind": "OBJECT",
                                 "name": "Pattern",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "replacementsExist",
+                        "description": "Do any trips of this route have any linked replacements.\nOnly ever true with NeTEx or SIRI, because GTFS does not implement replacement\nlinks, so replacement trips in GTFS cannot mechanically state their original trip.",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "Boolean",
                                 "ofType": null
                             }
                         },
@@ -5262,6 +5312,16 @@
                 "possibleTypes": null
             },
             {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "description": "The `Boolean` scalar type represents `true` or `false`.",
+                "fields": null,
+                "inputFields": null,
+                "interfaces": null,
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
                 "kind": "ENUM",
                 "name": "TransitMode",
                 "description": "Transit modes include modes that are used within organized transportation networks\nrun by public transportation authorities, taxi companies etc.\nEquivalent to GTFS route_type or to NeTEx TransportMode.",
@@ -5326,6 +5386,12 @@
                     {
                         "name": "RAIL",
                         "description": "This includes long or short distance trains.",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "SNOW_AND_ICE",
+                        "description": "Used for off-road snow and ice vehicles",
                         "isDeprecated": false,
                         "deprecationReason": null
                     },
@@ -5442,8 +5508,8 @@
                             "name": "Cluster",
                             "ofType": null
                         },
-                        "isDeprecated": false,
-                        "deprecationReason": null
+                        "isDeprecated": true,
+                        "deprecationReason": "Not implemented"
                     },
                     {
                         "name": "code",
@@ -6031,8 +6097,8 @@
                             "name": "Int",
                             "ofType": null
                         },
-                        "isDeprecated": false,
-                        "deprecationReason": null
+                        "isDeprecated": true,
+                        "deprecationReason": "Not implemented. Use `vehicleMode`."
                     },
                     {
                         "name": "wheelchairBoarding",
@@ -6273,8 +6339,8 @@
                                 "ofType": null
                             }
                         },
-                        "isDeprecated": false,
-                        "deprecationReason": null
+                        "isDeprecated": true,
+                        "deprecationReason": "Not implemented"
                     },
                     {
                         "name": "id",
@@ -6289,8 +6355,8 @@
                                 "ofType": null
                             }
                         },
-                        "isDeprecated": false,
-                        "deprecationReason": null
+                        "isDeprecated": true,
+                        "deprecationReason": "Not implemented"
                     },
                     {
                         "name": "lat",
@@ -6305,8 +6371,8 @@
                                 "ofType": null
                             }
                         },
-                        "isDeprecated": false,
-                        "deprecationReason": null
+                        "isDeprecated": true,
+                        "deprecationReason": "Not implemented"
                     },
                     {
                         "name": "lon",
@@ -6321,8 +6387,8 @@
                                 "ofType": null
                             }
                         },
-                        "isDeprecated": false,
-                        "deprecationReason": null
+                        "isDeprecated": true,
+                        "deprecationReason": "Not implemented"
                     },
                     {
                         "name": "name",
@@ -6337,8 +6403,8 @@
                                 "ofType": null
                             }
                         },
-                        "isDeprecated": false,
-                        "deprecationReason": null
+                        "isDeprecated": true,
+                        "deprecationReason": "Not implemented"
                     },
                     {
                         "name": "stops",
@@ -6357,8 +6423,8 @@
                                 }
                             }
                         },
-                        "isDeprecated": false,
-                        "deprecationReason": null
+                        "isDeprecated": true,
+                        "deprecationReason": "Not implemented"
                     }
                 ],
                 "inputFields": null,
@@ -6448,16 +6514,6 @@
                         "deprecationReason": null
                     }
                 ],
-                "possibleTypes": null
-            },
-            {
-                "kind": "SCALAR",
-                "name": "Boolean",
-                "description": "The `Boolean` scalar type represents `true` or `false`.",
-                "fields": null,
-                "inputFields": null,
-                "interfaces": null,
-                "enumValues": null,
                 "possibleTypes": null
             },
             {
@@ -6820,7 +6876,7 @@
                     },
                     {
                         "name": "arrivalStoptime",
-                        "description": "Arrival time to the final stop",
+                        "description": "Arrival time to the final stop. If the trip does not run on the given date,\nit will return scheduled times from another date. This field is slightly\nconfusing and will be deprecated when a better replacement is implemented.",
                         "args": [
                             {
                                 "name": "serviceDate",
@@ -6866,8 +6922,24 @@
                         "deprecationReason": null
                     },
                     {
+                        "name": "carsAllowed",
+                        "description": "Whether cars are allowed on board the vehicle running this trip",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "ENUM",
+                                "name": "CarsAllowed",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
                         "name": "departureStoptime",
-                        "description": "Departure time from the first stop",
+                        "description": "Departure time from the first stop. If the trip does not run on the given date,\nit will return scheduled times from another date. This field is slightly\nconfusing and will be deprecated when a better replacement is implemented.",
                         "args": [
                             {
                                 "name": "serviceDate",
@@ -6953,6 +7025,22 @@
                         "deprecationReason": null
                     },
                     {
+                        "name": "isReplacement",
+                        "description": "Is this a replacement trip.\nOnly true for GTFS-sourced data if set by the extended GTFS route type, because GTFS does not implement\nreplacement links, so replacement trips in GTFS cannot mechanically state their original trip.\nIn NeTEx/SIRI-sourced data this can be set by either a replacement submode, or a replacement\nlink in a DatedServiceJourney.",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "Boolean",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
                         "name": "occupancy",
                         "description": "The latest real-time occupancy information for the latest occurance of this\ntrip.",
                         "args": [],
@@ -6972,6 +7060,22 @@
                             "kind": "OBJECT",
                             "name": "Pattern",
                             "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "replacementsExist",
+                        "description": "Does this trip have any linked replacements.\nOnly ever true with NeTEx or SIRI, because GTFS does not implement replacement\nlinks, so replacement trips in GTFS cannot mechanically state their original trip.",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "Boolean",
+                                "ofType": null
+                            }
                         },
                         "isDeprecated": false,
                         "deprecationReason": null
@@ -7086,7 +7190,7 @@
                     },
                     {
                         "name": "stoptimesForDate",
-                        "description": "",
+                        "description": "List of times when this trip arrives to or departs from each stop on a given date, or\ntoday if the date is not given. If the trip does not run on the given date, it will\nreturn scheduled times from another date. This field is slightly confusing and\nwill be deprecated when a better replacement is implemented.",
                         "args": [
                             {
                                 "name": "serviceDate",
@@ -7223,6 +7327,35 @@
                     {
                         "name": "TRIP",
                         "description": "Alerts affecting the trip",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "possibleTypes": null
+            },
+            {
+                "kind": "ENUM",
+                "name": "CarsAllowed",
+                "description": "",
+                "fields": null,
+                "inputFields": null,
+                "interfaces": null,
+                "enumValues": [
+                    {
+                        "name": "ALLOWED",
+                        "description": "The vehicle being used on this particular trip can accommodate at least one car.",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "NOT_ALLOWED",
+                        "description": "No cars are allowed on this trip.",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "NO_INFORMATION",
+                        "description": "There is no car information for the trip.",
                         "isDeprecated": false,
                         "deprecationReason": null
                     }
@@ -7609,6 +7742,18 @@
                         "deprecationReason": null
                     },
                     {
+                        "name": "lastUpdate",
+                        "description": "When the position of the vehicle was recorded.",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "OffsetDateTime",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
                         "name": "lastUpdated",
                         "description": "When the position of the vehicle was recorded in seconds since the UNIX epoch.",
                         "args": [],
@@ -7617,8 +7762,8 @@
                             "name": "Long",
                             "ofType": null
                         },
-                        "isDeprecated": false,
-                        "deprecationReason": null
+                        "isDeprecated": true,
+                        "deprecationReason": "Use `lastUpdate` instead."
                     },
                     {
                         "name": "lat",
@@ -7699,6 +7844,16 @@
                 ],
                 "inputFields": null,
                 "interfaces": [],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "SCALAR",
+                "name": "OffsetDateTime",
+                "description": "An ISO-8601-formatted datetime with offset, i.e. `2023-06-13T14:30+03:00` for 2:30pm on June 13th 2023 at Helsinki's offset from UTC at that time.\n\nISO-8601 allows many different formats but OTP will only return the profile specified in RFC3339.",
+                "fields": null,
+                "inputFields": null,
+                "interfaces": null,
                 "enumValues": null,
                 "possibleTypes": null
             },
@@ -8402,6 +8557,82 @@
                 "possibleTypes": null
             },
             {
+                "kind": "INPUT_OBJECT",
+                "name": "CanceledTripsFilterInput",
+                "description": "A collection of selectors for including or excluding trips from canceled trips search. Currently,\nyou can only use either include or exclude filter (as filtering is only supported with transit modes).",
+                "fields": null,
+                "inputFields": [
+                    {
+                        "name": "exclude",
+                        "description": "A list of selectors for excluding canceled trips.\n  \nAn empty list or a list containing `null` is forbidden.",
+                        "type": {
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "NON_NULL",
+                                "name": null,
+                                "ofType": {
+                                    "kind": "INPUT_OBJECT",
+                                    "name": "CanceledTripsFilterSelectInput",
+                                    "ofType": null
+                                }
+                            }
+                        },
+                        "defaultValue": null
+                    },
+                    {
+                        "name": "include",
+                        "description": "A list of selectors for including canceled trips.\n  \nAn empty list or a list containing `null` is forbidden.",
+                        "type": {
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "NON_NULL",
+                                "name": null,
+                                "ofType": {
+                                    "kind": "INPUT_OBJECT",
+                                    "name": "CanceledTripsFilterSelectInput",
+                                    "ofType": null
+                                }
+                            }
+                        },
+                        "defaultValue": null
+                    }
+                ],
+                "interfaces": null,
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "INPUT_OBJECT",
+                "name": "CanceledTripsFilterSelectInput",
+                "description": "A list of selectors for including or excluding trips from canceled trips search. Null\nmeans everything is allowed to be returned and empty lists are not allowed.",
+                "fields": null,
+                "inputFields": [
+                    {
+                        "name": "modes",
+                        "description": "Canceled trips from these transit modes should be included/excluded.",
+                        "type": {
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "NON_NULL",
+                                "name": null,
+                                "ofType": {
+                                    "kind": "ENUM",
+                                    "name": "TransitMode",
+                                    "ofType": null
+                                }
+                            }
+                        },
+                        "defaultValue": null
+                    }
+                ],
+                "interfaces": null,
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
                 "kind": "OBJECT",
                 "name": "TripOnServiceDateConnection",
                 "description": "A connection to a list of trips on service dates that follows\n[GraphQL Cursor Connections Specification](https://relay.dev/graphql/connections.htm).",
@@ -8432,6 +8663,22 @@
                             "ofType": {
                                 "kind": "OBJECT",
                                 "name": "PageInfo",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "totalCount",
+                        "description": "The total number of trips on service dates in this connection at the time of\nquery execution (including the current and previous\npages).\nNote, this number might not stay the same throughout the paging as trips might be added or\nremoved.",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "Int",
                                 "ofType": null
                             }
                         },
@@ -8499,6 +8746,66 @@
                                 "kind": "OBJECT",
                                 "name": "StopCall",
                                 "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "isReplacement",
+                        "description": "Is this TripOnServiceDate a replacement? For GTFS-sourced data this might be all we know.",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Boolean",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "replacedByRelation",
+                        "description": "Replaced by these TripOnServiceDates.",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "LIST",
+                                "name": null,
+                                "ofType": {
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "OBJECT",
+                                        "name": "ReplacedByRelation",
+                                        "ofType": null
+                                    }
+                                }
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "replacementForRelation",
+                        "description": "Replacement for these TripOnServiceDates.",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "LIST",
+                                "name": null,
+                                "ofType": {
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "OBJECT",
+                                        "name": "ReplacementForRelation",
+                                        "ofType": null
+                                    }
+                                }
                             }
                         },
                         "isDeprecated": false,
@@ -8581,7 +8888,7 @@
             {
                 "kind": "OBJECT",
                 "name": "StopCall",
-                "description": "Stop call represents the time when a specific trip on a specific date arrives to\nand/or departs from a specific stop location.",
+                "description": "Represents the time or time window when a specific trip on a specific date arrives to and/or departs\nfrom a specific stop location.\n\nThis may contain real-time information, if available.",
                 "fields": [
                     {
                         "name": "realTime",
@@ -8718,16 +9025,6 @@
                 "possibleTypes": null
             },
             {
-                "kind": "SCALAR",
-                "name": "OffsetDateTime",
-                "description": "An ISO-8601-formatted datetime with offset, i.e. `2023-06-13T14:30+03:00` for 2:30pm on June 13th 2023 at Helsinki's offset from UTC at that time.\n\nISO-8601 allows many different formats but OTP will only return the profile specified in RFC3339.",
-                "fields": null,
-                "inputFields": null,
-                "interfaces": null,
-                "enumValues": null,
-                "possibleTypes": null
-            },
-            {
                 "kind": "OBJECT",
                 "name": "CallSchedule",
                 "description": "What is scheduled for a trip on a service date for a stop location.",
@@ -8762,6 +9059,11 @@
                     {
                         "kind": "OBJECT",
                         "name": "ArrivalDepartureTime",
+                        "ofType": null
+                    },
+                    {
+                        "kind": "OBJECT",
+                        "name": "TimeWindow",
                         "ofType": null
                     }
                 ]
@@ -8802,6 +9104,49 @@
                 "possibleTypes": null
             },
             {
+                "kind": "OBJECT",
+                "name": "TimeWindow",
+                "description": "A time window when a vehicle visits a stop, area or group of stops.",
+                "fields": [
+                    {
+                        "name": "end",
+                        "description": "",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "OffsetDateTime",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "start",
+                        "description": "",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "OffsetDateTime",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
                 "kind": "UNION",
                 "name": "CallStopLocation",
                 "description": "Location where a transit vehicle stops at.",
@@ -8812,10 +9157,184 @@
                 "possibleTypes": [
                     {
                         "kind": "OBJECT",
+                        "name": "Location",
+                        "ofType": null
+                    },
+                    {
+                        "kind": "OBJECT",
+                        "name": "LocationGroup",
+                        "ofType": null
+                    },
+                    {
+                        "kind": "OBJECT",
                         "name": "Stop",
                         "ofType": null
                     }
                 ]
+            },
+            {
+                "kind": "OBJECT",
+                "name": "Location",
+                "description": "A stop that isn't a fixed point but zone where passengers can board or alight anywhere.\n\nThis is mostly used by demand-responsive services.",
+                "fields": [
+                    {
+                        "name": "geometry",
+                        "description": "The geometry representing the geographic extend of the location.",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "OBJECT",
+                                "name": "StopGeometries",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "gtfsId",
+                        "description": "ÌD of the location in format `FeedId:LocationId`",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "String",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "name",
+                        "description": "Optional name of the location.",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "LocationGroup",
+                "description": "A group of fixed stops that are visited in an arbitrary order.\n\nThis is mostly used by demand-responsive services.",
+                "fields": [
+                    {
+                        "name": "gtfsId",
+                        "description": "ÌD of the location group in format `FeedId:LocationGroupId`",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "String",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "members",
+                        "description": "The stops that are part of the group (cannot be stations).",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "LIST",
+                                "name": null,
+                                "ofType": {
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "OBJECT",
+                                        "name": "Stop",
+                                        "ofType": null
+                                    }
+                                }
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "name",
+                        "description": "Optional name of the group.",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "ReplacedByRelation",
+                "description": "Relation for indicating the TripOnServiceDate which is replacing an older one. Exists as a\nplace to put additional information on the replacement when we get SIRI 2.1 support.",
+                "fields": [
+                    {
+                        "name": "tripOnServiceDate",
+                        "description": "The replacing TripOnServiceDate.",
+                        "args": [],
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "TripOnServiceDate",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "ReplacementForRelation",
+                "description": "Relation for indicating the TripOnServiceDate which is being replaced by a newer one. Exists\nas a place to put additional information on the replacement when we get SIRI 2.1 support.",
+                "fields": [
+                    {
+                        "name": "tripOnServiceDate",
+                        "description": "The TripOnServiceDate being replaced.",
+                        "args": [],
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "TripOnServiceDate",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [],
+                "enumValues": null,
+                "possibleTypes": null
             },
             {
                 "kind": "OBJECT",
@@ -9352,6 +9871,18 @@
                         },
                         "isDeprecated": false,
                         "deprecationReason": null
+                    },
+                    {
+                        "name": "version",
+                        "description": "The version of the dataset.",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
                     }
                 ],
                 "inputFields": null,
@@ -9628,7 +10159,7 @@
                     },
                     {
                         "name": "id",
-                        "description": "An identifier for the leg, which can be used to re-fetch transit leg information, except leg's fare products.\nRe-fetching fails when the underlying transit data no longer exists.\n**Note:** when both id and fare products are queried with\n[Relay](https://relay.dev/), id should be queried using a suitable GraphQL alias\nsuch as `legId: id`. Relay does not accept different fare product ids in otherwise identical legs.",
+                        "description": "An identifier for the leg, which can be used to re-fetch transit leg information, except leg's fare products.\nRe-fetching fails when the underlying transit data no longer exists.\n**Note:** when both id and fare products are queried with\n[Relay](https://relay.dev/), id should be queried using a suitable GraphQL alias\nsuch as `legId: id`. Relay does not accept different fare product ids in otherwise identical legs.\n  \nThe identifier is valid for a maximum of 2 years, but sometimes it will fail after a few hours.\nWe do not recommend storing IDs for a long time.",
                         "args": [],
                         "type": {
                             "kind": "SCALAR",
@@ -9659,12 +10190,12 @@
                             "name": "Boolean",
                             "ofType": null
                         },
-                        "isDeprecated": false,
-                        "deprecationReason": null
+                        "isDeprecated": true,
+                        "deprecationReason": "Not implemented. Use `viaLocationType` from from/to fields instead."
                     },
                     {
                         "name": "intermediatePlaces",
-                        "description": "For transit legs, intermediate stops between the Place where the leg\noriginates and the Place where the leg ends. For non-transit legs, null.\nReturns Place type, which has fields for e.g. departure and arrival times",
+                        "description": "For transit legs, intermediate stops between the Place where the leg\noriginates and the Place where the leg ends. For non-transit legs, null.",
                         "args": [],
                         "type": {
                             "kind": "LIST",
@@ -9675,13 +10206,32 @@
                                 "ofType": null
                             }
                         },
-                        "isDeprecated": false,
-                        "deprecationReason": null
+                        "isDeprecated": true,
+                        "deprecationReason": "Use `leg.stopCalls` instead"
                     },
                     {
                         "name": "intermediateStops",
-                        "description": "For transit legs, intermediate stops between the Place where the leg\noriginates and the Place where the leg ends. For non-transit legs, null.",
-                        "args": [],
+                        "description": "For transit legs, intermediate stops between the Place where the leg\noriginates and the Place where the leg ends. For non-transit legs, null.\n  \nThe `include` parameter allows filtering of the returned places by stop type. If not provided, the\nfield returns all types. An empty list is not permitted.",
+                        "args": [
+                            {
+                                "name": "include",
+                                "description": "",
+                                "type": {
+                                    "kind": "LIST",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "NON_NULL",
+                                        "name": null,
+                                        "ofType": {
+                                            "kind": "ENUM",
+                                            "name": "StopType",
+                                            "ofType": null
+                                        }
+                                    }
+                                },
+                                "defaultValue": null
+                            }
+                        ],
                         "type": {
                             "kind": "LIST",
                             "name": null,
@@ -9691,8 +10241,8 @@
                                 "ofType": null
                             }
                         },
-                        "isDeprecated": false,
-                        "deprecationReason": null
+                        "isDeprecated": true,
+                        "deprecationReason": "Use `leg.stopCalls` instead"
                     },
                     {
                         "name": "legGeometry",
@@ -9910,7 +10460,7 @@
                     },
                     {
                         "name": "rentedBike",
-                        "description": "Whether this leg is traversed with a rented bike.",
+                        "description": "Whether this leg is traversed with a rented vehicle.",
                         "args": [],
                         "type": {
                             "kind": "SCALAR",
@@ -9995,6 +10545,30 @@
                                 "kind": "OBJECT",
                                 "name": "step",
                                 "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "stopCalls",
+                        "description": "All the stop calls (stop times) of this _leg_ (but not trip) including the boarding and alighting one.\n  \nNon-transit legs return an empty list.",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "LIST",
+                                "name": null,
+                                "ofType": {
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "OBJECT",
+                                        "name": "StopCall",
+                                        "ofType": null
+                                    }
+                                }
                             }
                         },
                         "isDeprecated": false,
@@ -10408,7 +10982,7 @@
                 "fields": [
                     {
                         "name": "id",
-                        "description": "Represents the use of a single instance of a fare product throughout the itinerary. It can\nbe used to cross-reference and de-duplicate fare products that are applicable for more than one\nleg.\n  \nIf you want to uniquely identify the fare product itself (not its use) use the product's `id`.\n  \n### Example: Day pass\n  \nThe day pass is valid for both legs in the itinerary. It is listed as the applicable `product` for each leg,\nand the same FareProductUse id is shown, indicating that only one pass was used/bought.\n  \n**Illustration**\n```yaml\nitinerary:\n  leg1:\n    fareProducts:\n      id: \"AAA\" // id of a FareProductUse instance\n      product:\n        id: \"day-pass\" // product id\n        name: \"Day Pass\"\n  leg2:\n    fareProducts:\n      id: \"AAA\" // identical to leg1. the passenger needs to buy ONE pass, not two.\n      product:\n        id: \"day-pass\"  // product id\n        name: \"Day Pass\"\n```\n  \n**It is the responsibility of the API consumers to display the day pass as a product for the\nentire itinerary rather than two day passes!**\n  \n### Example: Several single tickets\n  \nIf you have two legs and need to buy two single tickets they will appear in each leg with the\nsame `FareProduct.id` but different `FareProductUse.id`.\n  \n**Illustration**\n```yaml\nitinerary:\n  leg1:\n    fareProducts:\n      id: \"AAA\" // id of a FareProductUse instance, not product id\n      product:\n        id: \"single-ticket\" // product id\n        name: \"Single Ticket\"\n  leg2:\n    fareProducts:\n      id: \"BBB\" // different to leg1. the passenger needs to buy two single tickets.\n      product:\n        id: \"single-ticket\"  // product id\n        name: \"Single Ticket\"\n```",
+                        "description": "Represents the use of a single instance of a fare product throughout the itinerary. It can\nbe used to cross-reference and de-duplicate fare products that are applicable for more than one\nleg.\n  \nIf you want to uniquely identify the fare product itself (not its use) use the product's `id`.\n  \n### Example: Day pass\n  \nThe day pass is valid for both legs in the itinerary. It is listed as the applicable `product` for each leg,\nand the same FareProductUse id is shown, indicating that only one pass was used/bought.\n  \n**Illustration**\n```yaml\nitinerary:\n  leg1:\n    fareProducts:\n      id: \"AAA\" // id of a FareProductUse instance\n      product:\n        id: \"day-pass\" // product id\n        name: \"Day Pass\"\n  leg2:\n    fareProducts:\n      id: \"AAA\" // identical to leg1. the passenger needs to buy ONE pass, not two.\n      product:\n        id: \"day-pass\"  // product id\n        name: \"Day Pass\"\n```\n  \n**It is the responsibility of the API consumers to display the day pass as a product for the\nentire itinerary rather than two day passes!**\n  \n### Example: Several single tickets\n  \nIf you have two legs and need to buy two single tickets they will appear in each leg with the\nsame `FareProduct.id` but different `FareProductUse.id`.\n  \n**Illustration**\n```yaml\nitinerary:\n  leg1:\n    fareProducts:\n      id: \"AAA\" // id of a FareProductUse instance, not product id\n      product:\n        id: \"single-ticket\" // product id\n        name: \"Single Ticket\"\n  leg2:\n    fareProducts:\n      id: \"BBB\" // different to leg1. the passenger needs to buy two single tickets.\n      product:\n        id: \"single-ticket\"  // product id\n        name: \"Single Ticket\"\n```\n  \n### Example: Combination of single tickets and day passes\n  \nIf you have two legs and it's possible to either buy singles or use a day pass, you will\nhave a combination of identical and different `FareProductUse.id`s.\n  \n**Illustration**\n```yaml\nitinerary:\n  leg1:\n    fareProducts:\n      # fare product use for day pass\n      id: \"AAA\" // id of a FareProductUse instance, not product id\n        product:\n          id: \"single-ticket\" // product id\n          name: \"Single Ticket\"\n  \n      # fare product use for single ticket\n      id: \"CCC\" // identical to leg2. the passenger needs to buy ONE day pass, not two.\n        product:\n          id: \"day-pass\"  // product id\n          name: \"Day Pass\"\n  leg2:\n    fareProducts:\n      id: \"BBB\" // different to leg1. the passenger needs to buy two single tickets.\n        product:\n          id: \"single-ticket\"  // product id\n          name: \"Single Ticket\"\n  \n      id: \"CCC\" // identical to leg1. the passenger needs to buy ONE day pass, not two.\n        product:\n          id: \"day-pass\"  // product id\n          name: \"Day Pass\"\n```\n**It is the responsibility of the API consumers to display the day pass as a product for the\nentire itinerary rather than two day passes!**",
                         "args": [],
                         "type": {
                             "kind": "NON_NULL",
@@ -10510,6 +11084,11 @@
                         "kind": "OBJECT",
                         "name": "DefaultFareProduct",
                         "ofType": null
+                    },
+                    {
+                        "kind": "OBJECT",
+                        "name": "DependentFareProduct",
+                        "ofType": null
                     }
                 ]
             },
@@ -10567,6 +11146,22 @@
                             "ofType": {
                                 "kind": "SCALAR",
                                 "name": "String",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "isDefault",
+                        "description": "If this category is considered the \"default\" one. In most places this means \"Adult\" or\n\"Regular\".\nFrontends can use this property to display this category more prominently or pre-select this\nin a UI.",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "Boolean",
                                 "ofType": null
                             }
                         },
@@ -10801,6 +11396,18 @@
                             "name": "VertexType",
                             "ofType": null
                         },
+                        "isDeprecated": true,
+                        "deprecationReason": "Unmaintained. Use `stop`, `rentalVehicle`, `vehicleParking` or `vehicleRentalStation` to tell which type it is."
+                    },
+                    {
+                        "name": "viaLocationType",
+                        "description": "This defines if the place is a requested via location, and what kind it is. If the value is\n`null`, this place is not a via location.",
+                        "args": [],
+                        "type": {
+                            "kind": "ENUM",
+                            "name": "ViaLocationType",
+                            "ofType": null
+                        },
                         "isDeprecated": false,
                         "deprecationReason": null
                     }
@@ -10822,6 +11429,30 @@
                         "type": {
                             "kind": "SCALAR",
                             "name": "Boolean",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "availableUntil",
+                        "description": "The vehicle should be returned before this deadline.",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "OffsetDateTime",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "fuel",
+                        "description": "Fuel or battery status of the rental vehicle",
+                        "args": [],
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "RentalVehicleFuel",
                             "ofType": null
                         },
                         "isDeprecated": false,
@@ -10973,6 +11604,51 @@
                         "ofType": null
                     }
                 ],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "RentalVehicleFuel",
+                "description": "Rental vehicle fuel represent the current status of the battery or fuel of a rental vehicle",
+                "fields": [
+                    {
+                        "name": "percent",
+                        "description": "Fuel or battery power remaining in the vehicle. Expressed from 0 to 1.",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Ratio",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "range",
+                        "description": "Range in meters that the vehicle can travel with the current charge or fuel.",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Int",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "SCALAR",
+                "name": "Ratio",
+                "description": "A fractional multiplier between 0 and 1, for example 0.25. 0 means 0% and 1 means 100%.",
+                "fields": null,
+                "inputFields": null,
+                "interfaces": null,
                 "enumValues": null,
                 "possibleTypes": null
             },
@@ -12052,6 +12728,58 @@
                 "possibleTypes": null
             },
             {
+                "kind": "ENUM",
+                "name": "ViaLocationType",
+                "description": "Categorization for via locations.",
+                "fields": null,
+                "inputFields": null,
+                "interfaces": null,
+                "enumValues": [
+                    {
+                        "name": "PASS_THROUGH",
+                        "description": "The via stop location must be visited as part of a transit trip as at the boarding stop, the\nintermediate stop, or the alighting stop.",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "VISIT",
+                        "description": "The location is visited physically by boarding or alighting a transit trip at a given stop, or by\ntraveling via requested coordinate location as part of a access, transfer, egress or direct\nsegment. Intermediate stops visited on-board do not count.",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "possibleTypes": null
+            },
+            {
+                "kind": "ENUM",
+                "name": "StopType",
+                "description": "",
+                "fields": null,
+                "inputFields": null,
+                "interfaces": null,
+                "enumValues": [
+                    {
+                        "name": "LOCATION",
+                        "description": "An area or zone represented by a polygon. Introduced by the GTFS-Flex spec process.",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "LOCATION_GROUP",
+                        "description": "A group of stops. Introduced by the GTFS-Flex spec process.",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "STOP",
+                        "description": "A fixed stop represented by a coordinate.",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "possibleTypes": null
+            },
+            {
                 "kind": "OBJECT",
                 "name": "RideHailingEstimate",
                 "description": "An estimate for a ride on a hailed vehicle, like an Uber car.",
@@ -12349,6 +13077,18 @@
                         "deprecationReason": null
                     },
                     {
+                        "name": "feature",
+                        "description": "Information about a feature associated with a step e.g. a station entrance or exit.",
+                        "args": [],
+                        "type": {
+                            "kind": "UNION",
+                            "name": "StepFeature",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
                         "name": "lat",
                         "description": "The latitude of the start of the step.",
                         "args": [],
@@ -12521,9 +13261,328 @@
                 "possibleTypes": null
             },
             {
+                "kind": "UNION",
+                "name": "StepFeature",
+                "description": "A feature for a step",
+                "fields": null,
+                "inputFields": null,
+                "interfaces": null,
+                "enumValues": null,
+                "possibleTypes": [
+                    {
+                        "kind": "OBJECT",
+                        "name": "ElevatorUse",
+                        "ofType": null
+                    },
+                    {
+                        "kind": "OBJECT",
+                        "name": "Entrance",
+                        "ofType": null
+                    },
+                    {
+                        "kind": "OBJECT",
+                        "name": "EscalatorUse",
+                        "ofType": null
+                    },
+                    {
+                        "kind": "OBJECT",
+                        "name": "StairsUse",
+                        "ofType": null
+                    }
+                ]
+            },
+            {
+                "kind": "OBJECT",
+                "name": "ElevatorUse",
+                "description": "A single use of an elevator.",
+                "fields": [
+                    {
+                        "name": "from",
+                        "description": "The level the use begins at.",
+                        "args": [],
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "Level",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "to",
+                        "description": "The level the use ends at.",
+                        "args": [],
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "Level",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "verticalDirection",
+                        "description": "",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "ENUM",
+                                "name": "VerticalDirection",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "Level",
+                "description": "A level with a name and comparable number. Levels can sometimes contain half levels, e.g. '1.5'.",
+                "fields": [
+                    {
+                        "name": "level",
+                        "description": "0-based comparable number where 0 is the ground level.",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "Float",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "name",
+                        "description": "Name of the level, e.g. 'M', 'P1', or '1'. Can be equal or different to the numerical representation.",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "String",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "ENUM",
+                "name": "VerticalDirection",
+                "description": "The vertical direction e.g. for a set of stairs.",
+                "fields": null,
+                "inputFields": null,
+                "interfaces": null,
+                "enumValues": [
+                    {
+                        "name": "DOWN",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "UNKNOWN",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "UP",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "Entrance",
+                "description": "Station entrance or exit, originating from OSM or GTFS data.",
+                "fields": [
+                    {
+                        "name": "entranceId",
+                        "description": "ID of the entrance in the format of `FeedId:EntranceId`. If the `FeedId` is `osm`, the entrance originates from OSM data.",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "String",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "name",
+                        "description": "Name of the entrance or exit.",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "publicCode",
+                        "description": "Short text or a number that identifies the entrance or exit for passengers. For example, `A` or `B`.",
+                        "args": [],
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "wheelchairAccessible",
+                        "description": "Whether the entrance or exit is accessible by wheelchair",
+                        "args": [],
+                        "type": {
+                            "kind": "ENUM",
+                            "name": "WheelchairBoarding",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "EscalatorUse",
+                "description": "A single use of an escalator.",
+                "fields": [
+                    {
+                        "name": "from",
+                        "description": "The level the use begins at.",
+                        "args": [],
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "Level",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "to",
+                        "description": "The level the use ends at.",
+                        "args": [],
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "Level",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "verticalDirection",
+                        "description": "",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "ENUM",
+                                "name": "VerticalDirection",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "OBJECT",
+                "name": "StairsUse",
+                "description": "A single use of a set of stairs.",
+                "fields": [
+                    {
+                        "name": "from",
+                        "description": "The level the use begins at.",
+                        "args": [],
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "Level",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "to",
+                        "description": "The level the use ends at.",
+                        "args": [],
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "Level",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "verticalDirection",
+                        "description": "",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "ENUM",
+                                "name": "VerticalDirection",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
                 "kind": "ENUM",
                 "name": "RelativeDirection",
-                "description": "Actions to take relative to the current position when engaging a walking/driving step.",
+                "description": "A direction that is not absolute but rather fuzzy and context-dependent.\nIt provides the passenger with information what they should do in this step depending on where they\nwere in the previous one.",
                 "fields": null,
                 "inputFields": null,
                 "interfaces": null,
@@ -12542,7 +13601,7 @@
                     },
                     {
                         "name": "CONTINUE",
-                        "description": "",
+                        "description": "Moving straight ahead in one of these cases\n  \n  - Passing through a crossing or intersection.\n  - Passing through a station entrance or exit when it is not know whether the passenger is\n    entering or exiting. If it _is_ known then `ENTER_STATION`/`EXIT_STATION` is used.\n    More information about the entrance is in the `step.feature` field.",
                         "isDeprecated": false,
                         "deprecationReason": null
                     },
@@ -12560,19 +13619,19 @@
                     },
                     {
                         "name": "ENTER_STATION",
-                        "description": "",
+                        "description": "Entering a public transport station. If it's not known if the passenger is entering or exiting\nthen `CONTINUE` is used.\n  \nMore information about the entrance is in the `step.feature` field.",
                         "isDeprecated": false,
                         "deprecationReason": null
                     },
                     {
                         "name": "EXIT_STATION",
-                        "description": "",
+                        "description": "Exiting a public transport station. If it's not known if the passenger is entering or exiting\nthen `CONTINUE` is used.\n  \nMore information about the entrance is in the `step.feature` field.",
                         "isDeprecated": false,
                         "deprecationReason": null
                     },
                     {
                         "name": "FOLLOW_SIGNS",
-                        "description": "",
+                        "description": "Follow the signs indicating a specific location like \"platform 1\" or \"exit B\".",
                         "isDeprecated": false,
                         "deprecationReason": null
                     },
@@ -13234,47 +14293,6 @@
             },
             {
                 "kind": "INPUT_OBJECT",
-                "name": "InputPreferred",
-                "description": "",
-                "fields": null,
-                "inputFields": [
-                    {
-                        "name": "agencies",
-                        "description": "A comma-separated list of ids of the agencies preferred by the user.",
-                        "type": {
-                            "kind": "SCALAR",
-                            "name": "String",
-                            "ofType": null
-                        },
-                        "defaultValue": null
-                    },
-                    {
-                        "name": "otherThanPreferredRoutesPenalty",
-                        "description": "Penalty added for using every route that is not preferred if user set any\nroute as preferred. We return number of seconds that we are willing to wait\nfor preferred route.",
-                        "type": {
-                            "kind": "SCALAR",
-                            "name": "Int",
-                            "ofType": null
-                        },
-                        "defaultValue": null
-                    },
-                    {
-                        "name": "routes",
-                        "description": "A comma-separated list of ids of the routes preferred by the user.",
-                        "type": {
-                            "kind": "SCALAR",
-                            "name": "String",
-                            "ofType": null
-                        },
-                        "defaultValue": null
-                    }
-                ],
-                "interfaces": null,
-                "enumValues": null,
-                "possibleTypes": null
-            },
-            {
-                "kind": "INPUT_OBJECT",
                 "name": "TransportMode",
                 "description": "Transportation mode which can be used in the itinerary",
                 "fields": null,
@@ -13538,9 +14556,19 @@
             {
                 "kind": "INPUT_OBJECT",
                 "name": "PlanVisitViaLocationInput",
-                "description": "A visit-via-location is a physical visit to one of the stop locations or coordinates listed. An\non-board visit does not count, the traveler must alight or board at the given stop for it to to\nbe accepted. To visit a coordinate, the traveler must walk(bike or drive) to the closest point\nin the street network from a stop and back to another stop to join the transit network.\n\nNOTE! Coordinates are NOT supported yet.",
+                "description": "A visit-via-location is a physical visit to one of the stop locations or coordinates listed. An\non-board visit does not count, the traveler must alight or board at the given stop for it to to\nbe accepted. To visit a coordinate, the traveler must walk(bike or drive) to the closest point\nin the street network from a stop and back to another stop to join the transit network.",
                 "fields": null,
                 "inputFields": [
+                    {
+                        "name": "coordinate",
+                        "description": "A coordinate to route through. To visit a coordinate, the traveler must walk(bike or drive)\nto the closest point in the street network from a stop and back to another stop to join the transit\nnetwork.",
+                        "type": {
+                            "kind": "INPUT_OBJECT",
+                            "name": "PlanCoordinateInput",
+                            "ofType": null
+                        },
+                        "defaultValue": null
+                    },
                     {
                         "name": "label",
                         "description": "The label/name of the location. This is pass-through information and is not used in routing.",
@@ -13580,6 +14608,55 @@
                         "defaultValue": null
                     }
                 ],
+                "interfaces": null,
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "INPUT_OBJECT",
+                "name": "PlanCoordinateInput",
+                "description": "A coordinate used for a location in a plan query.",
+                "fields": null,
+                "inputFields": [
+                    {
+                        "name": "latitude",
+                        "description": "Latitude as a WGS84 format number.",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "CoordinateValue",
+                                "ofType": null
+                            }
+                        },
+                        "defaultValue": null
+                    },
+                    {
+                        "name": "longitude",
+                        "description": "Longitude as a WGS84 format number.",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "CoordinateValue",
+                                "ofType": null
+                            }
+                        },
+                        "defaultValue": null
+                    }
+                ],
+                "interfaces": null,
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "SCALAR",
+                "name": "CoordinateValue",
+                "description": "Either a latitude or a longitude as a WGS84 format floating point number.",
+                "fields": null,
+                "inputFields": null,
                 "interfaces": null,
                 "enumValues": null,
                 "possibleTypes": null
@@ -13695,7 +14772,7 @@
                     },
                     {
                         "name": "nextDateTime",
-                        "description": "This is the suggested search time for the \"next page\" or time window. Insert it together\nwith the searchWindowUsed in the request to get a new set of trips following in the\nsearch-window AFTER the current search. No duplicate trips should be returned, unless a trip\nis delayed and new real-time data is available.",
+                        "description": "This will not be available after Match 2026.",
                         "args": [],
                         "type": {
                             "kind": "SCALAR",
@@ -13719,7 +14796,7 @@
                     },
                     {
                         "name": "prevDateTime",
-                        "description": "This is the suggested search time for the \"previous page\" or time window. Insert it together\nwith the searchWindowUsed in the request to get a new set of trips preceding in the\nsearch-window BEFORE the current search. No duplicate trips should be returned, unless a trip\nis delayed and new real-time data is available.",
+                        "description": "This will not be available after Match 2026.",
                         "args": [],
                         "type": {
                             "kind": "SCALAR",
@@ -13774,8 +14851,8 @@
                             "name": "Long",
                             "ofType": null
                         },
-                        "isDeprecated": false,
-                        "deprecationReason": null
+                        "isDeprecated": true,
+                        "deprecationReason": "This is not needed for debugging, and is misleading if the window is cropped."
                     },
                     {
                         "name": "to",
@@ -14385,6 +15462,12 @@
                         "deprecationReason": null
                     },
                     {
+                        "name": "NO_DIRECT_MODE_CONNECTION",
+                        "description": "No usable itineraries were found for the requested direct mode (e.g. walking, cycling, car, flex)\nand no transit modes were included in the search. This is returned both when no route exists and\nwhen routes were found but didn't pass quality filters.",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
                         "name": "NO_STOPS_IN_RANGE",
                         "description": "No stops are reachable from the start or end locations specified.\n  \nYou can try searching using a different access or egress mode, for example cycling instead of walking,\nincrease the walking/cycling/driving speed or have an administrator change the system's configuration\nso that stops further away are considered.",
                         "isDeprecated": false,
@@ -14445,6 +15528,12 @@
                     },
                     {
                         "name": "TO",
+                        "description": "",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "VIA",
                         "description": "",
                         "isDeprecated": false,
                         "deprecationReason": null
@@ -14551,55 +15640,6 @@
             },
             {
                 "kind": "INPUT_OBJECT",
-                "name": "PlanCoordinateInput",
-                "description": "A coordinate used for a location in a plan query.",
-                "fields": null,
-                "inputFields": [
-                    {
-                        "name": "latitude",
-                        "description": "Latitude as a WGS84 format number.",
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": null,
-                            "ofType": {
-                                "kind": "SCALAR",
-                                "name": "CoordinateValue",
-                                "ofType": null
-                            }
-                        },
-                        "defaultValue": null
-                    },
-                    {
-                        "name": "longitude",
-                        "description": "Longitude as a WGS84 format number.",
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": null,
-                            "ofType": {
-                                "kind": "SCALAR",
-                                "name": "CoordinateValue",
-                                "ofType": null
-                            }
-                        },
-                        "defaultValue": null
-                    }
-                ],
-                "interfaces": null,
-                "enumValues": null,
-                "possibleTypes": null
-            },
-            {
-                "kind": "SCALAR",
-                "name": "CoordinateValue",
-                "description": "Either a latitude or a longitude as a WGS84 format floating point number.",
-                "fields": null,
-                "inputFields": null,
-                "interfaces": null,
-                "enumValues": null,
-                "possibleTypes": null
-            },
-            {
-                "kind": "INPUT_OBJECT",
                 "name": "PlanStopLocationInput",
                 "description": "Stop, station, a group of stop places or multimodal stop place that should be used as\na location for the search. The trip doesn't have to use the given stop location for a\ntransit connection as it's possible to start walking to another stop from the given\nlocation. If a station or a group of stop places is provided, a stop that makes the most\nsense for the journey is picked as the location within the station or group of stop places.",
                 "fields": null,
@@ -14615,6 +15655,27 @@
                                 "name": "String",
                                 "ofType": null
                             }
+                        },
+                        "defaultValue": null
+                    }
+                ],
+                "interfaces": null,
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "INPUT_OBJECT",
+                "name": "FlexRequest",
+                "description": "Parameters that affect flexible transport routing per request.",
+                "fields": null,
+                "inputFields": [
+                    {
+                        "name": "bookingTime",
+                        "description": "The date and time for the latest time the user is expected to book the journey.\nNormally this is when the search is performed (now), plus a small grace period to\ncomplete the booking. Services which must be booked before this time are excluded. The\n`latestBookingTime` and `minimumBookingPeriod` in `BookingArrangement` (flexible\nservices only) are used to enforce this. If this parameter is _not set_, no booking-time\nrestrictions are applied - all journeys are listed.",
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "OffsetDateTime",
+                            "ofType": null
                         },
                         "defaultValue": null
                     }
@@ -14675,16 +15736,6 @@
                 "possibleTypes": null
             },
             {
-                "kind": "SCALAR",
-                "name": "Ratio",
-                "description": "A fractional multiplier between 0 and 1, for example 0.25. 0 means 0% and 1 means 100%.",
-                "fields": null,
-                "inputFields": null,
-                "interfaces": null,
-                "enumValues": null,
-                "possibleTypes": null
-            },
-            {
                 "kind": "ENUM",
                 "name": "ItineraryFilterDebugProfile",
                 "description": "Enable this to attach a system notice to itineraries instead of removing them. This is very\nconvenient when tuning the itinerary-filter-chain.",
@@ -14737,7 +15788,7 @@
                 "inputFields": [
                     {
                         "name": "direct",
-                        "description": "Street mode that is used when searching for itineraries that don't use any transit.\nIf more than one mode is selected, at least one of them must be used but not necessarily all.\nThere are modes that automatically also use walking such as the rental modes. To force rental\nto be used, this should only include the rental mode and not `WALK` in addition.\nThe default access mode is `WALK`.",
+                        "description": "Street mode that is used when searching for itineraries that don't use any transit.\nIf more than one mode is selected, at least one of them must be used but not necessarily all.\nThere are modes that automatically also use walking such as the rental modes. To force rental\nto be used, this should only include the rental mode and not `WALK` in addition.",
                         "type": {
                             "kind": "LIST",
                             "name": null,
@@ -14751,7 +15802,7 @@
                                 }
                             }
                         },
-                        "defaultValue": null
+                        "defaultValue": "[WALK]"
                     },
                     {
                         "name": "directOnly",
@@ -14765,7 +15816,7 @@
                     },
                     {
                         "name": "transit",
-                        "description": "Modes for different phases of an itinerary when transit is included. Also\nincludes street mode selections related to connecting to the transit network\nand transfers. By default, all transit modes are usable and `WALK` is used for\naccess, egress and transfers.",
+                        "description": "Modes for different phases of an itinerary when transit is included. Also\nincludes street mode selections related to connecting to the transit network\nand transfers. By default, all transit modes are usable.",
                         "type": {
                             "kind": "INPUT_OBJECT",
                             "name": "PlanTransitModesInput",
@@ -14861,7 +15912,7 @@
                 "inputFields": [
                     {
                         "name": "access",
-                        "description": "Street mode that is used when searching for access to the transit network from origin.\nIf more than one mode is selected, at least one of them must be used but not necessarily all.\nThere are modes that automatically also use walking such as the rental modes. To force rental\nto be used, this should only include the rental mode and not `WALK` in addition.\nThe default access mode is `WALK`.",
+                        "description": "Street mode that is used when searching for access to the transit network from origin.\nIf more than one mode is selected, at least one of them must be used but not necessarily all.\nThere are modes that automatically also use walking such as the rental modes. To force rental\nto be used, this should only include the rental mode and not `WALK` in addition.",
                         "type": {
                             "kind": "LIST",
                             "name": null,
@@ -14875,11 +15926,11 @@
                                 }
                             }
                         },
-                        "defaultValue": null
+                        "defaultValue": "[WALK]"
                     },
                     {
                         "name": "egress",
-                        "description": "Street mode that is used when searching for egress to destination from the transit network.\nIf more than one mode is selected, at least one of them must be used but not necessarily all.\nThere are modes that automatically also use walking such as the rental modes. To force rental\nto be used, this should only include the rental mode and not `WALK` in addition.\nThe default access mode is `WALK`.",
+                        "description": "Street mode that is used when searching for egress to destination from the transit network.\nIf more than one mode is selected, at least one of them must be used but not necessarily all.\nThere are modes that automatically also use walking such as the rental modes. To force rental\nto be used, this should only include the rental mode and not `WALK` in addition.",
                         "type": {
                             "kind": "LIST",
                             "name": null,
@@ -14893,11 +15944,11 @@
                                 }
                             }
                         },
-                        "defaultValue": null
+                        "defaultValue": "[WALK]"
                     },
                     {
                         "name": "transfer",
-                        "description": "Street mode that is used when searching for transfers. Selection of only one allowed for now.\nThe default transfer mode is `WALK`.",
+                        "description": "Street mode that is used when searching for transfers. Selection of only one allowed for now.",
                         "type": {
                             "kind": "LIST",
                             "name": null,
@@ -14911,11 +15962,11 @@
                                 }
                             }
                         },
-                        "defaultValue": null
+                        "defaultValue": "[WALK]"
                     },
                     {
                         "name": "transit",
-                        "description": "Transit modes and reluctances associated with them. Each defined mode can be used in\nan itinerary but doesn't have to be. If direct search is not disabled, there can be an\nitinerary without any transit legs. By default, all transit modes are usable.",
+                        "description": "Transit modes and reluctances associated with them. Each defined mode can be used in\nan itinerary but doesn't have to be. If direct search is not disabled, there can be an\nitinerary without any transit legs. By default, all transit modes are usable. For a transit trip\nto match PlanTransitModesInput, it must match one of the PlanTransitModePreferenceInputs given\nin the field.",
                         "type": {
                             "kind": "LIST",
                             "name": null,
@@ -14929,7 +15980,7 @@
                                 }
                             }
                         },
-                        "defaultValue": null
+                        "defaultValue": "[{mode: AIRPLANE}, {mode: BUS}, {mode: CABLE_CAR}, {mode: CARPOOL}, {mode: COACH}, {mode: FERRY}, {mode: FUNICULAR}, {mode: GONDOLA}, {mode: MONORAIL}, {mode: RAIL}, {mode: SNOW_AND_ICE}, {mode: SUBWAY}, {mode: TAXI}, {mode: TRAM}, {mode: TROLLEYBUS}]"
                     }
                 ],
                 "interfaces": null,
@@ -15124,6 +16175,16 @@
                             }
                         },
                         "defaultValue": null
+                    },
+                    {
+                        "name": "replacement",
+                        "description": "If present and not null, further limits the transit mode selection.  A transit trip matches\na PlanTransitModePreferenceInput if the mandatory TransitMode field mode matches. If replacement\nis REQUIRED, the trip must also be a replacement. If replacement is FORBIDDEN,\nthe trip must not be a replacement. If replacement is FEATURE_IGNORED or missing, it\ndoes not matter if the trip is a replacement or not. Whether a leg is a replacement is recognized\nboth by the NeTEx submode and the GTFS extended type, depending on the data source.\nNote that a bus replacing a train has mode: BUS, replacement: true, so it matches a query with\nmode: BUS, replacement: REQUIRED and mode: BUS, replacement: FEATURE_IGNORED, but it does not\nmatch mode: TRAIN with any replacement options. So to get both trains and buses replacing them,\nbut no other buses, query [(mode: TRAIN), (mode: BUS, replacement: REQUIRED)].",
+                        "type": {
+                            "kind": "INPUT_OBJECT",
+                            "name": "ReplacementFilterInput",
+                            "ofType": null
+                        },
+                        "defaultValue": null
                     }
                 ],
                 "interfaces": null,
@@ -15163,6 +16224,56 @@
                 "inputFields": null,
                 "interfaces": null,
                 "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "INPUT_OBJECT",
+                "name": "ReplacementFilterInput",
+                "description": "Contains details on how to filter trips based on the replacement feature when considering them for routing.",
+                "fields": null,
+                "inputFields": [
+                    {
+                        "name": "requirement",
+                        "description": "One of three choices: must be replacement, cannot be a replacement, can either be or not be a replacement",
+                        "type": {
+                            "kind": "ENUM",
+                            "name": "ReplacementRequirement",
+                            "ofType": null
+                        },
+                        "defaultValue": null
+                    }
+                ],
+                "interfaces": null,
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "ENUM",
+                "name": "ReplacementRequirement",
+                "description": "How does a trip's replacement feature affect whether a it is considered for use in routing?",
+                "fields": null,
+                "inputFields": null,
+                "interfaces": null,
+                "enumValues": [
+                    {
+                        "name": "FEATURE_IGNORED",
+                        "description": "Consider all trips ignoring their replacement feature.",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "FORBIDDEN",
+                        "description": "Only consider trips which don't have the replacement feature.",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "REQUIRED",
+                        "description": "Only consider trips which have the replacement feature.",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
                 "possibleTypes": null
             },
             {
@@ -15241,7 +16352,7 @@
                             "name": "Boolean",
                             "ofType": null
                         },
-                        "defaultValue": null
+                        "defaultValue": "false"
                     }
                 ],
                 "interfaces": null,
@@ -15313,7 +16424,7 @@
                             "name": "Cost",
                             "ofType": null
                         },
-                        "defaultValue": null
+                        "defaultValue": "120"
                     },
                     {
                         "name": "optimization",
@@ -15323,7 +16434,7 @@
                             "name": "CyclingOptimizationInput",
                             "ofType": null
                         },
-                        "defaultValue": null
+                        "defaultValue": "{type: SAFEST_STREETS}"
                     },
                     {
                         "name": "parking",
@@ -15343,7 +16454,7 @@
                             "name": "Reluctance",
                             "ofType": null
                         },
-                        "defaultValue": null
+                        "defaultValue": "1.7"
                     },
                     {
                         "name": "rental",
@@ -15363,7 +16474,7 @@
                             "name": "Speed",
                             "ofType": null
                         },
-                        "defaultValue": null
+                        "defaultValue": "5.6"
                     },
                     {
                         "name": "walk",
@@ -15531,7 +16642,7 @@
                                 }
                             }
                         },
-                        "defaultValue": null
+                        "defaultValue": "[]"
                     },
                     {
                         "name": "preferred",
@@ -15549,7 +16660,7 @@
                                 }
                             }
                         },
-                        "defaultValue": null
+                        "defaultValue": "[]"
                     },
                     {
                         "name": "unpreferredCost",
@@ -15559,7 +16670,7 @@
                             "name": "Cost",
                             "ofType": null
                         },
-                        "defaultValue": null
+                        "defaultValue": "300"
                     }
                 ],
                 "interfaces": null,
@@ -15574,7 +16685,7 @@
                 "inputFields": [
                     {
                         "name": "allowedNetworks",
-                        "description": "Rental networks which can be potentially used as part of an itinerary.",
+                        "description": "Rental networks which can be potentially used as part of an itinerary. If this field has no default value,\nit means that all networks are allowed unless some are banned with `bannedNetworks`.",
                         "type": {
                             "kind": "LIST",
                             "name": null,
@@ -15606,7 +16717,7 @@
                                 }
                             }
                         },
-                        "defaultValue": null
+                        "defaultValue": "[]"
                     },
                     {
                         "name": "destinationBicyclePolicy",
@@ -15637,7 +16748,7 @@
                             "name": "Boolean",
                             "ofType": null
                         },
-                        "defaultValue": null
+                        "defaultValue": "false"
                     },
                     {
                         "name": "keepingCost",
@@ -15647,7 +16758,7 @@
                             "name": "Cost",
                             "ofType": null
                         },
-                        "defaultValue": null
+                        "defaultValue": "0"
                     }
                 ],
                 "interfaces": null,
@@ -15688,7 +16799,7 @@
                             "name": "Duration",
                             "ofType": null
                         },
-                        "defaultValue": null
+                        "defaultValue": "\"PT0S\""
                     },
                     {
                         "name": "speed",
@@ -15698,7 +16809,7 @@
                             "name": "Speed",
                             "ofType": null
                         },
-                        "defaultValue": null
+                        "defaultValue": "1.35"
                     }
                 ],
                 "interfaces": null,
@@ -15719,7 +16830,7 @@
                             "name": "Cost",
                             "ofType": null
                         },
-                        "defaultValue": null
+                        "defaultValue": "0"
                     },
                     {
                         "name": "reluctance",
@@ -15729,7 +16840,7 @@
                             "name": "Reluctance",
                             "ofType": null
                         },
-                        "defaultValue": null
+                        "defaultValue": "5"
                     }
                 ],
                 "interfaces": null,
@@ -15742,6 +16853,16 @@
                 "description": "Preferences related to traveling on a car (excluding car travel on transit services such as taxi).",
                 "fields": null,
                 "inputFields": [
+                    {
+                        "name": "boardCost",
+                        "description": "Cost of boarding a vehicle with a car.",
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Cost",
+                            "ofType": null
+                        },
+                        "defaultValue": "600"
+                    },
                     {
                         "name": "parking",
                         "description": "Car parking related preferences.",
@@ -15760,7 +16881,7 @@
                             "name": "Reluctance",
                             "ofType": null
                         },
-                        "defaultValue": null
+                        "defaultValue": "10"
                     },
                     {
                         "name": "rental",
@@ -15799,7 +16920,7 @@
                                 }
                             }
                         },
-                        "defaultValue": null
+                        "defaultValue": "[]"
                     },
                     {
                         "name": "preferred",
@@ -15817,7 +16938,7 @@
                                 }
                             }
                         },
-                        "defaultValue": null
+                        "defaultValue": "[]"
                     },
                     {
                         "name": "unpreferredCost",
@@ -15827,7 +16948,7 @@
                             "name": "Cost",
                             "ofType": null
                         },
-                        "defaultValue": null
+                        "defaultValue": "300"
                     }
                 ],
                 "interfaces": null,
@@ -15842,7 +16963,7 @@
                 "inputFields": [
                     {
                         "name": "allowedNetworks",
-                        "description": "Rental networks which can be potentially used as part of an itinerary.",
+                        "description": "Rental networks which can be potentially used as part of an itinerary. If this field has no default value,\nit means that all networks are allowed unless some are banned with `bannedNetworks`.",
                         "type": {
                             "kind": "LIST",
                             "name": null,
@@ -15874,6 +16995,16 @@
                                 }
                             }
                         },
+                        "defaultValue": "[]"
+                    },
+                    {
+                        "name": "rentalDuration",
+                        "description": "The assumed duration of a car rental trip, used to ensure vehicle availability during the\nrental period.\n  \nThe rental time is calculated relative to the request search time:\n- Depart-after search: `request time + rental duration`\n- Arrive-by search: `request time - rental duration`\n  \nNote: Rental duration only applies to  free-floating vehicles in direct street searches.\nThis is not supported in access/egress in transit searches.",
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Duration",
+                            "ofType": null
+                        },
                         "defaultValue": null
                     }
                 ],
@@ -15895,7 +17026,7 @@
                             "name": "ScooterOptimizationInput",
                             "ofType": null
                         },
-                        "defaultValue": null
+                        "defaultValue": "{type: SAFE_STREETS}"
                     },
                     {
                         "name": "reluctance",
@@ -15905,7 +17036,7 @@
                             "name": "Reluctance",
                             "ofType": null
                         },
-                        "defaultValue": null
+                        "defaultValue": "2"
                     },
                     {
                         "name": "rental",
@@ -15925,7 +17056,7 @@
                             "name": "Speed",
                             "ofType": null
                         },
-                        "defaultValue": null
+                        "defaultValue": "5"
                     }
                 ],
                 "interfaces": null,
@@ -16059,7 +17190,7 @@
                 "inputFields": [
                     {
                         "name": "allowedNetworks",
-                        "description": "Rental networks which can be potentially used as part of an itinerary.",
+                        "description": "Rental networks which can be potentially used as part of an itinerary. If this field has no default value,\nit means that all networks are allowed unless some are banned with `bannedNetworks`.",
                         "type": {
                             "kind": "LIST",
                             "name": null,
@@ -16091,7 +17222,7 @@
                                 }
                             }
                         },
-                        "defaultValue": null
+                        "defaultValue": "[]"
                     },
                     {
                         "name": "destinationScooterPolicy",
@@ -16122,7 +17253,7 @@
                             "name": "Boolean",
                             "ofType": null
                         },
-                        "defaultValue": null
+                        "defaultValue": "false"
                     },
                     {
                         "name": "keepingCost",
@@ -16132,7 +17263,7 @@
                             "name": "Cost",
                             "ofType": null
                         },
-                        "defaultValue": null
+                        "defaultValue": "0"
                     }
                 ],
                 "interfaces": null,
@@ -16153,7 +17284,7 @@
                             "name": "Cost",
                             "ofType": null
                         },
-                        "defaultValue": null
+                        "defaultValue": "120"
                     },
                     {
                         "name": "reluctance",
@@ -16163,7 +17294,7 @@
                             "name": "Reluctance",
                             "ofType": null
                         },
-                        "defaultValue": null
+                        "defaultValue": "1.8"
                     },
                     {
                         "name": "safetyFactor",
@@ -16173,7 +17304,7 @@
                             "name": "Ratio",
                             "ofType": null
                         },
-                        "defaultValue": null
+                        "defaultValue": "1"
                     },
                     {
                         "name": "speed",
@@ -16183,7 +17314,7 @@
                             "name": "Speed",
                             "ofType": null
                         },
-                        "defaultValue": null
+                        "defaultValue": "1.2"
                     }
                 ],
                 "interfaces": null,
@@ -16215,6 +17346,34 @@
                             "ofType": null
                         },
                         "defaultValue": null
+                    },
+                    {
+                        "name": "filters",
+                        "description": "A list of filters for which trips should be included or excluded. A trip will be considered in the\nresult if it is included by at least one filter and isn't excluded by another one at the same time.\n  \nAn empty list of filters or no value means that all trips should be included.\n  \n**AND/OR Logic**\n  \nSeveral filters can be defined and form an OR-condition.\n  \nThe following example means \"include all trips with `F:route1` _or_ `F:agency1`\":\n  \n```\nfilters: [\n  {\n    include: {\n      routes: [\"F:route1\"]\n    }\n  },\n  { \n    include: {\n      agencies: [\"F:agency1\"]\n    }\n  }\n}]\n```\n  \nThe following example means \"include all trips of `F:agency1` _and_ exclude `F:route1`\":\n  \n```\nfilters: [\n  {\n    include: {\n      agencies: [\"F:agency1\"]\n    },\n    exclude: {\n      routes: [\"F:route1\"]\n    }\n  }\n]\n```\n  \nBe aware of the following pitfalls:\n  - It is easy to construct AND-conditions that can lead to zero results.\n  - OR-conditions that have an element which consists of only an exclude are likely to be\n    unwanted and may lead to unexpected results.\n  \n**Note**: This parameter also interacts with the modes set in `modes.transit` by forming\nan AND-condition.",
+                        "type": {
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "NON_NULL",
+                                "name": null,
+                                "ofType": {
+                                    "kind": "INPUT_OBJECT",
+                                    "name": "TransitFilterInput",
+                                    "ofType": null
+                                }
+                            }
+                        },
+                        "defaultValue": null
+                    },
+                    {
+                        "name": "relaxTransitGroupPriority",
+                        "description": "Relax generalized-cost when comparing itineraries with a different set of\ntransit-group-priorities. The groups are set server side for routes and\ncan not be configured in the API.\n  \nThis relaxes the comparison inside the routing engine for each stop-arrival. If two\npaths have a different set of transit-group-priorities, then the generalized-cost\ncomparison is relaxed. The final set of paths are filtered through the normal\nitinerary-filters.\n  \nA relax-cost is used to increase the limit when comparing one cost to another cost\nusing a linear function applied to the generalized cost.\nThis is used to include more results into the result. A `coefficient=2.0` means a path (itinerary)\nwith twice as high cost as another one, is accepted. A `constant=300` means a \"fixed\"\nconstant is added to the limit.",
+                        "type": {
+                            "kind": "INPUT_OBJECT",
+                            "name": "LinearCostFunctionInput",
+                            "ofType": null
+                        },
+                        "defaultValue": "{coefficient: 1, constant: 0}"
                     },
                     {
                         "name": "timetable",
@@ -16255,7 +17414,7 @@
                             "name": "Duration",
                             "ofType": null
                         },
-                        "defaultValue": null
+                        "defaultValue": "\"PT0S\""
                     }
                 ],
                 "interfaces": null,
@@ -16276,7 +17435,7 @@
                             "name": "Duration",
                             "ofType": null
                         },
-                        "defaultValue": null
+                        "defaultValue": "\"PT0S\""
                     },
                     {
                         "name": "waitReluctance",
@@ -16285,6 +17444,139 @@
                             "kind": "SCALAR",
                             "name": "Reluctance",
                             "ofType": null
+                        },
+                        "defaultValue": "1"
+                    }
+                ],
+                "interfaces": null,
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "INPUT_OBJECT",
+                "name": "TransitFilterInput",
+                "description": "A collection of selectors for what routes/agencies should be included in or excluded from the search.\n\nThe `include` is always applied to select the initial set, then `exclude` to remove elements.\nIf only `exclude` is present, the exclude is applied to the existing set of results.\n\nTherefore, if an entity is both included _and_ excluded the exclusion takes precedence.",
+                "fields": null,
+                "inputFields": [
+                    {
+                        "name": "exclude",
+                        "description": "A list of selectors for what routes/agencies should be excluded during search.\n  \nIn order to be excluded, a route/agency has to match with at least one selector.\n  \nAn empty list or a list containing `null` is forbidden.",
+                        "type": {
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "NON_NULL",
+                                "name": null,
+                                "ofType": {
+                                    "kind": "INPUT_OBJECT",
+                                    "name": "TransitFilterSelectInput",
+                                    "ofType": null
+                                }
+                            }
+                        },
+                        "defaultValue": null
+                    },
+                    {
+                        "name": "include",
+                        "description": "A list of selectors for what routes/agencies should be allowed during the search.\n  \nIf route/agency matches with at least one selector it will be included.\n  \nAn empty list or a list containing `null` is forbidden.",
+                        "type": {
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "NON_NULL",
+                                "name": null,
+                                "ofType": {
+                                    "kind": "INPUT_OBJECT",
+                                    "name": "TransitFilterSelectInput",
+                                    "ofType": null
+                                }
+                            }
+                        },
+                        "defaultValue": null
+                    }
+                ],
+                "interfaces": null,
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "INPUT_OBJECT",
+                "name": "TransitFilterSelectInput",
+                "description": "A list of selectors for including or excluding entities from the routing results. Null\nmeans everything is allowed to be returned and empty lists are not allowed.",
+                "fields": null,
+                "inputFields": [
+                    {
+                        "name": "agencies",
+                        "description": "Set of ids for agencies that should be included in/excluded from the search.\n  \nFormat: `FeedId:AgencyId`",
+                        "type": {
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "NON_NULL",
+                                "name": null,
+                                "ofType": {
+                                    "kind": "SCALAR",
+                                    "name": "String",
+                                    "ofType": null
+                                }
+                            }
+                        },
+                        "defaultValue": null
+                    },
+                    {
+                        "name": "routes",
+                        "description": "Set of ids for routes that should be included in/excluded from the search.\n  \nFormat: `FeedId:AgencyId`",
+                        "type": {
+                            "kind": "LIST",
+                            "name": null,
+                            "ofType": {
+                                "kind": "NON_NULL",
+                                "name": null,
+                                "ofType": {
+                                    "kind": "SCALAR",
+                                    "name": "String",
+                                    "ofType": null
+                                }
+                            }
+                        },
+                        "defaultValue": null
+                    }
+                ],
+                "interfaces": null,
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "INPUT_OBJECT",
+                "name": "LinearCostFunctionInput",
+                "description": "A generalized linear cost function that can be applied to a cost value.\nThe coefficient is used to scale the input Cost linearly and the constant is used\nto add a fixed offset. If we assume a cost c, then f(c) = coefficient * c + constant.",
+                "fields": null,
+                "inputFields": [
+                    {
+                        "name": "coefficient",
+                        "description": "The coefficient that scales the Cost input linearly.",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "Float",
+                                "ofType": null
+                            }
+                        },
+                        "defaultValue": null
+                    },
+                    {
+                        "name": "constant",
+                        "description": "The 0th degree constant of the function as a Cost, must be a non-negative integer",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "Cost",
+                                "ofType": null
+                            }
                         },
                         "defaultValue": null
                     }
@@ -16307,7 +17599,7 @@
                             "name": "Boolean",
                             "ofType": null
                         },
-                        "defaultValue": null
+                        "defaultValue": "false"
                     },
                     {
                         "name": "includePlannedCancellations",
@@ -16317,7 +17609,7 @@
                             "name": "Boolean",
                             "ofType": null
                         },
-                        "defaultValue": null
+                        "defaultValue": "false"
                     },
                     {
                         "name": "includeRealTimeCancellations",
@@ -16327,7 +17619,7 @@
                             "name": "Boolean",
                             "ofType": null
                         },
-                        "defaultValue": null
+                        "defaultValue": "false"
                     }
                 ],
                 "interfaces": null,
@@ -16348,7 +17640,7 @@
                             "name": "Cost",
                             "ofType": null
                         },
-                        "defaultValue": null
+                        "defaultValue": "0"
                     },
                     {
                         "name": "maximumAdditionalTransfers",
@@ -16358,7 +17650,7 @@
                             "name": "Int",
                             "ofType": null
                         },
-                        "defaultValue": null
+                        "defaultValue": "5"
                     },
                     {
                         "name": "maximumTransfers",
@@ -16368,17 +17660,17 @@
                             "name": "Int",
                             "ofType": null
                         },
-                        "defaultValue": null
+                        "defaultValue": "11"
                     },
                     {
                         "name": "slack",
-                        "description": "A global minimum transfer time (in seconds) that specifies the minimum amount of time\nthat must pass between exiting one transit vehicle and boarding another. This time is\nin addition to time it might take to walk between transit stops. Setting this value\nas `PT0S`, for example, can lead to passenger missing a connection when the vehicle leaves\nahead of time or the passenger arrives to the stop later than expected.",
+                        "description": "A global minimum transfer time that specifies the minimum amount of time that must pass\nbetween exiting one transit vehicle and boarding another. This time is in addition to\ntime it might take to walk between transit stops. Setting this value as `PT0S`, for\nexample, can lead to passenger missing a connection when the vehicle leaves ahead of time\nor the passenger arrives to the stop later than expected.",
                         "type": {
                             "kind": "SCALAR",
                             "name": "Duration",
                             "ofType": null
                         },
-                        "defaultValue": null
+                        "defaultValue": "\"PT1M30S\""
                     }
                 ],
                 "interfaces": null,
@@ -22733,6 +24025,153 @@
                 "possibleTypes": null
             },
             {
+                "kind": "OBJECT",
+                "name": "DependentFareProduct",
+                "description": "A (possibly discounted) fare product that requires another fare product to be purchased previously\nin order to be valid.\n\nFor example, when taking the train into a city, you might get a discounted \"transfer fare\" when\nswitching to the bus for the second leg.",
+                "fields": [
+                    {
+                        "name": "dependencies",
+                        "description": "The fare product is _not_ valid without purchasing at least _one_ of",
+                        "args": [
+                            {
+                                "name": "filter",
+                                "description": "",
+                                "type": {
+                                    "kind": "ENUM",
+                                    "name": "DependentFareProductFilter",
+                                    "ofType": null
+                                },
+                                "defaultValue": "ALL"
+                            }
+                        ],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "LIST",
+                                "name": null,
+                                "ofType": {
+                                    "kind": "NON_NULL",
+                                    "name": null,
+                                    "ofType": {
+                                        "kind": "INTERFACE",
+                                        "name": "FareProduct",
+                                        "ofType": null
+                                    }
+                                }
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "id",
+                        "description": "",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "String",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "medium",
+                        "description": "The 'medium' that this product applies to, for example \"Oyster Card\" or \"Berlin Ticket App\".\n  \nThis communicates to riders that a specific way of buying or keeping this product is required.",
+                        "args": [],
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "FareMedium",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "name",
+                        "description": "Human readable name of the product, for example example \"Day pass\" or \"Single ticket\".",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "String",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "price",
+                        "description": "The price of the product",
+                        "args": [],
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": null,
+                            "ofType": {
+                                "kind": "OBJECT",
+                                "name": "Money",
+                                "ofType": null
+                            }
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "riderCategory",
+                        "description": "The category of riders this product applies to, for example students or pensioners.",
+                        "args": [],
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "RiderCategory",
+                            "ofType": null
+                        },
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "inputFields": null,
+                "interfaces": [
+                    {
+                        "kind": "INTERFACE",
+                        "name": "FareProduct",
+                        "ofType": null
+                    }
+                ],
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "ENUM",
+                "name": "DependentFareProductFilter",
+                "description": "Dependent fare products can lead to many combinations of fares, however it is often not useful\ninformation to the passenger.\n\nThis enum allows filtering of the dependencies.\n\nSince it is recognised that this is not covered well in the specification, it is discussed here:\nhttps://github.com/google/transit/pull/423",
+                "fields": null,
+                "inputFields": null,
+                "interfaces": null,
+                "enumValues": [
+                    {
+                        "name": "ALL",
+                        "description": "Show all dependencies",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    },
+                    {
+                        "name": "MATCH_CATEGORY_AND_MEDIUM",
+                        "description": "Show only dependencies where the rider category and medium is the same es the main fare product.",
+                        "isDeprecated": false,
+                        "deprecationReason": null
+                    }
+                ],
+                "possibleTypes": null
+            },
+            {
                 "kind": "INPUT_OBJECT",
                 "name": "InputFilters",
                 "description": "",
@@ -22819,6 +24258,47 @@
                                 "name": "String",
                                 "ofType": null
                             }
+                        },
+                        "defaultValue": null
+                    }
+                ],
+                "interfaces": null,
+                "enumValues": null,
+                "possibleTypes": null
+            },
+            {
+                "kind": "INPUT_OBJECT",
+                "name": "InputPreferred",
+                "description": "",
+                "fields": null,
+                "inputFields": [
+                    {
+                        "name": "agencies",
+                        "description": "Not implemented",
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
+                        },
+                        "defaultValue": null
+                    },
+                    {
+                        "name": "otherThanPreferredRoutesPenalty",
+                        "description": "Not implemented",
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "Int",
+                            "ofType": null
+                        },
+                        "defaultValue": null
+                    },
+                    {
+                        "name": "routes",
+                        "description": "Not implemented",
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "String",
+                            "ofType": null
                         },
                         "defaultValue": null
                     }

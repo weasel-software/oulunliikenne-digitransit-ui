@@ -409,7 +409,6 @@ export default Relay.createContainer(withBreakpoint(SummaryPage), {
           triangle: $triangle,
           maxTransfers: $maxTransfers,
           modeWeight: $modeWeight
-          preferred: $preferred,
           unpreferred: $unpreferred),
         {
           ${SummaryPlanContainer.getFragment('plan')}
@@ -457,7 +456,6 @@ export default Relay.createContainer(withBreakpoint(SummaryPage), {
       transferPenalty: null,
       modes: null,
       maxWalkDistance: 0,
-      preferred: null,
       unpreferred: null,
       ticketTypes: null,
       itineraryFiltering: ITINERARYFILTERING_DEFAULT,

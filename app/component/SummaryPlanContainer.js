@@ -325,7 +325,6 @@ class SummaryPlanContainer extends React.Component {
       $walkReluctance:Float!,
       $walkSpeed:Float!,
       $wheelchair:Boolean!,
-      $preferred:InputPreferred!,
       $unpreferred: InputUnpreferred!,
       $fromPlace:String!,
       $toPlace:String!
@@ -358,7 +357,6 @@ class SummaryPlanContainer extends React.Component {
           walkSpeed:$walkSpeed,
           wheelchair:$wheelchair,
           arriveBy:$arriveBy,
-          preferred:$preferred,
           unpreferred: $unpreferred,
           transportModes: $transportModes,
           transferPenalty:$transferPenalty,
@@ -458,10 +456,7 @@ const connectedContainer = connectToStores(
   withRelayContainer,
   [TimeStore],
   context => ({
-    currentTime: context
-      .getStore(TimeStore)
-      .getCurrentTime()
-      .valueOf(),
+    currentTime: context.getStore(TimeStore).getCurrentTime().valueOf(),
   }),
 );
 
