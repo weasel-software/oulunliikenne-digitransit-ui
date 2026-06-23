@@ -201,7 +201,6 @@ export const getSettings = () => {
     tramWeight: getNumberValueOrDefault(routingSettings.tramWeight),
     ferryWeight: getNumberValueOrDefault(routingSettings.ferryWeight),
     airplaneWeight: getNumberValueOrDefault(routingSettings.airplaneWeight),
-    preferredRoutes: custSettings.preferredRoutes,
     unpreferredRoutes: custSettings.unpreferredRoutes,
   };
 };
@@ -219,7 +218,6 @@ export const preparePlanParams = config => (
         modes,
         numItineraries,
         optimize,
-        preferredRoutes,
         safetyFactor,
         slopeFactor,
         timeFactor,
@@ -347,9 +345,6 @@ export const preparePlanParams = config => (
                 nullOrUndefined,
               )
             : null,
-        preferred: {
-          routes: preferredRoutes || settings.preferredRoutes,
-        },
         unpreferred: {
           routes: unpreferredRoutes || settings.unpreferredRoutes,
         },

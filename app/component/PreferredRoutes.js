@@ -94,19 +94,9 @@ class PreferredRoutes extends React.Component {
     </div>
   );
 
-  renderPreferredRouteNumbers = () => (
-    <div className="preferred-routes-container">
-      {this.getPreferredRouteNumbers({
-        optionName: 'preferred',
-        preferredRoutes: this.props.preferredRoutes,
-      })}
-    </div>
-  );
-
   render() {
     return (
       <div className="settings-option-container">
-        {this.renderPreferredRouteNumbers()}
         {this.renderAvoidingRoutes()}
       </div>
     );

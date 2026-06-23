@@ -14,6 +14,9 @@ You also need a C compiler:
 
 ## Installation
 - `yarn install`
+
+**Note on Installation:** This project uses vendored legacy dependencies located in the /local_modules folder because the original upstream repositories were deleted by their authors. Do not remove this folder. Standard yarn install relies on these local files.
+
 ## Start development version
 
 - OSX / Linux: `yarn run dev`
