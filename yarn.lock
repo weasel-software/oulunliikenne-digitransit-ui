@@ -8182,16 +8182,14 @@ isomorphic-fetch@^2.1.1:
     node-fetch "^1.0.1"
     whatwg-fetch ">=0.10.0"
 
-"isomorphic-relay-router@github:michaelstockton/isomorphic-relay-router#feature-relay-1-public":
+"isomorphic-relay-router@file:./local_modules/isomorphic-relay-router":
   version "0.8.6"
-  resolved "https://codeload.github.com/michaelstockton/isomorphic-relay-router/tar.gz/bdefe542410d215d3a363ee529c7e502508d2b34"
   dependencies:
     babel-runtime "^6.3.19"
     react-router-relay "^0.14.0"
 
-"isomorphic-relay@github:hannesj/isomorphic-relay#feature-relay-1-public":
+"isomorphic-relay@file:./local_modules/isomorphic-relay":
   version "0.7.4"
-  resolved "https://codeload.github.com/hannesj/isomorphic-relay/tar.gz/a04f02e58e56192b6947953c26485d56c2da00b4"
   dependencies:
     babel-runtime "^6.6.1"
     prop-types "^15.5.10"
