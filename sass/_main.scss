@@ -63,6 +63,7 @@ $body-font-weight: $font-weight-medium;
 @import '~react-toastify/scss/main';
 
 /* Modal */
+@import '~foundation-apps/scss/helpers/functions';
 @import '~foundation-apps/scss/helpers/breakpoints';
 @import '~foundation-apps/scss/components/modal';
 
