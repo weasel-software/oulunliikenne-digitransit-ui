@@ -269,7 +269,11 @@ export default function (req, res, next) {
 
   // required by material-ui
   const agent = req.headers['user-agent'];
-  global.navigator = { userAgent: agent };
+  Object.defineProperty(global, 'navigator', {
+    value: { userAgent: agent },
+    writable: true,
+    configurable: true,
+  });
 
   const matchOptions = {
     routes: context.getComponent(),

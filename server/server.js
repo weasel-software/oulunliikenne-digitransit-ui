@@ -7,7 +7,8 @@ const path = require('path');
 const fs = require('fs');
 
 require('@babel/register')({
-  ignore: [/node_modules\/react-leaflet/],
+  // Compile node_modules too: the server imports react-leaflet's ES module build.
+  ignore: [],
 });
 
 global.fetch = require('node-fetch');
